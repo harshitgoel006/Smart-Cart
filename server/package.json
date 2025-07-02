@@ -1,5 +1,5 @@
 {
-  "name": "Smart-Cart server",
+  "name": "smart-cart-server",
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
@@ -21,7 +21,4 @@
   "devDependencies": {
     "nodemon": "^3.1.10"
   }
-
-
-  
 }
