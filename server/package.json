@@ -1,0 +1,14 @@
+{
+  "name": "Smart-Cart server",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon -r dotenv/config src/index.js",
+    "start": "node src/index.js"
+  },
+  "keywords": [],
+  "author": "Harshit Goel",
+  "license": "ISC",
+  "type": "module",
+  "description": "SmartCart AI Backend"
+}
