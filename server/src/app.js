@@ -13,4 +13,19 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static('public'));
 app.use(cookieParser());
 
+
+
+
+
+
+
+// Importing routes
+
+import { uploadRouter } from './routes/upload.routes.js';
+
+// Declaring routes
+
+app.use('/api/v1/uploads', uploadRouter);
+
+
 export {app}
