@@ -60,65 +60,70 @@ const sendOtp = asyncHandler(async (req, res) => {
 
 });
 
-const registerUser = asyncHandler(async (req, res)=> {
-    const {email, fullname, password, role, phone ,otp,username} = req.body;
-    if(!(email && fullname  && password && role && phone)){
-        throw new ApiError(400, "All fields are required");
-    }
+const registerUser = asyncHandler(async (req, res)=>{ const { email, username, fullname, password, role, phone } = req.body;
 
-    const existingOtp = await OTP.findOne({email});
+  if (!email || !fullname || !username || !password || !role || !phone) {
+    throw new ApiError(400, "All fields are required");
+  }
 
-    if(!existingOtp || existingOtp.otp !== req.body.otp){
-        throw new ApiError(400, "Invalid  OTP");
-    }
-
-    await OTP.deleteOne({email});
-
-    const userExists = await User.findOne({
+  const userExists = await User.findOne({
     $or: [{ username }, { email }]
+  });
+  if (userExists) {
+    throw new ApiError(400, "User with this email  already exists");
+  }
+
+  const avatarLocalPath = req.files?.avatar[0]?.path;
+  if (!avatarLocalPath) {
+    throw new ApiError(400, "Avatar is required");
+  }
+
+  const avatar = await uploadOnCloudinary(avatarLocalPath);
+
+  const user = await User.create({
+    email,
+    username,
+    fullname,
+    password,
+    role,
+    phone,
+    avatar: avatar.url,
+  });
+
+  const createdUser = await User.findById(user._id).select("-password -refreshToken");
+  if (!createdUser) {
+    throw new ApiError(500, "Something went wrong while registering user");
+  }
+
+  return res.status(201).json(
+    new ApiResponse(200, createdUser, "User registered successfully")
+  );
 });
-    if (userExists) {
-        throw new ApiError(400, "User with this email or username already exists");
-    }
 
-    const avatarLocalPath = req.files?.avatar[0]?.path;
+const verifyOtp = asyncHandler(async (req, res) => {
 
-    if(!avatarLocalPath){
-    throw new ApiError(400, "Avatar file is required")
-}
+const { email, otp } = req.body;
 
-const avatar = await uploadOnCloudinary(avatarLocalPath);
+  if (!email || !otp) {
+    throw new ApiError(400, "Email and OTP are required");
+  }
 
-    const user = await User.create({
-        email,
-        username,
-        fullname,
-        password,
-        role,
-        phone,
-        avatar: avatar.url,
-    });
-
-    const createdUser = await User.findById(user._id).select(
-    "-password -refreshToken"
-)
-
-if(!createdUser){
-    throw new ApiError(500, "Something went wrong while registering the useer")
-}
+  const existingOtp = await OTP.findOne({ email });
+  if (!existingOtp || existingOtp.otp !== otp) {
+    throw new ApiError(400, "Invalid or expired OTP");
+  }
 
 
-return res.status(201).json(
-    new ApiResponse(200, createdUser, "User registered Successfully")
-)
+  await OTP.deleteOne({ email });
 
-    
-})
-
-
+  return res.status(200).json(
+    new ApiResponse(200, null, "OTP verified successfully")
+  );
+});
 
 export {
     sendOtp,
-    registerUser
+    registerUser,
+    verifyOtp,
 }
 

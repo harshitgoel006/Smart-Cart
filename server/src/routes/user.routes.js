@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { registerUser, sendOtp } from '../controllers/user.controller.js';
+import { registerUser, sendOtp, verifyOtp } from '../controllers/user.controller.js';
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
@@ -19,6 +19,7 @@ router.route("/register").post(
 )
 
 router.route("/send-otp").post(sendOtp);
+router.route("/verify-otp").post(verifyOtp)
 
 
 export default router;

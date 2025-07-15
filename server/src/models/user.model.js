@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema
         phone: {
             type: String,
             required: true,
-            unique: true,
+            
             minlength: [10, "phone number must be 10 digits"],
             maxlength: [10, "phone number must be 10 digits"],
             trim: true,
