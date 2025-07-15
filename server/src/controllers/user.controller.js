@@ -101,14 +101,16 @@ const registerUser = asyncHandler(async (req, res)=>{ const { email, username, f
 });
 
 const verifyOtp = asyncHandler(async (req, res) => {
-
+console.log("Verifying OTP");
 const { email, otp } = req.body;
+console.log(email, otp);
 
   if (!email || !otp) {
     throw new ApiError(400, "Email and OTP are required");
   }
-
+  console.log("Verifying OTP for email:", email, otp);
   const existingOtp = await OTP.findOne({ email });
+  console.log(existingOtp);
   if (!existingOtp || existingOtp.otp !== otp) {
     throw new ApiError(400, "Invalid or expired OTP");
   }
@@ -123,8 +125,9 @@ const { email, otp } = req.body;
 
 
 const loginUser = asyncHandler(async(req, res)=>{
-
+console.log("Logging in user");
   const { email, password} = req.body;
+  console.log("Logging in user with email:", email, password);
 
   if(!email){
     throw new ApiError(400, "Email is required");
@@ -168,10 +171,41 @@ return res
 
 })
 
+const logOutUser = asyncHandler(async (req, res) => {
+  
+  await User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set: {
+        refreshToken: undefined
+      }
+    },
+    {
+      new: true
+    }
+  )
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(
+      new ApiResponses(
+        200,
+        {},
+        "user logged out successfully"
+      )
+    )
+})
+
 export {
     sendOtp,
     registerUser,
     verifyOtp,
-    loginUser
+    loginUser,
+    logOutUser
 }
 
