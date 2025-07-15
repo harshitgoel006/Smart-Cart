@@ -1,0 +1,124 @@
+import {asyncHandler} from "../utils/asyncHandler.js";
+import{ApiError} from "../utils/ApiError.js"
+import {User} from "../models/user.model.js"
+import{uploadOnCloudinary} from "../utils/cloudinary.js"
+import {ApiResponse} from "../utils/ApiResponse.js"
+import jwt from "jsonwebtoken";
+import sendEmail from "../utils/sendEmail.js";
+import {OTP} from "../models/otp.model.js";
+
+
+const generateAccessAndRefreshToken = async (userId) =>{
+    try{
+        const user = await User.findById(userId)
+        const accessToken = user.generateAccessToken()
+        const refreshToken = user.generateRefreshToken()
+
+        user.refreshToken = refreshToken
+        await user.save({validateBeforeSave : false})
+
+        return {accessToken, refreshToken}
+    
+    }
+    catch(error){
+        throw new ApiError(500, "Something went wrong while generate access and refresh token");
+    }
+}
+
+
+const sendOtp = asyncHandler(async (req, res) => {
+    const {email, role} = req.body;
+    
+    if(!(email && role)){
+        throw new ApiError(400, "Email and role are required");
+    }
+
+    const existingUser = await User.findOne({email});
+
+    if(existingUser){
+        throw new ApiError(400, "User with this email is already exist");
+    }
+
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    await OTP.deleteMany({email}); // Clear any existing OTP for the email
+    await OTP.create({email, otp});
+
+    const subject = "Your OTP from SmartCart for Signup";
+    const html = `<p> Your OTP is <b>${otp}</b>. It is valid for 10 minute. </p>`;
+
+    await sendEmail(email, subject, html);
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200, 
+            null, 
+            "OTP sent successfully to your email"
+        ));
+
+});
+
+const registerUser = asyncHandler(async (req, res)=> {
+    const {email, fullname, password, role, phone ,otp,username} = req.body;
+    if(!(email && fullname  && password && role && phone)){
+        throw new ApiError(400, "All fields are required");
+    }
+
+    const existingOtp = await OTP.findOne({email});
+
+    if(!existingOtp || existingOtp.otp !== req.body.otp){
+        throw new ApiError(400, "Invalid  OTP");
+    }
+
+    await OTP.deleteOne({email});
+
+    const userExists = await User.findOne({
+    $or: [{ username }, { email }]
+});
+    if (userExists) {
+        throw new ApiError(400, "User with this email or username already exists");
+    }
+
+    const avatarLocalPath = req.files?.avatar[0]?.path;
+
+    if(!avatarLocalPath){
+    throw new ApiError(400, "Avatar file is required")
+}
+
+const avatar = await uploadOnCloudinary(avatarLocalPath);
+
+    const user = await User.create({
+        email,
+        username,
+        fullname,
+        password,
+        role,
+        phone,
+        avatar: avatar.url,
+    });
+
+    const createdUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+)
+
+if(!createdUser){
+    throw new ApiError(500, "Something went wrong while registering the useer")
+}
+
+
+return res.status(201).json(
+    new ApiResponse(200, createdUser, "User registered Successfully")
+)
+
+    
+})
+
+
+
+export {
+    sendOtp,
+    registerUser
+}
+
