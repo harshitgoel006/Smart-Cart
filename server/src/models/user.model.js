@@ -47,6 +47,10 @@ const userSchema = new mongoose.Schema
             enum: ['user', 'seller'],
             default: 'user'
         },
+        refreshToken:{
+          type: String,
+          select: true,
+        },
         
         address: [
   {

@@ -8,7 +8,8 @@ import {
     changeCurrentPassword,
     sendResetOtp,
     verifyResetOtp,
-    resetPassword
+    resetPassword,
+    refreshAccessToken
  } from '../controllers/user.controller.js';
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -75,6 +76,13 @@ router
 .post(
     verifyJWT, 
     changeCurrentPassword
+)
+
+// This route is used to refresh the access token
+router
+.route("/refresh-token")
+.post(
+    refreshAccessToken
 )
 
 
