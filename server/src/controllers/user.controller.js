@@ -392,6 +392,54 @@ const getCurrentUser = asyncHandler(async (req, res)=> {
   )
 })
 
+const updateAccountDetails = asyncHandler(async(req, res)=>{
+  const {fullname, username, phone,email} = req.body;
+
+  if(!(fullname || username || phone || email)){
+    throw new ApiError(400, "At least one field is required to update");
+  }
+  const userId = req.user?._id;
+  const user = await User.findById(req.user?._id).select("-password -refreshToken");
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+  if (email && email !== user.email) {
+    const emailExists = await User.findOne({ email });
+    if (emailExists && emailExists._id.toString() !== userId.toString()) {
+      throw new ApiError(400, "Email is already taken");
+    }
+  }
+
+  if (username && username !== user.username) {
+    const usernameExists = await User.findOne({ username });
+    if (usernameExists && usernameExists._id.toString() !== userId.toString()) {
+      throw new ApiError(400, "Username is already taken");
+    }
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user?._id,
+  {
+    $set:{
+      fullname: fullname || user.fullname,
+      username: username || user.username,
+      phone: phone || user.phone,
+      email: email || user.email
+    }
+  },
+  {new: true}
+).select("-password -refreshToken");
+
+return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      updatedUser,
+      "User account details updated successfully"
+    )
+)
+});
 
 export {
     sendOtp,
@@ -404,7 +452,8 @@ export {
     verifyResetOtp,
     resetPassword,
     refreshAccessToken,
-    getCurrentUser
+    getCurrentUser,
+    updateAccountDetails
   
 }
 

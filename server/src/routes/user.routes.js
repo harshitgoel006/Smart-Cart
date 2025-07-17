@@ -10,7 +10,8 @@ import {
     verifyResetOtp,
     resetPassword,
     refreshAccessToken,
-    getCurrentUser
+    getCurrentUser,
+    updateAccountDetails
  } from '../controllers/user.controller.js';
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -87,12 +88,20 @@ router
     refreshAccessToken
 )
 
-
+// This route is used to get the current user's details
 router
 .route("/get-user")
-.post(
+.get(
     verifyJWT,
     getCurrentUser
+)
+
+// This route is used to update the current user's account details
+router
+.route("/update-account")
+.patch(
+    verifyJWT,
+    updateAccountDetails
 )
 
 
