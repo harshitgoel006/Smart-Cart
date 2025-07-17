@@ -9,10 +9,12 @@ import {
     sendResetOtp,
     verifyResetOtp,
     resetPassword,
-    refreshAccessToken
+    refreshAccessToken,
+    getCurrentUser
  } from '../controllers/user.controller.js';
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+
 
 
 const router = Router();
@@ -83,6 +85,14 @@ router
 .route("/refresh-token")
 .post(
     refreshAccessToken
+)
+
+
+router
+.route("/get-user")
+.post(
+    verifyJWT,
+    getCurrentUser
 )
 
 

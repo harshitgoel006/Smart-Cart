@@ -377,6 +377,21 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
+const getCurrentUser = asyncHandler(async (req, res)=> {
+  if (!req.user) {
+    throw new ApiError(401, "User not authenticated");
+  }
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      req.user,
+      "Current user fetched successfully"
+    )
+  )
+})
+
 
 export {
     sendOtp,
@@ -388,7 +403,8 @@ export {
     sendResetOtp,
     verifyResetOtp,
     resetPassword,
-    refreshAccessToken
+    refreshAccessToken,
+    getCurrentUser
   
 }
 
