@@ -105,6 +105,7 @@ router
     updateAccountDetails
 )
 
+// This route is used to update the user's avatar
 router
 .route("/update-avatar")
 .patch(
@@ -112,4 +113,6 @@ router
     upload.single("avatar"),
     updateUserAvatar
 )
+
+
 export default router;
