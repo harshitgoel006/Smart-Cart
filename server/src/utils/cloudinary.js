@@ -16,11 +16,15 @@ const uploadOnCloudinary = async(localFilePath) => {
         }
         const response = await cloudinary.uploader.upload(localFilePath,{
             resource_type: "auto",
+            folder: "SmartCart/avatars"
         })
         
         fs.unlinkSync(localFilePath);
         
-        return response;
+        return {
+            url: response.secure_url,
+            public_id: response.public_id
+        };
     }
     catch(error){
         fs.unlinkSync(localFilePath);

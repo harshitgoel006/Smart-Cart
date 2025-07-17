@@ -6,6 +6,7 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken";
 import sendEmail from "../utils/sendEmail.js";
 import {OTP} from "../models/otp.model.js";
+import cloudinary from "cloudinary";
 
 
 const generateAccessAndRefreshToken = async (userId) =>{
@@ -390,7 +391,7 @@ const getCurrentUser = asyncHandler(async (req, res)=> {
       "Current user fetched successfully"
     )
   )
-})
+});
 
 const updateAccountDetails = asyncHandler(async(req, res)=>{
   const {fullname, username, phone,email} = req.body;
@@ -441,6 +442,44 @@ return res
 )
 });
 
+const updateUserAvatar = asyncHandler(async (req, res) => {
+  const avatarLocalPath = req.file?.path;
+
+  if (!avatarLocalPath) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, "No avatar uploaded. Nothing was changed"));
+  }
+
+  const user = await User.findById(req.user?._id);
+
+  if (user?.avatar_public_id) {
+    await cloudinary.v2.uploader.destroy(user.avatar_public_id);
+  }
+
+  const avatar = await uploadOnCloudinary(avatarLocalPath);
+
+  if (!avatar?.url || !avatar?.public_id) {
+    throw new ApiError(400, "Failed to upload new avatar");
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        avatar: avatar.url,
+        avatar_public_id: avatar.public_id,
+      },
+    },
+    { new: true }
+  ).select("-password -refreshToken");
+
+  return res.status(200).json(
+    new ApiResponse(200, updatedUser, "User avatar updated successfully")
+  );
+});
+
+
 export {
     sendOtp,
     registerUser,
@@ -453,7 +492,8 @@ export {
     resetPassword,
     refreshAccessToken,
     getCurrentUser,
-    updateAccountDetails
+    updateAccountDetails,
+    updateUserAvatar,
   
 }
 

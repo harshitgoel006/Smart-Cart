@@ -11,7 +11,8 @@ import {
     resetPassword,
     refreshAccessToken,
     getCurrentUser,
-    updateAccountDetails
+    updateAccountDetails,
+    updateUserAvatar
  } from '../controllers/user.controller.js';
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -104,5 +105,11 @@ router
     updateAccountDetails
 )
 
-
+router
+.route("/update-avatar")
+.patch(
+    verifyJWT,
+    upload.single("avatar"),
+    updateUserAvatar
+)
 export default router;

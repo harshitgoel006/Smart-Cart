@@ -34,6 +34,9 @@ const userSchema = new mongoose.Schema
         avatar: {
             type: String,
         },
+        avatar_public_id: {
+            type: String,
+        },
         phone: {
             type: String,
             required: true,
