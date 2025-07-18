@@ -12,10 +12,12 @@ import {
     refreshAccessToken,
     getCurrentUser,
     updateAccountDetails,
-    updateUserAvatar
+    updateUserAvatar,
+    updateAddress
  } from '../controllers/user.controller.js';
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+
 
 
 
@@ -112,6 +114,14 @@ router
     verifyJWT,
     upload.single("avatar"),
     updateUserAvatar
+)
+
+// This route is used to update the user's address
+router
+.route("/update-address")
+.patch(
+    verifyJWT,
+    updateAddress
 )
 
 

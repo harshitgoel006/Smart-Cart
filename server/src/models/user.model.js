@@ -81,10 +81,6 @@ const userSchema = new mongoose.Schema
       type: String,
       default: "India",
     },
-    phoneNumber: {
-      type: String,
-      required: true,
-    },
     isDefault: {
       type: Boolean,
       default: false,

@@ -9,6 +9,13 @@ import {OTP} from "../models/otp.model.js";
 import cloudinary from "cloudinary";
 
 
+
+// ======================================================
+// =============== AUTHENTHICATION HANDLERS ============
+// ======================================================
+
+
+
 const generateAccessAndRefreshToken = async (userId) =>{
     try{
         const user = await User.findById(userId)
@@ -378,6 +385,14 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
+
+
+// ======================================================
+// =============== CUSTOMER ACCOUNT HANDLERS ============
+// ======================================================
+
+
+
 const getCurrentUser = asyncHandler(async (req, res)=> {
   if (!req.user) {
     throw new ApiError(401, "User not authenticated");
@@ -479,6 +494,54 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   );
 });
 
+const updateAddress = asyncHandler(async(req, res)=>{
+  const {label, street, city, state, country, pinCode, isDefault} = req.body;
+  if(!(label && street && city && state && country && pinCode && isDefault)){
+    throw new ApiError(400, "All fields are required");
+  }
+  const user = await User.findById(req.user?._id);
+  if(!user){
+    throw new ApiError(404, "User not found");
+  }
+
+  const updatedAddress = {
+    label,
+    street,
+    city,
+    state,
+    country:country || "India",
+    pincode: pinCode,
+    isDefault: isDefault || false,
+  };
+
+  if (user.address.length === 0) {
+    user.address.push(updatedAddress);
+  } else {
+    
+    user.address[0] = updatedAddress;
+  }
+  await user.save();
+
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200, 
+      user.address[0], 
+      "Address updated successfully"
+    )
+  );
+
+});
+
+
+
+// ======================================================
+// =============== SELLER ACCOUNT HANDLERS ============
+// ======================================================
+
+
+
 
 export {
     sendOtp,
@@ -494,6 +557,7 @@ export {
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,
+    updateAddress
   
 }
 
