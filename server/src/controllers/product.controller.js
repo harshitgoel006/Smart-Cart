@@ -64,7 +64,7 @@ const getAllProducts = asyncHandler(async (req, res)=>{
             )
         )
 
-})
+});
 
 const getProductById = asyncHandler(async (req, res)=>{
     const {productId} = req.params;
@@ -87,11 +87,103 @@ const getProductById = asyncHandler(async (req, res)=>{
             )
         )
 
-})
+});
 
+const getTopRatedProduct = asyncHandler(async(req, res) =>{
+    const limit = parseInt(req.query.limit) || 10;
+
+    const topProduct = await Product
+    .find()
+    .sort({rating: -1})
+    .limit(limit)
+    .populate({
+      path: "seller",
+      select: "fullname email username avatar"
+    });
+
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            topProduct,
+            "Top rated products fetched successfully"
+        )
+    )
+});
+
+const getNewArrivalProduct = asyncHandler(async(req, res)=>{
+    const limit =  parseInt(req.query.limit) || 10;
+
+    const newArrivals = await Product
+    .find()
+    .sort({createdAt : 1})
+    .limit(limit)
+    .populate({
+      path: "seller",
+      select: "fullname email username avatar"
+    });
+
+    return res
+    .status(200)
+    .json(
+    new ApiResponse(
+        200, 
+        newArrivals, 
+        "New arrival products fetched successfully"
+    )
+  );
+});
+
+const getProductsByCategory = asyncHandler(async(req, res)=>{
+    const {categoryId} = req.params;
+    const{sort, page =1, limit = 10} = req.query;
+
+    if(!categoryId){
+        throw new ApiError(400, "category Id is required")
+    }
+
+    const filter = {category: categoryId}
+
+    let sortOption ={}
+    if (sort === "price") sortOption.price = 1;
+    else if (sort === "-price") sortOption.price = -1;
+    else if (sort === "rating") sortOption.rating = -1;
+    else sortOption.createdAt = -1;
+
+    const totalProducts = await Product.countDocuments(filter);
+    const products = await Product
+    .find(filter)
+    .sort(sortOption)
+    .skip((page - 1) * limit)
+    .limit(Number(limit))
+    .populate({
+      path: "seller",
+      select: "fullname email username avatar phone role"
+    });
+
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                total: totalProducts,
+                page: Number(page),
+                limit: Number(limit),
+                products
+            },
+            "Products fetched successfully by category"
+        )
+    )
+
+})
 
 
 export {
     getAllProducts,
-    getProductById
+    getProductById,
+    getTopRatedProduct,
+    getNewArrivalProduct,
+    getProductsByCategory
 }
