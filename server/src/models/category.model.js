@@ -10,12 +10,17 @@ const categorySchema = new mongoose.Schema(
             unique: true
         },
         description:{
-            type: true,
+            type: String,
             default:""
         },
         image:{
             type: String,
             default:""
+        },
+        slug:{
+            type: String,
+            lowercase:true,
+            unique: true
         },
         isFeatured:{
             type: Boolean,
@@ -34,5 +39,10 @@ const categorySchema = new mongoose.Schema(
         timestamps:true
     });
 
-
+    categorySchema.pre("save", async function (next){
+        if(this.isModified("name")){
+            this.slug = this.name.toLowerCase().replace(/\s+/g, "-")
+        }
+        next();
+    })
     export const Category = mongoose.model("Category", categorySchema);
