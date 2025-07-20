@@ -40,19 +40,18 @@ const userSchema = new mongoose.Schema
         phone: {
             type: String,
             required: true,
-            
             minlength: [10, "phone number must be 10 digits"],
             maxlength: [10, "phone number must be 10 digits"],
             trim: true,
         },
         role: {
             type: String,
-            enum: ['user', 'seller'],
-            default: 'user'
+            enum: ['customer', 'seller'],
+            default: 'customer'
         },
         refreshToken:{
           type: String,
-          select: true,
+          select: false,
         },
         
         address: [
@@ -87,6 +86,41 @@ const userSchema = new mongoose.Schema
     }
   }
 ],
+isSellerProfileComplete:{
+    type: Boolean,
+    default: false
+},
+sellerDetails:{
+    shopName:{
+        type:String
+    },
+    shopAddress:{
+        type:String,
+    },
+    gstNumber: {
+        type: String,
+        validate: {
+            validator: function (v) {
+                return /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(v);
+            },
+            message: props => `${props.value} is not a valid GST number!`
+        }
+    },
+
+    businessType:{
+        type:String
+    },
+    bankAccountNumber:{
+        type:String,
+    },
+    ifscCode:{
+        type:String
+    },
+    upiId:{
+        type:String
+    }
+}
+
 },
     {timestamps: true}
 )
