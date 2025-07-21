@@ -180,10 +180,60 @@ const getProductsByCategory = asyncHandler(async(req, res)=>{
 })
 
 
+ const createProduct = asyncHandler(async (req, res) => {
+  const {
+    name,
+    description,
+    price,
+    stock,
+    brand,
+    category
+  } = req.body;
+
+  if (!name || !description || !price || !stock || !brand || !category) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  const localImagePaths = req.files?.map(file => file.path);
+
+  if (!localImagePaths || localImagePaths.length === 0) {
+    throw new ApiError(400, "At least one image is required");
+  }
+
+  const uploadedImages = [];
+
+  for (const localPath of localImagePaths) {
+    const result = await uploadOnCloudinary(localPath);
+    if (result?.url && result?.public_id) {
+      uploadedImages.push({
+        url: result.url,
+        public_id: result.public_id
+      });
+    }
+  }
+
+  const product = await Product.create({
+    name,
+    description,
+    price,
+    stock,
+    brand,
+    category,
+    images: uploadedImages, // add here
+    seller: req.user?._id,
+  });
+
+  return res
+    .status(201)
+    .json(new ApiResponse(201, product, "Product created successfully"));
+});
+
+
 export {
     getAllProducts,
     getProductById,
     getTopRatedProduct,
     getNewArrivalProduct,
-    getProductsByCategory
+    getProductsByCategory,
+    createProduct
 }

@@ -4,10 +4,12 @@ import {
     getNewArrivalProduct,
     getProductById,
     getProductsByCategory,
-    getTopRatedProduct
+    getTopRatedProduct,
+    createProduct
  } from "../controllers/product.controller.js";
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { authorizedRole } from "../middlewares/authorizeRole.middleware.js";
 
 const router = Router();
 
@@ -25,5 +27,14 @@ router.route("/new-arrivals").get(getNewArrivalProduct)
 
 // 
 router.route("/category/:categoryId").get(getProductsByCategory)
+
+
+router.route("/create").post(
+  verifyJWT,
+  authorizedRole("seller"),
+  upload.array("images", 5), // max 5 files
+  createProduct
+);
+
 
 export default router;
