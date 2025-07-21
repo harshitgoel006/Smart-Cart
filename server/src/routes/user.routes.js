@@ -13,11 +13,12 @@ import {
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,
-    updateAddress
+    updateAddress,
+    getSellerProfile
  } from '../controllers/user.controller.js';
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-
+import {authorizedRole} from "../middlewares/authorizeRole.middleware.js"
 
 
 
@@ -122,6 +123,23 @@ router
 .patch(
     verifyJWT,
     updateAddress
+)
+
+// This route is used for to get seller profile
+router
+.route("/seller/profile")
+.get(
+    verifyJWT,
+    authorizedRole("SELLER"), 
+    getSellerProfile)
+
+
+router
+.route("/seller/update-account")
+.patch(
+    verifyJWT,
+    authorizedRole("SELLER"), 
+    updateAccountDetails
 )
 
 

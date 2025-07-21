@@ -542,6 +542,85 @@ const updateAddress = asyncHandler(async(req, res)=>{
 
 
 
+const getSellerProfile =  asyncHandler(async(req, res) =>{
+  if(!req.user || req.user.role !== "SELLER"){
+    throw new ApiError(403, "Acess denied. Only seller can access ")
+  }
+  const seller = await User.findById(req.user._id)
+  .select("-password -refreshToken -otp")
+
+  if(!seller){
+    throw new ApiError(404, "Seller not found");
+  }
+
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      seller,
+      "Seller profile fetched successfully"
+    ))
+
+});
+
+const updateSellerProfile = asyncHandler(async(req,res) =>{
+  if(!req.user || req.user.role !== "SELLER"){
+    throw new ApiError(403, "Acess denied. Only seller can access ")
+  }
+   const {fullname, username, phone,email,shopeName, shopAddress, gstNumber, businessType,bankAccountNumber,ifscCode,upiId,accountHolderName} = req.body;
+
+  if(!(fullname || username || phone || email || shopeName || shopAddress || gstNumber || businessType ||bankAccountNumber || ifscCode || upiId ||accountHolderName)){
+    throw new ApiError(400, "At least one field is required to update");
+  }
+  const userId = req.user?._id;
+  const user = await User.findById(req.user?._id).select("-password -refreshToken");
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+  if (email && email !== user.email) {
+    const emailExists = await User.findOne({ email });
+    if (emailExists && emailExists._id.toString() !== userId.toString()) {
+      throw new ApiError(400, "Email is already taken");
+    }
+  }
+
+  if (username && username !== user.username) {
+    const usernameExists = await User.findOne({ username });
+    if (usernameExists && usernameExists._id.toString() !== userId.toString()) {
+      throw new ApiError(400, "Username is already taken");
+    }
+  }
+
+  const updatedSeller = await User.findByIdAndUpdate(
+    req.user?._id,
+  {
+    $set:{
+      fullname: fullname || user.fullname,
+      username: username || user.username,
+      phone: phone || user.phone,
+      email: email || user.email,
+      shopeName: shopeName || user.shopeName, 
+      shopAddress: shopAddress || user.shopAddress,gstNumber: gstNumber || user.gstNumber, businessType: businessType || user.businessType,bankAccountNumber: bankAccountNumber || user.bankAccountNumber, 
+      ifscCode : ifscCode || user.ifscCode,
+      upiId: upiId || user.upiId,
+      accountHolderName: accountHolderName|| user.accountHolderName
+
+    }
+  },
+  {new: true}
+).select("-password -refreshToken");
+
+return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      updatedSeller,
+      "User account details updated successfully"
+    )
+)
+})
 
 export {
     sendOtp,
@@ -557,7 +636,9 @@ export {
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,
-    updateAddress
+    updateAddress,
+    getSellerProfile,
+    updateSellerProfile
   
 }
 
