@@ -25,10 +25,10 @@ router.route("/top-rated").get(getTopRatedProduct);
 // This route is used to get new arrivals product
 router.route("/new-arrivals").get(getNewArrivalProduct)
 
-// 
+// This route is used to get product by category
 router.route("/category/:categoryId").get(getProductsByCategory)
 
-
+// This route is used to create product
 router.route("/create").post(
   verifyJWT,
   authorizedRole("seller"),

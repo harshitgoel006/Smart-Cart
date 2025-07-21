@@ -7,6 +7,13 @@ import  jwt  from "jsonwebtoken";
 
 
 
+
+// ======================================================
+// =============== CUSTOMER PANNEL HANDLERS =============
+// ======================================================
+
+
+
 const getAllProducts = asyncHandler(async (req, res)=>{
     const {search , category, minPrice,maxPrice, sort , page = 1, limit = 10} = req.query;
     const filter = {};
@@ -177,10 +184,19 @@ const getProductsByCategory = asyncHandler(async(req, res)=>{
         )
     )
 
-})
+});
 
 
- const createProduct = asyncHandler(async (req, res) => {
+
+
+// ======================================================
+// =============== SELLER PANNEL HANDLERS ===============
+// ======================================================
+
+
+
+
+const createProduct = asyncHandler(async (req, res) => {
   const {
     name,
     description,
