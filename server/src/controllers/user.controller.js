@@ -7,6 +7,9 @@ import jwt from "jsonwebtoken";
 import sendEmail from "../utils/sendEmail.js";
 import {OTP} from "../models/otp.model.js";
 import cloudinary from "cloudinary";
+import{Order} from "../models/order.model.js";
+import {Product} from "../models/product.model.js";
+import mongoose from "mongoose"
 
 
 
@@ -620,7 +623,118 @@ return res
       "User account details updated successfully"
     )
 )
-})
+});
+
+const getProductWiseBreakdown = asyncHandler(async (req, res) => {
+  const sellerId = req.user._id;
+
+  const data = await Order.aggregate([
+    { $unwind: "$items" },
+    { $match: { "items.seller": new mongoose.Types.ObjectId(sellerId) } },
+    {
+      $group: {
+        _id: "$items.product",
+        totalUnitsSold: { $sum: "$items.quantity" },
+        totalRevenue: { $sum: { $multiply: ["$items.quantity", "$items.price"] } },
+      },
+    },
+    {
+      $lookup: {
+        from: "products",
+        localField: "_id",
+        foreignField: "_id",
+        as: "productDetails",
+      },
+    },
+    { $unwind: "$productDetails" },
+    {
+      $project: {
+        _id: 0,
+        productId: "$_id",
+        name: "$productDetails.name",
+        totalUnitsSold: 1,
+        totalRevenue: 1,
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    success: true,
+    data,
+  });
+});
+
+const getTopSellingItems = asyncHandler(async (req, res) => {
+  const sellerId = req.user._id;
+
+  const topProducts = await Order.aggregate([
+    { $unwind: "$items" },
+    { $match: { "items.seller": new mongoose.Types.ObjectId(sellerId) } },
+    {
+      $group: {
+        _id: "$items.product",
+        totalUnitsSold: { $sum: "$items.quantity" },
+      },
+    },
+    { $sort: { totalUnitsSold: -1 } },
+    { $limit: 5 },
+    {
+      $lookup: {
+        from: "products",
+        localField: "_id",
+        foreignField: "_id",
+        as: "productDetails",
+      },
+    },
+    { $unwind: "$productDetails" },
+    {
+      $project: {
+        productId: "$_id",
+        name: "$productDetails.name",
+        totalUnitsSold: 1,
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    success: true,
+    topProducts,
+  });
+});
+
+const getDailySalesData = asyncHandler(async (req, res) => {
+  const sellerId = req.user._id;
+
+  const dailyData = await Order.aggregate([
+    { $unwind: "$items" },
+    { $match: { "items.seller": new mongoose.Types.ObjectId(sellerId) } },
+    {
+      $group: {
+        _id: {
+          date: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+          },
+        },
+        totalRevenue: { $sum: { $multiply: ["$items.quantity", "$items.price"] } },
+        totalOrders: { $sum: 1 },
+      },
+    },
+    { $sort: { "_id.date": 1 } },
+    {
+      $project: {
+        date: "$_id.date",
+        totalRevenue: 1,
+        totalOrders: 1,
+        _id: 0,
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    success: true,
+    dailyData,
+  });
+});
 
 export {
     sendOtp,
@@ -638,7 +752,10 @@ export {
     updateUserAvatar,
     updateAddress,
     getSellerProfile,
-    updateSellerProfile
+    updateSellerProfile,
+    getProductWiseBreakdown,
+    getTopSellingItems,
+    getDailySalesData
   
 }
 

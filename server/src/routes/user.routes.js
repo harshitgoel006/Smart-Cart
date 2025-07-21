@@ -142,5 +142,22 @@ router
     updateAccountDetails
 )
 
+router.route("/seller/product-breakdown")
+.get(
+    authorizedRole("seller"),
+    getProductWiseBreakdown
+)
+
+router.route("/seller/top-products")
+.get(
+    authorizedRole("seller"),
+    getTopSellingItems
+)
+
+router.route("/seller/daily-sales")
+.get(
+    authorizedRole("seller"),
+    getDailySalesData
+)
 
 export default router;
