@@ -133,7 +133,7 @@ router
 .route("/seller/profile")
 .get(
     verifyJWT,
-    authorizedRole("SELLER"), 
+    authorizedRole("seller"), 
     getSellerProfile)
 
 
@@ -141,7 +141,7 @@ router
 .route("/seller/update-account")
 .patch(
     verifyJWT,
-    authorizedRole("SELLER"), 
+    authorizedRole("seller"), 
     updateAccountDetails
 )
 

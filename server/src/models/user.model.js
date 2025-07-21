@@ -86,14 +86,15 @@ const userSchema = new mongoose.Schema
     }
   }
 ],
+shopName:{
+        type:String
+    },
 isSellerProfileComplete:{
     type: Boolean,
     default: false
 },
-sellerDetails:{
-    shopName:{
-        type:String
-    },
+
+    
     shopAddress:{
         type:String,
     },
@@ -122,9 +123,8 @@ sellerDetails:{
     upiId:{
         type:String
     }
-}
-
 },
+
     {timestamps: true}
 )
 
