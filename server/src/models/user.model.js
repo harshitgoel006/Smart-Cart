@@ -110,6 +110,9 @@ sellerDetails:{
     businessType:{
         type:String
     },
+    accountHolderName:{
+        type:String
+    },
     bankAccountNumber:{
         type:String,
     },
