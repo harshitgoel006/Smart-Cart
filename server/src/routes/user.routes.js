@@ -17,7 +17,8 @@ import {
     getSellerProfile,
     getDailySalesData,
     getProductWiseBreakdown,
-    getTopSellingItems
+    getTopSellingItems,
+    updateSellerProfile
  } from '../controllers/user.controller.js';
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -139,10 +140,10 @@ router
 
 router
 .route("/seller/update-account")
-.patch(
+.post(
     verifyJWT,
     authorizedRole("seller"), 
-    updateAccountDetails
+    updateSellerProfile
 )
 
 router.route("/seller/product-breakdown")

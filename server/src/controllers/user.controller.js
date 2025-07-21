@@ -568,109 +568,57 @@ const getSellerProfile =  asyncHandler(async(req, res) =>{
 });
 
 const updateSellerProfile = asyncHandler(async (req, res) => {
-  const userId = req.user?._id;
-
-  if (!req.user || req.user.role !== "seller") {
-    throw new ApiError(403, "Access denied. Only sellers can access this route");
-  }
+  const userId = req.user._id;
 
   const {
-    fullname,
-    username,
-    phone,
-    email,
-    shopName,
-    shopAddress,
-    gstNumber,
-    businessType,
-    bankAccountNumber,
-    ifscCode,
-    upiId,
-    accountHolderName
+    fullname, email, username, phone,
+    shopName, shopAddress, gstNumber, businessType, 
+    accountHolderName, bankAccountNumber, ifscCode, upiId 
   } = req.body;
 
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new ApiError(404, "User not found");
+  const seller = await User.findById(userId);
+
+  if (!seller) {
+    throw new ApiError(404, "Seller not found");
   }
 
-  // Check if email or username is already taken
-  if (email && email !== user.email) {
-    const existingEmail = await User.findOne({ email });
-    if (existingEmail && existingEmail._id.toString() !== userId.toString()) {
-      throw new ApiError(400, "Email already taken");
-    }
+  if (seller.role !== "seller") {
+    throw new ApiError(403, "Only sellers can update seller profile");
   }
 
-  if (username && username !== user.username) {
-    const existingUsername = await User.findOne({ username });
-    if (existingUsername && existingUsername._id.toString() !== userId.toString()) {
-      throw new ApiError(400, "Username already taken");
-    }
-  }
+  // ✅ Registration fields (except password/avatar)
+  if (fullname) seller.fullname = fullname;
+  if (email) seller.email = email;
+  if(username) seller.username = username;
+  if(phone) seller.phone = phone;
 
-  // Update all provided fields
-  const sellerFields = {
-    fullname,
-    username,
-    phone,
-    email,
-    shopName,
-    shopAddress,
-    gstNumber,
-    businessType,
-    bankAccountNumber,
-    ifscCode,
-    upiId,
-    accountHolderName
-  };
+  // ✅ Seller profile fields
+  if (shopName) seller.shopName = shopName;
+  if (shopAddress) seller.shopAddress = shopAddress;
+  if (gstNumber) seller.gstNumber = gstNumber;
+  if (businessType) seller.businessType = businessType;
+  if (accountHolderName) seller.accountHolderName = accountHolderName;
+  if (bankAccountNumber) seller.bankAccountNumber = bankAccountNumber;
+  if (ifscCode) seller.ifscCode = ifscCode;
+  if (upiId) seller.upiId = upiId;
 
-  // Remove undefined or empty fields to avoid overwriting with empty values
-  const updatedFields = {};
-  Object.entries(sellerFields).forEach(([key, value]) => {
-    if (value !== undefined && value !== "") {
-      updatedFields[key] = value;
-    }
-  });
+  // ✅ Check profile completeness
+  const allFieldsFilled = seller.shopName && seller.shopAddress && seller.gstNumber &&
+    seller.businessType && seller.accountHolderName && seller.bankAccountNumber &&
+    seller.ifscCode && seller.upiId;
+if(allFieldsFilled){
+  seller.isSellerProfileComplete = true;
+}
+else{
+  seller.isSellerProfileComplete = false;
+}
 
-  // Check if all required fields for seller are now filled
-  const requiredFields = [
-    "shopName",
-    "shopAddress",
-    "gstNumber",
-    "businessType",
-    "bankAccountNumber",
-    "ifscCode",
-    "upiId",
-    "accountHolderName"
-  ];
-
-  const allFieldsFilled = requiredFields.every(field =>
-    (updatedFields[field] || user[field]) // check if it's being updated OR already exists in DB
-  );
-
-  if (allFieldsFilled) {
-    updatedFields.isSellerProfileCompleted = true;
-  }
-
-  const updatedSeller = await User.findByIdAndUpdate(
-    userId,
-    { $set: updatedFields },
-    { new: true }
-  ).select("-password -refreshToken");
+  await seller.save();
 
   return res.status(200).json(
-    new ApiResponse(
-      200,
-      updatedSeller,
-      updatedFields.isSellerProfileCompleted
-        ? "Seller profile completed successfully"
-        : "Seller profile updated successfully"
-    )
+    new ApiResponse(200, seller, "Seller profile updated successfully")
   );
 });
-
-
 
 const getProductWiseBreakdown = asyncHandler(async (req, res) => {
   const sellerId = req.user._id;
