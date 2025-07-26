@@ -18,7 +18,8 @@ import {
     getDailySalesData,
     getProductWiseBreakdown,
     getTopSellingItems,
-    updateSellerProfile
+    updateSellerProfile,
+    deactivateAccount
  } from '../controllers/user.controller.js';
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -94,6 +95,14 @@ router
 .route("/refresh-token")
 .post(
     refreshAccessToken
+)
+
+// This route is used for deactivate the account
+router
+.route("/deactivate-account")
+.post(
+    verifyJWT,
+    deactivateAccount
 )
 
 // This route is used to get the current user's details

@@ -111,7 +111,8 @@ const registerUser = asyncHandler(async (req, res)=>{
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong while registering user");
   }
-
+  await User.findOneAndUpdate({email},{isEmailVerified:true},{new:true});
+ 
   return res.status(201).json(
     new ApiResponse(200, createdUser, "User registered successfully")
   );
@@ -134,7 +135,6 @@ const { email, otp } = req.body;
   }
 
   await OTP.deleteOne({ email });
-
   return res.status(200).json(
     new ApiResponse(200, null, "OTP verified successfully")
   );
@@ -153,12 +153,25 @@ const user = await User.findOne({email}).select("+password +refreshToken")
 if(!user){
     throw new ApiError(404, "User does not exist")
 }
-
+if(!user.isActive || user.isDeleted){
+  throw new ApiError(403, "Your account is inactive or deleted. Contact support.")
+}
+if(user.role === "seller"){
+  if(!user.isSellerApproved){
+    throw new ApiError(403, "Seller account is not approved yet")
+  }
+  if(user.isSellerSuspended){
+    throw new ApiError(403, "Your account is suspended. Contact support.")
+  }
+}
 const isPasswordValid = await user.isPasswordCorrect(password)
 if(!isPasswordValid){
     throw new ApiError(401, "Invalid user credentials")
 }
 
+if(!user.isEmailVerified){
+  throw new ApiError(401, "Email not verified yet. Please verify your email first.")
+}
 const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id)
 
 const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
@@ -388,6 +401,19 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
+const deactivateAccount = asyncHandler(async(req, res) =>{
+  await User.findByIdAndUpdate(req.user._id,{isActive: false});
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      {},
+      "Account deactivated successfully"
+    )
+  )
+})
+
 
 
 // ======================================================
@@ -448,6 +474,7 @@ const updateAccountDetails = asyncHandler(async(req, res)=>{
   },
   {new: true}
 ).select("-password -refreshToken");
+
 
 return res
   .status(200)
@@ -586,13 +613,14 @@ const updateSellerProfile = asyncHandler(async (req, res) => {
     throw new ApiError(403, "Only sellers can update seller profile");
   }
 
-  // ✅ Registration fields (except password/avatar)
+ 
   if (fullname) seller.fullname = fullname;
   if (email) seller.email = email;
+  seller.isEmailVerified = false;
   if(username) seller.username = username;
   if(phone) seller.phone = phone;
 
-  // ✅ Seller profile fields
+ 
   if (shopName) seller.shopName = shopName;
   if (shopAddress) seller.shopAddress = shopAddress;
   if (gstNumber) seller.gstNumber = gstNumber;
@@ -602,10 +630,31 @@ const updateSellerProfile = asyncHandler(async (req, res) => {
   if (ifscCode) seller.ifscCode = ifscCode;
   if (upiId) seller.upiId = upiId;
 
-  // ✅ Check profile completeness
-  const allFieldsFilled = seller.shopName && seller.shopAddress && seller.gstNumber &&
-    seller.businessType && seller.accountHolderName && seller.bankAccountNumber &&
-    seller.ifscCode && seller.upiId;
+  if(req.file){
+    if(seller.storeBanner){
+      await 
+      cloudinary.v2.uploader.destroy(seller.storeBanner_public_id);
+    }
+    const uploadResult = await uploadOnCloudinary(req.file.path);
+    if(!uploadResult.url || !uploadResult.public_id){
+      throw new ApiError(400, "Failed to upload new store Banner")
+    }
+    seller.storeBanner = uploadResult.url;
+    seller.storeBanner_public_id = uploadResult.public_id;
+  }
+
+
+  const allFieldsFilled = 
+  seller.shopName && 
+  seller.shopAddress && 
+  seller.gstNumber &&
+  seller.businessType && 
+  seller.accountHolderName && 
+  seller.bankAccountNumber &&
+  seller.ifscCode && 
+  seller.upiId && 
+  seller.storeBanner;
+
 if(allFieldsFilled){
   seller.isSellerProfileComplete = true;
 }
@@ -742,6 +791,7 @@ export {
     verifyResetOtp,
     resetPassword,
     refreshAccessToken,
+    deactivateAccount,
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,

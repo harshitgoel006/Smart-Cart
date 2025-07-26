@@ -53,78 +53,100 @@ const userSchema = new mongoose.Schema
           type: String,
           select: false,
         },
-        
+        isActive:{
+            type:Boolean,
+            default:true
+        },
+        isDeleted:{
+            type:Boolean,
+            default:false
+        },
+        isEmailVerified:{
+            type:Boolean,
+            default:false
+        },
+        isPhoneVerified:{
+            type:Boolean,
+            default:false
+        },
         address: [
-  {
-    label: {
-      type: String,  
-      required: true,
-    },
-    street: {
-      type: String,
-      required: true,
-    },
-    city: {
-      type: String,
-      required: true,
-    },
-    state: {
-      type: String,
-      required: true,
-    },
-    pincode: {
-      type: String,
-      required: true,
-    },
-    country: {
-      type: String,
-      default: "India",
-    },
-    isDefault: {
-      type: Boolean,
-      default: false,
-    }
-  }
-],
-shopName:{
-        type:String
-    },
-isSellerProfileComplete:{
-    type: Boolean,
-    default: false
-},
-
-    
-    shopAddress:{
-        type:String,
-    },
-    gstNumber: {
-        type: String,
-        validate: {
-            validator: function (v) {
-                return /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(v);
-            },
-            message: props => `${props.value} is not a valid GST number!`
+            {
+                label: {
+                    type: String,
+                    required: true,
+                },
+                street: {
+                    type: String,
+                    required: true,
+                },
+                city: {
+                    type: String,
+                    required: true,
+                },
+                state: {
+                    type: String,
+                    required: true,
+                },
+                pincode: {
+                    type: String,
+                    required: true,
+                },
+                country: {
+                    type: String,
+                    default: "India",
+                },
+                isDefault: {
+                    type: Boolean,
+                    default: false,
+                }
+            }
+        ],
+        shopName:{
+            type:String
+        },
+        shopBanner:{
+            type:String
+        },
+        isSellerApproved:{
+            type:Boolean,
+            default:false
+        },
+        isSellerSuspended:{
+            type:Boolean,
+            default:false
+        },
+        isSellerProfileComplete:{
+            type: Boolean,
+            default: false
+        },
+        shopAddress:{
+            type:String,
+        },
+        gstNumber: {
+            type: String,
+            validate: {
+                validator: function (v) {
+                    return /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(v);
+                },
+                message: props => `${props.value} is not a valid GST number!`
+            }
+        },
+        businessType:{
+            type:String
+        },
+        accountHolderName:{
+            type:String
+        },
+        bankAccountNumber:{
+            type:String,
+        },
+        ifscCode:{
+            type:String
+        },
+        upiId:{
+            type:String
         }
     },
-
-    businessType:{
-        type:String
-    },
-    accountHolderName:{
-        type:String
-    },
-    bankAccountNumber:{
-        type:String,
-    },
-    ifscCode:{
-        type:String
-    },
-    upiId:{
-        type:String
-    }
-},
-
     {timestamps: true}
 )
 

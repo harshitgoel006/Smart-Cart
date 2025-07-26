@@ -16,8 +16,14 @@ export const verifyJWT = asyncHandler(async(req, res, next) => {
      
    const user =  await User.findById(decodedToken?._id).select("-password -refreshToken")
    if(!user){
-     // next_video: discuss about frontend
      throw new ApiError(401,"Invalid Access Token")
+   }
+
+   if(!user.isActive || user.isDeleted){
+    throw new ApiError(403, "Your account is inactive or deleted.")
+   }
+   if(user.role === "seller" && (user.isSellerSuspended || !user.isSellerApproved)){
+    throw new ApiError(403, "Seller account not allowed. Contact support")
    }
  
    req.user = user;
