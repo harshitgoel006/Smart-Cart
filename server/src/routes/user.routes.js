@@ -19,7 +19,15 @@ import {
     getProductWiseBreakdown,
     getTopSellingItems,
     updateSellerProfile,
-    deactivateAccount
+    deactivateAccount,
+    approveSeller,
+    suspendSeller,
+    unsuspendSeller,
+    getAllUsers,
+    getAllSellers,
+    getAllCustomers,
+    reactivateUserAccount,
+    deactivateUserAccount
  } from '../controllers/user.controller.js';
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -30,7 +38,14 @@ import {authorizedRole} from "../middlewares/authorizeRole.middleware.js"
 const router = Router();
 
 
-// This route is used to register a new user
+
+// ======================================================
+// =============== AUTHENTHICATION HANDLERS ============
+// ======================================================
+
+
+
+// registration of user - {customer, seller, admin}
 router.route("/register").post(
     upload.fields([
         {
@@ -41,32 +56,32 @@ router.route("/register").post(
     registerUser
 )
 
-// This route is used to send OTP to the user for verification
+// send otp for registration
 router
 .route("/send-otp")
 .post(sendOtp);
 
-// This route is used to verify the OTP sent to the user
+// verify otp through email
 router
 .route("/verify-otp")
 .post(verifyOtp)
 
-// This route is used to login the user
+// login of user - {customer, seller, admin}
 router
 .route("/login")
 .post(loginUser);
 
-// This route is used to send reset OTP to the user
+// sending otp for forget password
 router
 .route("/send-reset-otp")
 .post(sendResetOtp);
 
-// This route is used to verify the reset OTP sent to the user
+// verify the reset otp 
 router
 .route("/verify-reset-otp")
 .post(verifyResetOtp);
 
-// This route is used to reset the user's password
+// change the password through otp via email
 router
 .route("/reset-password")
 .post(resetPassword);
@@ -74,7 +89,7 @@ router
 
 // secured routes
 
-// This route is used to logout the user
+// logout of user -{customer, seller, admin}
 router
 .route("/logout")
 .post(
@@ -82,7 +97,7 @@ router
     logoutUser
 )
 
-// This route is used to change the current user's password
+// change of current password through old password
 router
 .route("/change-password")
 .post(
@@ -90,38 +105,14 @@ router
     changeCurrentPassword
 )
 
-// This route is used to refresh the access token
+//  refreshing access token
 router
 .route("/refresh-token")
 .post(
     refreshAccessToken
 )
 
-// This route is used for deactivate the account
-router
-.route("/deactivate-account")
-.post(
-    verifyJWT,
-    deactivateAccount
-)
-
-// This route is used to get the current user's details
-router
-.route("/get-user")
-.get(
-    verifyJWT,
-    getCurrentUser
-)
-
-// This route is used to update the current user's account details
-router
-.route("/update-account")
-.patch(
-    verifyJWT,
-    updateAccountDetails
-)
-
-// This route is used to update the user's avatar
+// update user avatar - {customer, seller, admin}
 router
 .route("/update-avatar")
 .patch(
@@ -130,7 +121,7 @@ router
     updateUserAvatar
 )
 
-// This route is used to update the user's address
+// update address of user - {customer, seller, admin}
 router
 .route("/update-address")
 .patch(
@@ -138,15 +129,49 @@ router
     updateAddress
 )
 
-// This route is used for to get seller profile
+
+
+// ======================================================
+// =============== CUSTOMER ACCOUNT HANDLERS ============
+// ======================================================
+
+
+
+//  customer fetch profile 
+router
+.route("/get-user")
+.get(
+    verifyJWT,
+    getCurrentUser
+)
+
+// customer update profile
+router
+.route("/update-account")
+.patch(
+    verifyJWT,
+    updateAccountDetails
+)
+
+
+
+// ======================================================
+// =============== SELLER ACCOUNT HANDLERS ==============
+// ======================================================
+
+
+
+//  seller fetch profile 
 router
 .route("/seller/profile")
 .get(
     verifyJWT,
     authorizedRole("seller"), 
-    getSellerProfile)
+    getSellerProfile
+)
 
 
+// seller update profile or complete profile if not
 router
 .route("/seller/update-account")
 .post(
@@ -155,22 +180,89 @@ router
     updateSellerProfile
 )
 
+// seller get product wise breakdown analysis
 router.route("/seller/product-breakdown")
 .get(
     authorizedRole("seller"),
     getProductWiseBreakdown
 )
 
+// seller get top selling items 
 router.route("/seller/top-products")
 .get(
     authorizedRole("seller"),
     getTopSellingItems
 )
 
+// seller get daily sales data
 router.route("/seller/daily-sales")
 .get(
     authorizedRole("seller"),
     getDailySalesData
+)
+
+
+
+// ======================================================
+// =============== ADMIN ACCOUNT HANDLERS ===============
+// ======================================================
+
+
+
+// admin approve seller
+router.route("/admin/sellers/:id/approve")
+.post(verifyJWT,
+    authorizedRole("admin"),
+    approveSeller
+)
+
+// admin suspend seller
+router.route("/admin/sellers/:id/suspend")
+.post(verifyJWT,
+    authorizedRole("admin"),
+    suspendSeller
+)
+
+// admin unsuspend seller
+router.route("/admin/sellers/:id/unsuspend")
+.post(verifyJWT,
+    authorizedRole("admin"),
+    unsuspendSeller
+)
+
+// admin get all user- (customer + seller)
+router.route("/admin/users")
+.post(verifyJWT,
+    authorizedRole("admin"),
+    getAllUsers
+)
+
+// admin get all seller
+router.route("/admin/sellers")
+.post(verifyJWT,
+    authorizedRole("admin"),
+    getAllSellers
+)
+
+// admin get all customer
+router.route("/admin/customers")
+.post(verifyJWT,
+    authorizedRole("admin"),
+    getAllCustomers
+)
+
+// admin can activate user account again
+router.route("/admin/users/:id/reactivate")
+.post(verifyJWT,
+    authorizedRole("admin"),
+    reactivateUserAccount
+)
+
+// admin can deactivate user account
+router.route("/admin/users/:id/deactivate")
+.post(verifyJWT,
+    authorizedRole("admin"),
+    deactivateUserAccount
 )
 
 export default router;

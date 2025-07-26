@@ -18,7 +18,7 @@ import mongoose from "mongoose"
 // ======================================================
 
 
-
+// generate refresh and access token
 const generateAccessAndRefreshToken = async (userId) =>{
     try{
         const user = await User.findById(userId)
@@ -36,6 +36,7 @@ const generateAccessAndRefreshToken = async (userId) =>{
     }
 };
 
+// send otp for registration
 const sendOtp = asyncHandler(async (req, res) => {
     const {email, role} = req.body;
     
@@ -76,6 +77,7 @@ const sendOtp = asyncHandler(async (req, res) => {
 
 });
 
+// registration of user - {customer, seller, admin}
 const registerUser = asyncHandler(async (req, res)=>{
    const { email, username, fullname, password, role, phone } = req.body;
 
@@ -118,6 +120,7 @@ const registerUser = asyncHandler(async (req, res)=>{
   );
 });
 
+// verify otp through email
 const verifyOtp = asyncHandler(async (req, res) => {
 
 const { email, otp } = req.body;
@@ -140,6 +143,7 @@ const { email, otp } = req.body;
   );
 });
 
+// login of user - {customer, seller, admin}
 const loginUser = asyncHandler(async (req, res) => {
    
 
@@ -197,6 +201,7 @@ return res
 
 });
 
+// logout of user -{customer, seller, admin}
 const logoutUser = asyncHandler(async(req,res) =>{
     await User.findByIdAndUpdate(
         req.user._id,
@@ -222,6 +227,7 @@ return res
     
 });
 
+// change of current password through old password
 const changeCurrentPassword = asyncHandler(async (req, res)=>{
 
   const {oldPassword, newPassword} = req.body;
@@ -258,6 +264,7 @@ const isSame = await user.isPasswordCorrect(newPassword);
 
 });
 
+// sending otp for forget password
 const sendResetOtp = asyncHandler(async (req, res)=>{
   const {email} = req.body;
     
@@ -304,6 +311,7 @@ Team SmartCart</p>`;
         ));
 });
 
+// verify the reset otp 
 const verifyResetOtp = asyncHandler(async (req, res) => {
   const { email, otp } = req.body;
   if (!email || !otp) {
@@ -326,6 +334,7 @@ const verifyResetOtp = asyncHandler(async (req, res) => {
   );
 });
 
+// change the password through otp via email
 const resetPassword = asyncHandler(async (req, res)=>{
   const {email, newPassword} = req.body;
   if(!(email && newPassword)){
@@ -354,6 +363,7 @@ const resetPassword = asyncHandler(async (req, res)=>{
   );
 });
 
+//  refreshing access token
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken =
     req.cookies.refreshToken || req.body.refreshToken || req.query.refreshToken;
@@ -401,18 +411,85 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
-const deactivateAccount = asyncHandler(async(req, res) =>{
-  await User.findByIdAndUpdate(req.user._id,{isActive: false});
+// update user avatar - {customer, seller, admin}
+const updateUserAvatar = asyncHandler(async (req, res) => {
+  const avatarLocalPath = req.file?.path;
+
+  if (!avatarLocalPath) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, null, "No avatar uploaded. Nothing was changed"));
+  }
+
+  const user = await User.findById(req.user?._id);
+
+  if (user?.avatar_public_id) {
+    await cloudinary.v2.uploader.destroy(user.avatar_public_id);
+  }
+
+  const avatar = await uploadOnCloudinary(avatarLocalPath);
+
+  if (!avatar?.url || !avatar?.public_id) {
+    throw new ApiError(400, "Failed to upload new avatar");
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: {
+        avatar: avatar.url,
+        avatar_public_id: avatar.public_id,
+      },
+    },
+    { new: true }
+  ).select("-password -refreshToken");
+
+  return res.status(200).json(
+    new ApiResponse(200, updatedUser, "User avatar updated successfully")
+  );
+});
+
+// update address of user - {customer, seller, admin}
+const updateAddress = asyncHandler(async(req, res)=>{
+  const {label, street, city, state, country, pinCode, isDefault} = req.body;
+  if(!(label && street && city && state && country && pinCode && isDefault)){
+    throw new ApiError(400, "All fields are required");
+  }
+  const user = await User.findById(req.user?._id);
+  if(!user){
+    throw new ApiError(404, "User not found");
+  }
+
+  const updatedAddress = {
+    label,
+    street,
+    city,
+    state,
+    country:country || "India",
+    pincode: pinCode,
+    isDefault: isDefault || false,
+  };
+
+  if (user.address.length === 0) {
+    user.address.push(updatedAddress);
+  } else {
+    
+    user.address[0] = updatedAddress;
+  }
+  await user.save();
+
   return res
   .status(200)
   .json(
     new ApiResponse(
-      200,
-      {},
-      "Account deactivated successfully"
+      200, 
+      user.address[0], 
+      "Address updated successfully"
     )
-  )
-})
+  );
+
+});
+
 
 
 
@@ -421,7 +498,7 @@ const deactivateAccount = asyncHandler(async(req, res) =>{
 // ======================================================
 
 
-
+//  customer fetch profile 
 const getCurrentUser = asyncHandler(async (req, res)=> {
   if (!req.user) {
     throw new ApiError(401, "User not authenticated");
@@ -437,6 +514,7 @@ const getCurrentUser = asyncHandler(async (req, res)=> {
   )
 });
 
+// customer update profile
 const updateAccountDetails = asyncHandler(async(req, res)=>{
   const {fullname, username, phone,email} = req.body;
 
@@ -487,91 +565,14 @@ return res
 )
 });
 
-const updateUserAvatar = asyncHandler(async (req, res) => {
-  const avatarLocalPath = req.file?.path;
-
-  if (!avatarLocalPath) {
-    return res
-      .status(200)
-      .json(new ApiResponse(200, null, "No avatar uploaded. Nothing was changed"));
-  }
-
-  const user = await User.findById(req.user?._id);
-
-  if (user?.avatar_public_id) {
-    await cloudinary.v2.uploader.destroy(user.avatar_public_id);
-  }
-
-  const avatar = await uploadOnCloudinary(avatarLocalPath);
-
-  if (!avatar?.url || !avatar?.public_id) {
-    throw new ApiError(400, "Failed to upload new avatar");
-  }
-
-  const updatedUser = await User.findByIdAndUpdate(
-    req.user?._id,
-    {
-      $set: {
-        avatar: avatar.url,
-        avatar_public_id: avatar.public_id,
-      },
-    },
-    { new: true }
-  ).select("-password -refreshToken");
-
-  return res.status(200).json(
-    new ApiResponse(200, updatedUser, "User avatar updated successfully")
-  );
-});
-
-const updateAddress = asyncHandler(async(req, res)=>{
-  const {label, street, city, state, country, pinCode, isDefault} = req.body;
-  if(!(label && street && city && state && country && pinCode && isDefault)){
-    throw new ApiError(400, "All fields are required");
-  }
-  const user = await User.findById(req.user?._id);
-  if(!user){
-    throw new ApiError(404, "User not found");
-  }
-
-  const updatedAddress = {
-    label,
-    street,
-    city,
-    state,
-    country:country || "India",
-    pincode: pinCode,
-    isDefault: isDefault || false,
-  };
-
-  if (user.address.length === 0) {
-    user.address.push(updatedAddress);
-  } else {
-    
-    user.address[0] = updatedAddress;
-  }
-  await user.save();
-
-  return res
-  .status(200)
-  .json(
-    new ApiResponse(
-      200, 
-      user.address[0], 
-      "Address updated successfully"
-    )
-  );
-
-});
-
 
 
 // ======================================================
-// =============== SELLER ACCOUNT HANDLERS ============
+// =============== SELLER ACCOUNT HANDLERS ==============
 // ======================================================
 
 
-
+//  seller fetch profile 
 const getSellerProfile =  asyncHandler(async(req, res) =>{
   if(!req.user || req.user.role !== "seller"){
     throw new ApiError(403, "Acess denied. Only seller can access ")
@@ -594,6 +595,7 @@ const getSellerProfile =  asyncHandler(async(req, res) =>{
 
 });
 
+// seller update profile or complete profile if not
 const updateSellerProfile = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
@@ -669,6 +671,7 @@ else{
   );
 });
 
+// seller get product wise breakdown analysis
 const getProductWiseBreakdown = asyncHandler(async (req, res) => {
   const sellerId = req.user._id;
 
@@ -708,6 +711,7 @@ const getProductWiseBreakdown = asyncHandler(async (req, res) => {
   });
 });
 
+// seller get top selling items 
 const getTopSellingItems = asyncHandler(async (req, res) => {
   const sellerId = req.user._id;
 
@@ -746,6 +750,7 @@ const getTopSellingItems = asyncHandler(async (req, res) => {
   });
 });
 
+// seller get daily sales data
 const getDailySalesData = asyncHandler(async (req, res) => {
   const sellerId = req.user._id;
 
@@ -780,6 +785,167 @@ const getDailySalesData = asyncHandler(async (req, res) => {
   });
 });
 
+
+
+// ======================================================
+// =============== ADMIN ACCOUNT HANDLERS ===============
+// ======================================================
+
+
+
+// admin approve seller
+const approveSeller = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const seller = await User.findById(id);
+  if (!seller || seller.role !== "seller") {
+    throw new ApiError(404, "Seller not found or invalid");
+  }
+
+  if (seller.isSellerApproved) {
+    return res.status(400).json({ message: "Seller is already approved" });
+  }
+
+  seller.isSellerApproved = true;
+  seller.isSellerSuspended = false;
+  await seller.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Seller approved successfully",
+    seller,
+  });
+});
+
+// admin suspend seller
+const suspendSeller = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const seller = await User.findById(id);
+  if (!seller || seller.role !== "seller") {
+    throw new ApiError(404, "Seller not found or invalid");
+  }
+
+  if (seller.isSellerSuspended) {
+    return res.status(400).json({ message: "Seller is already suspended" });
+  }
+
+  seller.isSellerSuspended = true;
+  await seller.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Seller suspended successfully",
+    seller,
+  });
+});
+
+// admin unsuspend seller
+const unsuspendSeller = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const seller = await User.findById(id);
+  if (!seller || seller.role !== "seller") {
+    throw new ApiError(404, "Seller not found or invalid");
+  }
+
+  if (!seller.isSellerSuspended) {
+    return res.status(400).json({ message: "Seller is not suspended" });
+  }
+
+  seller.isSellerSuspended = false;
+  await seller.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Seller unsuspended successfully",
+    seller,
+  });
+});
+
+// admin get all user- (customer + seller)
+const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find()
+    .select("-password -refreshToken")
+    .sort({ createdAt: -1 });
+
+  res.status(200).json({
+    success: true,
+    count: users.length,
+    users,
+  });
+});
+
+// admin get all customer
+const getAllCustomers = asyncHandler(async (req, res) => {
+  const customers = await User.find({ role: "customer" })
+    .select("-password -refreshToken")
+    .sort({ createdAt: -1 });
+
+  res.status(200).json({
+    success: true,
+    count: customers.length,
+    sellers,
+  });
+});
+
+// admin get all seller
+const getAllSellers = asyncHandler(async (req, res) => {
+  const sellers = await User.find({ role: "seller" })
+    .select("-password -refreshToken")
+    .sort({ createdAt: -1 });
+
+  res.status(200).json({
+    success: true,
+    count: sellers.length,
+    sellers,
+  });
+});
+
+// admin can deactivate user account
+const deactivateUserAccount = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const user = await User.findById(id);
+  if (!user) throw new ApiError(404, "User not found");
+
+  if (!user.isActive) {
+    return res.status(400).json({ message: "User account already deactivated" });
+  }
+
+  user.isActive = false;
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "User account deactivated successfully",
+    user,
+  });
+});
+
+// admin can activate user account again
+const reactivateUserAccount = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const user = await User.findById(id);
+  if (!user) throw new ApiError(404, "User not found");
+
+  if (user.isActive) {
+    return res.status(400).json({ message: "User account is already active" });
+  }
+
+  user.isActive = true;
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "User account reactivated successfully",
+    user,
+  });
+});
+
+
+
 export {
     sendOtp,
     registerUser,
@@ -791,16 +957,26 @@ export {
     verifyResetOtp,
     resetPassword,
     refreshAccessToken,
-    deactivateAccount,
+
     getCurrentUser,
     updateAccountDetails,
     updateUserAvatar,
     updateAddress,
+
     getSellerProfile,
     updateSellerProfile,
     getProductWiseBreakdown,
     getTopSellingItems,
-    getDailySalesData
+    getDailySalesData,
+
+    approveSeller,
+    suspendSeller,
+    unsuspendSeller,
+    getAllUsers,
+    getAllCustomers,
+    getAllSellers,
+    deactivateUserAccount,
+    reactivateUserAccount,
   
 }
 
