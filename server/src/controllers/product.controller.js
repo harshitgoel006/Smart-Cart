@@ -14,7 +14,7 @@ import  jwt  from "jsonwebtoken";
 
 
 
-const getAllProducts = asyncHandler(async (req, res)=>{
+const customerGetAllProducts = asyncHandler(async (req, res)=>{
     const {search , category, minPrice,maxPrice, sort , page = 1, limit = 10} = req.query;
     const filter = {};
     if(search){
@@ -203,29 +203,25 @@ const createProduct = asyncHandler(async (req, res) => {
     price,
     stock,
     brand,
-    category
+    category,
+    variants
   } = req.body;
 
-  if (!name || !description || !price || !stock || !brand || !category) {
-    throw new ApiError(400, "All fields are required");
+  if (!name || !description || !price || !stock  || !category ) {
+    throw new ApiError(400, "Required fields are missing");
   }
 
-  const localImagePaths = req.files?.map(file => file.path);
-
-  if (!localImagePaths || localImagePaths.length === 0) {
-    throw new ApiError(400, "At least one image is required");
+  if(!req.files || req.files.length === 0){
+    throw new ApiError(400, "Atleast one image is required")
   }
 
-  const uploadedImages = [];
-
-  for (const localPath of localImagePaths) {
-    const result = await uploadOnCloudinary(localPath);
-    if (result?.url && result?.public_id) {
-      uploadedImages.push({
-        url: result.url,
-        public_id: result.public_id
-      });
-    }
+  const images =[];
+  for(const file of  req.files){
+    const uploadResult = await uploadOnCloudinary(file.path);
+    images.push({
+        url: uploadResult.url,
+        public_id: uploadResult.public_id
+    });
   }
 
   const product = await Product.create({
@@ -235,21 +231,348 @@ const createProduct = asyncHandler(async (req, res) => {
     stock,
     brand,
     category,
-    images: uploadedImages, // add here
+    images, 
     seller: req.user?._id,
+    variants: variants ? JSON.parse(variants) :[],
+    approvalStatus: 'pending',
+    isActive:true
   });
 
   return res
     .status(201)
-    .json(new ApiResponse(201, product, "Product created successfully"));
+    .json(new ApiResponse(201, product, "Product created successfully & pending admin approval"));
 });
 
+const getSellerProduct = asyncHandler(async(req, res) =>{
+    const sellerId = req.user._id;
+    const {status, category, page = 1, limit = 10}= req.query;
+
+    const filter = {seller:sellerId};
+    if(status) filter.approvalStatus = status;
+    if(category) filter.category = category;
+
+    const products = await Product
+    .find(filter)
+    .skip((page-1)*limit)
+    .limit(parseInt(limit))
+    .sort({createdAt:-1});
+
+    const total = await Product.countDocuments(filter);
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                count: products.length,
+                total,
+                page:parseInt(page),
+                products
+            },
+            "Products fetched successfully"
+        )
+    )
+});
+
+const updateProduct = asyncHandler(async(req, res) =>{
+    const productId = req.params.id;
+    const sellerId = req.user._id;
+
+    const product = await Product.findById(productId);
+    if(!product){
+        throw new ApiError(404, "Product not found");
+    }
+    if(product.seller.toString() !== sellerId.toString()){
+        throw new ApiError(403, "Not authorized");
+    }
+
+    const updates = req.body;
+    if(req.files && req.files >0 )
+        {
+            for(const img of product.images)
+                {
+                    await uploadOnCloudinary.v2.uploader.destroy(img.public_id)
+                }
+            const images = [];
+            for(const file of req.files)
+                {
+                    const uploadResult = await uploadOnCloudinary(file.path)
+                    images.push(
+                        {
+                            url: uploadResult.url,
+                            public_id: uploadResult.public_id
+                        }
+                    );
+                }
+            updates.images = images;
+        }
+    updates.approvalStatus = 'pending',
+    product = await Product.findByIdAndUpdate
+    (
+        productId, 
+        updates,
+        {
+            new:true
+        }
+    )
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            product,
+            "Product updated & pending admin approval"
+        )
+    )
+
+        
+    
+});
+
+const deleteProduct = asyncHandler(async(req, res) =>{
+    const productId = req.params;
+    const sellerId = req.user._id;
+
+    const product = await Product.findById(productId);
+    if(!product){
+        throw new ApiError(404, "Product not found")
+    }
+    if(product.seller.toString() !== sellerId.toString()){
+        throw new ApiError(403, "Not authorized");
+    }
+    product.isDeleted = true;
+    await product.save();
+
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            "Product deleted successfully"
+        )
+    )
+});
+
+const manageProductStock = asyncHandler(async(req, res)=>{
+    const productId = req.params.id;
+    const{ stock } = req.body;
+    if(stock === undefined){
+        throw new ApiError(400, "Stock value is required")
+    }
+    const product = await Product.findById(productId);
+    if(!product){
+        throw new ApiError(404, "Product not found");
+    }
+    if(product.seller.toString() !== req.user._id.toString()){
+        throw new ApiError(403,"Not authorized");
+    }
+    product.stock = stock;
+    await product.save();
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            product,
+            "Stock updated successfully"
+        )
+    )
+
+}) 
+
+
+
+// ======================================================
+// =============== ADMIN PANNEL HANDLERS ===============
+// ======================================================
+
+
+
+
+const approveProducts = asyncHandler(async(req, res) =>{
+    const {id} = req.params;
+    const product = await Product.findByIdAndUpdate(
+        id,
+        {
+            approveStatus:"approved", 
+            isActive:true
+        },
+        {
+            new:true
+        }
+    );
+    if(!product){
+        throw new ApiError(404,"Product not found")
+    }
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            product,
+            "Product approved successfully"
+        )
+    )
+
+
+});
+
+const rejectProduct = asyncHandler(async (req,res) =>{
+    const {id} = req.params;
+    const {reason} = req.body;
+    const product = await Product.findByIdAndUpdate(
+        id,
+        {
+            approvalStatus: "rejected",
+            isActive:false
+        },
+        {
+            new:true
+        }
+    );
+    if(!product){
+        throw new ApiError(404,"Product not found");
+    }
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            product,
+            "Product rejected successfully",
+            {reason}
+        )
+    )
+    
+});
+
+const adminGetAllProducts = asyncHandler(async(req,res) =>{
+    const {status, seller, isActive}= req.query;
+    const filter = {};
+    if(status) filter.approvalStatus = status;
+    if(seller) filter.seller = seller;
+    if(isActive !== undefined) filter.isActive = isActive === 'true';
+    const products = await Product
+    .find(filter)
+    .populate("seller", "fullname email")
+    .populate("category" ,"name");
+
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            products,
+            "All products fetched successfully"
+        )
+    )
+});
+
+const moderateProductContent = asyncHandler(async(req, res) =>{
+    const updates = req.body;
+    if(!updates){
+        throw new ApiError(404, "Atleast one update is required")
+    }
+    const {id} = req.params;
+    const product = await Product.findByIdAndUpdate(
+        id,
+        updates,
+        {
+            new:true
+        }
+    );
+    if(!product){
+        throw new ApiError(404, "Product not found")
+    }
+
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            product,
+            "Product moderated successfully"
+        )
+    )
+})
+
+const toggleProductStatus = asyncHandler(async(req, res) =>{
+    const {id} = req.params;
+    const {isActive} = req.body;
+    if(!isActive){
+        throw new ApiError(404, "status is required")
+    }
+    const product = await Product.findByIdAndUpdate(
+        id,
+        {
+            isActive
+        },
+        {
+            new:true
+        }
+    );
+    if(!product){
+        throw new ApiError(404,"Product not found");
+    }
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            product,
+            "Product status updated successfully"
+        )
+    )
+
+})
+
+const bulkModerateProducts = asyncHandler(async(req, res) =>{
+    const {ids, action} = req.body;
+    if(!ids || !action){
+        throw new ApiError(404, "All fields are required")
+    }
+    const update = action === "approve" 
+    ?{approvalStatus:"approved", isActive:true}
+    :{approvalStatus:"rejected", isActive:false};
+
+    const result = await Product.updateMany(
+        {
+            _id:{
+                $in: ids
+            }
+        },
+        update
+    );
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            result,
+            `Products ${action}d successfully`
+        )
+    );
+})
 
 export {
-    getAllProducts,
+    customerGetAllProducts,
     getProductById,
     getTopRatedProduct,
     getNewArrivalProduct,
     getProductsByCategory,
-    createProduct
+
+    createProduct,
+    getSellerProduct,
+    updateProduct,
+    deleteProduct,
+    manageProductStock,
+
+    approveProducts,
+    rejectProduct,
+    adminGetAllProducts,
+    moderateProductContent,
+    toggleProductStatus,
+    bulkModerateProducts
 }

@@ -5,11 +5,18 @@ import {
     getProductById,
     getProductsByCategory,
     getTopRatedProduct,
-    createProduct
+    createProduct,
+    approveProducts,
+    rejectProduct,
+    adminGetAllProducts,
+    moderateProductContent,
+    toggleProductStatus,
+    bulkModerateProducts
  } from "../controllers/product.controller.js";
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { authorizedRole } from "../middlewares/authorizeRole.middleware.js";
+import { verify } from "jsonwebtoken";
 
 const router = Router();
 
@@ -34,6 +41,42 @@ router.route("/create").post(
   authorizedRole("seller"),
   upload.array("images", 5), // max 5 files
   createProduct
+);
+
+router.route("/products").post(
+  verifyJWT,
+  authorizedRole("admin"),
+  adminGetAllProducts
+)
+
+router.route("/products/:id/approve").post(
+  verifyJWT,
+  authorizedRole("admin"),
+  approveProducts
+);
+
+router.route("/products/:id/reject").post(
+  verifyJWT,
+  authorizedRole("admin"),
+  rejectProduct
+);
+
+router.route("/products/:id/moderate").post(
+  verifyJWT,
+  authorizedRole("admin"),
+  moderateProductContent
+);
+
+router.route("/products/:id/toggle-status").post(
+  verifyJWT,
+  authorizedRole("admin"),
+  toggleProductStatus
+);
+
+router.route("/products/:id/bulk-moderate").post(
+  verifyJWT,
+  authorizedRole("admin"),
+  bulkModerateProducts
 );
 
 

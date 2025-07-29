@@ -1,5 +1,21 @@
 import mongoose from "mongoose";
 
+
+const optionSchema = new mongoose.Schema({
+  value:String,
+  stock:Number,
+  price:Number,
+},
+{
+  _id:false
+})
+
+const variantSchema = new mongoose.Schema({
+  lable:String,
+  options:[optionSchema]
+},{
+  _id:false
+})
 const productSchema = new mongoose.Schema(
   {
     name: {
@@ -32,29 +48,31 @@ const productSchema = new mongoose.Schema(
     stock: {
       type: Number,
       required: true,
+      min:0
     },
     sold: {
       type: Number,
       default: 0,
     },
     images: [
-  {
-    public_id: {
-      type: String,
-      required: true
-    },
-    url: {
-      type: String,
-      required: true
-    }
-  }
-],
+      {
+        public_id: {
+          type: String,
+          required: true
+        },
+        url: {
+          type: String,
+          required: true
+        }
+      }
+    ],
     brand: {
       type: String,
       required: true,
     },
     category: {
-      type: "String",
+      type: mongoose.Schema.Types.ObjectId,
+      ref:"Category",
       required: true,
     },
     ratings: {
@@ -78,10 +96,33 @@ const productSchema = new mongoose.Schema(
       ref: "User",
       required: [true, "Seller ID is required"],
     },
+    isActive:{
+      type:Boolean,
+      default:true
+    },
     isDeleted: {
       type: Boolean,
       default: false,
     },
+    approvalStatus:{
+      type:String,
+      enum:['pending','approved','rejected'],
+      default:'pending'
+    },
+    variants:[variantSchema],
+    featured:{
+      type:Boolean,
+      default:false
+    },
+    flashSale:{
+      start: Date,
+      end:Date,
+      discount: Number,
+      isActive:{
+        type:Boolean,
+        default:false
+      }
+    }
   },
   {
     timestamps: true,
