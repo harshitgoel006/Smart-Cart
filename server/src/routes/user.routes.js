@@ -19,7 +19,6 @@ import {
     getProductWiseBreakdown,
     getTopSellingItems,
     updateSellerProfile,
-    deactivateAccount,
     approveSeller,
     suspendSeller,
     unsuspendSeller,
@@ -60,6 +59,10 @@ router.route("/register").post(
 router
 .route("/send-otp")
 .post(sendOtp);
+
+router.post("/hello", (req, res) =>{
+    res.send("hello from harshit")
+})
 
 // verify otp through email
 router

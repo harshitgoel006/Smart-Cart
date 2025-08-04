@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { Product } from "../models/product.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { Order } from "../models/order.model.js"
 import  jwt  from "jsonwebtoken";
 
 
@@ -496,7 +497,7 @@ const moderateProductContent = asyncHandler(async(req, res) =>{
             "Product moderated successfully"
         )
     )
-})
+});
 
 const toggleProductStatus = asyncHandler(async(req, res) =>{
     const {id} = req.params;
@@ -526,7 +527,7 @@ const toggleProductStatus = asyncHandler(async(req, res) =>{
         )
     )
 
-})
+});
 
 const bulkModerateProducts = asyncHandler(async(req, res) =>{
     const {ids, action} = req.body;
@@ -554,7 +555,63 @@ const bulkModerateProducts = asyncHandler(async(req, res) =>{
             `Products ${action}d successfully`
         )
     );
+});
+
+const bulkProductUpload = asyncHandler(async(req, res) =>{
+    const file = req.file;
+    if(!file){
+        throw new ApiError(400, "CSV/Excel file is required")
+    }
+
 })
+
+const variantManagement = asyncHandler(async(req, res) =>{
+    const productId = req.params.id;
+    const {variants} = req.body;
+
+    const product = await Product.findById(productId);
+    if(!product){
+        throw new ApiError(404, "Product not found")
+    }
+    if(product.seller.toString()!== req.user._id.toString()){
+        throw new ApiError(403,"Not authorized");
+    }
+    product.variants = variants;
+    await product.save();
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            product,
+            "Variants updated successfully"
+        )
+    )
+});
+
+const getProductOrders = asyncHandler(async(req, res) =>{
+    const productId = req.params.id;
+    const order = await Order
+    .find({"items.product": productId, seller: req.user._id})
+    .populate("user", "fullname email")
+    .sort({createdAt:-1});
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                order,
+                count:order.length
+            },
+            
+        )
+    )
+});
+
+
 
 export {
     customerGetAllProducts,

@@ -59,7 +59,7 @@ const sendOtp = asyncHandler(async (req, res) => {
     const html = `<p>Hello 👋,</p>
                   <p>Thank you for choosing <strong>SmartCart</strong>.</p>
                   <p>Your One-Time Password (OTP) to complete your sign-up is:</p>
-                  <h2 style="color: #007bff;">{{OTP}}</h2>
+                  <h2 style="color: #007bff;">${otp}</h2>
                   <p>This OTP is valid for <strong>1 minutes</strong>. Please do not share this code with anyone.</p>
                   <p>If you did not initiate this request, please ignore this email.</p>
                   <p>Regards,<br> Team SmartCart</p>`;

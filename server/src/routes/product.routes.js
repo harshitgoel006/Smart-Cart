@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-    getAllProducts,
+    customerGetAllProducts,
     getNewArrivalProduct,
     getProductById,
     getProductsByCategory,
@@ -16,12 +16,12 @@ import {
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { authorizedRole } from "../middlewares/authorizeRole.middleware.js";
-import { verify } from "jsonwebtoken";
+
 
 const router = Router();
 
 // This route is used to get all products with optional filters
-router.route("/").get(getAllProducts);
+router.route("/").get(customerGetAllProducts);
 
 // This route is used to get product by its ID
 router.route("/product/:productId").get(getProductById);
