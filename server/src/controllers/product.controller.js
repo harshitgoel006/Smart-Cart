@@ -382,12 +382,279 @@ const manageProductStock = asyncHandler(async(req, res)=>{
         )
     )
 
-}) 
+}) ;
+
+
+// ----------->>>>>   >>>>>  >>>>> WORK ON IT || PENDING 
+
+const bulkProductUpload = asyncHandler(async(req, res) =>{
+    const file = req.file;
+    if(!file){
+        throw new ApiError(400, "CSV/Excel file is required")
+    }
+
+});
+
+const variantManagement = asyncHandler(async(req, res) =>{
+    const productId = req.params.id;
+    const {variants} = req.body;
+
+    const product = await Product.findById(productId);
+    if(!product){
+        throw new ApiError(404, "Product not found")
+    }
+    if(product.seller.toString()!== req.user._id.toString()){
+        throw new ApiError(403,"Not authorized");
+    }
+    product.variants = variants;
+    await product.save();
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            product,
+            "Variants updated successfully"
+        )
+    )
+});
+
+const getProductOrders = asyncHandler(async(req, res) =>{
+    const productId = req.params.id;
+    const order = await Order
+    .find({"items.product": productId, seller: req.user._id})
+    .populate("user", "fullname email")
+    .sort({createdAt:-1});
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                order,
+                count:order.length
+            },
+            
+        )
+    )
+});
+
+const respondToProductQnA = asyncHandler(async(req,res)=>{
+    const {productId, questionId} = req.params;
+    const {answer} = req.body;
+
+    const qna = await ProductQnA.findById(questionId);
+    if(!qna || qna.product.toString()!== productId){
+        throw new ApiError(404, "Question not found for this product");
+    }
+    const product = await Product.findById(productId)
+    if(!product || product.seller.toString() !== req.user._id.toString()){
+        throw new ApiError(403, "Not authorized to answer questions for this product")
+    }
+
+    qna.answer = answer;
+    qna.answeredBy = req.user._id;
+    await qna.save();
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            qna,
+            "Answer submitted"
+        )
+    );
+});
+
+const archiveProduct = asyncHandler(async(req, res) =>{
+    const product = await Product.findById(req.params.id);
+    if(!product){
+        throw new ApiError(404, "Product not found")
+    }
+    if(product.seller.toString() !== req.user._id.toString()){
+        throw new ApiError(403, "Not authorized")
+    }
+    product.isActive = false;
+    product.isArchived = true;
+    await product.save();
+
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            "Product archived suucessfully"
+        )
+    )
+});
+
+const restoreArchiveProduct = asyncHandler(async(req, res) =>{
+    const product = await Product.findById(req.params.id);
+    if(!product){
+        throw new ApiError(404, "Product not found")
+    }
+    if(product.seller.toString() !== req.user._id.toString()){
+        throw new ApiError(403, "Not authorized")
+    }
+    product.isActive = true;
+    product.isArchived = false;
+    await product.save();
+
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            "Product restotred suucessfully"
+        )
+    )
+});
+
+const getProductFeedback = asyncHandler(async(req,res) =>{
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+    if(!product){
+        throw new ApiError(404, "Product not found");
+    }
+    if(product.seller.toString() !== req.user._id.toString()){
+        throw new ApiError(403, "Not authorized")
+    }
+    const reviews = await Review 
+    .find({product: productId})
+    .sort({createdAt:-1})
+    .limit(10);
+    const avgRating = await Review.aggregate([
+        {
+            $match: {
+                product:product._id
+            },
+        },
+        {
+            $group:{
+                _id:"$product",
+                avg:{
+                    $avg: "$rating"
+                },
+                count:{
+                    $sum:1
+                }
+            }
+        }
+    ]);
+
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                avgRating: avgRating[0]?.avg?? 0,
+                reviewCount: avgRating[0]?.count ?? 0,
+                recentReviews: reviews
+            },
+            "Product feedback fetched successfully"
+        )
+    )
+
+});
+
+const toggleProductFeature = asyncHandler(async(req, res) =>{
+    const productId = req.params;
+    const{featured} = req.body;
+
+    if(featured){
+        const featuredCount = await Product.countDocuments(
+            {
+                seller: req.user._id, 
+                featured:true
+            }
+        )
+    };
+    if(featuredCount >=5){
+        throw new ApiError(400, "Feature limit reached (max 5)")
+    }
+    const product = await Product.findById(productId)
+    if(!product){
+        throw new ApiError(404, "Product not found")
+    }
+    if(product.seller.toString() !== req.user._id.toString()){
+        throw new ApiError(403, "Not authorized")
+    }
+    product.featured = featured;
+    await product.save();
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            product,
+            `Product ${featured ? "featured" : "unfeatured"}successfully`
+        )
+    )
+});
+
+const scheduleFlashSale = asyncHandler(async(req, res) =>{
+    const productId = req.params.id;
+
+    const {start, end , discount} = req.body;
+
+    if(!(start && end && discount)){
+        throw new ApiError(400, "All fields are required");
+    }
+    if(new Date(start) >= new Date(end)){
+        throw new ApiError(400, "Start must be before end")
+    }
+    const product = await Product.findById(productId);
+    if(!product){
+        throw new ApiError(404, "product not found")
+    }
+    if(product.seller.toString() !== req.user._id.toString()){
+        throw new ApiError(403, "Not authorized")
+    }
+    product.flashSale = {
+        start: new Date(start),
+        end: new Date(end),
+        discount,
+        isActive:true
+    };
+    await product.save();
+
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            product,
+            "Flash sale scheduled successfully"
+        )
+    );
+});
+
+// ----------->>>>>   >>>>>  >>>>> WORK ON IT || PENDING 
+
+const getProductPerformanceAnalytics = asyncHandler(async(req, res) =>{
+    const productId = req.params.id;
+    const range = req.query.range || '30d';
+
+    const product = await Product.findById(productId);
+    
+    if(!product){
+        throw new ApiError(404, "product not found")
+    }
+    if(product.seller.toString() !== req.user._id.toString()){
+        throw new ApiError(403, "Not authorized")
+    }
+
+})
 
 
 
 // ======================================================
-// =============== ADMIN PANNEL HANDLERS ===============
+// =============== ADMIN PANNEL HANDLERS ================
 // ======================================================
 
 
@@ -558,131 +825,7 @@ const bulkModerateProducts = asyncHandler(async(req, res) =>{
     );
 });
 
-const bulkProductUpload = asyncHandler(async(req, res) =>{
-    const file = req.file;
-    if(!file){
-        throw new ApiError(400, "CSV/Excel file is required")
-    }
 
-})
-
-const variantManagement = asyncHandler(async(req, res) =>{
-    const productId = req.params.id;
-    const {variants} = req.body;
-
-    const product = await Product.findById(productId);
-    if(!product){
-        throw new ApiError(404, "Product not found")
-    }
-    if(product.seller.toString()!== req.user._id.toString()){
-        throw new ApiError(403,"Not authorized");
-    }
-    product.variants = variants;
-    await product.save();
-
-    return res
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            product,
-            "Variants updated successfully"
-        )
-    )
-});
-
-const getProductOrders = asyncHandler(async(req, res) =>{
-    const productId = req.params.id;
-    const order = await Order
-    .find({"items.product": productId, seller: req.user._id})
-    .populate("user", "fullname email")
-    .sort({createdAt:-1});
-
-    return res
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            {
-                order,
-                count:order.length
-            },
-            
-        )
-    )
-});
-
-const respondToProductQnA = asyncHandler(async(req,res)=>{
-    const {productId, questionId} = req.params;
-    const {answer} = req.body;
-
-    const qna = await ProductQnA.findById(questionId);
-    if(!qna || qna.product.toString()!== productId){
-        throw new ApiError(404, "Question not found for this product");
-    }
-    const product = await Product.findById(productId)
-    if(!product || product.seller.toString() !== req.user._id.toString()){
-        throw new ApiError(403, "Not authorized to answer questions for this product")
-    }
-
-    qna.answer = answer;
-    qna.answeredBy = req.user._id;
-    await qna.save();
-
-    return res
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            qna,
-            "Answer submitted"
-        )
-    );
-});
-
-const archiveProduct = asyncHandler(async(req, res) =>{
-    const product = await Product.findById(req.params.id);
-    if(!product){
-        throw new ApiError(404, "Product not found")
-    }
-    if(product.seller.toString() !== req.user._id.toString()){
-        throw new ApiError(403, "Not authorized")
-    }
-    product.isActive = false;
-    product.isArchived = true;
-    await product.save();
-
-    return res 
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            "Product archived suucessfully"
-        )
-    )
-});
-
-const restoreArchiveProduct = asyncHandler(async(req, res) =>{
-    const product = await Product.findById(req.params.id);
-    if(!product){
-        throw new ApiError(404, "Product not found")
-    }
-    if(product.seller.toString() !== req.user._id.toString()){
-        throw new ApiError(403, "Not authorized")
-    }
-    product.isActive = true;
-    product.isArchived = false;
-    await product.save();
-
-    return res 
-    .status(200)
-    .json(
-        new ApiResponse(
-            200,
-            "Product restotred suucessfully"
-        )
-    )
-});
 
 
 
@@ -707,6 +850,9 @@ export {
     respondToProductQnA,
     archiveProduct,
     restoreArchiveProduct,
+    getProductFeedback,
+    toggleProductFeature,
+    scheduleFlashSale,
 
     approveProducts,
     rejectProduct,
