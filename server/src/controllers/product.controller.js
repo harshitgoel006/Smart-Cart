@@ -4,6 +4,7 @@ import { Product } from "../models/product.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Order } from "../models/order.model.js"
+import { ProductQnA } from "../models/productQnA.model.js";
 import  jwt  from "jsonwebtoken";
 
 
@@ -611,6 +612,82 @@ const getProductOrders = asyncHandler(async(req, res) =>{
     )
 });
 
+const respondToProductQnA = asyncHandler(async(req,res)=>{
+    const {productId, questionId} = req.params;
+    const {answer} = req.body;
+
+    const qna = await ProductQnA.findById(questionId);
+    if(!qna || qna.product.toString()!== productId){
+        throw new ApiError(404, "Question not found for this product");
+    }
+    const product = await Product.findById(productId)
+    if(!product || product.seller.toString() !== req.user._id.toString()){
+        throw new ApiError(403, "Not authorized to answer questions for this product")
+    }
+
+    qna.answer = answer;
+    qna.answeredBy = req.user._id;
+    await qna.save();
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            qna,
+            "Answer submitted"
+        )
+    );
+});
+
+const archiveProduct = asyncHandler(async(req, res) =>{
+    const product = await Product.findById(req.params.id);
+    if(!product){
+        throw new ApiError(404, "Product not found")
+    }
+    if(product.seller.toString() !== req.user._id.toString()){
+        throw new ApiError(403, "Not authorized")
+    }
+    product.isActive = false;
+    product.isArchived = true;
+    await product.save();
+
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            "Product archived suucessfully"
+        )
+    )
+});
+
+const restoreArchiveProduct = asyncHandler(async(req, res) =>{
+    const product = await Product.findById(req.params.id);
+    if(!product){
+        throw new ApiError(404, "Product not found")
+    }
+    if(product.seller.toString() !== req.user._id.toString()){
+        throw new ApiError(403, "Not authorized")
+    }
+    product.isActive = true;
+    product.isArchived = false;
+    await product.save();
+
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            "Product restotred suucessfully"
+        )
+    )
+});
+
+
+
+
+
 
 
 export {
@@ -625,6 +702,11 @@ export {
     updateProduct,
     deleteProduct,
     manageProductStock,
+    variantManagement,
+    getProductOrders,
+    respondToProductQnA,
+    archiveProduct,
+    restoreArchiveProduct,
 
     approveProducts,
     rejectProduct,

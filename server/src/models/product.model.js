@@ -100,6 +100,10 @@ const productSchema = new mongoose.Schema(
       type:Boolean,
       default:true
     },
+    isArchived:{
+      type:Boolean,
+      default:false,
+    },
     isDeleted: {
       type: Boolean,
       default: false,
