@@ -31,4 +31,4 @@ const productQnASchema = new mongoose.Schema
 )
 
 
-export const productQnA = mongoose.model("ProductQnA",productQnASchema);
+export const ProductQnA = mongoose.model("ProductQnA",productQnASchema);
