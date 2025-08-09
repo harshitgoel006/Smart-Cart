@@ -16,9 +16,19 @@ import  jwt  from "jsonwebtoken";
 
 
 
+// Sort handler
+function sortHandler(sort) {
+  if (sort === "price") return { price: 1 };
+  if (sort === "-price") return { price: -1 };
+  if (sort === "rating") return { rating: -1 };
+  return { createdAt: -1 };
+}
+
+
+// Customer get all products
 const customerGetAllProducts = asyncHandler(async (req, res)=>{
-    const {search , category, minPrice,maxPrice, sort , page = 1, limit = 10} = req.query;
-    const filter = {};
+    const {search , category, minPrice, maxPrice, sort , page = 1, limit = 10} = req.query;
+    const filter = {isActive: true, isDeleted: false, approvalStatus: "approved"};
     if(search){
         filter.$or = [
             {title: {$regex: search, $options: "i"}},
@@ -37,26 +47,17 @@ const customerGetAllProducts = asyncHandler(async (req, res)=>{
             filter.price.$lte  = Number(maxPrice);
         }
     }
-    let sortOption = {};
-    if(sort === "price"){
-        sortOption.price = 1;
-    }
-    else if( sort === "-price"){
-        sortOption.price = -1;
-    }
-    else if(sort === "rating" ){
-         sortOption.rating = -1;
-    }
-    else sortOption.createdAt = -1;
 
+    const sortOption = sortHandler(sort);
     const totalProducts = await Product.countDocuments(filter);
     const products = await Product.find(filter)
         .sort(sortOption)
         .skip((page - 1) * limit)
         .limit(Number(limit))
+        .select("title price discount rating images stock category")
         .populate({
             path: "seller",
-            select: "fullname email username avatar phone role"
+            select: "fullname email username avatar"
         });
         return res
         .status(200)
@@ -75,16 +76,26 @@ const customerGetAllProducts = asyncHandler(async (req, res)=>{
 
 });
 
+// Get product by ID
 const getProductById = asyncHandler(async (req, res)=>{
     const {productId} = req.params;
-    const product = await Product
-    .findById(productId)
+    const product = await Product.findById({
+        _id: productId,
+        isActive: true,
+        isDeleted: false,
+        approvalStatus: "approved"
+    })
     .populate({
         path: "seller",
-        select: "fullname email username avatar phone "
+        select: "fullname email username avatar"
     })
+    .populate({
+        path: "reviews",
+        select: "rating comment user"
+    });
+
     if(!product){
-        throw new ApiError(404, "Product not found");
+        throw new ApiError(404, "Product not found or not available");
     }
     return res
         .status(200)
@@ -98,13 +109,19 @@ const getProductById = asyncHandler(async (req, res)=>{
 
 });
 
+// Get top rated products
 const getTopRatedProduct = asyncHandler(async(req, res) =>{
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit, 10) || 10;
 
     const topProduct = await Product
-    .find()
+    .find({
+        isActive: true,
+        isDeleted: false,
+        approvalStatus: "approved"
+    })
     .sort({rating: -1})
     .limit(limit)
+    .select("title price discount rating images stock category")
     .populate({
       path: "seller",
       select: "fullname email username avatar"
@@ -121,13 +138,19 @@ const getTopRatedProduct = asyncHandler(async(req, res) =>{
     )
 });
 
+// get new Arrival products
 const getNewArrivalProduct = asyncHandler(async(req, res)=>{
-    const limit =  parseInt(req.query.limit) || 10;
+    const limit =  parseInt(req.query.limit, 10) || 10;
 
     const newArrivals = await Product
-    .find()
+    .find({
+        isActive: true,
+        isDeleted: false,
+        approvalStatus: "approved"
+    })
     .sort({createdAt : 1})
     .limit(limit)
+    .select("title price discount rating images stock category")
     .populate({
       path: "seller",
       select: "fullname email username avatar"
@@ -144,6 +167,7 @@ const getNewArrivalProduct = asyncHandler(async(req, res)=>{
   );
 });
 
+//  get products by their category
 const getProductsByCategory = asyncHandler(async(req, res)=>{
     const {categoryId} = req.params;
     const{sort, page =1, limit = 10} = req.query;
@@ -152,23 +176,28 @@ const getProductsByCategory = asyncHandler(async(req, res)=>{
         throw new ApiError(400, "category Id is required")
     }
 
-    const filter = {category: categoryId}
+    const filter = {
+        category: categoryId,
+        isActive: true,
+        isDeleted: false,
+        approvalStatus: "approved"
+    }
 
-    let sortOption ={}
-    if (sort === "price") sortOption.price = 1;
-    else if (sort === "-price") sortOption.price = -1;
-    else if (sort === "rating") sortOption.rating = -1;
-    else sortOption.createdAt = -1;
+    let sortOption = sortHandler(sort);
+
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 10;
 
     const totalProducts = await Product.countDocuments(filter);
     const products = await Product
     .find(filter)
     .sort(sortOption)
-    .skip((page - 1) * limit)
-    .limit(Number(limit))
+    .skip((pageNum - 1) * limitNum)
+    .limit(limitNum)
+    .select("title price discount rating images stock category")
     .populate({
       path: "seller",
-      select: "fullname email username avatar phone role"
+      select: "fullname email username avatar "
     });
 
     return res 
