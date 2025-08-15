@@ -5,7 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Order } from "../models/order.model.js"
 import { ProductQnA } from "../models/productQnA.model.js";
-import  jwt  from "jsonwebtoken";
+import mongoose, { mongo } from "mongoose";
 
 
 
@@ -216,6 +216,240 @@ const getProductsByCategory = asyncHandler(async(req, res)=>{
     )
 
 });
+
+// get product review
+// submit review
+// get product qna
+// askproductqna
+// ai recommendedProducts
+// personilzed home recommadation
+
+
+// 
+const searchProduct = asyncHandler(async(req, res) =>{
+    const {query, brand, category, minPrice, maxPrice, sort, tags, page = 1, limit = 10} = req.query;
+
+    const filter = {
+        isActive: true,
+        isDeleted: false,
+        approvalStatus: "approved"
+    }
+    if(query){
+        filter.$or = [
+            {
+                title:{$regex: query, $options:"i"}
+            },
+            {
+                description:{$regex: query, $options:"i"}
+            }
+        ];
+    }
+    if(brand){
+        filter.brand = brand;
+    }
+    if(category){
+        filter.category = category;
+    }
+    if(tags && tags.length > 0){
+        filter.tags = {$in: tags.split(",")};
+    }
+    if(minPrice || maxPrice){
+        filter.price = {};
+        if(minPrice){
+            filter.price.$gte = Number(minPrice);
+        }
+        if(maxPrice){
+            filter.price.$lte = Number(maxPrice);
+        }
+    }
+    let sortOption = sortHandler(sort);
+
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) ||10;
+    const total = await Product.countDocuments(filter);
+    const products = await Product.find(filter)
+    .sort(sortOption)
+    .skip((pageNum-1)*limitNum)
+    .limit(limitNum)
+    .select("title price discount rating images stock category")
+    .populate({
+        path:"seller",
+        select: "fullname email username avatar"
+    })
+
+    return res 
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                total,
+                page: pageNum,
+                limit: limitNum,
+                products
+            },
+            "searched products fetched successfully"
+        )
+    )
+
+});
+
+
+const getRelatedProducts = asyncHandler(async(req, res) =>{
+    const productId = req.params;
+
+    const {page = 1, limit = 10} = req.query;
+
+    const mainProduct = await Product.findById(productId);
+    if(!mainProduct){
+        throw new ApiError(404, "Product not found");
+    }
+
+    let filter = {
+        _id : {$ne: productId},
+        isActive: true,
+        isDeleted: false,
+        approvalStatus: "approved",
+        category: mainProduct.category
+    }
+    if(mainProduct.tags || mainProduct.tags.length > 0){
+        filter.tags = {$in: mainProduct.tags};
+    }
+    if(mainProduct.brand){
+        filter.brand = mainProduct.brand;
+    }
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 10;
+    const total = await Product.countDocuments(filter);
+
+    const products = await Product.find(filter)
+    .limitNum(limit)
+    .skip((pageNum - 1) * limitNum)
+    .select("title price discount rating images stock category")
+    .populate({
+        path: "seller",
+        select: "fullname email username avatar"
+    })
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                total,
+                page: pageNum,
+                limit: limitNum,
+                products
+            },
+            "Related products fetched successfully"
+        )
+    )
+});
+
+
+//  ----------------->>>>>>>>>>>>>>>>>>>> work on Review Model
+const getProductReview = asyncHandler(async(req, res) =>{
+    const {productId} = req.params;
+    const { page = 1, limit = 10} = req.query;
+    const filter = {product: productId};
+    if(rating){
+        filter.rating = Number(rating);
+    }
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 10;
+    const total = await Review.countDocuments(filter);
+    const reviews = await Review.find(filter)
+    .sort({createdAt: -1})
+    .skip((pageNum - 1) * limitNum)
+    .limitNum(limit)
+    .populate({
+        path: "user",
+        select: "fullname email username avatar"
+    })
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                total,
+                page: pageNum,
+                limit: limitNum,
+                reviews
+            },
+            "Product reviews fetched successfully"
+        )
+    )
+
+    
+});
+
+
+//  ----------------->>>>>>>>>>>>>>>>>>>> work on Review Model
+const submitReview = asyncHandler(async(req, res) =>{
+    const {productId} = req.params;
+    const {rating, comment} = req.body;
+    const userId = req.user._id;
+
+    const review = await Review.findOne({produt:productId, user: userId});
+    if(review){
+        review.rating = rating;
+        review.comment = comment;
+        await review.save();
+    }
+    else{
+         review = await Review.create({
+            product: productId,
+            user: userId,
+            rating,
+            comment
+        });
+    }
+
+    const stats = await Review.aggregate([
+        {
+            $match: {product: new mongoose.Types.ObjectId(productId)}
+        },
+        {
+            $group:{
+                _id: productId, 
+                averageRating: {
+                    $avg: "$rating"
+                }, 
+                total: {
+                    $sum: 1
+                }
+            }
+        }
+    ]);
+    if(stats.length > 0){
+        await Product.findByIdAndUpdate(
+            productId,
+            {
+                rating: stats[0].averageRating,
+                totalReviews: stats[0].total
+            },
+            {
+                new:true
+            }
+        );
+    }
+    return res 
+    .status(201)
+    .json(
+        new ApiResponse(
+            201,
+            review.isNew ? "Review submitted successfully" : "Review updated successfully"
+        )
+    );
+
+});
+
+
+
+
 
 
 
@@ -868,6 +1102,10 @@ export {
     getTopRatedProduct,
     getNewArrivalProduct,
     getProductsByCategory,
+    searchProduct,
+    getRelatedProducts,
+    getProductReview,
+    submitReview,
 
     createProduct,
     getSellerProduct,
@@ -882,6 +1120,7 @@ export {
     getProductFeedback,
     toggleProductFeature,
     scheduleFlashSale,
+
 
     approveProducts,
     rejectProduct,
