@@ -5,14 +5,34 @@ import {
     getProductById,
     getProductsByCategory,
     getTopRatedProduct,
+    searchProduct,
+    getRelatedProducts,
+    getProductReview,
+    submitReview,
+    getProductQnA,
+    askProductQuestion,
+
     createProduct,
+    getSellerProduct,
+    updateProduct,
+    deleteProduct,
+    manageProductStock,
+    variantManagement,
+    getProductOrders,
+    respondToProductQnA,
+    archiveProduct,
+    restoreArchiveProduct,
+    getProductFeedback,
+    toggleProductFeature,
+    scheduleFlashSale,
+
     approveProducts,
     rejectProduct,
     adminGetAllProducts,
     moderateProductContent,
     toggleProductStatus,
     bulkModerateProducts,
-    getSellerProduct
+
  } from "../controllers/product.controller.js";
 import{upload} from "../middlewares/multer.middleware.js"
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -20,6 +40,14 @@ import { authorizedRole } from "../middlewares/authorizeRole.middleware.js";
 
 
 const router = Router();
+
+
+
+// ======================================================
+// =============== CUSTOMER PANNEL HANDLERS =============
+// ======================================================
+
+
 
 // This route is used to get all products with optional filters
 router.route("/").get(customerGetAllProducts);
@@ -36,7 +64,38 @@ router.route("/new-arrivals").get(getNewArrivalProduct)
 // This route is used to get product by category
 router.route("/category/:categoryId").get(getProductsByCategory)
 
+// This route is used to search products
+router.route("/search").get(searchProduct);
 
+// This route is used to get related products
+router.route("/product/:productId/related").get(getRelatedProducts);
+
+// This route is used to get product reviews
+router.route("/product/:productId/reviews").get(getProductReview);
+
+// This route is used to submit a review
+router.route("/product/:productId/reviews").post(
+  verifyJWT,
+  authorizedRole("customer"),
+  submitReview
+);
+
+// This route is used to get product QnA
+router.route("/product/:productId/qna").get(getProductQnA);
+
+// This route is used to ask a question about a product
+router.route("/product/:productId/qna").post(
+  verifyJWT,
+  authorizedRole("customer"),
+  askProductQuestion
+);
+
+
+
+
+// ======================================================
+// =============== SELLER PANNEL HANDLERS ===============
+// ======================================================
 
 
 
@@ -54,6 +113,87 @@ router.route("/product/:productId").get(
   authorizedRole("seller"),
   getSellerProduct
 );
+
+// This route is used to update a seller's product
+router.route("/product/:productId").put(
+  verifyJWT,
+  authorizedRole("seller"),
+  updateProduct
+);
+
+// This route is used to delete a seller's product
+router.route("/product/:productId").delete(
+  verifyJWT,
+  authorizedRole("seller"),
+  deleteProduct
+);
+
+// This route is used to manage a seller's product stock
+router.route("/product/:productId/stock").patch(
+  verifyJWT,
+  authorizedRole("seller"),
+  manageProductStock
+);
+
+// This route is used to manage a seller's product variants
+router.route("/product/:productId/variants").patch(
+  verifyJWT,
+  authorizedRole("seller"),
+  variantManagement
+);
+
+// This route is used to get a seller's product orders
+router.route("/product/:productId/orders").get(
+  verifyJWT,
+  authorizedRole("seller"),
+  getProductOrders
+);
+
+// This route is used to respond to a seller's product QnA
+router.route("/product/:productId/qna/:questionId/respond").post(
+  verifyJWT,
+  authorizedRole("seller"),
+  respondToProductQnA
+);
+
+// This route is used to archive a seller's product
+router.route("/product/:productId/archive").post(
+  verifyJWT,
+  authorizedRole("seller"),
+  archiveProduct
+);
+
+// This route is used to restore a seller's archived product
+router.route("/product/:productId/restore").post(
+  verifyJWT,
+  authorizedRole("seller"),
+  restoreArchiveProduct
+);
+
+// This route is used to get a seller's product feedback
+router.route("/product/:productId/feedback").get(
+  verifyJWT,
+  authorizedRole("seller"),
+  getProductFeedback
+);
+
+// This route is used to toggle a seller's product feature
+router.route("/product/:productId/toggle-feature").post(
+  verifyJWT,
+  authorizedRole("seller"),
+  toggleProductFeature
+);
+
+// This route is used to schedule a flash sale for a seller's product
+router.route("/product/:productId/flash-sale").post(
+  verifyJWT,
+  authorizedRole("seller"),
+  scheduleFlashSale
+);
+
+// ======================================================
+// =============== ADMIN PANNEL HANDLERS ================
+// ======================================================
 
 
 
