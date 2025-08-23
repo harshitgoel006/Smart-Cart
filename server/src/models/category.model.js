@@ -39,6 +39,28 @@ const categorySchema = new mongoose.Schema(
             type: Boolean,
             default: true
         },
+        isProposed:{
+            type: Boolean,
+            default: false
+        },
+        proposedBy:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            default: null
+        },
+        status:{
+            type: String,
+            enum: ["pending", "approved", "rejected"],
+            default: "pending"
+        },
+        tags: [{
+            type: String,
+            trim: true
+        }],
+        order: {
+            type: Number,
+            default: 0
+        },
         metaTitle: { 
             type: String, 
             default: "" 
