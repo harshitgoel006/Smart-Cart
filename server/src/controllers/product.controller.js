@@ -217,15 +217,7 @@ const getProductsByCategory = asyncHandler(async(req, res)=>{
 
 });
 
-// get product review
-// submit review
-// get product qna
-// askproductqna
-// ai recommendedProducts
-// personilzed home recommadation
-
-
-// 
+// search product
 const searchProduct = asyncHandler(async(req, res) =>{
     const {query, brand, category, minPrice, maxPrice, sort, tags, page = 1, limit = 10} = req.query;
 
@@ -294,7 +286,7 @@ const searchProduct = asyncHandler(async(req, res) =>{
 
 });
 
-
+// get related products
 const getRelatedProducts = asyncHandler(async(req, res) =>{
     const productId = req.params;
 
@@ -446,6 +438,66 @@ const submitReview = asyncHandler(async(req, res) =>{
     );
 
 });
+
+// get product QnA
+const getProductQnA = asyncHandler(async (req, res) => {
+  const { productId } = req.params;
+  const { page = 1, limit = 10 } = req.query;
+
+  const filter = { product: productId };
+  const pageNum = parseInt(page, 10) || 1;
+  const limitNum = parseInt(limit, 10) || 10;
+
+  const total = await ProductQnA.countDocuments(filter);
+  const qnaList = await ProductQnA.find(filter)
+    .sort({ createdAt: -1 })
+    .skip((pageNum - 1) * limitNum)
+    .limit(limitNum)
+    .populate({ path: "user", select: "fullname avatar username" })
+    .populate({ path: "answers.answeredBy", select: "fullname username avatar role" }); // assuming answers is an array
+
+  return res.status(200).json(new ApiResponse(
+    200,
+    { total, page: pageNum, limit: limitNum, qna: qnaList },
+    "Product QnA fetched successfully"
+  ));
+});
+
+// ask product question
+const askProductQuestion = asyncHandler(async (req, res) => {
+  const { productId } = req.params;
+  const { question } = req.body;
+  const userId = req.user._id; // Auth middleware
+
+  if (!question || !question.trim()) {
+    throw new ApiError(400, "Question text is required");
+  }
+
+  // (Optional) Check if product exists and is active
+  const product = await Product.findOne(
+    { 
+        _id: productId, 
+        isActive: true, 
+        isDeleted: false, 
+        approvalStatus: "approved" 
+    });
+  if (!product) throw new ApiError(404, "Product not found or unavailable");
+
+  const newQnA = await ProductQnA.create({
+    product: productId,
+    user: userId,
+    question,
+    isAnswered: false
+  });
+
+  return res.status(201).json(new ApiResponse(
+    201,
+    newQnA,
+    "Product question submitted successfully"
+  ));
+});
+
+
 
 
 
@@ -1106,6 +1158,9 @@ export {
     getRelatedProducts,
     getProductReview,
     submitReview,
+    getProductQnA,
+    askProductQuestion,
+    
 
     createProduct,
     getSellerProduct,
