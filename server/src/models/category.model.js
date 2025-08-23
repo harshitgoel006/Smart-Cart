@@ -22,6 +22,11 @@ const categorySchema = new mongoose.Schema(
             lowercase:true,
             unique: true
         },
+        parentCategory:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Category",
+            default: null,
+        },
         isFeatured:{
             type: Boolean,
             default: false,
@@ -30,10 +35,30 @@ const categorySchema = new mongoose.Schema(
             type: Boolean,
             default:false
         },
+        isActive:{
+            type: Boolean,
+            default: true
+        },
+        metaTitle: { 
+            type: String, 
+            default: "" 
+        },
+        metaDescription: { 
+            type: String, 
+            default: "" 
+        },
+        metaKeywords: { 
+            type: String, 
+            default: "" 
+        },
         createdBy:{
             type:mongoose.Schema.Types.ObjectId,
             ref:"User",
         },
+        updatedBy:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"User",
+        }
     },
     {
         timestamps:true
@@ -41,7 +66,11 @@ const categorySchema = new mongoose.Schema(
 
     categorySchema.pre("save", async function (next){
         if(this.isModified("name")){
-            this.slug = this.name.toLowerCase().replace(/\s+/g, "-")
+            this.slug = this
+            .name
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-");
         }
         next();
     })
