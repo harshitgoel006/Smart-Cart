@@ -5,7 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Order } from "../models/order.model.js"
 import { ProductQnA } from "../models/productQnA.model.js";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 
 
