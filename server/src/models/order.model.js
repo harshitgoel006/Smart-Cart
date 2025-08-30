@@ -6,6 +6,7 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true
     },
     items: [
       {
@@ -28,19 +29,48 @@ const orderSchema = new mongoose.Schema(
           type: Number,
           required: true,
         },
+        fulfillmentStatus: {
+          type: String,
+          enum: ["Processing", "Packed", "Shipped"],
+          default: "Processing",
+        },
+        shipment: {                                
+          courierName: { type: String },
+          shipmentStatus: { type: String, default: "Pending" },
+          estimatedDelivery: { type: Date },
+          shippedAt: { type: Date },
+        },
       },
     ],
     shippingAddress: {
-      fullName: { type: String, required: true },
-      mobile: { type: String, required: true },
-      addressLine: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      pincode: { type: String, required: true },
+      fullName: { 
+        type: String, 
+        required: true 
+      },
+      mobile: { 
+        type: String, 
+        required: true 
+      },
+      addressLine: { 
+        type: String, 
+        required: true 
+      },
+      city: { 
+        type: String, 
+        required: true 
+      },
+      state: { 
+        type: String, 
+        required: true 
+      },
+      pincode: { 
+        type: String, 
+        required: true 
+      },
     },
     paymentMethod: {
       type: String,
-      enum: ["COD", "Online"],
+      enum: ["COD", "Online", "Blockchain"],
       default: "COD",
     },
     paymentStatus: {
@@ -52,15 +82,52 @@ const orderSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    smartContractTxHash: { 
+      type: String, 
+      default: null 
+    },
     totalAmount: {
       type: Number,
       required: true,
     },
+    isPaid: { 
+      type: Boolean, 
+      default: false 
+    },
+    paidAt: { 
+      type: Date 
+    },
     orderStatus: {
       type: String,
-      enum: ["Pending", "Confirmed", "Shipped", "Delivered", "Cancelled"],
+      enum: ["Pending", "Confirmed", "Processing","Packed", "Shipped", "Delivered", "Cancelled"],
       default: "Pending",
+      index: true
     },
+    shipmentDetails: {
+      trackingNumber: String,
+      courierName: String,
+      shipmentStatus: String,
+      estimatedDeliveryDate: Date,
+    },
+    deliveredAt: { 
+      type: Date 
+    },
+    returnStatus: {
+      type: String,
+      enum: ["None", "Requested", "Returned", "ReplacementInProgress"],
+      default: "None",
+    },
+    refundRequestStatus:{
+      type: String,
+      enum: ["None", "Requested", "Approved", "Rejected"],
+      default: "None",
+    },
+    statusHistory: [
+      {
+        status: String,
+        updatedAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   {
     timestamps: true,
