@@ -52,6 +52,9 @@ router.route("/featured").get(getFeaturedCategories);
 // This route is for searching categories
 router.route("/search").get(searchCategories);
 
+
+
+
 // ======================================================
 // =============== SELLER PANEL HANDLERS ================
 // ======================================================

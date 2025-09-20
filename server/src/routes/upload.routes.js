@@ -8,4 +8,4 @@ router.post("/upload", upload.single("file"),uploadFile);
 
 
 
-export { router as uploadRouter };
+export default router;

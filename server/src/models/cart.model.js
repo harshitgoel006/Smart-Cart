@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {ApiResponse} from "..//utils/ApiResponse"
+
 const cartSchema = new mongoose.Schema
 (
     {
@@ -7,7 +7,7 @@ const cartSchema = new mongoose.Schema
             type: mongoose.Schema.Types.ObjectId,
             ref:"User",
             required:true,
-            Unique:true
+            unique:true
         },
         items:[
             {
@@ -22,6 +22,10 @@ const cartSchema = new mongoose.Schema
                     min:[1,"quantity can not be less than 1"],
                     default:1
                 },
+                priceSnapshot:{
+                    type:Number,
+                    required:true
+                }
             }
         ],
         totalItems:{
@@ -45,8 +49,11 @@ cartSchema.methods.calculateTotals = async function(){
     let totalItems = 0;
     let totalPrice = 0;
 
+    const productIds = this.items.map(item => item.product);
+    const products = await mongoose.model("Product").find({_id: {$in: productIds}});
+
     for(const item of this.items){
-        const product = await mongoose.model("Product").findByIf(item.product);
+        const product = products.find(p => p._id.toString() === item.product.toString());
         if(product){
             totalItems += item.quantity;
             totalPrice += item.quantity*product.price;
@@ -60,7 +67,7 @@ cartSchema.methods.calculateTotals = async function(){
 
 //  add items 
 
-cartSchema.methods.addItems = async function(productId, quantity =1){
+cartSchema.methods.addItems = async function(productId, quantity =1, priceSnapshot){
     const index = this.items.findIndex(
         item => item.product.toString() === productId.toString()
     );
@@ -68,7 +75,7 @@ cartSchema.methods.addItems = async function(productId, quantity =1){
         this.items[index].quantity += quantity;
     }
     else{
-        this.items.push({product: productId, quantity});
+        this.items.push({product: productId, quantity, priceSnapshot});
     }
     
     await this.calculateTotals();
@@ -96,4 +103,5 @@ cartSchema.methods.clearCart = async function(){
     return this.save();
 }
 
-     
+export const Cart = mongoose.model("Cart", cartSchema);
+
