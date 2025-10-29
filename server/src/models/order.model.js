@@ -1,5 +1,31 @@
 import mongoose from "mongoose";
 
+const trackingEventSchema = new mongoose.Schema({
+  event: {
+    type: String,
+    required: true,
+  },
+  scannedAt:{
+    type: Date,
+    required: true,
+    default: Date.now
+  },
+  scannedBy:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  location:{
+    type: String,
+    required: true,
+  },
+  remarks:{
+    type: String,
+  },
+
+},
+{  _id: false
+});
+
 const orderSchema = new mongoose.Schema(
   {
     user: {
@@ -67,6 +93,10 @@ const orderSchema = new mongoose.Schema(
         type: String, 
         required: true 
       },
+      country: { 
+        type: String, 
+        required: true 
+      },
     },
     paymentMethod: {
       type: String,
@@ -75,7 +105,7 @@ const orderSchema = new mongoose.Schema(
     },
     paymentStatus: {
       type: String,
-      enum: ["Pending", "Paid", "Failed"],
+      enum: ["Pending", "Paid", "Failed", "Refunded"],
       default: "Pending",
     },
     transactionId: {
@@ -90,6 +120,18 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    discount:{
+      type: Number,
+      default: 0
+    },
+    finalAmount: {
+       type: Number, 
+       required: true 
+    },
+    couponUsed: { 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Coupon" 
+    },
     isPaid: { 
       type: Boolean, 
       default: false 
@@ -99,7 +141,10 @@ const orderSchema = new mongoose.Schema(
     },
     orderStatus: {
       type: String,
-      enum: ["Pending", "Confirmed", "Processing","Packed", "Shipped", "Delivered", "Cancelled"],
+      enum: [
+        "Pending", "Confirmed", "Processing", "Packed", "Shipped",
+        "OutForDelivery", "Delivered", "Cancelled", "Returned", "Refunded"
+      ],
       default: "Pending",
       index: true
     },
@@ -128,6 +173,20 @@ const orderSchema = new mongoose.Schema(
         updatedAt: { type: Date, default: Date.now },
       },
     ],
+    trackingEvents: [ trackingEventSchema ],
+    qrCode: { 
+      type: String, 
+      unique: true 
+    }, 
+    qrCodeImage: { 
+      type: String 
+    },
+    invoiceUrl: { 
+      type: String 
+    }, 
+    notes: { 
+      type: String 
+    },
   },
   {
     timestamps: true,

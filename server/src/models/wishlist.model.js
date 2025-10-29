@@ -10,7 +10,7 @@ const wishlistItemSchema = new mongoose.Schema(
         },
         
         dateAdded:{
-            tyepe:Date,
+            type:Date,
             default:Date.now
         },
         note:{
