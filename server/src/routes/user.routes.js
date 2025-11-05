@@ -235,21 +235,21 @@ router.route("/admin/sellers/:id/unsuspend")
 
 // admin get all user- (customer + seller)
 router.route("/admin/users")
-.post(verifyJWT,
+.get(verifyJWT,
     authorizedRole("admin"),
     getAllUsers
 )
 
 // admin get all seller
 router.route("/admin/sellers")
-.post(verifyJWT,
+.get(verifyJWT,
     authorizedRole("admin"),
     getAllSellers
 )
 
 // admin get all customer
 router.route("/admin/customers")
-.post(verifyJWT,
+.get(verifyJWT,
     authorizedRole("admin"),
     getAllCustomers
 )

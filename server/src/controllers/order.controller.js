@@ -138,6 +138,7 @@ const placeOrderController = asyncHandler(async (req, res) =>{
             remarks: "Order successfully placed by customer"
         }]
     });
+    newOrder.save();
 
     const session = await mongoose.startSession();
   session.startTransaction();
