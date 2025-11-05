@@ -9,26 +9,25 @@ Folder Structure --
 
 
 smartcart-backend/
-│
-├── server/
-│   ├── node_modules/
-│   ├── public/
-│   │   └── temp/
-│   ├── src/
-│   │   ├── config/
-│   │   ├── controllers/
-│   │   ├── db/
-│   │   ├── middlewares/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── utils/
-│   │   ├── constant.js
-│   │   ├── app.js
-│   │   ├── index.js
-│   ├── .env
-│   ├── .gitignore
-│   ├── package.json
-│   └── README.md
+  └── server/
+      ├── node_modules/
+      ├── public/
+      │   └── temp/
+      ├── src/
+      │   ├── config/
+      │   ├── controllers/
+      │   ├── db/
+      │   ├── middlewares/
+      │   ├── models/
+      │   ├── routes/
+      │   ├── utils/
+      │   ├── constant.js
+      │   ├── app.js
+      │   ├── index.js
+      ├── .env
+      ├── .gitignore
+      ├── package.json
+      └── README.md
 
 Features --
 
