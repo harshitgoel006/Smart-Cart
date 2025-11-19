@@ -10,28 +10,30 @@ import { generateQRCode, generateAndUploadQRCode } from "../utils/qrCodeGenerato
 
 
 /*
-Customer Panel Controllers
-placeOrderController — Cart se order confirm/send karna
+Seller Panel Controllers
+getSellerOrdersController — Seller ke assigned orders listing
 
-getOrderHistoryController — User ke past orders (paginated, filtered)
+getSellerOrderDetailsController — Particular order ki detailed view
 
-getOrderDetailsController — Specific order ki full details dekhna
+updateOrderStatusController — Seller side status update (processing, packed, shipped)
 
-trackOrderController — Real-time status/QR tracking events fetch karna
+updateTrackingInfoController — Courier/tracking number update on shipment
 
-cancelOrderController — Order cancel request (pre-dispatch)
+addTrackingScanEventController — QR scan event POST (warehouse, delivery, etc.)
 
-requestReturnController — Return/replace request after delivery
+handleCustomerReturnRequestController — Return/dispute ko manage/approve/reject
 
-requestRefundController — Refund request initiate karna
+handleRefundRequestController — Seller side refund approvals/notes
 
-downloadInvoiceController — Invoice PDF ya link download
-
-applyCouponController — Checkout pe coupon code validate/apply
-
-getOrderNotificationsController — User ke order-related notifications fetch
-
+getSalesAnalyticsController — Seller ke sales, revenue, delivery performance
 */
+
+
+
+// ======================================================
+// =============== CUSTOMER PANEL HANDLERS ================
+// ======================================================
+
 
 
 // Place a new order
@@ -604,7 +606,324 @@ const applyCouponController = asyncHandler(async (req, res) => {
 
 
 
+// ======================================================
+// =============== SELLER PANEL HANDLERS ================
+// ======================================================
 
+
+
+// this controller fetches orders assigned to the logged-in seller
+const getSellerOrdersController = asyncHandler(async(req, res) =>{
+
+  const sellerId = req.user._id;
+
+  const {page =1, limit = 10, status} = req.query;
+
+  const query = {'items.seller':sellerId};
+
+  if(status){
+    query.orderStatus = status;
+  }
+
+  const pageInt = Number(page);
+  const limitInt = Number(limit);
+
+  const order = await Order.find(query)
+  .populate('user', 'fullname email')
+  .populate('items.product', 'name images')
+  .skip((pageInt - 1) * limitInt)
+  .limit(limitInt)
+  .sort({createdAt: -1});
+
+  const totalOrders = await Order.countDocuments(query);
+
+  const responseData = {
+    orders: order,
+    pagination:{
+      total: totalOrders,
+      page: parseInt(page),
+      pages: Math.ceil(totalOrders/limit)
+    }
+  };
+
+  return res.
+  status(200)
+  .json(
+    new ApiResponse(
+      200,
+      responseData,
+      "Seller orders fetched successfully"
+    )
+  )
+
+
+ });
+
+// this controller fetches detailed view of a particular order for the logged-in seller
+ const getSellerOrderDetailsController = asyncHandler(async(req,res) =>{
+
+  const sellerId = req.user._id;
+
+  const {orderId} = req.params;
+  const order = await Order.findOne({
+    _id: orderId,
+    'items.seller': sellerId
+  })
+  .populate('user', 'fullname email address')
+  .populate('items.product', 'name images price')
+  .populate('shippingInfo')
+  .populate('trackingInfo');
+
+  if(!order){
+    throw new ApiError(404, "Order not found or access denied.");
+  }
+
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      order,
+      "Seller order details fetched successfully"
+    )
+  )
+
+  });
+// this controller allows seller to update order item status
+
+  const updateOrderStatusController = asyncHandler(async(req, res) =>{
+
+    const sellerId = req.user._id;
+    const { orderId, itemId, newStatus } = req.body;
+
+    const order = await Order.findOne({_id: orderId, 'items._id':itemId, 'items.seller': sellerId});
+
+    if(!order){
+      throw new ApiError(404, "Order or item not found or access denied.");
+    }
+
+    const item = order.items.find(i => i._id.toString() === itemId && i.seller.toString() === sellerId.toString());
+
+    if(!item){
+      throw new ApiError(404, "Item not found in the order for this seller.");
+    }
+
+    item.status = newStatus;
+
+    item.statusUpdateAt = new Date();
+    await order.save();
+
+    return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        item,
+        "Order item status updated successfully"
+      )
+    );
+
+  });
+
+  // this controller allows seller to update tracking info for an order item
+  const updateTrackingInfoController = asyncHandler(async(req,res) =>{
+
+    const sellerId = req.user._id;
+    const {orderId, trackingNumber, itemId, courierName} = req.body;
+
+    const order = await Order.findOne({_id: orderId, 'items.seller':sellerId, 'items._id': itemId});
+
+    if(!order){
+      throw new ApiError(404, "Order or item not found or access denied.");
+    }
+    const item = order.items.find(i => i._id.toString() === itemId && i.seller.toString() === sellerId.toString());
+    if(!item){
+      throw new ApiError(404, "Item not found in the order for this seller.");
+    }
+    item.shipment.courierName = courierName;
+    item.shipment.trackingNumber = trackingNumber;
+    item.shipment.updatedAt = new Date();
+    await order.save();
+
+    return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        item,
+        "Order item tracking info updated successfully"
+      )
+    );
+  });
+
+  // this controller allows seller to add a tracking scan event for an order item
+  const addTrackingScanEventController = asyncHandler(async(req, res) =>{
+    const sellerId = req.user._id;
+    const {orderId, itemId, event, location, remarks} = req.body;
+
+    const order = await Order.findOne({_id: orderId, 'items.seller': sellerId, 'items._id': itemId});
+
+    if(!order){
+      throw new ApiError(404, "Order or item not found or access denied.");
+    }
+    const item = order.items.find(i => i._id.toString() === itemId && i.seller.toString() === sellerId.toString());
+    if(!item){
+      throw new ApiError(404, "Item not found in the order for this seller.");
+    }
+    item.trackingEvents.push({
+      event,
+      scannedAt: new Date(),
+      scannedBy: sellerId,
+      location,
+      remarks
+    });
+    await order.save();
+
+    return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        item,
+        "Tracking scan event added successfully"
+      )
+    );
+  });
+
+  // this controller allows seller to handle customer return requests
+  const handleCustomerReturnRequestController = asyncHandler(async(req, res) =>{
+
+    const sellerId = req.user._id;
+    const {orderId, itemId, action, comments} = req.body;
+    const order = await Order.findOne({_id: orderId, 'items.seller': sellerId, 'items._id': itemId});
+    if(!order){
+      throw new ApiError(404, "Order or item not found or access denied.");
+    } 
+    const item = order.items.find(i => i._id.toString() === itemId && i.seller.toString() === sellerId.toString());
+    if(!item){
+      throw new ApiError(404, "Item not found in the order for this seller.");
+    }
+    const validActions = ["approve", "reject", "pending"];
+    if (!validActions.includes(action)) {
+      throw new ApiError(400, "Invalid action for return request.");
+    }
+
+    item.returnStatus = action.charAt(0).toUpperCase() + action.slice(1); // Capitalize first letter
+    if (comments) {
+      item.returnNotes = comments;
+    }
+
+    item.statusHistory.push({
+      status: `Return ${item.returnStatus}`,
+      updatedAt: new Date(),
+      comment: comments || ""
+    });
+
+    await order.save();
+    return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        item,
+        "Customer return request handled successfully"
+      )
+    );
+  });
+ 
+  //  this controller allows seller to handle refund requests
+  const handleRefundRequestController = asyncHandler(async(req, res) =>{
+    const sellerId = req.user._id;
+    const {orderId, itemId, action, comments} = req.body;
+
+    const order = await Order.findOne({_id: orderId, 'items.seller': sellerId, 'items._id': itemId});
+
+    if(!order){
+      throw new ApiError(404, "Order or item not found or access denied.");
+    }
+    const item = order.items.find(i => i._id.toString() === itemId && i.seller.toString() === sellerId.toString());
+    if(!item){
+      throw new ApiError(404, "Item not found in the order for this seller.");
+    }
+    const validActions = ["approve", "reject", "pending"];
+    if (!validActions.includes(action)) {
+      throw new ApiError(400, "Invalid action for refund request.");
+    }
+    item.refundRequestStatus = action.charAt(0).toUpperCase() + action.slice(1); // Capitalize first letter
+    if (comments) {
+      item.refundNotes = comments;
+    }
+    item.statusHistory.push({
+      status: `Refund ${item.refundRequestStatus}`,
+      updatedAt: new Date(),
+      comment: comments || ""
+    });
+    await order.save();
+
+    return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        item,
+        "Refund request handled successfully"
+      )
+    );
+  });
+
+  // this controller fetches sales analytics for the logged-in seller
+  const getSalesAnalyticsController = asyncHandler(async(req, res) =>{
+    const sellerId = req.user._id;
+    const { startDate, endDate } = req.query; 
+    const matchConditions = {
+      'items.seller': sellerId
+    };
+    if (startDate || endDate) {
+      matchConditions.createdAt = {};
+      if (startDate) {
+        matchConditions.createdAt.$gte = new Date(startDate);
+      }
+      if (endDate) {
+        matchConditions.createdAt.$lte = new Date(endDate);
+      }
+    }
+
+    const analytics = await Order.aggregate([
+      { $match: matchConditions },
+      { $unwind: "$items" },
+      { $match: { "items.seller": sellerId } },
+      { $group: {
+          _id: null,
+          totalSales: { $sum: { $multiply: ["$items.price", "$items.quantity"] } },
+          distinctOrders: { $addToSet: "$_id" },
+          totalOrders: { $sum: 1 },
+          totalProductsSold: { $sum: "$items.quantity" }
+        }
+      },
+      {
+        $project: { 
+          totalSales: 1,
+          totalOrders: { $size: "$distinctOrders" },  
+          totalProductsSold: 1
+        }
+      }
+    ]);
+    
+    const result = analytics[0] || {
+      totalSales: 0,
+      totalOrders: 0,
+      totalProductsSold: 0
+    };
+    return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        result,
+        "Sales analytics retrieved successfully"
+      )
+    );
+  });
 
 export {
     placeOrderController,
@@ -616,6 +935,17 @@ export {
     requestRefundController,
     downloadInvoiceController,
     applyCouponController,
+
+    getSellerOrdersController,
+    getSellerOrderDetailsController,
+    updateOrderStatusController,
+    updateTrackingInfoController,
+    addTrackingScanEventController,
+    handleCustomerReturnRequestController,
+    handleRefundRequestController,
+    getSalesAnalyticsController,
+
+
 
 };
 
