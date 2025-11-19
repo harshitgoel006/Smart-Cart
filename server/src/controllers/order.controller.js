@@ -2,42 +2,25 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Order } from "../models/order.model.js";
-import{User} from "../models/user.model.js";
 import { Product } from "../models/product.model.js";
 import { Cart } from "../models/cart.model.js";
 import { Coupon } from "../models/coupon.model.js";
 import { generateQRCode, generateAndUploadQRCode } from "../utils/qrCodeGenerators.js";
+import { parse } from 'json2csv';
+import XLSX from 'xlsx';
+import { Escalation } from "../models/escalation.model.js";
 
 
-/*
-Seller Panel Controllers
-getSellerOrdersController — Seller ke assigned orders listing
-
-getSellerOrderDetailsController — Particular order ki detailed view
-
-updateOrderStatusController — Seller side status update (processing, packed, shipped)
-
-updateTrackingInfoController — Courier/tracking number update on shipment
-
-addTrackingScanEventController — QR scan event POST (warehouse, delivery, etc.)
-
-handleCustomerReturnRequestController — Return/dispute ko manage/approve/reject
-
-handleRefundRequestController — Seller side refund approvals/notes
-
-getSalesAnalyticsController — Seller ke sales, revenue, delivery performance
-*/
 
 
 
 // ======================================================
-// =============== CUSTOMER PANEL HANDLERS ================
+// =============== CUSTOMER PANEL HANDLERS ==============
 // ======================================================
 
 
 
-// Place a new order
-
+// This controller allows a customer to place a new order
 const placeOrderController = asyncHandler(async (req, res) =>{
     const userId = req.user._id;
     const { shippingAddress, paymentMethod, couponCode, notes , productId, quantity, formCart = false} = req.body;
@@ -195,8 +178,7 @@ const placeOrderController = asyncHandler(async (req, res) =>{
     );
 });
 
-// getOrderHistoryController
-
+// This controller fetches order history for the logged-in customer
 const getOrderHistoryController = asyncHandler(async( req, res) =>{
   const userId = req.user._id;
   const {page =1, limit =10, status , startDate, endDate} = req.query;
@@ -252,7 +234,7 @@ const getOrderHistoryController = asyncHandler(async( req, res) =>{
 
 });
 
-// getOrderDetailsController
+// This controller fetches detailed information for a specific order of the logged-in customer
 const getOrderDetailsController = asyncHandler(async( req, res) =>{
 
   const userId = req.user._id;
@@ -296,8 +278,7 @@ const getOrderDetailsController = asyncHandler(async( req, res) =>{
 
 });
 
-// trackOrderController
-
+// This controller fetches tracking information for a specific order of the logged-in customer
 const trackOrderController = asyncHandler(async( req, res) =>{
 
   const userId = req.user._id;
@@ -323,8 +304,7 @@ const trackOrderController = asyncHandler(async( req, res) =>{
   );
 });
 
-// cancelOrderController
-
+// This controller allows a customer to cancel an order
 const cancelOrderController = asyncHandler(async(req, res) =>{
 
   const userId = req.user._id;
@@ -409,8 +389,7 @@ const cancelOrderController = asyncHandler(async(req, res) =>{
 
 });
 
-// requestReturnController
-
+// This controller allows a customer to request a return for an order
 const requestReturnController = asyncHandler(async(req, res) =>{
   const userId = req.user._id;
   const {orderId} = req.params;
@@ -469,8 +448,7 @@ const requestReturnController = asyncHandler(async(req, res) =>{
 });
 
 
-// requestRefundController
-
+// This controller allows a customer to request a refund for an order
 const requestRefundController = asyncHandler(async(req, res) =>{
 
   const userId = req.user._id;
@@ -522,9 +500,7 @@ const requestRefundController = asyncHandler(async(req, res) =>{
   );
 });
 
-
-// downloadInvoiceController
-
+// This controller allows a customer to download the invoice for an order
 const downloadInvoiceController = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const { orderId } = req.params;
@@ -545,8 +521,7 @@ const downloadInvoiceController = asyncHandler(async (req, res) => {
 
 });
 
-// applyCouponController
-
+// This controller allows a customer to apply a coupon to an order
 const applyCouponController = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const { orderId, couponCode } = req.body;
@@ -612,7 +587,7 @@ const applyCouponController = asyncHandler(async (req, res) => {
 
 
 
-// this controller fetches orders assigned to the logged-in seller
+// This controller fetches orders assigned to the logged-in seller
 const getSellerOrdersController = asyncHandler(async(req, res) =>{
 
   const sellerId = req.user._id;
@@ -659,7 +634,7 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
 
  });
 
-// this controller fetches detailed view of a particular order for the logged-in seller
+// This controller fetches detailed view of a particular order for the logged-in seller
  const getSellerOrderDetailsController = asyncHandler(async(req,res) =>{
 
   const sellerId = req.user._id;
@@ -689,8 +664,8 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
   )
 
   });
-// this controller allows seller to update order item status
 
+// This controller allows seller to update order item status
   const updateOrderStatusController = asyncHandler(async(req, res) =>{
 
     const sellerId = req.user._id;
@@ -725,7 +700,7 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
 
   });
 
-  // this controller allows seller to update tracking info for an order item
+  // This controller allows seller to update tracking info for an order item
   const updateTrackingInfoController = asyncHandler(async(req,res) =>{
 
     const sellerId = req.user._id;
@@ -756,7 +731,7 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
     );
   });
 
-  // this controller allows seller to add a tracking scan event for an order item
+  // This controller allows seller to add a tracking scan event for an order item
   const addTrackingScanEventController = asyncHandler(async(req, res) =>{
     const sellerId = req.user._id;
     const {orderId, itemId, event, location, remarks} = req.body;
@@ -790,7 +765,7 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
     );
   });
 
-  // this controller allows seller to handle customer return requests
+  // This controller allows seller to handle customer return requests
   const handleCustomerReturnRequestController = asyncHandler(async(req, res) =>{
 
     const sellerId = req.user._id;
@@ -831,7 +806,7 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
     );
   });
  
-  //  this controller allows seller to handle refund requests
+  //  This controller allows seller to handle refund requests
   const handleRefundRequestController = asyncHandler(async(req, res) =>{
     const sellerId = req.user._id;
     const {orderId, itemId, action, comments} = req.body;
@@ -871,7 +846,7 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
     );
   });
 
-  // this controller fetches sales analytics for the logged-in seller
+  // This controller fetches sales analytics for the logged-in seller
   const getSalesAnalyticsController = asyncHandler(async(req, res) =>{
     const sellerId = req.user._id;
     const { startDate, endDate } = req.query; 
@@ -925,6 +900,378 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
     );
   });
 
+
+
+
+// ======================================================
+// =============== ADMIN PANEL HANDLERS =================
+// ======================================================
+
+
+
+
+// This controller fetches all orders with advanced filtering and pagination for admin panel
+const getAllOrdersController = asyncHandler(async(req,res) =>{
+
+  const {page=1, limit=20, status, startDate, endDate, sellerId, userId} = req.query;
+
+  const filter = {};
+  if(status){
+    filter.orderStatus = status;
+  }
+  if(startDate || endDate){
+    filter.createdAt = {};
+    if(startDate){
+      filter.createdAt.$gte = new Date(startDate);
+    }
+    if(endDate){
+      filter.createdAt.$lte = new Date(endDate);
+    }
+  }
+  if(sellerId){
+    filter['items.seller'] = sellerId;
+  }
+  if(userId){
+    filter.user = userId;
+  }
+  const skip = (parseInt(page)-1) * parseInt(limit);
+  const ordersPromise = Order.find(filter)
+  .sort({createdAt: -1})
+  .skip(skip)
+  .limit(parseInt(limit))
+  .populate('user', 'fullname email')
+  .populate('items.product', 'name')
+  .populate('items.seller', 'name email');
+  const countPromise = Order.countDocuments(filter);
+
+  const [orders, totalOrders] = await Promise.all([ordersPromise, countPromise]);
+  const responseData = {
+    orders: orders,
+    pagination:{
+      page: parseInt(page),
+      limit: parseInt(limit),
+      totalOrders: totalOrders,
+      totalPages: Math.ceil(totalOrders / parseInt(limit))
+    }
+  };
+
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      responseData,
+      "Orders retrieved successfully"
+    )
+  );
+});
+
+// This controller fetches detailed information for a specific order for admin panel
+const getOrderAdminDetailsController = asyncHandler(async(req,res) =>{
+
+  const {orderId} = req.params;
+
+  const order = await Order.findById(orderId)
+  .populate('user', 'fullname email address')
+  .populate('items.product', 'name images price description')
+  .populate('items.seller', 'shopName fullname email')
+  .populate('shipmentDetails')
+  .populate('paymentInfo')
+  .populate('trackingInfo');
+
+  if(!order){
+    throw new ApiError(404, "Order not found.");
+  }
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      order,
+      "Order details fetched successfully"
+    )
+  );
+});
+
+// This controller allows admin to manually update order or order item status
+const manualOrderStatusUpdateController = asyncHandler(async(req,res) =>{
+  const adminId = req.user._id;
+  const {orderId,itemId, newStatus, reason} = req.body;
+
+  const order = await Order.findById(orderId);
+  if(!order){
+    throw new ApiError(404, "Order not found.");
+  }
+ let subject;
+ if(itemId){
+  subject = order.items.find(i => i._id.toString() === itemId);
+  if(!subject){
+    throw new ApiError(404, "Order item not found.");
+  }
+  subject.status = newStatus;
+  if(!subject.statusHistory){
+    subject.statusHistory = [];
+  }
+  subject.statusHistory.push({
+    status: newStatus,
+    updatedAt: new Date(),
+    updatedBy: adminId,
+    role :"admin",
+    reason: reason || "Manual update by admin"
+  });
+ }
+  else{
+    subject = order;
+    subject.orderStatus = newStatus;
+    if(!subject.statusHistory){
+      subject.statusHistory = [];
+    }
+    subject.statusHistory.push({
+      status: newStatus,
+      updatedAt: new Date(),
+      updatedBy: adminId,
+      role: "admin",
+      reason: reason || "Manual update by admin"
+    });
+  }
+  await order.save();
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      order,
+      "Order status updated successfully"
+    )
+  );
+});
+
+// This controller allows admin to approve or reject refund requests
+const approveRefundController = asyncHandler(async(req,res) =>{
+
+  const adminId = req.user._id;
+  const {orderId, itemId, action, comments} = req.body;
+  if(!["approve", "reject"].includes(action)){
+    throw new ApiError(400, "Invalid action. Must be 'approve' or 'reject'.");
+  }
+  const order = await Order.findById(orderId);
+  if(!order){
+    throw new ApiError(404, "Order not found.");
+  }
+  const item = order.items.find(i => i._id.toString() === itemId);
+  if(!item){
+    throw new ApiError(404, "Order item not found.");
+  }
+   item.refundStatus = action.charAt(0).toUpperCase() + action.slice(1);
+  if (adminNotes) {
+    item.refundAdminNotes = adminNotes;
+  }
+  if(!item.statusHistory){
+    item.statusHistory = [];
+  }
+  item.statusHistory.push({
+    status: `Refund ${item.refundStatus}`,
+    updatedAt: new Date(),
+    updatedBy: adminId,
+    role: "admin",
+    comment: comments || ""
+  });
+  await order.save();
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      item,
+      "Refund request processed successfully"
+    )
+  );
+
+});
+
+// This controller allows admin to approve or reject return requests
+const approveReturnController = asyncHandler(async(req,res) =>{
+  const adminId = req.user._id;
+  const {orderId, itemId, action, comments} = req.body;
+  if(!["approve", "reject"].includes(action)){
+    throw new ApiError(400, "Invalid action. Must be 'approve' or 'reject'.");
+  }
+  const order = await Order.findById(orderId);
+  if(!order){
+    throw new ApiError(404, "Order not found.");
+  }
+  const item = order.items.find(i => i._id.toString() === itemId);
+  if(!item){
+    throw new ApiError(404, "Order item not found.");
+  }
+    item.returnStatus = action.charAt(0).toUpperCase() + action.slice(1);
+  if(!item.statusHistory){
+    item.statusHistory = [];
+  }
+  item.statusHistory.push({
+    status: `Return ${item.returnStatus}`,
+    updatedAt: new Date(),
+    updatedBy: adminId,
+    role: "admin",
+    comment: comments || ""
+  });
+  await order.save();
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      item,
+      "Return request processed successfully"
+    )
+  );
+});
+
+// This controller allows admin to export order reports in CSV or Excel format
+const exportOrderReportController = asyncHandler(async(req,res) =>{
+  const adminId = req.user._id;
+
+  const {format = "csv", startDate, endDate, status} = req.query;
+  const filter = {};
+  if(status){
+    filter.orderStatus = status;
+  }
+  if(startDate || endDate){
+    filter.createdAt = {};
+    if(startDate){
+      filter.createdAt.$gte = new Date(startDate);
+    }
+    if(endDate){
+      filter.createdAt.$lte = new Date(endDate);
+    }
+  }
+  const orders = await Order.find(filter)
+  .populate('user', 'fullname email')
+  .populate('items.product', 'name')
+  .populate('items.seller', 'name email');
+
+  let data =[];
+  orders.forEach(order => {
+    order.items.forEach(item => {
+      data.push({
+        OrderID: order._id,
+        CustomerName: order.user.fullname,
+        CustomerEmail: order.user.email,
+        ProductName: item.product.name,
+        SellerName: item.seller.name,
+        SellerEmail: item.seller.email,
+        Quantity: item.quantity,
+        Price: item.price,
+        OrderStatus: order.orderStatus,
+        CreatedAt: order.createdAt,
+      });
+    });
+  }
+  );
+
+  if(format === "csv"){
+    const csv = parse(data);
+    res.header('Content-Type', 'text/csv');
+    res.attachment('order_report.csv');
+    return res.send(csv);
+  }
+  else if(format === "xlsx"){
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Orders");
+    const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+    res.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.attachment('order_report.xlsx');
+    return res.send(buffer);
+  }
+  else{
+    throw new ApiError(400, "Invalid format. Supported formats are 'csv' and 'xlsx'.");
+  }
+});
+
+// This controller fetches audit logs for a specific order with pagination
+const getAuditLogsController  = asyncHandler(async(req,res) =>{
+  const { orderId, page = 1, limit = 20 } = req.query;
+
+  if (!orderId) {
+    throw new ApiError(400, "orderId parameter is required.");
+  }
+
+  const order = await Order.findById(orderId).select("statusHistory");
+  if (!order) {
+    throw new ApiError(404, "Order not found.");
+  }
+
+  const sortedLogs = order.statusHistory.sort((a, b) => b.updatedAt - a.updatedAt);
+
+  const pageInt = Number(page);
+  const limitInt = Number(limit);
+  const startIndex = (pageInt - 1) * limitInt;
+  const pagedLogs = sortedLogs.slice(startIndex, startIndex + limitInt);
+
+  const responseData = {
+    logs: pagedLogs,
+    pagination: {
+      page: pageInt,
+      limit: limitInt,
+      totalLogs: sortedLogs.length,
+      totalPages: Math.ceil(sortedLogs.length / limitInt)
+    }
+  };
+
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200, 
+      responseData, 
+      "Audit logs retrieved successfully"
+    )
+  );
+});
+
+// This controller allows admin to handle escalations
+const handleEscalationController = asyncHandler(async(req,res) =>{
+
+  const adminId = req.user._id;
+  const {escalationId, action,comments} = req.body;
+  if(!escalationId || !action){
+    throw new ApiError(400, "escalationId and action are required.");
+  }
+
+  const validActions = ["Open", "InProgress", "Resolved", "Closed"];
+  const normalizedAction = action.charAt(0).toUpperCase() + action.slice(1).toLowerCase();
+
+  if (!validActions.includes(normalizedAction)) {
+    throw new ApiError(400, `Invalid action. Allowed actions: ${validActions.join(", ")}`);
+  }
+  const escalation = await Escalation.findById(escalationId);
+  if(!escalation){
+    throw new ApiError(404, "Escalation not found.");
+  }
+  if(action ){
+    escalation.status = action.charAt(0).toUpperCase() + action.slice(1);
+  }
+  if(comments){
+    escalation.remarks = comments;
+  }
+  escalation.assignedTo = adminId;
+  escalation.updatedAt = new Date();
+
+  await escalation.save();
+
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      escalation,
+      "Escalation updated successfully"
+    )
+  );
+});
+
+
 export {
     placeOrderController,
     getOrderHistoryController,
@@ -945,8 +1292,13 @@ export {
     handleRefundRequestController,
     getSalesAnalyticsController,
 
-
+    getAllOrdersController,
+    getOrderAdminDetailsController,
+    manualOrderStatusUpdateController,
+    approveRefundController,
+    approveReturnController,
+    exportOrderReportController,
+    getAuditLogsController,
+    handleEscalationController,
 
 };
-
-

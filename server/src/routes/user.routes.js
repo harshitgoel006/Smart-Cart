@@ -33,7 +33,6 @@ import { verifyJWT } from "../middlewares/auth.middleware.js";
 import {authorizedRole} from "../middlewares/authorizeRole.middleware.js"
 
 
-
 const router = Router();
 
 

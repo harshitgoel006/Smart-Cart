@@ -169,10 +169,14 @@ const orderSchema = new mongoose.Schema(
     },
     statusHistory: [
       {
-        status: String,
+        status: { type: String, required: true },
         updatedAt: { type: Date, default: Date.now },
-      },
+        changedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, 
+        role: { type: String, enum: ["admin", "seller", "user"], default: "user" }, 
+        comment: { type: String }  
+      }
     ],
+
     trackingEvents: [ trackingEventSchema ],
     qrCode: { 
       type: String, 
