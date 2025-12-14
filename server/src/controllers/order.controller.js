@@ -9,6 +9,7 @@ import { generateQRCode, generateAndUploadQRCode } from "../utils/qrCodeGenerato
 import { parse } from 'json2csv';
 import XLSX from 'xlsx';
 import { Escalation } from "../models/escalation.model.js";
+import createAndSendNotification from "../utils/sendNotification.js";
 
 
 
@@ -167,6 +168,63 @@ const placeOrderController = asyncHandler(async (req, res) =>{
     .populate("items.product", "name images")
     .populate("items.seller", "shopName fullname");
 
+    try {
+    await createAndSendNotification({
+      recipientId: userId,
+      recipientRole: "customer",
+      recipientEmail: req.user.email,
+      type: "ORDER_PLACED",
+      title: "Order placed successfully",
+      message: `Your order #${populatedOrder._id} has been placed.`,
+      relatedEntity: {
+        entityType: "order",
+        entityId: populatedOrder._id,
+      },
+      channels: ["in-app", "email"],
+      meta: {
+        orderId: populatedOrder._id,
+        amount: populatedOrder.finalAmount,
+      },
+    });
+  } catch (e) {
+    console.error("ORDER_PLACED notification (customer) failed", e);
+  }
+
+
+  try {
+    const sellerIds = [
+      ...new Set(
+        populatedOrder.items.map((i) =>
+          i.seller._id.toString()
+        )
+      ),
+    ];
+
+    for (const sellerId of sellerIds) {
+      const sellerItem = populatedOrder.items.find(
+        (i) => i.seller._id.toString() === sellerId
+      );
+      await createAndSendNotification({
+        recipientId: sellerId,
+        recipientRole: "seller",
+        recipientEmail: sellerItem.seller.email || null,
+        type: "NEW_ORDER_FOR_SELLER",
+        title: "New order received",
+        message: `You have received a new order #${populatedOrder._id}.`,
+        relatedEntity: {
+          entityType: "order",
+          entityId: populatedOrder._id,
+        },
+        channels: ["in-app", "email"],
+        meta: {
+          orderId: populatedOrder._id,
+          productName: sellerItem.product.name,
+        },
+      });
+    }
+  } catch (e) {
+    console.error("NEW_ORDER_FOR_SELLER notifications failed", e);
+  }
     return res 
     .status(201)
     .json(
@@ -377,6 +435,68 @@ const cancelOrderController = asyncHandler(async(req, res) =>{
     });
   }
 
+  try {
+      await createAndSendNotification({
+        recipientId: userId,
+        recipientRole: "customer",
+        recipientEmail: req.user.email,
+        type: "ORDER_CANCELLED",
+        title: "Order cancelled",
+        message: `Your order #${order._id} has been cancelled.`,
+        relatedEntity: {
+          entityType: "order",
+          entityId: order._id,
+        },
+        channels: ["in-app", "email"],
+        meta: {
+          orderId: order._id,
+        },
+      });
+    } catch (e) {
+      console.error(
+        "ORDER_CANCELLED notification (customer) failed",
+        e
+      );
+    }
+
+    // Sellers
+    try {
+      const sellerIds = [
+        ...new Set(
+          order.items.map((item) =>
+            item.seller.toString()
+          )
+        ),
+      ];
+      for (const sellerId of sellerIds) {
+        const anyItem = order.items.find(
+          (i) => i.seller.toString() === sellerId
+        );
+        await createAndSendNotification({
+          recipientId: sellerId,
+          recipientRole: "seller",
+          recipientEmail: null,
+          type: "ORDER_ITEM_CANCELLED",
+          title: "Order cancelled",
+          message: `Order #${order._id} including your items has been cancelled.`,
+          relatedEntity: {
+            entityType: "order",
+            entityId: order._id,
+          },
+          channels: ["in-app"],
+          meta: {
+            orderId: order._id,
+            productName: anyItem?.product?.name,
+          },
+        });
+      }
+    } catch (e) {
+      console.error(
+        "ORDER_ITEM_CANCELLED notifications (sellers) failed",
+        e
+      );
+    }
+
   return res 
   .status(200)
   .json(
@@ -435,6 +555,71 @@ const requestReturnController = asyncHandler(async(req, res) =>{
     });
   }
 
+  try {
+      await createAndSendNotification({
+        recipientId: userId,
+        recipientRole: "customer",
+        recipientEmail: req.user.email,
+        type: "RETURN_REQUESTED_CUSTOMER",
+        title: "Return request submitted",
+        message: `Your return request for order #${order._id} has been submitted.`,
+        relatedEntity: {
+          entityType: "order",
+          entityId: order._id,
+        },
+        channels: ["in-app", "email"],
+        meta: {
+          orderId: order._id,
+          reason,
+        },
+      });
+    } catch (e) {
+      console.error(
+        "RETURN_REQUESTED_CUSTOMER notification failed",
+        e
+      );
+    }
+
+    // 🔔 Sellers
+    try {
+      const sellerIds = [
+        ...new Set(
+          order.items.map((item) =>
+            item.seller.toString()
+          )
+        ),
+      ];
+      for (const sellerId of sellerIds) {
+        const anyItem = order.items.find(
+          (i) => i.seller.toString() === sellerId
+        );
+        await createAndSendNotification({
+          recipientId: sellerId,
+          recipientRole: "seller",
+          recipientEmail: null,
+          type: "RETURN_REQUESTED_FOR_ITEM",
+          title: "Return requested",
+          message: `Return requested for order #${order._id}. Please review.`,
+          relatedEntity: {
+            entityType: "order",
+            entityId: order._id,
+          },
+          channels: ["in-app", "email"],
+          meta: {
+            orderId: order._id,
+            productName: anyItem?.product?.name,
+            reason,
+          },
+        });
+      }
+    } catch (e) {
+      console.error(
+        "RETURN_REQUESTED_FOR_ITEM notifications failed",
+        e
+      );
+    }
+
+
   return res 
   .status(200)
   .json(
@@ -446,7 +631,6 @@ const requestReturnController = asyncHandler(async(req, res) =>{
   );
 
 });
-
 
 // This controller allows a customer to request a refund for an order
 const requestRefundController = asyncHandler(async(req, res) =>{
@@ -488,6 +672,62 @@ const requestRefundController = asyncHandler(async(req, res) =>{
     relatedEntity: { entityType: "order", entityId: order._id },
     channels: ["in-app", "email"]
   });
+
+  try {
+      await createAndSendNotification({
+        recipientId: userId,
+        recipientRole: "customer",
+        recipientEmail: req.user.email,
+        type: "REFUND_REQUESTED_CUSTOMER",
+        title: "Refund request submitted",
+        message: `Your refund request for order #${order._id} has been submitted.`,
+        relatedEntity: {
+          entityType: "order",
+          entityId: order._id,
+        },
+        channels: ["in-app", "email"],
+        meta: {
+          orderId: order._id,
+          reason,
+        },
+      });
+    } catch (e) {
+      console.error(
+        "REFUND_REQUESTED_CUSTOMER notification failed",
+        e
+      );
+    }
+
+    // 🔔 Admin notification for high-value refunds
+    try {
+      const threshold = 1000; // adjust
+      if (order.finalAmount >= threshold) {
+        // const admin = await User.findOne({ role: "admin" });
+        // if (admin)
+        await createAndSendNotification({
+          recipientId: null,
+          recipientRole: "admin",
+          recipientEmail: null,
+          type: "HIGH_VALUE_REFUND_REQUESTED",
+          title: "High value refund request",
+          message: `Refund requested for order #${order._id} (amount ₹${order.finalAmount}).`,
+          relatedEntity: {
+            entityType: "order",
+            entityId: order._id,
+          },
+          channels: ["in-app"],
+          meta: {
+            orderId: order._id,
+            amount: order.finalAmount,
+          },
+        });
+      }
+    } catch (e) {
+      console.error(
+        "HIGH_VALUE_REFUND_REQUESTED notification failed",
+        e
+      );
+    }
 
   return res 
   .status(200)
@@ -632,10 +872,10 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
   )
 
 
- });
+});
 
 // This controller fetches detailed view of a particular order for the logged-in seller
- const getSellerOrderDetailsController = asyncHandler(async(req,res) =>{
+const getSellerOrderDetailsController = asyncHandler(async(req,res) =>{
 
   const sellerId = req.user._id;
 
@@ -663,10 +903,10 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
     )
   )
 
-  });
+});
 
 // This controller allows seller to update order item status
-  const updateOrderStatusController = asyncHandler(async(req, res) =>{
+const updateOrderStatusController = asyncHandler(async(req, res) =>{
 
     const sellerId = req.user._id;
     const { orderId, itemId, newStatus } = req.body;
@@ -688,6 +928,56 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
     item.statusUpdateAt = new Date();
     await order.save();
 
+
+    try {
+      let type = null;
+      let title = "";
+      let msg = "";
+
+      if (newStatus === "Shipped") {
+        type = "ORDER_SHIPPED";
+        title = "Order shipped";
+        msg = `Your order #${order._id} has been shipped.`;
+      } else if (newStatus === "Delivered") {
+        type = "ORDER_DELIVERED";
+        title = "Order delivered";
+        msg = `Your order #${order._id} has been delivered.`;
+      } else if (newStatus === "Packed") {
+        type = "ORDER_PACKED";
+        title = "Order packed";
+        msg = `Your order #${order._id} has been packed.`;
+      } else if (newStatus === "Confirmed") {
+        type = "ORDER_CONFIRMED";
+        title = "Order confirmed";
+        msg = `Your order #${order._id} has been confirmed by the seller.`;
+      }
+
+      if (type) {
+        await createAndSendNotification({
+          recipientId: order.user._id,
+          recipientRole: "customer",
+          recipientEmail: order.user.email,
+          type,
+          title,
+          message: msg,
+          relatedEntity: {
+            entityType: "order",
+            entityId: order._id,
+          },
+          channels: ["in-app", "email"],
+          meta: {
+            orderId: order._id,
+          },
+        });
+      }
+    } catch (e) {
+      console.error(
+        "Customer order status notification failed",
+        e
+      );
+    }
+
+
     return res
     .status(200)
     .json(
@@ -698,10 +988,10 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
       )
     );
 
-  });
+});
 
-  // This controller allows seller to update tracking info for an order item
-  const updateTrackingInfoController = asyncHandler(async(req,res) =>{
+// This controller allows seller to update tracking info for an order item
+const updateTrackingInfoController = asyncHandler(async(req,res) =>{
 
     const sellerId = req.user._id;
     const {orderId, trackingNumber, itemId, courierName} = req.body;
@@ -720,6 +1010,32 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
     item.shipment.updatedAt = new Date();
     await order.save();
 
+    try {
+      await createAndSendNotification({
+        recipientId: order.user._id,
+        recipientRole: "customer",
+        recipientEmail: order.user.email,
+        type: "ORDER_SHIPPED",
+        title: "Order shipped",
+        message: `Your order #${order._id} has been shipped.`,
+        relatedEntity: {
+          entityType: "order",
+          entityId: order._id,
+        },
+        channels: ["in-app", "email"],
+        meta: {
+          orderId: order._id,
+          courier: courierName,
+          trackingNumber,
+        },
+      });
+    } catch (e) {
+      console.error(
+        "ORDER_SHIPPED notification (tracking) failed",
+        e
+      );
+    }
+
     return res
     .status(200)
     .json(
@@ -729,10 +1045,10 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
         "Order item tracking info updated successfully"
       )
     );
-  });
+});
 
-  // This controller allows seller to add a tracking scan event for an order item
-  const addTrackingScanEventController = asyncHandler(async(req, res) =>{
+// This controller allows seller to add a tracking scan event for an order item
+const addTrackingScanEventController = asyncHandler(async(req, res) =>{
     const sellerId = req.user._id;
     const {orderId, itemId, event, location, remarks} = req.body;
 
@@ -763,10 +1079,10 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
         "Tracking scan event added successfully"
       )
     );
-  });
+});
 
-  // This controller allows seller to handle customer return requests
-  const handleCustomerReturnRequestController = asyncHandler(async(req, res) =>{
+// This controller allows seller to handle customer return requests
+const handleCustomerReturnRequestController = asyncHandler(async(req, res) =>{
 
     const sellerId = req.user._id;
     const {orderId, itemId, action, comments} = req.body;
@@ -795,6 +1111,49 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
     });
 
     await order.save();
+
+    try {
+      let type;
+      let title;
+      let msg;
+      if (action === "approve") {
+        type = "RETURN_APPROVED_CUSTOMER";
+        title = "Return approved";
+        msg = `Your return request for order #${order._id} was approved.`;
+      } else if (action === "reject") {
+        type = "RETURN_REJECTED_CUSTOMER";
+        title = "Return request rejected";
+        msg = `Your return request for order #${order._id} was rejected.`;
+      } else {
+        type = null;
+      }
+
+      if (type) {
+        await createAndSendNotification({
+          recipientId: order.user._id,
+          recipientRole: "customer",
+          recipientEmail: order.user.email,
+          type,
+          title,
+          message: msg,
+          relatedEntity: {
+            entityType: "order",
+            entityId: order._id,
+          },
+          channels: ["in-app", "email"],
+          meta: {
+            orderId: order._id,
+            reason: comments,
+          },
+        });
+      }
+    } catch (e) {
+      console.error(
+        "Customer return decision notification failed",
+        e
+      );
+    }
+
     return res
     .status(200)
     .json(
@@ -804,10 +1163,10 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
         "Customer return request handled successfully"
       )
     );
-  });
+});
  
-  //  This controller allows seller to handle refund requests
-  const handleRefundRequestController = asyncHandler(async(req, res) =>{
+//  This controller allows seller to handle refund requests
+const handleRefundRequestController = asyncHandler(async(req, res) =>{
     const sellerId = req.user._id;
     const {orderId, itemId, action, comments} = req.body;
 
@@ -835,6 +1194,49 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
     });
     await order.save();
 
+    try {
+      let type;
+      let title;
+      let msg;
+      if (action === "approve") {
+        type = "REFUND_APPROVED_CUSTOMER";
+        title = "Refund approved";
+        msg = `Your refund request for order #${order._id} was approved.`;
+      } else if (action === "reject") {
+        type = "REFUND_REJECTED_CUSTOMER";
+        title = "Refund request rejected";
+        msg = `Your refund request for order #${order._id} was rejected.`;
+      } else {
+        type = null;
+      }
+
+      if (type) {
+        await createAndSendNotification({
+          recipientId: order.user._id,
+          recipientRole: "customer",
+          recipientEmail: order.user.email,
+          type,
+          title,
+          message: msg,
+          relatedEntity: {
+            entityType: "order",
+            entityId: order._id,
+          },
+          channels: ["in-app", "email"],
+          meta: {
+            orderId: order._id,
+            amount: order.finalAmount,
+            reason: comments,
+          },
+        });
+      }
+    } catch (e) {
+      console.error(
+        "Customer refund decision notification failed",
+        e
+      );
+    }
+
     return res
     .status(200)
     .json(
@@ -844,10 +1246,10 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
         "Refund request handled successfully"
       )
     );
-  });
+});
 
-  // This controller fetches sales analytics for the logged-in seller
-  const getSalesAnalyticsController = asyncHandler(async(req, res) =>{
+// This controller fetches sales analytics for the logged-in seller
+const getSalesAnalyticsController = asyncHandler(async(req, res) =>{
     const sellerId = req.user._id;
     const { startDate, endDate } = req.query; 
     const matchConditions = {
@@ -898,7 +1300,7 @@ const getSellerOrdersController = asyncHandler(async(req, res) =>{
         "Sales analytics retrieved successfully"
       )
     );
-  });
+});
 
 
 
@@ -1035,6 +1437,31 @@ const manualOrderStatusUpdateController = asyncHandler(async(req,res) =>{
     });
   }
   await order.save();
+
+  try {
+      await createAndSendNotification({
+        recipientId: order.user._id,
+        recipientRole: "customer",
+        recipientEmail: order.user.email,
+        type: "SYSTEM_ANNOUNCEMENT_CUSTOMER",
+        title: "Order status updated by admin",
+        message: `Order #${order._id} status was updated to "${newStatus}".`,
+        relatedEntity: {
+          entityType: "order",
+          entityId: order._id,
+        },
+        channels: ["in-app", "email"],
+        meta: {
+          orderId: order._id,
+          status: newStatus,
+        },
+      });
+    } catch (e) {
+      console.error(
+        "Admin manual order status notification failed",
+        e
+      );
+    }
   return res
   .status(200)
   .json(
@@ -1077,6 +1504,45 @@ const approveRefundController = asyncHandler(async(req,res) =>{
     comment: comments || ""
   });
   await order.save();
+
+  try {
+      const type =
+        action === "approve"
+          ? "REFUND_APPROVED_CUSTOMER"
+          : "REFUND_REJECTED_CUSTOMER";
+      const title =
+        action === "approve"
+          ? "Refund approved"
+          : "Refund request rejected";
+      const msg =
+        action === "approve"
+          ? `Your refund request for order #${order._id} was approved by admin.`
+          : `Your refund request for order #${order._id} was rejected by admin.`;
+
+      await createAndSendNotification({
+        recipientId: order.user._id,
+        recipientRole: "customer",
+        recipientEmail: order.user.email,
+        type,
+        title,
+        message: msg,
+        relatedEntity: {
+          entityType: "order",
+          entityId: order._id,
+        },
+        channels: ["in-app", "email"],
+        meta: {
+          orderId: order._id,
+          reason: comments,
+        },
+      });
+    } catch (e) {
+      console.error(
+        "Admin refund decision notification failed",
+        e
+      );
+    }
+
   return res
   .status(200)
   .json(
@@ -1116,6 +1582,45 @@ const approveReturnController = asyncHandler(async(req,res) =>{
     comment: comments || ""
   });
   await order.save();
+
+  try {
+      const type =
+        action === "approve"
+          ? "RETURN_APPROVED_CUSTOMER"
+          : "RETURN_REJECTED_CUSTOMER";
+      const title =
+        action === "approve"
+          ? "Return approved"
+          : "Return request rejected";
+      const msg =
+        action === "approve"
+          ? `Your return request for order #${order._id} was approved by admin.`
+          : `Your return request for order #${order._id} was rejected by admin.`;
+
+      await createAndSendNotification({
+        recipientId: order.user._id,
+        recipientRole: "customer",
+        recipientEmail: order.user.email,
+        type,
+        title,
+        message: msg,
+        relatedEntity: {
+          entityType: "order",
+          entityId: order._id,
+        },
+        channels: ["in-app", "email"],
+        meta: {
+          orderId: order._id,
+          reason: comments,
+        },
+      });
+    } catch (e) {
+      console.error(
+        "Admin return decision notification failed",
+        e
+      );
+    }
+
   return res
   .status(200)
   .json(
@@ -1259,6 +1764,31 @@ const handleEscalationController = asyncHandler(async(req,res) =>{
   escalation.updatedAt = new Date();
 
   await escalation.save();
+
+  try {
+      await createAndSendNotification({
+        recipientId: null,
+        recipientRole: "admin",
+        recipientEmail: null,
+        type: "ESCALATION_UPDATED",
+        title: "Escalation updated",
+        message: `Escalation #${escalation._id} updated to ${escalation.status}.`,
+        relatedEntity: {
+          entityType: "escalation",
+          entityId: escalation._id,
+        },
+        channels: ["in-app"],
+        meta: {
+          escalationId: escalation._id,
+          status: escalation.status,
+        },
+      });
+    } catch (e) {
+      console.error(
+        "ESCALATION_UPDATED admin notification failed",
+        e
+      );
+    }
 
   return res
   .status(200)

@@ -4,6 +4,7 @@ import { Product } from "../models/product.model.js";
 import { Coupon } from "../models/coupon.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import {ApiError} from "../utils/ApiError.js";
+import createAndSendNotification from "../utils/sendNotification.js";
 
 
 
@@ -214,6 +215,28 @@ const applyCoupon = asyncHandler(async (req, res) => {
   cart.totalPrice = Math.max(0, cart.totalPrice - discountAmount);
 
   await cart.save();
+
+  try {
+    await createAndSendNotification({
+      recipientId: userId,
+      recipientRole: "customer",
+      recipientEmail: req.user.email,
+      type: "COUPON_APPLIED",
+      title: "Coupon applied successfully",
+      message: `Coupon ${coupon.code} applied on your cart.`,
+      relatedEntity: {
+        entityType: "cart",
+        entityId: cart._id,
+      },
+      channels: ["in-app", "email"],
+      meta: {
+        couponCode: coupon.code,
+        discount: discountAmount,
+      },
+    });
+  } catch (e) {
+    console.error("COUPON_APPLIED notification failed", e);
+  }
 
   return res
     .status(200)

@@ -6,7 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Order } from "../models/order.model.js"
 import { ProductQnA } from "../models/productQnA.model.js";
 import mongoose from "mongoose";
-import createAndSendNotification from "../utils/notification/createAndSendNotification.js";
+import createAndSendNotification from "../utils/sendNotification.js";
 
 
 

@@ -1,6 +1,7 @@
-import {Notification} from '../models/Notification.js';
+import {Notification} from '../models/notification.model.js';
 import sendEmail from './sendEmail.js';
 import {emailTemplates} from './notificationEmailTemplates.js';
+
 
 
 

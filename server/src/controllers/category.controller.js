@@ -3,6 +3,7 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { Category } from '../models/category.model.js';
 import { Order } from '../models/order.model.js';
+import createAndSendNotification from "../utils/sendNotification.js";
 
 
 // ======================================================
@@ -258,6 +259,29 @@ const proposeNewCategory = asyncHandler(async(req, res) =>{
         isActive: false,
         isDeleted: false
     });
+
+    try {
+    await createAndSendNotification({
+      recipientId: null,
+      recipientRole: "admin",
+      recipientEmail: null,
+      type: "SYSTEM_ANNOUNCEMENT_ADMIN",
+      title: "New category proposed",
+      message: `Seller proposed a new category "${newCategory.name}" for approval.`,
+      relatedEntity: {
+        entityType: "category",
+        entityId: newCategory._id,
+      },
+      channels: ["in-app"],
+      meta: {
+        categoryId: newCategory._id,
+        categoryName: newCategory.name,
+        sellerId,
+      },
+    });
+  } catch (e) {
+    console.error("Admin new-category notification failed", e);
+  }
 
     return res
         .status(201)
@@ -539,6 +563,33 @@ const approveCategory = asyncHandler(async(req, res) =>{
     category.isActive = true;
     await category.save();
 
+    if (category.proposedBy) {
+    try {
+      await createAndSendNotification({
+        recipientId: category.proposedBy._id,
+        recipientRole: "seller",
+        recipientEmail: category.proposedBy.email,
+        type: "SYSTEM_ANNOUNCEMENT_SELLER",
+        title: "Category approved",
+        message: `Your proposed category "${category.name}" has been approved.`,
+        relatedEntity: {
+          entityType: "category",
+          entityId: category._id,
+        },
+        channels: ["in-app", "email"],
+        meta: {
+          categoryId: category._id,
+          categoryName: category.name,
+        },
+      });
+    } catch (e) {
+      console.error(
+        "Seller category approved notification failed",
+        e
+      );
+    }
+  }
+
     return res 
     .status(200)
     .json(
@@ -578,6 +629,35 @@ const rejectCategory = asyncHandler(async(req, res ) =>{
     category.isActive = false;
     category.rejectionReason = rejectionReason || "No reason provided";
     await category.save();
+
+    if (category.proposedBy) {
+    try {
+      await createAndSendNotification({
+        recipientId: category.proposedBy._id,
+        recipientRole: "seller",
+        recipientEmail: category.proposedBy.email,
+        type: "SYSTEM_ANNOUNCEMENT_SELLER",
+        title: "Category rejected",
+        message: `Your proposed category "${category.name}" was rejected.`,
+        relatedEntity: {
+          entityType: "category",
+          entityId: category._id,
+        },
+        channels: ["in-app", "email"],
+        meta: {
+          categoryId: category._id,
+          categoryName: category.name,
+          reason: category.rejectionReason,
+        },
+      });
+    } catch (e) {
+      console.error(
+        "Seller category rejected notification failed",
+        e
+      );
+    }
+  }
+
 
     return res
         .status(200)
