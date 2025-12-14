@@ -32,7 +32,10 @@ const generateAccessAndRefreshToken = async (userId) =>{
     
     }
     catch(error){
-        throw new ApiError(500, "Something went wrong while generate access and refresh token");
+        throw new ApiError(
+          500, 
+          "Something went wrong while generate access and refresh token"
+        );
     }
 };
 
@@ -114,7 +117,27 @@ const registerUser = asyncHandler(async (req, res)=>{
     throw new ApiError(500, "Something went wrong while registering user");
   }
   await User.findOneAndUpdate({email},{isEmailVerified:true},{new:true});
- 
+
+  try {
+    await createAndSendNotification({
+      recipientId: null, // optional: use admin user id if you have it
+      recipientRole: "admin",
+      recipientEmail: null,
+      type: "NEW_USER_REGISTERED",
+      title: "New user registered",
+      message: `New ${role} registered: ${fullname} (${email})`,
+      relatedEntity: { entityType: "user", entityId: user._id },
+      channels: ["in-app"],
+      meta: {
+        userId: user._id,
+        role,
+        email,
+      },
+    });
+  } catch (e) {
+    console.error("Failed to send NEW_USER_REGISTERED notification", e);
+  }  
+
   return res.status(201).json(
     new ApiResponse(200, createdUser, "User registered successfully")
   );
@@ -251,6 +274,24 @@ const isSame = await user.isPasswordCorrect(newPassword);
 
   await user.save({validateBeforeSave: false});
 
+  try {
+    await createAndSendNotification({
+      recipientId: user._id,
+      recipientRole: user.role,
+      recipientEmail: user.email,
+      type: "PASSWORD_CHANGED",
+      title: "Password changed successfully",
+      message: "Your password was changed from your account settings.",
+      relatedEntity: { entityType: "user", entityId: user._id },
+      channels: ["in-app", "email"],
+      meta: {
+        userId: user._id,
+      },
+    });
+  } catch (e) {
+    console.error("Failed to send PASSWORD_CHANGED notification", e);
+  }
+
   return res 
   .status(200)
   .json(
@@ -352,6 +393,26 @@ const resetPassword = asyncHandler(async (req, res)=>{
   }
   user.password = newPassword;
   await user.save({validateBeforeSave: false});
+
+  try {
+    await createAndSendNotification({
+      recipientId: user._id,
+      recipientRole: user.role,
+      recipientEmail: user.email,
+      type: "PASSWORD_RESET",
+      title: "Password reset successfully",
+      message:
+        "Your password was reset using the OTP password reset flow.",
+      relatedEntity: { entityType: "user", entityId: user._id },
+      channels: ["in-app", "email"],
+      meta: {
+        userId: user._id,
+      },
+    });
+  } catch (e) {
+    console.error("Failed to send PASSWORD_RESET notification", e);
+  }
+
   return res
   .status(200)
   .json(
@@ -553,6 +614,24 @@ const updateAccountDetails = asyncHandler(async(req, res)=>{
   {new: true}
 ).select("-password -refreshToken");
 
+try {
+    await createAndSendNotification({
+      recipientId: updatedUser._id,
+      recipientRole: updatedUser.role,
+      recipientEmail: null,
+      type: "PROFILE_UPDATED",
+      title: "Profile updated",
+      message: "Your account details were updated.",
+      relatedEntity: { entityType: "user", entityId: updatedUser._id },
+      channels: ["in-app"],
+      meta: {
+        userId: updatedUser._id,
+      },
+    });
+  } catch (e) {
+    console.error("Failed to send PROFILE_UPDATED notification", e);
+  }
+
 
 return res
   .status(200)
@@ -665,6 +744,26 @@ else{
 }
 
   await seller.save();
+
+  try {
+    await createAndSendNotification({
+      recipientId: seller._id,
+      recipientRole: "seller",
+      recipientEmail: seller.email,
+      type: "SELLER_PROFILE_UPDATED",
+      title: "Store profile updated",
+      message:
+        "Your seller/store profile has been updated. If you changed business or bank details, they may be reviewed.",
+      relatedEntity: { entityType: "user", entityId: seller._id },
+      channels: ["in-app", "email"],
+      meta: {
+        userId: seller._id,
+      },
+    });
+  } catch (e) {
+    console.error("Failed to send SELLER_PROFILE_UPDATED notification", e);
+  }
+
 
   return res.status(200).json(
     new ApiResponse(200, seller, "Seller profile updated successfully")
@@ -810,6 +909,25 @@ const approveSeller = asyncHandler(async (req, res) => {
   seller.isSellerSuspended = false;
   await seller.save();
 
+  try {
+    await createAndSendNotification({
+      recipientId: seller._id,
+      recipientRole: "seller",
+      recipientEmail: seller.email,
+      type: "SELLER_APPROVED",
+      title: "Seller account approved",
+      message:
+        "Congratulations! Your seller account has been approved. You can now start selling on SmartCart.",
+      relatedEntity: { entityType: "user", entityId: seller._id },
+      channels: ["in-app", "email"],
+      meta: {
+        userId: seller._id,
+      },
+    });
+  } catch (e) {
+    console.error("Failed to send SELLER_APPROVED notification", e);
+  }
+
   res.status(200).json({
     success: true,
     message: "Seller approved successfully",
@@ -833,6 +951,25 @@ const suspendSeller = asyncHandler(async (req, res) => {
   seller.isSellerSuspended = true;
   await seller.save();
 
+  try {
+    await createAndSendNotification({
+      recipientId: seller._id,
+      recipientRole: "seller",
+      recipientEmail: seller.email,
+      type: "SELLER_SUSPENDED",
+      title: "Seller account suspended",
+      message:
+        "Your seller account has been suspended by admin. Please contact support for more details.",
+      relatedEntity: { entityType: "user", entityId: seller._id },
+      channels: ["in-app", "email"],
+      meta: {
+        userId: seller._id,
+      },
+    });
+  } catch (e) {
+    console.error("Failed to send SELLER_SUSPENDED notification", e);
+  }
+
   res.status(200).json({
     success: true,
     message: "Seller suspended successfully",
@@ -855,6 +992,25 @@ const unsuspendSeller = asyncHandler(async (req, res) => {
 
   seller.isSellerSuspended = false;
   await seller.save();
+
+  try {
+    await createAndSendNotification({
+      recipientId: seller._id,
+      recipientRole: "seller",
+      recipientEmail: seller.email,
+      type: "SELLER_UNSUSPENDED",
+      title: "Seller account unsuspended",
+      message:
+        "Your seller account suspension has been removed. You can now continue selling.",
+      relatedEntity: { entityType: "user", entityId: seller._id },
+      channels: ["in-app", "email"],
+      meta: {
+        userId: seller._id,
+      },
+    });
+  } catch (e) {
+    console.error("Failed to send SELLER_UNSUSPENDED notification", e);
+  }
 
   res.status(200).json({
     success: true,
@@ -916,6 +1072,25 @@ const deactivateUserAccount = asyncHandler(async (req, res) => {
   user.isActive = false;
   await user.save();
 
+   try {
+    await createAndSendNotification({
+      recipientId: user._id,
+      recipientRole: user.role,
+      recipientEmail: user.email,
+      type: "ACCOUNT_DEACTIVATED",
+      title: "Account deactivated",
+      message:
+        "Your account has been deactivated by admin. You can no longer access SmartCart until it is reactivated.",
+      relatedEntity: { entityType: "user", entityId: user._id },
+      channels: ["in-app", "email"],
+      meta: {
+        userId: user._id,
+      },
+    });
+  }catch (e) {
+    console.error("Failed to send ACCOUNT_DEACTIVATED notification", e);
+  }
+
   res.status(200).json({
     success: true,
     message: "User account deactivated successfully",
@@ -936,6 +1111,25 @@ const reactivateUserAccount = asyncHandler(async (req, res) => {
 
   user.isActive = true;
   await user.save();
+
+  try {
+    await createAndSendNotification({
+      recipientId: user._id,
+      recipientRole: user.role,
+      recipientEmail: user.email,
+      type: "ACCOUNT_REACTIVATED",
+      title: "Account reactivated",
+      message:
+        "Your account has been reactivated by admin. You can now access SmartCart again.",
+      relatedEntity: { entityType: "user", entityId: user._id },
+      channels: ["in-app", "email"],
+      meta: {
+        userId: user._id,
+      },
+    });
+  } catch (e) {
+    console.error("Failed to send ACCOUNT_REACTIVATED notification", e);
+  }
 
   res.status(200).json({
     success: true,
