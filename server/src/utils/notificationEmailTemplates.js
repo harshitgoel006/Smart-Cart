@@ -1,6 +1,6 @@
 // utils/notificationEmailTemplates.js
 
-export const emailTemplates = {
+ const emailTemplates = {
   // ======================
   // CUSTOMER NOTIFICATIONS
   // ======================
@@ -430,3 +430,5 @@ export const emailTemplates = {
     `,
   },
 };
+
+  export {emailTemplates};
