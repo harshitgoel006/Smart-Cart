@@ -6,6 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { Order } from "../models/order.model.js"
 import { ProductQnA } from "../models/productQnA.model.js";
 import mongoose from "mongoose";
+import createAndSendNotification from "../utils/notification/createAndSendNotification.js";
 
 
 
@@ -512,7 +513,7 @@ const askProductQuestion = asyncHandler(async (req, res) => {
 
 
 
-
+// this controller is used to create a new product by seller
 const createProduct = asyncHandler(async (req, res) => {
   const {
     name,
@@ -560,6 +561,7 @@ const createProduct = asyncHandler(async (req, res) => {
     .json(new ApiResponse(201, product, "Product created successfully & pending admin approval"));
 });
 
+// this controller is used to get all products of a seller
 const getSellerProduct = asyncHandler(async(req, res) =>{
     const sellerId = req.user._id;
     const {status, category, page = 1, limit = 10}= req.query;
@@ -592,6 +594,7 @@ const getSellerProduct = asyncHandler(async(req, res) =>{
     )
 });
 
+// this controller is used to update product details by seller
 const updateProduct = asyncHandler(async(req, res) =>{
     const productId = req.params.id;
     const sellerId = req.user._id;
@@ -633,6 +636,30 @@ const updateProduct = asyncHandler(async(req, res) =>{
             new:true
         }
     )
+
+    try{
+        await createAndSendNotification({
+            recipientId: product.seller,
+            recipientRole:"seller",
+            recipientEmail: req.user.email,
+            type:"PRODUCT_STATUS_TOGGLED",
+            title:"Product updated & pending approval",
+            message: `Your product "${product.name}" was updated and is pending admin approval.`,
+            relatedEntity:{
+                entityType: "product", 
+                entityId: product._id
+            },
+            channels:["in-app", "email"],
+            meta:{
+                productId:product._id,
+                productName: product.name,
+                status: product.approvalStatus,
+            },
+        });
+    }catch(e){
+        console.error("Failed to send PRODUCT_STATUS_TOGGLED createAndSendNotification",e)
+    }
+
     return res 
     .status(200)
     .json(
@@ -647,6 +674,7 @@ const updateProduct = asyncHandler(async(req, res) =>{
     
 });
 
+// this controller is used to delete a product by seller
 const deleteProduct = asyncHandler(async(req, res) =>{
     const productId = req.params;
     const sellerId = req.user._id;
@@ -671,6 +699,7 @@ const deleteProduct = asyncHandler(async(req, res) =>{
     )
 });
 
+// this controller is used to manage product stock by seller
 const manageProductStock = asyncHandler(async(req, res)=>{
     const productId = req.params.id;
     const{ stock } = req.body;
@@ -710,6 +739,7 @@ const bulkProductUpload = asyncHandler(async(req, res) =>{
 
 });
 
+// this controller is used to manage product variants by seller
 const variantManagement = asyncHandler(async(req, res) =>{
     const productId = req.params.id;
     const {variants} = req.body;
@@ -735,6 +765,7 @@ const variantManagement = asyncHandler(async(req, res) =>{
     )
 });
 
+// this controller is used to get orders for a specific product by seller
 const getProductOrders = asyncHandler(async(req, res) =>{
     const productId = req.params.id;
     const order = await Order
@@ -756,6 +787,7 @@ const getProductOrders = asyncHandler(async(req, res) =>{
     )
 });
 
+// this controller is used to respond to product QnA by seller
 const respondToProductQnA = asyncHandler(async(req,res)=>{
     const {productId, questionId} = req.params;
     const {answer} = req.body;
@@ -773,6 +805,30 @@ const respondToProductQnA = asyncHandler(async(req,res)=>{
     qna.answeredBy = req.user._id;
     await qna.save();
 
+    try{
+        await createAndSendNotification ({
+            recipientId: qna.user,
+            recipientRole: "customer",
+            recipientEmail: null,
+            type: "SYSTEM_ANNOUNCEMENT_CUSTOMER",
+            title: "Your product question was answered",
+            message:`Your question on product "${product.name}" has a new answer.`,
+            relatedEntity: {
+                entityType:"product",
+                entityId: product._id,
+            },
+            channels: ["in-app"],
+            meta:{
+                productId: product._id,
+                productName: product.name,
+                questionId: qna._id,
+                answer,
+            }
+        });
+    }catch(e){
+        console.error("Failed to send QnA answer notification", e)
+    }
+
     return res
     .status(200)
     .json(
@@ -784,6 +840,7 @@ const respondToProductQnA = asyncHandler(async(req,res)=>{
     );
 });
 
+// this controller is used to archive a product by seller
 const archiveProduct = asyncHandler(async(req, res) =>{
     const product = await Product.findById(req.params.id);
     if(!product){
@@ -806,6 +863,7 @@ const archiveProduct = asyncHandler(async(req, res) =>{
     )
 });
 
+// this controller is used to restore an archived product by seller
 const restoreArchiveProduct = asyncHandler(async(req, res) =>{
     const product = await Product.findById(req.params.id);
     if(!product){
@@ -828,6 +886,7 @@ const restoreArchiveProduct = asyncHandler(async(req, res) =>{
     )
 });
 
+// this controller is used to get product feedback by seller
 const getProductFeedback = asyncHandler(async(req,res) =>{
     const productId = req.params.id;
     const product = await Product.findById(productId);
@@ -876,6 +935,7 @@ const getProductFeedback = asyncHandler(async(req,res) =>{
 
 });
 
+//  this controller is used to feature/unfeature a product by seller
 const toggleProductFeature = asyncHandler(async(req, res) =>{
     const productId = req.params;
     const{featured} = req.body;
@@ -912,6 +972,7 @@ const toggleProductFeature = asyncHandler(async(req, res) =>{
     )
 });
 
+// this controller is used to schedule flash sale for a product by seller
 const scheduleFlashSale = asyncHandler(async(req, res) =>{
     const productId = req.params.id;
 
@@ -974,7 +1035,7 @@ const getProductPerformanceAnalytics = asyncHandler(async(req, res) =>{
 
 
 
-
+// this controller is used to approve products by admin
 const approveProducts = asyncHandler(async(req, res) =>{
     const {id} = req.params;
     const product = await Product.findByIdAndUpdate(
@@ -990,6 +1051,28 @@ const approveProducts = asyncHandler(async(req, res) =>{
     if(!product){
         throw new ApiError(404,"Product not found")
     }
+
+    try {
+        await createAndSendNotification({
+            recipientId: product.seller._id,
+            recipientRole: "seller",
+            recipientEmail: product.seller.email,
+            type: "PRODUCT_APPROVED",
+            title: "Product approved",
+            message: `Your product "${product.name}" has been approved and is now live.`,
+            relatedEntity: { 
+                entityType: "product", 
+                entityId: product._id 
+            },
+            channels: ["in-app", "email"],
+            meta: {
+                productId: product._id,
+                productName: product.name,
+            },
+        });
+    }catch (e) {
+        console.error("Failed to send PRODUCT_APPROVED notification", e);
+    }
     return res 
     .status(200)
     .json(
@@ -1003,6 +1086,7 @@ const approveProducts = asyncHandler(async(req, res) =>{
 
 });
 
+// this controller is used to reject products by admin
 const rejectProduct = asyncHandler(async (req,res) =>{
     const {id} = req.params;
     const {reason} = req.body;
@@ -1019,6 +1103,30 @@ const rejectProduct = asyncHandler(async (req,res) =>{
     if(!product){
         throw new ApiError(404,"Product not found");
     }
+
+    try {
+        await createAndSendNotification({
+            recipientId: product.seller._id,
+            recipientRole: "seller",
+            recipientEmail: product.seller.email,
+            type: "PRODUCT_REJECTED",
+            title: "Product rejected",
+            message: `Your product "${product.name}" was rejected by admin.`,
+            relatedEntity: { 
+                entityType: "product", 
+                entityId: product._id 
+            },
+            channels: ["in-app", "email"],
+            meta: {
+                productId: product._id,
+                productName: product.name,
+                reason: reason || "Not specified",
+            },
+        });
+    } catch (e) {
+        console.error("Failed to send PRODUCT_REJECTED notification", e);
+    }
+
     return res
     .status(200)
     .json(
@@ -1032,6 +1140,7 @@ const rejectProduct = asyncHandler(async (req,res) =>{
     
 });
 
+// this controller is used to get all products by admin
 const adminGetAllProducts = asyncHandler(async(req,res) =>{
     const {status, seller, isActive}= req.query;
     const filter = {};
@@ -1054,6 +1163,7 @@ const adminGetAllProducts = asyncHandler(async(req,res) =>{
     )
 });
 
+//  this controller is used to moderate product content by admin
 const moderateProductContent = asyncHandler(async(req, res) =>{
     const updates = req.body;
     if(!updates){
@@ -1082,6 +1192,7 @@ const moderateProductContent = asyncHandler(async(req, res) =>{
     )
 });
 
+// this controller is used to toggle product status by admin
 const toggleProductStatus = asyncHandler(async(req, res) =>{
     const {id} = req.params;
     const {isActive} = req.body;
@@ -1100,6 +1211,27 @@ const toggleProductStatus = asyncHandler(async(req, res) =>{
     if(!product){
         throw new ApiError(404,"Product not found");
     }
+
+    try {
+        await createAndSendNotification({
+            recipientId: product.seller._id,
+            recipientRole: "seller",
+            recipientEmail: product.seller.email,
+            type: "PRODUCT_STATUS_TOGGLED",
+            title: "Product status updated",
+            message: `Admin ${isActive ? "activated" : "deactivated"} your product "${product.name}".`,
+            relatedEntity: { entityType: "product", entityId: product._id },
+            channels: ["in-app", "email"],
+            meta: { 
+                productId: product._id, 
+                productName: product.name, 
+                status: isActive ? "active" : "inactive",
+            },
+        });
+    } catch (e) {
+        console.error("Failed to send PRODUCT_STATUS_TOGGLED notification",e);
+    }
+
     return res 
     .status(200)
     .json(
@@ -1112,6 +1244,7 @@ const toggleProductStatus = asyncHandler(async(req, res) =>{
 
 });
 
+// this controller is used to bulk moderate products by admin
 const bulkModerateProducts = asyncHandler(async(req, res) =>{
     const {ids, action} = req.body;
     if(!ids || !action){
