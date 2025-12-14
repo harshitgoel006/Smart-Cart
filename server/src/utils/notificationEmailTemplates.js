@@ -1,6 +1,6 @@
 // utils/notificationEmailTemplates.js
 
- const emailTemplates = {
+const emailTemplates = {
   // ======================
   // CUSTOMER NOTIFICATIONS
   // ======================
@@ -177,6 +177,111 @@
     html: (d) => `
       <h2>${d.title || "Exclusive offer"}</h2>
       <p>${d.message || ""}</p>
+    `,
+  },
+
+  // ======================
+  // USER / ACCOUNT EVENTS
+  // ======================
+
+  NEW_USER_REGISTERED: {
+    subject: (d) => `New ${d.role || "user"} registered on SmartCart`,
+    html: (d) => `
+      <h2>New user registered</h2>
+      <p>Role: ${d.role || "-"}</p>
+      <p>Name: ${d.fullname || "-"}</p>
+      <p>Email: ${d.email || "-"}</p>
+    `,
+  },
+
+  PASSWORD_CHANGED: {
+    subject: () => "Your SmartCart password was changed",
+    html: (d) => `
+      <h2>Password changed</h2>
+      <p>Hi ${d.fullname || "there"},</p>
+      <p>Your SmartCart account password was changed just now.</p>
+      <p>If this wasn't you, reset your password immediately and contact support.</p>
+    `,
+  },
+
+  PASSWORD_RESET: {
+    subject: () => "Your SmartCart password was reset",
+    html: (d) => `
+      <h2>Password reset successful</h2>
+      <p>Hi ${d.fullname || "there"},</p>
+      <p>Your SmartCart account password has been reset using the OTP flow.</p>
+      <p>If this wasn't you, please change your password again and contact support.</p>
+    `,
+  },
+
+  PROFILE_UPDATED: {
+    subject: () => "Your SmartCart profile was updated",
+    html: (d) => `
+      <h2>Profile updated</h2>
+      <p>Hi ${d.fullname || "there"},</p>
+      <p>Your account profile details were recently updated.</p>
+      <p>If you did not make these changes, please review your account immediately.</p>
+    `,
+  },
+
+  SELLER_PROFILE_UPDATED: {
+    subject: () => "Your seller profile was updated",
+    html: (d) => `
+      <h2>Seller profile updated</h2>
+      <p>Hi ${d.fullname || "Seller"},</p>
+      <p>Your seller/store profile has been updated.</p>
+      <p>If you changed business or bank details, they may be reviewed by SmartCart.</p>
+    `,
+  },
+
+  SELLER_APPROVED: {
+    subject: () => "Your SmartCart seller account is approved",
+    html: (d) => `
+      <h2>Seller account approved</h2>
+      <p>Hi ${d.fullname || "Seller"},</p>
+      <p>Your SmartCart seller account has been approved.</p>
+      <p>You can now start listing products and receiving orders.</p>
+    `,
+  },
+
+  SELLER_SUSPENDED: {
+    subject: () => "Your SmartCart seller account is suspended",
+    html: (d) => `
+      <h2>Seller account suspended</h2>
+      <p>Hi ${d.fullname || "Seller"},</p>
+      <p>Your seller account has been suspended by SmartCart.</p>
+      <p>Reason: ${d.reason || "Not specified"}.</p>
+      <p>Please contact support if you believe this is a mistake.</p>
+    `,
+  },
+
+  SELLER_UNSUSPENDED: {
+    subject: () => "Your SmartCart seller account is active again",
+    html: (d) => `
+      <h2>Seller account unsuspended</h2>
+      <p>Hi ${d.fullname || "Seller"},</p>
+      <p>Your seller account suspension has been removed.</p>
+      <p>You can now continue selling on SmartCart.</p>
+    `,
+  },
+
+  ACCOUNT_DEACTIVATED: {
+    subject: () => "Your SmartCart account was deactivated",
+    html: (d) => `
+      <h2>Account deactivated</h2>
+      <p>Hi ${d.fullname || "there"},</p>
+      <p>Your SmartCart account has been deactivated by an administrator.</p>
+      <p>You will not be able to log in until it is reactivated.</p>
+    `,
+  },
+
+  ACCOUNT_REACTIVATED: {
+    subject: () => "Your SmartCart account was reactivated",
+    html: (d) => `
+      <h2>Account reactivated</h2>
+      <p>Hi ${d.fullname || "there"},</p>
+      <p>Your SmartCart account has been reactivated.</p>
+      <p>You can now log in and continue using SmartCart.</p>
     `,
   },
 
@@ -431,4 +536,4 @@
   },
 };
 
-  export {emailTemplates};
+export { emailTemplates };
