@@ -29,6 +29,7 @@ import cartRouter  from './routes/cart.routes.js';
 import wishlistRouter from './routes/wishlist.routes.js';
 import orderRouter from './routes/order.routes.js';
 import notificationRouter from './routes/notification.routes.js';
+import reviewRouter from './routes/review.routes.js';
 
 
 
@@ -36,7 +37,7 @@ import notificationRouter from './routes/notification.routes.js';
 
 // Declaring routes
 
-app.use('/api/v1/uploads', uploadRouter);
+app.use("/api/v1/uploads", uploadRouter);
 app.use("/api/v1/users" , userRouter);
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/categories", categoryRouter);
@@ -44,5 +45,6 @@ app.use("/api/v1/carts", cartRouter);
 app.use("/api/v1/wishlists", wishlistRouter);
 app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/notifications", notificationRouter);
+app.use("/api/v1/reviews", reviewRouter);
 
 export {app}

@@ -172,6 +172,34 @@ const emailTemplates = {
     `,
   },
 
+  REVIEW_SUBMITTED_CUSTOMER: {
+  subject: "Your review has been submitted",
+  html: (d) => `
+    <h2>Review submitted</h2>
+    <p>Product: ${d.productName || "-"}</p>
+    <p>Status: Pending moderation.</p>
+  `,
+},
+
+REVIEW_APPROVED_CUSTOMER: {
+  subject: "Your review is now live",
+  html: (d) => `
+    <h2>Review approved</h2>
+    <p>Product: ${d.productName || "-"}</p>
+    <p>Your review is now visible on the product page.</p>
+  `,
+},
+
+REVIEW_REJECTED_CUSTOMER: {
+  subject: "Your review was not approved",
+  html: (d) => `
+    <h2>Review rejected</h2>
+    <p>Product: ${d.productName || "-"}</p>
+    <p>Reason: ${d.reason || "Does not meet our review guidelines."}</p>
+  `,
+},
+
+
   PROMO_CUSTOMER: {
     subject: (d) => d.subject || "New offer just for you",
     html: (d) => `
@@ -422,6 +450,24 @@ const emailTemplates = {
     `,
   },
 
+  NEW_REVIEW_FOR_PRODUCT: {
+  subject: "New review on your product",
+  html: (d) => `
+    <h2>New product review</h2>
+    <p>Product: ${d.productName || "-"}</p>
+    <p>Rating: ${d.rating}★</p>
+  `,
+},
+
+LOW_RATING_REVIEW_ALERT: {
+  subject: "Low-rating review alert",
+  html: (d) => `
+    <h2>Low rating received</h2>
+    <p>Product: ${d.productName || "-"}</p>
+    <p>Rating: ${d.rating}★</p>
+  `,
+},
+
   SYSTEM_ANNOUNCEMENT_SELLER: {
     subject: "Important update for sellers",
     html: (d) => `
@@ -517,6 +563,16 @@ const emailTemplates = {
       <p>Download link: ${d.downloadUrl || "-"}</p>
     `,
   },
+
+  REVIEW_REPORTED_ADMIN: {
+  subject: "Review reported by users",
+  html: (d) => `
+    <h2>Review reported</h2>
+    <p>Product: ${d.productName || "-"}</p>
+    <p>Review ID: ${d.reviewId}</p>
+    <p>Reports count: ${d.reportCount}</p>
+  `,
+},
 
   SYSTEM_ANNOUNCEMENT_ADMIN: {
     subject: "Admin announcement",
