@@ -30,6 +30,7 @@ import wishlistRouter from './routes/wishlist.routes.js';
 import orderRouter from './routes/order.routes.js';
 import notificationRouter from './routes/notification.routes.js';
 import reviewRouter from './routes/review.routes.js';
+import paymentRouter from './routes/payment.routes.js'
 
 
 
@@ -46,5 +47,8 @@ app.use("/api/v1/wishlists", wishlistRouter);
 app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/notifications", notificationRouter);
 app.use("/api/v1/reviews", reviewRouter);
+app.use("/api/v1/payments",paymentRouter);
+
+
 
 export {app}
