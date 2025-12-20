@@ -111,13 +111,14 @@ const registerUser = asyncHandler(async (req, res)=>{
     role,
     phone,
     avatar: avatar.url,
+    isEmailVerified: true
   });
 
   const createdUser = await User.findById(user._id).select("-password -refreshToken");
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong while registering user");
   }
-  await User.findOneAndUpdate({email},{isEmailVerified:true},{new:true});
+  
 
   try {
     await createAndSendNotification({
@@ -1042,7 +1043,7 @@ const getAllCustomers = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     count: customers.length,
-    sellers,
+    customers,
   });
 });
 

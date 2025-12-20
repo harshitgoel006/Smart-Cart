@@ -5,6 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Order } from "../models/order.model.js"
 import { ProductQnA } from "../models/productQnA.model.js";
+import { Review } from "../models/review.model.js";
 import mongoose from "mongoose";
 import createAndSendNotification from "../utils/sendNotification.js";
 
@@ -396,7 +397,10 @@ const submitReview = asyncHandler(async(req, res) =>{
          review = await Review.create({
             product: productId,
             user: userId,
+            order: orderId,              // REQUIRED
+            orderItem: orderItemId || null,
             rating,
+            title,
             comment
         });
     }
@@ -1041,7 +1045,7 @@ const approveProducts = asyncHandler(async(req, res) =>{
     const product = await Product.findByIdAndUpdate(
         id,
         {
-            approveStatus:"approved", 
+            approvalStatus:"approved", 
             isActive:true
         },
         {
