@@ -60,7 +60,7 @@ const getCartItems = asyncHandler(async(req, res) =>{
     const userId = req.user._id;
 
     const cart = await Cart.findOne({user:userId})
-    .populate("items.prroduct" , "name price images ");
+    .populate("items.product" , "name price images ");
 
     if(!cart || cart.items.length === 0){
         throw new ApiError(404, "Cart is empty");
@@ -72,8 +72,9 @@ const getCartItems = asyncHandler(async(req, res) =>{
         new ApiResponse(
             200,
             true,
+            cart,
             "Cart fetched successfully",
-            cart
+            
         )
     );
 });
@@ -103,6 +104,14 @@ const updateCartItem = asyncHandler(async(req, res) =>{
         throw new ApiError(404, "Product not found in cart");
     }
 
+    const product = await Product.findById(productId);
+  if(!product || !product.isActive){
+    throw new ApiError(404, "Product not available");
+  }
+
+  if(quantity > product.stock){
+    throw new ApiError(400, `Only ${product.stock} items available in stock`);
+  }
     cart.items[index].quantity = quantity;
 
     await cart.calculateTotals();
@@ -125,11 +134,11 @@ const updateCartItem = asyncHandler(async(req, res) =>{
 const removeCartItem = asyncHandler(async(req, res) =>{
     const userId = req.user._id;
 
-    const {productId} = req.params;
+    const {itemId} = req.params;
 
-    if(!productId){
-        throw new ApiError(400, "Product ID is required");
-    }
+    if(!itemId || !itemId.match(/^[0-9a-fA-F]{24}$/)){
+    throw new ApiError(400, "Valid item ID required");
+  }
 
     const cart  = await Cart.findOne({user:userId});
 
@@ -137,7 +146,15 @@ const removeCartItem = asyncHandler(async(req, res) =>{
         throw new ApiError(404, "Cart not found");
     }
 
-    await cart.removeItem(productId);
+    const initialCount = cart.items.length;
+  cart.items = cart.items.filter(item => item._id.toString() !== itemId);
+  
+  if(cart.items.length === initialCount){
+    throw new ApiError(404, "Item not found in cart");
+  }
+
+  await cart.calculateTotals();
+  await cart.save();
 
     return res 
     .status(200)

@@ -7,6 +7,7 @@ import { Cart } from "../models/cart.model.js";
 import { Coupon } from "../models/coupon.model.js";
 import { generateQRCode, generateAndUploadQRCode } from "../utils/qrCodeGenerators.js";
 import { parse } from 'json2csv';
+import mongoose from "mongoose";
 import XLSX from 'xlsx';
 import { Escalation } from "../models/escalation.model.js";
 import createAndSendNotification from "../utils/sendNotification.js";
@@ -121,7 +122,8 @@ const placeOrderController = asyncHandler(async (req, res) =>{
         trackingEvents: [{
             event: "Order Placed",
             scannedAt: new Date(),
-            remarks: "Order successfully placed by customer"
+            remarks: "Order successfully placed by customer",
+            location: "Warehouse"
         }]
     });
     newOrder.save();

@@ -1,5 +1,17 @@
 import QRCode from "qrcode";
 import crypto from "crypto";
+import { ApiError } from "./ApiError.js";
+import path from "path";
+import fs from "fs/promises";                   
+import fsSync from 'fs';  
+import { uploadOnCloudinary } from "./cloudinary.js";  
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+
 
 const generateQRCode = async () =>{
 
@@ -28,24 +40,37 @@ const generateQRCodeImage = async (orderId) => {
 };
 
 
-const generateAndUploadQRCode = async (orderId) => {
+
+
+
+const generateAndUploadQRCode = async (qrData) => {
+  
+  let tempPath;  
   try {
-    const qrCodeBuffer = await QRCode.toBuffer(orderId, {
-      width: 400,
-      margin: 2
-    });
+    const qrBuffer = await QRCode.toBuffer(qrData);
+    tempPath = path.join(process.cwd(), 'temp', `qr_${Date.now()}.png`);
     
     
-    const cloudinaryResponse = await uploadOnCloudinary(qrCodeBuffer, {
-      folder: "order-qrcodes",
-      resource_type: "image"
-    });
+    await fs.writeFile(tempPath, qrBuffer);
     
-    return cloudinaryResponse.secure_url;
+    const uploadResult = await uploadOnCloudinary(tempPath);
+    
+    return uploadResult?.url;
+    
   } catch (error) {
-    throw new Error("Failed to upload QR code");
+    throw new ApiError(500, "Failed to upload QR code");
+  } finally {
+    if (tempPath && fsSync.existsSync(tempPath)) {
+    fsSync.unlinkSync(tempPath);
+  }
   }
 };
+
+
+
+
+
+
 
 export {
     generateQRCode,
