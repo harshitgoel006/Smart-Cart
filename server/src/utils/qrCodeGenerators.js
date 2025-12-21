@@ -44,27 +44,51 @@ const generateQRCodeImage = async (orderId) => {
 
 
 const generateAndUploadQRCode = async (qrData) => {
+  console.log("🔍 QR Data:", qrData);
+  let tempPath;
   
-  let tempPath;  
   try {
     const qrBuffer = await QRCode.toBuffer(qrData);
     tempPath = path.join(process.cwd(), 'temp', `qr_${Date.now()}.png`);
     
+    console.log("🔍 Temp path:", tempPath);
     
     await fs.writeFile(tempPath, qrBuffer);
+    console.log("✅ QR file created");
     
     const uploadResult = await uploadOnCloudinary(tempPath);
+    console.log("✅ Upload success:", uploadResult?.url);
     
-    return uploadResult?.url;
+    return uploadResult?.url;  // String only
     
   } catch (error) {
+    console.error("🔍 QR Error:", error);
     throw new ApiError(500, "Failed to upload QR code");
   } finally {
-    if (tempPath && fsSync.existsSync(tempPath)) {
-    fsSync.unlinkSync(tempPath);
-  }
+    // 🔥 BULLETPROOF CLEANUP
+    if (tempPath) {
+      // Multiple cleanup attempts with delay
+      const cleanupAttempts = [0, 100, 500]; // 0ms, 100ms, 500ms delays
+      
+      for (const delay of cleanupAttempts) {
+        await new Promise(r => setTimeout(r, delay));
+        
+        try {
+          if (await fs.access(tempPath).then(() => true).catch(() => false)) {
+            await fs.unlink(tempPath);
+            console.log("✅ Temp file cleaned up");
+            return;
+          }
+        } catch (unlinkError) {
+          console.log(`⏳ Cleanup attempt ${delay}ms failed, retrying...`);
+        }
+      }
+      
+      console.warn("⚠️ Temp file left behind:", tempPath);
+    }
   }
 };
+
 
 
 

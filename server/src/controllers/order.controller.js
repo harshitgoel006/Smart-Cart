@@ -265,7 +265,7 @@ const getOrderHistoryController = asyncHandler(async( req, res) =>{
 
   const countPromise = Order.countDocuments(filter);
 
-  const [orders, totalOrders] = await Promise.all([ordersPromise, countPromise]);
+  const [orders, total] = await Promise.all([ordersPromise, countPromise]);
 
   const responseData = {
     orders: orders.map(order => ({
