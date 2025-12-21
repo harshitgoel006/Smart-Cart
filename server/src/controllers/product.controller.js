@@ -290,7 +290,7 @@ const searchProduct = asyncHandler(async(req, res) =>{
 
 // get related products
 const getRelatedProducts = asyncHandler(async(req, res) =>{
-    const productId = req.params;
+    const {productId} = req.params;
 
     const {page = 1, limit = 10} = req.query;
 
@@ -317,7 +317,7 @@ const getRelatedProducts = asyncHandler(async(req, res) =>{
     const total = await Product.countDocuments(filter);
 
     const products = await Product.find(filter)
-    .limitNum(limit)
+    .limit(limitNum)
     .skip((pageNum - 1) * limitNum)
     .select("title price discount rating images stock category")
     .populate({
@@ -343,9 +343,9 @@ const getRelatedProducts = asyncHandler(async(req, res) =>{
 
 
 //  ----------------->>>>>>>>>>>>>>>>>>>> work on Review Model
-const getProductReview = asyncHandler(async(req, res) =>{
+const getProductReview = asyncHandler(async(req, res) => {
     const {productId} = req.params;
-    const { page = 1, limit = 10} = req.query;
+    const { rating, page = 1, limit = 10 } = req.query;  
     const filter = {product: productId};
     if(rating){
         filter.rating = Number(rating);
@@ -356,11 +356,11 @@ const getProductReview = asyncHandler(async(req, res) =>{
     const reviews = await Review.find(filter)
     .sort({createdAt: -1})
     .skip((pageNum - 1) * limitNum)
-    .limitNum(limit)
+    .limit(limitNum)  
     .populate({
         path: "user",
         select: "fullname email username avatar"
-    })
+    });
 
     return res
     .status(200)
@@ -382,26 +382,26 @@ const getProductReview = asyncHandler(async(req, res) =>{
 
 
 //  ----------------->>>>>>>>>>>>>>>>>>>> work on Review Model
-const submitReview = asyncHandler(async(req, res) =>{
+const submitReview = asyncHandler(async(req, res) => {
     const {productId} = req.params;
-    const {rating, comment} = req.body;
+    const {rating, comment, title = ""} = req.body;  
     const userId = req.user._id;
 
-    const review = await Review.findOne({produt:productId, user: userId});
+    const review = await Review.findOne({product:productId, user: userId}); 
     if(review){
         review.rating = rating;
         review.comment = comment;
+        review.title = title;
         await review.save();
-    }
-    else{
-         review = await Review.create({
+    } else {
+        review = await Review.create({
             product: productId,
             user: userId,
-            order: orderId,              // REQUIRED
-            orderItem: orderItemId || null,
             rating,
             title,
-            comment
+            comment,
+            order: null,  
+            orderItem: null
         });
     }
 
@@ -680,7 +680,7 @@ const updateProduct = asyncHandler(async(req, res) =>{
 
 // this controller is used to delete a product by seller
 const deleteProduct = asyncHandler(async(req, res) =>{
-    const productId = req.params;
+    const productId = req.params.productId;
     const sellerId = req.user._id;
 
     const product = await Product.findById(productId);
@@ -705,7 +705,7 @@ const deleteProduct = asyncHandler(async(req, res) =>{
 
 // this controller is used to manage product stock by seller
 const manageProductStock = asyncHandler(async(req, res)=>{
-    const productId = req.params.id;
+    const productId = req.params.productId;
     const{ stock } = req.body;
     if(stock === undefined){
         throw new ApiError(400, "Stock value is required")
@@ -745,7 +745,7 @@ const bulkProductUpload = asyncHandler(async(req, res) =>{
 
 // this controller is used to manage product variants by seller
 const variantManagement = asyncHandler(async(req, res) =>{
-    const productId = req.params.id;
+    const productId = req.params.productId;
     const {variants} = req.body;
 
     const product = await Product.findById(productId);
@@ -846,7 +846,7 @@ const respondToProductQnA = asyncHandler(async(req,res)=>{
 
 // this controller is used to archive a product by seller
 const archiveProduct = asyncHandler(async(req, res) =>{
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.productId);
     if(!product){
         throw new ApiError(404, "Product not found")
     }
@@ -869,7 +869,7 @@ const archiveProduct = asyncHandler(async(req, res) =>{
 
 // this controller is used to restore an archived product by seller
 const restoreArchiveProduct = asyncHandler(async(req, res) =>{
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.productId);
     if(!product){
         throw new ApiError(404, "Product not found")
     }
@@ -940,22 +940,24 @@ const getProductFeedback = asyncHandler(async(req,res) =>{
 });
 
 //  this controller is used to feature/unfeature a product by seller
-const toggleProductFeature = asyncHandler(async(req, res) =>{
-    const productId = req.params;
-    const{featured} = req.body;
+const toggleProductFeature = asyncHandler(async(req, res) => {
+  const productId = req.params.productId;  
+  const { featured } = req.body || {};    
 
-    if(featured){
-        const featuredCount = await Product.countDocuments(
-            {
-                seller: req.user._id, 
-                featured:true
-            }
-        )
-    };
-    if(featuredCount >=5){
-        throw new ApiError(400, "Feature limit reached (max 5)")
-    }
-    const product = await Product.findById(productId)
+  if(featured === undefined) {
+    throw new ApiError(400, "featured field required");
+  }
+
+  const featuredCount = await Product.countDocuments({
+    seller: req.user._id,
+    featured: true
+  });
+
+  if(featured && featuredCount >= 5) {
+    throw new ApiError(400, "Feature limit reached (max 5)");
+  }
+
+  const product = await Product.findById(productId);
     if(!product){
         throw new ApiError(404, "Product not found")
     }
@@ -978,7 +980,7 @@ const toggleProductFeature = asyncHandler(async(req, res) =>{
 
 // this controller is used to schedule flash sale for a product by seller
 const scheduleFlashSale = asyncHandler(async(req, res) =>{
-    const productId = req.params.id;
+    const productId = req.params.productId;
 
     const {start, end , discount} = req.body;
 
@@ -1200,8 +1202,8 @@ const moderateProductContent = asyncHandler(async(req, res) =>{
 const toggleProductStatus = asyncHandler(async(req, res) =>{
     const {id} = req.params;
     const {isActive} = req.body;
-    if(!isActive){
-        throw new ApiError(404, "status is required")
+    if(isActive === undefined){  
+        throw new ApiError(400, "isActive is required")
     }
     const product = await Product.findByIdAndUpdate(
         id,
