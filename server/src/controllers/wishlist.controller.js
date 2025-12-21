@@ -43,8 +43,8 @@ const addProductToWishlist = asyncHandler(async(req, res)=>{
         new ApiResponse(
             200, 
             true,
+            wishlist,
             "Product added to wishlist", 
-            wishlist
         )
     );
 
@@ -82,8 +82,8 @@ const removeProductFromWishlist = asyncHandler(async(req, res)=>{
         new ApiResponse(
             200,
             true,
+            wishlist,
             "Product removed from wishlist",
-            wishlist
         )
     );
 });
@@ -115,8 +115,9 @@ const viewWishlist = asyncHandler(async(req, res) =>{
         new ApiResponse(
             200,
             true,
+            wishlist,
             "wishlist fetched successfully",
-            wishlist
+            
         )
     );
 });
@@ -172,11 +173,12 @@ const moveListItemToCart = asyncHandler(async(req, res) =>{
         new ApiResponse(
             200,
             true,
-            "Product moved to cart",
             {
                 wishlist, 
                 cart
-            }
+            },
+            "Product moved to cart",
+            
         )
     );
 
@@ -204,8 +206,8 @@ const wishlistItemAvailablity = asyncHandler(async(req,res) =>{
         new ApiResponse(
             200,
             true,
+            wishlist,
             "Wishlist item availability updated",
-            wishlist
         )
     );
 });
@@ -227,8 +229,8 @@ const  getWishlistCount = asyncHandler(async(req, res) =>{
     .json(new ApiResponse(
         200,
         true, 
+        {count},
         "Wishlist count fetched successfully",
-        {count}
     ));
 });
 
@@ -251,8 +253,8 @@ const clearWishlist = asyncHandler(async(req, res) => {
         new ApiResponse(
             200,
             true,
+            wishlist,
             "Wishlist cleared successfully",
-            wishlist
         )
     );
 });
@@ -282,8 +284,8 @@ const wishlistPrivacy = asyncHandler(async(req, res) =>{
         new ApiResponse(
             200, 
             true,
+            wishlist,
             "Wishlist privacy updated",
-            wishlist
         )
     );
 });
@@ -321,8 +323,8 @@ const  createNewWishlist = asyncHandler(async(req, res)=>{
         new ApiResponse(
             201, 
             true,
+            wishlist,
             "Wishlist created successfully",
-            wishlist
         )
     );
 });
@@ -346,8 +348,8 @@ const getAllWishlist = asyncHandler(async(req, res) =>{
         new ApiResponse(
             200,
             true,
+            wishlists,
             "Wishlists fetched successfully",
-            wishlists
         )
     );
 });
@@ -385,8 +387,8 @@ const setDefaultWishlist = asyncHandler(async(req, res) =>{
         new ApiResponse(
             200,
             true,
+            wishlist,
             "Default wishlist updated",
-            wishlist
         )
     );
 });
