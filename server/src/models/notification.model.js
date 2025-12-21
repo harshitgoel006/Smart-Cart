@@ -95,7 +95,7 @@ const notificationSchema = new mongoose.Schema(
     relatedEntity: {
       entityType: {
         type: String,
-        enum: ["order", "product", "escalation", "user", "none"],
+        enum: ["order", "product", "escalation", "user", "none","cart"],
         default: "none"
       },
       entityId: {

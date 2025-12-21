@@ -35,6 +35,18 @@ const cartSchema = new mongoose.Schema
         totalPrice:{
             type: Number,
             default:0
+        },
+        couponCode: {  
+            type: String,
+            default: null
+        },
+        discountAmount: {
+            type: Number,
+            default: 0
+        },
+        finalPrice: {  
+            type: Number,
+            default: 0
         }
     },
     {
@@ -47,7 +59,7 @@ const cartSchema = new mongoose.Schema
 
 cartSchema.methods.calculateTotals = async function(){
     let totalItems = 0;
-    let totalPrice = 0;
+    let subTotal = 0;
 
     const productIds = this.items.map(item => item.product);
     const products = await mongoose.model("Product").find({_id: {$in: productIds}});
@@ -56,12 +68,20 @@ cartSchema.methods.calculateTotals = async function(){
         const product = products.find(p => p._id.toString() === item.product.toString());
         if(product){
             totalItems += item.quantity;
-            totalPrice += item.quantity*product.price;
+            subTotal += item.quantity*product.price;
         }
     }
 
     this.totalItems = totalItems;
-    this.totalPrice = totalPrice;
+    this.totalPrice = subTotal;
+
+    if (this.couponCode && this.discountAmount > 0) {
+        this.finalPrice = Math.max(0, this.totalPrice - this.discountAmount);
+    } else {
+        this.finalPrice = this.totalPrice;
+        this.discountAmount = 0;
+        this.couponCode = null;
+    }
 };
 
 

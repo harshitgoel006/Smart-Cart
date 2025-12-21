@@ -229,7 +229,8 @@ const applyCoupon = asyncHandler(async (req, res) => {
 
   cart.couponCode = coupon.code;
   cart.discountAmount = discountAmount;
-  cart.totalPrice = Math.max(0, cart.totalPrice - discountAmount);
+  await cart.save();
+  await cart.calculateTotals();
 
   await cart.save();
 

@@ -14,12 +14,21 @@ const couponSchema = new mongoose.Schema(
     },
     discountType: {
       type: String,
-      enum: ["percentage", "fixed"],
+      enum: ["percentage", "fixed"],  // Controller uses discountPercent/discountAmount
       required: true,
     },
-    discountValue: {
+    discountValue: {  // ✅ Used for both percentage & fixed
       type: Number,
       required: true,
+      min: 0,
+    },
+    discountPercent: {  // ✅ MISSING - Controller expects this!
+      type: Number,
+      min: 0,
+      max: 100,
+    },
+    discountAmount: {  // ✅ MISSING - Controller expects this!
+      type: Number,
       min: 0,
     },
     applicableProducts: [
