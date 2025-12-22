@@ -12,6 +12,11 @@ import XLSX from 'xlsx';
 import { Escalation } from "../models/escalation.model.js";
 import createAndSendNotification from "../utils/sendNotification.js";
 
+import { invoiceEmailTemplate } from "../utils/notificationEmailTemplates.js";
+import sendEmail, { sendEmailWithHTML } from "../utils/sendEmail.js";
+
+
+
 
 
 
@@ -22,70 +27,80 @@ import createAndSendNotification from "../utils/sendNotification.js";
 
 
 
-// This controller allows a customer to place a new order
-const placeOrderController = asyncHandler(async (req, res) =>{
-    const userId = req.user._id;
-    const { shippingAddress, paymentMethod, couponCode, notes , productId, quantity, formCart = false} = req.body;
 
-    if(!shippingAddress || !paymentMethod) {
+
+// This controller allows a customer to place a new order
+const placeOrderController = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+    const { shippingAddress, paymentMethod, couponCode, notes, productId, quantity, formCart = false } = req.body;
+
+    if (!shippingAddress || !paymentMethod) {
         throw new ApiError(400, "Shipping address and payment method are required to place an order.");
     }
+    
     let orderItems = [];
     let totalAmount = 0;
 
-    if(formCart){
-        const cart = await Cart.findOne({user:userId})
-        .populate('items.product');
+    if (formCart) {
+        const cart = await Cart.findOne({ user: userId })
+            .populate('items.product');
 
-        if(!cart || cart.items.length === 0){
+        if (!cart || cart.items.length === 0) {
             throw new ApiError(400, "Your cart is empty.");
         }
-
-    }
-    else{
-        if(!productId || !quantity){
+        
+        cart.items.forEach(cartItem => {
+            totalAmount += cartItem.priceSnapshot * cartItem.quantity;
+            orderItems.push({
+                product: cartItem.product._id,
+                quantity: cartItem.quantity,
+                price: cartItem.priceSnapshot,
+                seller: cartItem.product.seller,
+                fulfillmentStatus: "Processing"
+            });
+        });
+        console.log("🔍 Cart orderItems:", orderItems);  // DEBUG
+    } else {
+        if (!productId || !quantity) {
             throw new ApiError(400, "Product ID and quantity are required to place an order.");
         }
-
         const product = await Product.findById(productId);
-        if(!product){
+        if (!product) {
             throw new ApiError(404, "Product not found.");
         }
 
-        if(product.stock < quantity){
+        if (product.stock < quantity) {
             throw new ApiError(400, `Only ${product.stock} items left in stock.`);
         }
 
         totalAmount = product.price * quantity;
         orderItems.push({
             product: product._id,
-            quantity,   
+            quantity,
             price: product.price,
             seller: product.seller,
             fulfillmentStatus: "Processing"
-
         });
     }
 
     let discount = 0;
     let couponUsed = null;
-    if(couponCode){
+    if (couponCode) {
         const coupon = await Coupon.findOne({
             code: couponCode.toUpperCase(),
             active: true,
             expiryDate: { $gt: new Date() }
         });
-        if(!coupon){
+        if (!coupon) {
             throw new ApiError(400, "Invalid or expired coupon code.");
         }
-        if(coupon.usageCount >= coupon.totalUsageLimit){
+        if (coupon.usageCount >= coupon.totalUsageLimit) {
             throw new ApiError(400, "Coupon usage limit reached.");
         }
 
-        if(coupon.discountType === "percentage"){
+        if (coupon.discountType === "percentage") {
             discount = (totalAmount * coupon.discountValue) / 100;
-        }
-        else {
+        } else {
             discount = coupon.discountValue;
         }
         couponUsed = coupon._id;
@@ -94,14 +109,12 @@ const placeOrderController = asyncHandler(async (req, res) =>{
             $inc: { usageCount: 1 }
         });
     }
-
+    
     const finalAmount = totalAmount - discount;
-
     const qrCode = await generateQRCode();
     const qrCodeImageUrl = await generateAndUploadQRCode(qrCode);
-
-
-  const newOrder = new Order({
+    
+    const newOrder = new Order({
         user: userId,
         items: orderItems,
         shippingAddress,
@@ -116,8 +129,11 @@ const placeOrderController = asyncHandler(async (req, res) =>{
         qrCodeImage: qrCodeImageUrl,
         notes,
         statusHistory: [
-            { status: "Pending",
-              updatedAt: new Date()  }
+            { 
+                status: "Pending",
+                updatedAt: new Date(),
+                role: "user"
+            }
         ],
         trackingEvents: [{
             event: "Order Placed",
@@ -126,116 +142,120 @@ const placeOrderController = asyncHandler(async (req, res) =>{
             location: "Warehouse"
         }]
     });
-    newOrder.save();
+
+    
+    await newOrder.save();
 
     const session = await mongoose.startSession();
-  session.startTransaction();
-
-  try {
-    for (const item of orderItems) {
-      await Product.findByIdAndUpdate(
-        item.product,
-        { 
-          $inc: { 
-            stock: -item.quantity,
-            sold: item.quantity 
-          }
-        },
-        { session }
-      );
-    }
-
-    // Clear user's cart
-    await Cart.findOneAndUpdate(
-      { user: userId },
-      { 
-        $set: { 
-          items: [],
-          totalItems: 0,
-          totalPrice: 0 
-        }
-      },
-      { session }
-    );
-
-    await session.commitTransaction();
-  } catch (error) {
-    await session.abortTransaction();
-    throw new ApiError(500, "Failed to update inventory and cart");
-  } finally {
-    session.endSession();
-  }
-
-  const populatedOrder = await Order.findById(newOrder._id)
-    .populate("items.product", "name images")
-    .populate("items.seller", "shopName fullname");
+    session.startTransaction();
 
     try {
-    await createAndSendNotification({
-      recipientId: userId,
-      recipientRole: "customer",
-      recipientEmail: req.user.email,
-      type: "ORDER_PLACED",
-      title: "Order placed successfully",
-      message: `Your order #${populatedOrder._id} has been placed.`,
-      relatedEntity: {
-        entityType: "order",
-        entityId: populatedOrder._id,
-      },
-      channels: ["in-app", "email"],
-      meta: {
-        orderId: populatedOrder._id,
-        amount: populatedOrder.finalAmount,
-      },
-    });
-  } catch (e) {
-    console.error("ORDER_PLACED notification (customer) failed", e);
-  }
+        for (const item of orderItems) {
+            await Product.findByIdAndUpdate(
+                item.product,
+                { 
+                    $inc: { 
+                        stock: -item.quantity,
+                        sold: item.quantity 
+                    }
+                },
+                { session }
+            );
+        }
 
+        // Clear user's cart
+        await Cart.findOneAndUpdate(
+            { user: userId },
+            { 
+                $set: { 
+                    items: [],
+                    totalItems: 0,
+                    totalPrice: 0 
+                }
+            },
+            { session }
+        );
 
-  try {
-    const sellerIds = [
-      ...new Set(
-        populatedOrder.items.map((i) =>
-          i.seller._id.toString()
-        )
-      ),
-    ];
-
-    for (const sellerId of sellerIds) {
-      const sellerItem = populatedOrder.items.find(
-        (i) => i.seller._id.toString() === sellerId
-      );
-      await createAndSendNotification({
-        recipientId: sellerId,
-        recipientRole: "seller",
-        recipientEmail: sellerItem.seller.email || null,
-        type: "NEW_ORDER_FOR_SELLER",
-        title: "New order received",
-        message: `You have received a new order #${populatedOrder._id}.`,
-        relatedEntity: {
-          entityType: "order",
-          entityId: populatedOrder._id,
-        },
-        channels: ["in-app", "email"],
-        meta: {
-          orderId: populatedOrder._id,
-          productName: sellerItem.product.name,
-        },
-      });
+        await session.commitTransaction();
+    } catch (error) {
+        await session.abortTransaction();
+        throw new ApiError(500, "Failed to update inventory and cart");
+    } finally {
+        session.endSession();
     }
-  } catch (e) {
-    console.error("NEW_ORDER_FOR_SELLER notifications failed", e);
-  }
-    return res 
-    .status(201)
-    .json(
-        new ApiResponse(
-            201, 
-            "Order placed successfully", 
-            populatedOrder
-        )
-    );
+
+    const populatedOrder = await Order.findById(newOrder._id)
+        .populate("items.product", "name images")
+        .populate("items.seller", "shopName fullname");
+
+    // Customer notification
+    try {
+        await createAndSendNotification({
+            recipientId: userId,
+            recipientRole: "customer",
+            recipientEmail: req.user.email,
+            type: "ORDER_PLACED",
+            title: "Order placed successfully",
+            message: `Your order #${populatedOrder._id} has been placed.`,
+            relatedEntity: {
+                entityType: "order",
+                entityId: populatedOrder._id,
+            },
+            channels: ["in-app", "email"],
+            meta: {
+                orderId: populatedOrder._id,
+                amount: populatedOrder.finalAmount,
+            },
+        });
+    } catch (e) {
+        console.error("ORDER_PLACED notification (customer) failed", e);
+    }
+
+    // Seller notifications
+    try {
+        const sellerIds = [
+            ...new Set(
+                populatedOrder.items.map((i) =>
+                    i.seller._id.toString()
+                )
+            ),
+        ];
+
+        for (const sellerId of sellerIds) {
+            const sellerItem = populatedOrder.items.find(
+                (i) => i.seller._id.toString() === sellerId
+            );
+            await createAndSendNotification({
+                recipientId: sellerId,
+                recipientRole: "seller",
+                recipientEmail: sellerItem.seller.email || null,
+                type: "NEW_ORDER_FOR_SELLER",
+                title: "New order received",
+                message: `You have received a new order #${populatedOrder._id}.`,
+                relatedEntity: {
+                    entityType: "order",
+                    entityId: populatedOrder._id,
+                },
+                channels: ["in-app", "email"],
+                meta: {
+                    orderId: populatedOrder._id,
+                    productName: sellerItem.product.name,
+                },
+            });
+        }
+    } catch (e) {
+        console.error("NEW_ORDER_FOR_SELLER notifications failed", e);
+    }
+
+    return res
+        .status(201)
+        .json(
+            new ApiResponse(
+                201,
+                "Order placed successfully",
+                populatedOrder
+            )
+        );
 });
 
 // This controller fetches order history for the logged-in customer
@@ -744,24 +764,55 @@ const requestRefundController = asyncHandler(async(req, res) =>{
 
 // This controller allows a customer to download the invoice for an order
 const downloadInvoiceController = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
   const { orderId } = req.params;
+  const userId = req.user._id;
 
-  const order = await Order.findOne({ _id: orderId, user: userId });
+  // Populate needed fields
+  const order = await Order.findOne({
+    _id: orderId,
+    user: userId,
+  })
+    .populate("items.product", "name price")
+    .populate("user", "email fullname");
 
   if (!order) {
     throw new ApiError(404, "Order not found.");
   }
 
-  if (!order.invoiceUrl) {
-    throw new ApiError(404, "Invoice is not available for this order.");
+  try {
+    console.log("📧 Preparing invoice email for order:", orderId);
+
+    // ✅ Generate HTML invoice using template
+    const invoiceHTML = invoiceEmailTemplate(order);
+
+    // ✅ Send email with invoice
+    await sendEmailWithHTML({
+      to: order.user.email,
+      subject: `SmartCart Invoice - Order #${order._id}`,
+      html: invoiceHTML,
+    });
+
+    console.log("✅ Invoice email sent to:", order.user.email);
+
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        { orderId: order._id, email: order.user.email },
+        "Invoice has been sent to your email successfully!"
+      )
+    );
+  } catch (error) {
+    console.error("❌ Invoice email failed:", error.message);
+    throw new ApiError(
+      500,
+      `Failed to send invoice: ${error.message}`
+    );
   }
-
-  return res
-  .status(302)
-  .redirect(order.invoiceUrl);
-
 });
+
+
+
+
 
 // This controller allows a customer to apply a coupon to an order
 const applyCouponController = asyncHandler(async (req, res) => {
@@ -1063,7 +1114,10 @@ const addTrackingScanEventController = asyncHandler(async(req, res) =>{
     if(!item){
       throw new ApiError(404, "Item not found in the order for this seller.");
     }
-    item.trackingEvents.push({
+    if (!order.trackingEvents) {
+      order.trackingEvents = [];
+    }
+    order.trackingEvents.push({
       event,
       scannedAt: new Date(),
       scannedBy: sellerId,

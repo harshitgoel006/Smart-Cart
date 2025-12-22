@@ -49,22 +49,24 @@ const generateAndUploadQRCode = async (qrData) => {
   
   try {
     const qrBuffer = await QRCode.toBuffer(qrData);
-    tempPath = path.join(process.cwd(), 'temp', `qr_${Date.now()}.png`);
+    const tempDir = path.join(process.cwd(), 'public', 'temp');  // ✅ YOUR FOLDER!
+    await fs.mkdir(tempDir, { recursive: true });
+    tempPath = path.join(tempDir, `qr_${Date.now()}.png`);
     
     console.log("🔍 Temp path:", tempPath);
     
     await fs.writeFile(tempPath, qrBuffer);
-    console.log("✅ QR file created");
+    console.log("✅ QR file created in public/temp");
     
     const uploadResult = await uploadOnCloudinary(tempPath);
     console.log("✅ Upload success:", uploadResult?.url);
     
-    return uploadResult?.url;  // String only
+    return uploadResult?.url;
     
   } catch (error) {
     console.error("🔍 QR Error:", error);
     throw new ApiError(500, "Failed to upload QR code");
-  } finally {
+  }  finally {
     // 🔥 BULLETPROOF CLEANUP
     if (tempPath) {
       // Multiple cleanup attempts with delay

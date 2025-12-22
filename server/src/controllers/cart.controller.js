@@ -58,12 +58,16 @@ const addItems = asyncHandler(async(req, res) =>{
 const getCartItems = asyncHandler(async(req, res) =>{
 
     const userId = req.user._id;
+    console.log("🔍 Getting cart for user:", userId);
 
     const cart = await Cart.findOne({user:userId})
     .populate("items.product" , "name price images ");
 
-    if(!cart || cart.items.length === 0){
-        throw new ApiError(404, "Cart is empty");
+    console.log("🔍 Cart found:", !!cart);             
+    console.log("🔍 Cart items:", cart?.items);
+
+    if (!cart || !cart.items || cart.items.length === 0) {
+      throw new ApiError(400, "Cart is empty.");
     }
 
     return res
