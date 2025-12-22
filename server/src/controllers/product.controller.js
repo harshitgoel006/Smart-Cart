@@ -821,7 +821,7 @@ const respondToProductQnA = asyncHandler(async(req,res)=>{
                 entityType:"product",
                 entityId: product._id,
             },
-            channels: ["in-app"],
+            channels: ["in-app","email"],
             meta:{
                 productId: product._id,
                 productName: product.name,

@@ -121,15 +121,16 @@ const registerUser = asyncHandler(async (req, res)=>{
   
 
   try {
+    
     await createAndSendNotification({
-      recipientId: null, // optional: use admin user id if you have it
+      recipientId: "6946fbc63074456aa4c2906c",
       recipientRole: "admin",
-      recipientEmail: null,
+      recipientEmail: "harshitgoel885@gmail.com",
       type: "NEW_USER_REGISTERED",
       title: "New user registered",
       message: `New ${role} registered: ${fullname} (${email})`,
       relatedEntity: { entityType: "user", entityId: user._id },
-      channels: ["in-app"],
+      channels: ["in-app","email"],
       meta: {
         userId: user._id,
         role,

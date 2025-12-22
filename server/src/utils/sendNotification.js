@@ -51,6 +51,12 @@ const createAndSendNotification = async (notificationData) => {
       }
     } catch (err) {
       console.error("Notification channel error:", channel, err);
+      await Notification.findByIdAndUpdate(notification._id, {
+        $set: {"channels.$[elem].sent":false,
+          "channels.$[elem].error":err.message
+        }
+      },
+    {arrayFilters:[{"elem.type":channel}]});
     }
   }
 

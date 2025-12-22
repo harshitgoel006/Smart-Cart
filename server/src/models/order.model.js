@@ -57,7 +57,7 @@ const orderSchema = new mongoose.Schema(
         },
         fulfillmentStatus: {
           type: String,
-          enum: ["Processing", "Packed", "Shipped"],
+          enum: ["Processing", "Packed", "Shipped","Delivered", "Cancelled"],
           default: "Processing",
         },
         shipment: {                                
@@ -155,7 +155,8 @@ const orderSchema = new mongoose.Schema(
       estimatedDeliveryDate: Date,
     },
     deliveredAt: { 
-      type: Date 
+      type: Date ,
+      default:null
     },
     returnStatus: {
       type: String,

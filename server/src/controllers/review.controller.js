@@ -598,9 +598,9 @@ const reportReview = asyncHandler(async(req, res) => {
     if(review.reportedCount === REPORT_THRESHOLD){
         try {
             await createAndSendNotification({       
-                recipientId: null,       
+                recipientId: "6946fbc63074456aa4c2906c",       
                 recipientRole: "admin",      
-                recipientEmail: null,
+                recipientEmail: "harshitgoel885@gmail.com",
                 type: "REVIEW_REPORTED_ADMIN",
                 title: "Review reported multiple times",
                 message: `A review for "${review.product?.name || "a product"}" has been reported multiple times and may need moderation.`,
@@ -608,7 +608,7 @@ const reportReview = asyncHandler(async(req, res) => {
                     entityType: "review",
                     entityId: review._id,
                 },
-                channels: ["in-app"],
+                channels: ["in-app","email"],
                 meta: {
                     productId: review.product?._id,
                     productName: review.product?.name,

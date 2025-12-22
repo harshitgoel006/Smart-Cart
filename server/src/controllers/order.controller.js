@@ -228,7 +228,7 @@ const placeOrderController = asyncHandler(async (req, res) => {
             await createAndSendNotification({
                 recipientId: sellerId,
                 recipientRole: "seller",
-                recipientEmail: sellerItem.seller.email || null,
+                recipientEmail: sellerItem.seller.email ,
                 type: "NEW_ORDER_FOR_SELLER",
                 title: "New order received",
                 message: `You have received a new order #${populatedOrder._id}.`,
@@ -448,12 +448,13 @@ const cancelOrderController = asyncHandler(async(req, res) =>{
   for (const sellerId of sellerIds) {
     await createAndSendNotification({
       recipientId: sellerId,
+      recipientEmail: anyItem?.seller?.email,
       recipientType: "seller",
       type: "ORDER_CANCELLED",
       title: "Order Cancelled",
       message: `Order #${order._id} including your items has been cancelled.`,
       relatedEntity: { entityType: "order", entityId: order._id },
-      channels: ["in-app"]
+      channels: ["in-app","email"]
     });
   }
 
@@ -568,6 +569,7 @@ const requestReturnController = asyncHandler(async(req, res) =>{
   for (const sellerId of sellerIds) {
     await createAndSendNotification({
       recipientId: sellerId,
+      recipientEmail: anyItem?.seller?.email,
       recipientType: "seller",
       type: "RETURN_REQUESTED",
       title: "Return Request Submitted",
@@ -727,9 +729,9 @@ const requestRefundController = asyncHandler(async(req, res) =>{
         // const admin = await User.findOne({ role: "admin" });
         // if (admin)
         await createAndSendNotification({
-          recipientId: null,
+          recipientId: "6946fbc63074456aa4c2906c",
           recipientRole: "admin",
-          recipientEmail: null,
+          recipientEmail: "harshitgoel885@gmail.com",
           type: "HIGH_VALUE_REFUND_REQUESTED",
           title: "High value refund request",
           message: `Refund requested for order #${order._id} (amount ₹${order.finalAmount}).`,
@@ -976,9 +978,23 @@ const updateOrderStatusController = asyncHandler(async(req, res) =>{
       throw new ApiError(404, "Item not found in the order for this seller.");
     }
 
-    item.status = newStatus;
+    item.fulfillmentStatus = newStatus  
+    item.statusUpdatedAt = new Date()
+    const allItemsDelivered = order.items.every(i => i.fulfillmentStatus === 'Delivered');
+  const allItemsShipped = order.items.every(i => i.fulfillmentStatus === 'Shipped');
+  const allItemsPacked = order.items.every(i => i.fulfillmentStatus === 'Packed');
+  const allItemsConfirmed = order.items.every(i => i.fulfillmentStatus === 'Confirmed');
 
-    item.statusUpdateAt = new Date();
+  if (allItemsDelivered) {
+    order.orderStatus = 'Delivered';
+    order.deliveredAt = new Date();
+  } else if (allItemsShipped) {
+    order.orderStatus = 'Shipped';
+  } else if (allItemsPacked) {
+    order.orderStatus = 'Packed';
+  } else if (allItemsConfirmed) {
+    order.orderStatus = 'Confirmed';
+  }
     await order.save();
 
 
@@ -1823,9 +1839,9 @@ const handleEscalationController = asyncHandler(async(req,res) =>{
 
   try {
       await createAndSendNotification({
-        recipientId: null,
+        recipientId: "6946fbc63074456aa4c2906c",
         recipientRole: "admin",
-        recipientEmail: null,
+        recipientEmail: "harshitgoel885@gmail.com",
         type: "ESCALATION_UPDATED",
         title: "Escalation updated",
         message: `Escalation #${escalation._id} updated to ${escalation.status}.`,
@@ -1833,7 +1849,7 @@ const handleEscalationController = asyncHandler(async(req,res) =>{
           entityType: "escalation",
           entityId: escalation._id,
         },
-        channels: ["in-app"],
+        channels: ["in-app","email"],
         meta: {
           escalationId: escalation._id,
           status: escalation.status,
