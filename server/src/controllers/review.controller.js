@@ -341,7 +341,7 @@ const getProductReviews = asyncHandler(async(req,res) => {
         throw new ApiError(404, "Product not found");
     }
 
-    const page = parseInt(req.querypage,10) || 1;
+    const page = parseInt(req.query.page,10) || 1;
     const limit = Math.min(parseInt(req.query.limit, 10)|| 10,50);
     const skip = (page -1)*limit;
     

@@ -11,9 +11,8 @@ import mongoose from "mongoose";
 import XLSX from 'xlsx';
 import { Escalation } from "../models/escalation.model.js";
 import createAndSendNotification from "../utils/sendNotification.js";
-
 import { invoiceEmailTemplate } from "../utils/notificationEmailTemplates.js";
-import sendEmail, { sendEmailWithHTML } from "../utils/sendEmail.js";
+import  { sendEmailWithHTML } from "../utils/sendEmail.js";
 
 
 
@@ -213,6 +212,11 @@ const placeOrderController = asyncHandler(async (req, res) => {
 
     // Seller notifications
     try {
+
+      const populatedOrder = await Order.findById(order._id)
+        .populate("customer", "fullname email phone")
+        .populate("items.product", "name price images")
+        .populate("items.seller", "fullname email");
         const sellerIds = [
             ...new Set(
                 populatedOrder.items.map((i) =>
@@ -811,10 +815,6 @@ const downloadInvoiceController = asyncHandler(async (req, res) => {
     );
   }
 });
-
-
-
-
 
 // This controller allows a customer to apply a coupon to an order
 const applyCouponController = asyncHandler(async (req, res) => {
