@@ -1,1 +1,32 @@
 @import "tailwindcss";
+
+/* =========================
+   GitHub-style color system
+   Light-first
+   ========================= */
+
+:root {
+  /* Light mode (PRIMARY) */
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --border: #d0d7de;
+  --text-primary: #1f2328;
+  --text-secondary: #57606a;
+  --accent: #0969da; /* GitHub blue */
+}
+
+/* Dark mode (later polish) */
+html.dark {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --border: #30363d;
+  --text-primary: #e6edf3;
+  --text-secondary: #7d8590;
+  --accent: #2f81f7;
+}
+
+/* Apply globally */
+html {
+  background-color: var(--bg);
+  color: var(--text-primary);
+}
