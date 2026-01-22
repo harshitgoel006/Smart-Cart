@@ -2,6 +2,9 @@ import { motion } from "framer-motion";
 import Hero from "../../components/Hero";
 import TopCategories from "../../components/TopCategories";
 import FeaturedProducts from "../../components/FeaturedProducts";
+import OffersSlider from "../../components/OffersSlider";
+import TopBrands from "../../components/TopBrands";
+import RazorpayPromo from "../../components/RazorpayPromo";
 
 const Home = () => {
   return (
@@ -49,6 +52,9 @@ const Home = () => {
       <Hero />
       <TopCategories />
       <FeaturedProducts/>
+      <OffersSlider/>
+      <TopBrands/>
+      <RazorpayPromo/>
       {/* next sections yaha add honge */}
 
     </div>

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 
-
+// Sample product data
 const products = [
   {
     id: 1,
@@ -79,6 +79,7 @@ const products = [
   },
 ];
 
+// FeaturedProducts Component
 const FeaturedProducts = () => {
   const calculateDiscount = (price, mrp) =>
     Math.round(((mrp - price) / mrp) * 100);
