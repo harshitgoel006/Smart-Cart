@@ -95,7 +95,7 @@ const FeaturedProducts = () => {
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              className="text-4xl font-black text-gray-900 tracking-tight"
+              className="text-4xl md:text-5xl font-black text-gray-900 tracking-tight"
             >
               Trending{" "}
               <span className="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">

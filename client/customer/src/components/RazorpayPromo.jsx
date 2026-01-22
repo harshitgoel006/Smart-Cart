@@ -12,8 +12,8 @@ const RazorpayPromo = () => {
       >
         {/* Background Decorative Elements */}
         <div className="absolute top-0 right-0 w-full h-full opacity-20 pointer-events-none">
-          <div className="absolute top-[-10%] right-[-5%] w-[400px] h-[400px] bg-blue-600 rounded-full blur-[120px]" />
-          <div className="absolute bottom-[-10%] left-[-5%] w-[300px] h-[300px] bg-indigo-600 rounded-full blur-[100px]" />
+          <div className="absolute top-1/4 -left-32 w-[420px] h-[420px] bg-purple-400/20 blur-[140px] rounded-full" />
+        <div className="absolute bottom-1/4 -right-32 w-[480px] h-[480px] bg-pink-400/20 blur-[160px] rounded-full" />
         </div>
 
         <div className="relative z-10 w-full px-10 md:px-16 flex flex-col md:flex-row items-center justify-between gap-10 py-12">

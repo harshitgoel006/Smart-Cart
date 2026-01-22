@@ -39,7 +39,6 @@ const TopBrands = () => {
                 Partner Brands
               </span>
             </h2>
-            <div className="mt-4 h-1.5 w-20 bg-purple-600 rounded-full" />
           </motion.div>
 
           <motion.p

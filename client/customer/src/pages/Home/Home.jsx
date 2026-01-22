@@ -5,6 +5,10 @@ import FeaturedProducts from "../../components/FeaturedProducts";
 import OffersSlider from "../../components/OffersSlider";
 import TopBrands from "../../components/TopBrands";
 import RazorpayPromo from "../../components/RazorpayPromo";
+import AIRecommendations from "../../components/AIRecommendations";
+import ExploreDepartments from "../../components/ExploreDepartments";
+import Testimonials from "../../components/Testimonials";
+import WhySmartCart from "../../components/WhySmartCart";
 
 const Home = () => {
   return (
@@ -54,7 +58,11 @@ const Home = () => {
       <FeaturedProducts/>
       <OffersSlider/>
       <TopBrands/>
+      <AIRecommendations/>
       <RazorpayPromo/>
+      <ExploreDepartments/>
+      <Testimonials/>
+      <WhySmartCart/>
       {/* next sections yaha add honge */}
 
     </div>
