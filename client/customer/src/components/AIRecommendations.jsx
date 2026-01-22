@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { FiArrowRight, FiZap, FiTrendingUp, FiBox } from "react-icons/fi";
 import { Link } from "react-router-dom";
@@ -10,8 +9,7 @@ const recommendations = [
     desc: "Personalized recommendations based on your searches, clicks and purchases.",
     icon: <FiZap />,
     gradient: "from-purple-600 to-pink-500",
-    bgImage:
-      "https://images.unsplash.com/photo-1607082349566-1870e31f7d1c?q=80&w=1200&auto=format&fit=crop",
+    bgImage: "https://images.unsplash.com/photo-1607082349566-1870e31f7d1c?q=80&w=1200&auto=format&fit=crop",
     link: "/recommendations/personalized",
   },
   {
@@ -20,8 +18,7 @@ const recommendations = [
     desc: "Products that people around you are buying the most right now.",
     icon: <FiTrendingUp />,
     gradient: "from-blue-600 to-cyan-500",
-    bgImage:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1200&auto=format&fit=crop",
+    bgImage: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1200&auto=format&fit=crop",
     link: "/recommendations/trending",
   },
   {
@@ -30,8 +27,7 @@ const recommendations = [
     desc: "AI-curated product combinations that save money and time together.",
     icon: <FiBox />,
     gradient: "from-amber-500 to-orange-500",
-    bgImage:
-      "https://images.unsplash.com/photo-1585386959984-a41552231693?q=80&w=1200&auto=format&fit=crop",
+    bgImage: "https://images.unsplash.com/photo-1585386959984-a41552231693?q=80&w=1200&auto=format&fit=crop",
     link: "/recommendations/bundles",
   },
 ];
@@ -39,16 +35,16 @@ const recommendations = [
 const AIRecommendations = () => {
   return (
     <section className="relative py-32 overflow-hidden">
-
-      {/* LIGHT AI BACKGROUND */}
+      
+      {/* --- BACKGROUND GLOW EFFECTS --- */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute top-1/4 -left-32 w-[420px] h-[420px] bg-purple-400/20 blur-[140px] rounded-full" />
         <div className="absolute bottom-1/4 -right-32 w-[480px] h-[480px] bg-pink-400/20 blur-[160px] rounded-full" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6">
-
-        {/* HEADER */}
+        
+        {/* --- HEADER SECTION --- */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10 mb-24">
           <motion.div
             initial={{ opacity: 0, x: -40 }}
@@ -79,7 +75,7 @@ const AIRecommendations = () => {
           </motion.p>
         </div>
 
-        {/* CARDS */}
+        {/* --- RECOMMENDATION CARDS --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {recommendations.map((item, i) => (
             <motion.div
@@ -90,7 +86,7 @@ const AIRecommendations = () => {
               viewport={{ once: true }}
               className="group relative h-[460px] rounded-[3rem] overflow-hidden bg-gray-900"
             >
-              {/* BACKGROUND IMAGE */}
+              {/* IMAGE OVERLAY LAYER */}
               <div className="absolute inset-0">
                 <img
                   src={item.bgImage}
@@ -100,7 +96,7 @@ const AIRecommendations = () => {
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/60 to-black" />
               </div>
 
-              {/* CONTENT */}
+              {/* CARD CONTENT */}
               <div className="relative h-full p-10 flex flex-col justify-end">
                 <div
                   className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${item.gradient}
@@ -131,7 +127,7 @@ const AIRecommendations = () => {
                 </Link>
               </div>
 
-              {/* BORDER GLOW */}
+              {/* INTERACTIVE BORDER GLOW */}
               <div className="absolute inset-0 rounded-[3rem] border border-white/0 group-hover:border-white/10 transition pointer-events-none" />
             </motion.div>
           ))}

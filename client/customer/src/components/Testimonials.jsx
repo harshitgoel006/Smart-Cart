@@ -57,7 +57,7 @@ const Testimonials = () => {
   return (
     <section className="relative py-12 overflow-hidden bg-white">
       
-      {/* 🌈 Luxury Background Elements */}
+      {/* Luxury Background Elements */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute top-0 right-0 h-[600px] w-[600px] bg-purple-500/20 rounded-full blur-[140px]" />
         <div className="absolute bottom-0 left-0 h-[600px] w-[600px] bg-pink-500/20 rounded-full blur-[140px]" />
