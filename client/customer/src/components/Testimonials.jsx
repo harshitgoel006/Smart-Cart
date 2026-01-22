@@ -55,7 +55,7 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="relative py-20 overflow-hidden bg-white">
+    <section className="relative py-12 overflow-hidden bg-white">
       
       {/* 🌈 Luxury Background Elements */}
       <div className="pointer-events-none absolute inset-0 -z-10">
