@@ -1,28 +1,35 @@
 @import "tailwindcss";
 
 /* =========================
-   GitHub-style color system
-   Light-first
+   SmartCart Global Theme
+   Light-first (Ecommerce)
    ========================= */
 
 :root {
-  /* Light mode (PRIMARY) */
   --bg: #ffffff;
-  --surface: #f6f8fa;
-  --border: #d0d7de;
-  --text-primary: #1f2328;
-  --text-secondary: #57606a;
-  --accent: #0969da; /* GitHub blue */
+  --surface: #faf7ff;        /* very light lavender */
+  --border: #ece7f5;
+
+  --text-primary: #1f2937;   /* gray-800 */
+  --text-secondary: #6b7280; /* gray-500 */
+
+  --primary: #7c3aed;        /* purple */
+  --secondary: #a855f7;
+  --accent-pink: #f472b6;
 }
 
-/* Dark mode (later polish) */
+/* Dark mode (later, not now) */
 html.dark {
-  --bg: #0d1117;
-  --surface: #161b22;
-  --border: #30363d;
-  --text-primary: #e6edf3;
-  --text-secondary: #7d8590;
-  --accent: #2f81f7;
+  --bg: #0f0a1f;
+  --surface: #1a1333;
+  --border: #2a1f4d;
+
+  --text-primary: #f5f3ff;
+  --text-secondary: #c4b5fd;
+
+  --primary: #a78bfa;
+  --secondary: #c084fc;
+  --accent-pink: #f9a8d4;
 }
 
 /* Apply globally */
@@ -30,3 +37,26 @@ html {
   background-color: var(--bg);
   color: var(--text-primary);
 }
+
+body {
+  font-family: Inter, system-ui, sans-serif;
+}
+
+@keyframes softGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-soft-gradient {
+  background-size: 300% 300%;
+  animation: softGradient 22s ease-in-out infinite;
+}
+
+

@@ -1,12 +1,7 @@
-import { BrowserRouter } from "react-router-dom";
 import CustomerRoutes from "./routes/CustomerRoutes";
 
-function App() {
-  return (
-    <BrowserRouter>
-      <CustomerRoutes />
-    </BrowserRouter>
-  );
-}
+const App = () => {
+  return <CustomerRoutes />;
+};
 
 export default App;
