@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Hero from "../../components/Hero";
 import TopCategories from "../../components/TopCategories";
+import FeaturedProducts from "../../components/FeaturedProducts";
 
 const Home = () => {
   return (
@@ -47,6 +48,7 @@ const Home = () => {
       {/* PAGE CONTENT */}
       <Hero />
       <TopCategories />
+      <FeaturedProducts/>
       {/* next sections yaha add honge */}
 
     </div>
