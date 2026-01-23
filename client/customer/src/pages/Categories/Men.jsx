@@ -4,6 +4,7 @@ import MenHero from "../../components/categories/men/MenHero";
 import MenNewArrivals from "../../components/categories/men/MenNewArrivals";
 import MenAISection from "../../components/categories/men/MenAISection";
 import MenPromoCategories from "../../components/categories/men/MenPromoCategories";
+import MenTrendingCategories from "../../components/categories/men/MenTrendingCategories";
 
 const Men = () => {
   return (
@@ -49,6 +50,7 @@ const Men = () => {
         <MenNewArrivals/>
         <MenAISection/>
         <MenPromoCategories/>
+        <MenTrendingCategories/>
      
     </div>
   );

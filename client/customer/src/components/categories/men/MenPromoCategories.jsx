@@ -48,7 +48,7 @@ const categories = [
 
 const MenPromoCategories = () => {
   return (
-    <section className="pt-0 pb-28 overflow-hidden ">
+    <section className="pt-0 pb-18 overflow-hidden ">
 
       
 
