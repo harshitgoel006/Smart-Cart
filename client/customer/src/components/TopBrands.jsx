@@ -18,7 +18,7 @@ const TopBrands = () => {
       
       {/*  LIGHT BACKGROUND GLOW */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -top-32 left-1/4 h-[420px] w-[420px] rounded-full bg-purple-300/30 blur-[140px]" />
+        <div className="absolute -top-32 left-1/4 h-[420px] w-[420px] rounded-full bg-purple-200/30 blur-[140px]" />
         <div className="absolute top-1/2 right-1/4 h-[420px] w-[420px] rounded-full bg-pink-300/25 blur-[140px]" />
       </div>
 
