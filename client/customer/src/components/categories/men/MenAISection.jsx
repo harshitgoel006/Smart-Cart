@@ -31,15 +31,11 @@ const slides = [
 
 const MenAISection = () => {
   return (
-    <section className="relative w-full py-20 mb-40 overflow-hidden bg-white">
-  {/* Ambient background glow */}
-  <div className="pointer-events-none absolute inset-0">
-    <div className="absolute -top-32 left-1/4 w-[500px] h-[500px] bg-purple-200/40 blur-[160px] rounded-full" />
-    <div className="absolute -bottom-32 right-1/4 w-[500px] h-[500px] bg-pink-200/30 blur-[160px] rounded-full" />
-  </div>
+    <section className="relative w-full py-20 mb-15 overflow-hidden ">
+  
       <div className=" w-full relative group
   rounded-none
-  shadow-[0_25px_60px_rgba(0,0,0,0.12),0_80px_140px_rgba(0,0,0,0.08)]">
+  shadow-[0_15px_15px_rgba(0,0,0,0.12),0_15px_15px_rgba(0,0,0,0.08)]">
         <Swiper
           modules={[Autoplay, Pagination, Navigation, EffectFade]}
           effect="fade"

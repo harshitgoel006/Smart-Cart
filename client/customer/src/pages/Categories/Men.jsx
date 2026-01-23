@@ -3,6 +3,7 @@ import MenCategories from "../../components/categories/men/MenCategories";
 import MenHero from "../../components/categories/men/MenHero";
 import MenNewArrivals from "../../components/categories/men/MenNewArrivals";
 import MenAISection from "../../components/categories/men/MenAISection";
+import MenPromoCategories from "../../components/categories/men/MenPromoCategories";
 
 const Men = () => {
   return (
@@ -33,7 +34,7 @@ const Men = () => {
             h-[520px] w-[520px]
             rounded-full
             bg-pink-400/40
-            blur-[100px]
+            blur-[50px]
           "
           animate={{ x: [0, -40, 0], y: [0, -30, 0] }}
           transition={{
@@ -47,7 +48,8 @@ const Men = () => {
         <MenCategories/>
         <MenNewArrivals/>
         <MenAISection/>
-      {/* next sections yahan add honge */}
+        <MenPromoCategories/>
+     
     </div>
   );
 };
