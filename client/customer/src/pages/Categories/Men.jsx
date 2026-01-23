@@ -5,6 +5,9 @@ import MenNewArrivals from "../../components/categories/men/MenNewArrivals";
 import MenAISection from "../../components/categories/men/MenAISection";
 import MenPromoCategories from "../../components/categories/men/MenPromoCategories";
 import MenTrendingCategories from "../../components/categories/men/MenTrendingCategories";
+import MenExclusivePromo from "../../components/categories/men/MenExclusivePromo";
+import MenTopBrands from "../../components/categories/men/MenTopBrands";
+import TrustBadgeSection from "../../components/TrustBadgeSection";
 
 const Men = () => {
   return (
@@ -51,6 +54,9 @@ const Men = () => {
         <MenAISection/>
         <MenPromoCategories/>
         <MenTrendingCategories/>
+        <MenExclusivePromo/>
+        <MenTopBrands/>
+        <TrustBadgeSection/>
      
     </div>
   );
