@@ -1,14 +1,14 @@
 import { motion } from "framer-motion";
-import Hero from "../../components/Hero";
-import TopCategories from "../../components/TopCategories";
-import FeaturedProducts from "../../components/FeaturedProducts";
-import OffersSlider from "../../components/OffersSlider";
-import TopBrands from "../../components/TopBrands";
-import RazorpayPromo from "../../components/RazorpayPromo";
-import AIRecommendations from "../../components/AIRecommendations";
-import ExploreDepartments from "../../components/ExploreDepartments";
-import Testimonials from "../../components/Testimonials";
-import WhySmartCart from "../../components/WhySmartCart";
+import Hero from "../../components/home/Hero";
+import TopCategories from "../../components/home/TopCategories";
+import FeaturedProducts from "../../components/home/FeaturedProducts";
+import OffersSlider from "../../components/home/OffersSlider";
+import TopBrands from "../../components/home/TopBrands";
+import RazorpayPromo from "../../components/home/RazorpayPromo";
+import AIRecommendations from "../../components/home/AIRecommendations";
+import ExploreDepartments from "../../components/home/ExploreDepartments";
+import Testimonials from "../../components/home/Testimonials";
+import WhySmartCart from "../../components/home/WhySmartCart";
 
 const Home = () => {
   return (
