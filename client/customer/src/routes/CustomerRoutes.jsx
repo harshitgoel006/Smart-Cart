@@ -6,7 +6,8 @@ import Men from "../pages/Categories/Men";
 
 const CustomerRoutes = () => {
   return (
-    <>
+    
+      <>
       <Routes>
         <Route element={<CustomerLayout />}>
           <Route path="/" element={<Home />} />
@@ -15,7 +16,8 @@ const CustomerRoutes = () => {
 
         </Route>
       </Routes>
-    </>
+      </>
+    
   );
 };
 
