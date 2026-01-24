@@ -1,4 +1,13 @@
 import { motion } from "framer-motion";
+import KidsHero from "../../components/categories/kids/KidsHero";
+import KidsCategories from "../../components/categories/kids/KidsCategories";
+import KidsNewArrivals from "../../components/categories/kids/KidsNewArrivals";
+import KidsAISection from "../../components/categories/kids/KidsAISection";
+import KidsPromoCategories from "../../components/categories/kids/KidsPromoCategories";
+import KidsTrendingCategories from "../../components/categories/kids/KidsTrendingCategories";
+import KidsExclusivePromo from "../../components/categories/kids/KidsExclusivePromo";
+import KidsTopBrands from "../../components/categories/kids/KIdsTopBrands";
+import TrustBadgeSection from "../../components/TrustBadgeSection";
 
 
 const Kids = () => {
@@ -40,6 +49,17 @@ const Kids = () => {
           }}
         />
       </div>
+        <KidsHero />
+        <KidsCategories/>
+        <KidsNewArrivals/>
+        <KidsAISection/>
+        <KidsPromoCategories/>
+        <KidsTrendingCategories/>
+        <KidsExclusivePromo/>
+        <KidsTopBrands/>
+        <TrustBadgeSection/>
+
+        
         
      
     </div>
