@@ -1,4 +1,13 @@
 import { motion } from "framer-motion";
+import AccessoriesHero from "../../components/categories/accessories/AccessoriesHero";
+import AccessoriesCategories from "../../components/categories/accessories/AccessoriesCategories";
+import AccessoriesNewArrivals from "../../components/categories/accessories/AccessoriesNewArrivals";
+import AccessoriesAISection from "../../components/categories/accessories/AccessoriesAISection";
+import AccessoriesPromoCategories from "../../components/categories/accessories/AccessoriesPromoCategories";
+import AccessoriesTrendingCategories from "../../components/categories/accessories/AccessoriesTrendingCategories";
+import AccessoriesExclusivePromo from "../../components/categories/accessories/AccessoriesExclusivePromo";
+import AccessoriesTopBrands from "../../components/categories/accessories/AccessoriesTopBrands";
+import TrustBadgeSection from "../../components/TrustBadgeSection";
 
 
 
@@ -41,7 +50,15 @@ const Accessories = () => {
           }}
         />
       </div>
-        
+        <AccessoriesHero/>
+        <AccessoriesCategories/>
+        <AccessoriesNewArrivals/>
+        <AccessoriesAISection/>
+        <AccessoriesPromoCategories/>
+        <AccessoriesTrendingCategories/>
+        <AccessoriesExclusivePromo/>
+        <AccessoriesTopBrands/>
+        <TrustBadgeSection/>
      
     </div>
   );
