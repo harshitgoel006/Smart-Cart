@@ -6,6 +6,7 @@ import Men from "../pages/Categories/Men";
 import Women from "../pages/Categories/Women";
 import Beauty from "../pages/Categories/Beauty";
 import Kids from "../pages/Categories/Kids";
+import Accessories from "../pages/Categories/Accessories";
 
 const CustomerRoutes = () => {
   return (
@@ -19,6 +20,7 @@ const CustomerRoutes = () => {
           <Route path="/categories/women" element={<Women />} />
           <Route path="/categories/beauty" element={<Beauty />} />
           <Route path="/categories/kids" element={<Kids />} />
+          <Route path="/categories/accessories" element={<Accessories />} />
 
 
 
