@@ -8,6 +8,8 @@ import Beauty from "../pages/Categories/Beauty";
 import Kids from "../pages/Categories/Kids";
 import Accessories from "../pages/Categories/Accessories";
 import HomeLiving from "../pages/Categories/HomeLiving";
+import Electronics from "../pages/Categories/Electronics";
+import Gifts from "../pages/Categories/Gifts";
 
 const CustomerRoutes = () => {
   return (
@@ -23,6 +25,8 @@ const CustomerRoutes = () => {
           <Route path="/categories/kids" element={<Kids />} />
           <Route path="/categories/accessories" element={<Accessories />} />
           <Route path="/categories/home-living" element={<HomeLiving />} />
+          <Route path="/categories/electronics" element={<Electronics />} />
+          <Route path="/categories/gifts" element={<Gifts />} />
 
 
 
