@@ -1,4 +1,13 @@
 import { motion } from "framer-motion";
+import GiftsHero from "../../components/categories/gifts/GiftsHero";
+import GiftsCategories from "../../components/categories/gifts/GiftsCategories";
+import GiftsNewArrivals from "../../components/categories/gifts/GiftsNewArrivals";
+import GiftsAISection from "../../components/categories/gifts/GiftsAISection";
+import GiftsPromoCategories from "../../components/categories/gifts/GiftsPromoCategories";
+import GiftsTrendingCategories from "../../components/categories/gifts/GiftsTrendingCategories";
+import GiftsExclusivePromo from "../../components/categories/gifts/GiftsExclusivePromo";
+import GiftsTopBrands from "../../components/categories/gifts/GiftsTopBrands";
+import TrustBadgeSection from "../../components/TrustBadgeSection";
 
 
 
@@ -41,11 +50,15 @@ const Gifts = () => {
           }}
         />
       </div>
-        
-
-        
-        
-     
+        <GiftsHero/>
+        <GiftsCategories/>
+        <GiftsNewArrivals/>
+        <GiftsAISection/>
+        <GiftsPromoCategories/>
+        <GiftsTrendingCategories/>
+        <GiftsExclusivePromo/>
+        <GiftsTopBrands/>
+        <TrustBadgeSection/>
     </div>
   );
 };
