@@ -34,8 +34,8 @@ const categories = [
         color: "from-purple-500/20" 
     },
     { 
-        name: "Sports", 
-        slug: "sports", 
+        name: "Sports & Gym", 
+        slug: "sports-gym", 
         image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=600&auto=format&fit=crop", 
         color: "from-red-500/20" 
     },

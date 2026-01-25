@@ -30,7 +30,7 @@ const CustomerRoutes = () => {
           <Route path="/categories/electronics" element={<Electronics />} />
           <Route path="/categories/gifts" element={<Gifts />} />
           <Route path="/categories/groceries" element={<Groceries />} />
-          <Route path="/categories/sports" element={<Sports />} />
+          <Route path="/categories/sports-gym" element={<Sports />} />
 
 
 

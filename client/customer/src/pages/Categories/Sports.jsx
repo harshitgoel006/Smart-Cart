@@ -1,4 +1,13 @@
 import { motion } from "framer-motion";
+import SportsHero from "../../components/categories/sports/SportsHero";
+import SportsCategories from "../../components/categories/sports/SportsCategories";
+import SportsNewArrivals from "../../components/categories/sports/SportsNewArrivals";
+import SportsAISection from "../../components/categories/sports/SportsAISection";
+import SportsPromoCategories from "../../components/categories/sports/SportsPromoCategories";
+import SportsTrendingCategories from "../../components/categories/sports/SportsTrendingCategories";
+import SportsExclusivePromo from "../../components/categories/sports/SportsExclusivePromo";
+import SportsTopBrands from "../../components/categories/sports/SportsTopBrands";
+import TrustBadgeSection from "../../components/TrustBadgeSection";
 
 
 
@@ -42,7 +51,15 @@ const Accessories = () => {
           }}
         />
       </div>
-        
+      <SportsHero/>
+      <SportsCategories/>
+      <SportsNewArrivals/>
+      <SportsAISection/>
+      <SportsPromoCategories/>
+      <SportsTrendingCategories/>
+      <SportsExclusivePromo/>
+      <SportsTopBrands/>
+      <TrustBadgeSection/>
     </div>
   );
 };
