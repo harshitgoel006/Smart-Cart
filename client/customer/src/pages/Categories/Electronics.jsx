@@ -1,4 +1,14 @@
 import { motion } from "framer-motion";
+import ElectronicsHero from "../../components/categories/electronics/ElectronicsHero";
+import ElectronicsCategories from "../../components/categories/electronics/ElectronicsCategories";
+import ElectronicsNewArrivals from "../../components/categories/electronics/ElectronicsNewArrivals";
+import ElectronicsAISection from "../../components/categories/electronics/ElectronicsAISection";
+import ElectronicsPromoCategories from "../../components/categories/electronics/ElectronicsPromoCategories";
+import ElectronicsTrendingCategories from "../../components/categories/electronics/ElectronicsTrendingCategories";
+import ElectronicsExclusivePromo from "../../components/categories/electronics/ElectronicsExclusivePromo";
+import ElectronicsTopBrands from "../../components/categories/electronics/ElectronicsTopBrands";
+import TrustBadgeSection from "../../components/TrustBadgeSection";
+
 
 
 
@@ -41,11 +51,16 @@ const Electronics = () => {
           }}
         />
       </div>
-        
 
-        
-        
-     
+      <ElectronicsHero/>
+      <ElectronicsCategories/>
+      <ElectronicsNewArrivals/>
+      <ElectronicsAISection/>
+      <ElectronicsPromoCategories/>
+      <ElectronicsTrendingCategories/>
+      <ElectronicsExclusivePromo/>
+      <ElectronicsTopBrands/>
+      <TrustBadgeSection/>
     </div>
   );
 };
