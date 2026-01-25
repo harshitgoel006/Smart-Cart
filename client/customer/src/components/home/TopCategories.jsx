@@ -23,7 +23,7 @@ const categories = [
     },
     { 
         name: "Home & Kitchen", 
-        slug: "home-kitchen", 
+        slug: "home-living", 
         image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=600&auto=format&fit=crop", 
         color: "from-orange-500/20" 
     },

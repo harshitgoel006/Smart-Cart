@@ -31,7 +31,7 @@ const offers = [
     subtitle: "SMART SAVINGS",
     desc: "Upgrade your home with modern appliances and daily-use essentials.",
     cta: "View Deals",
-    link: "/categories/home-kitchen",
+    link: "/categories/home-living",
     image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=2000&auto=format&fit=crop",
   },
 ];
