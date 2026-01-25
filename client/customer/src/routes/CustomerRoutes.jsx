@@ -10,6 +10,7 @@ import Accessories from "../pages/Categories/Accessories";
 import HomeLiving from "../pages/Categories/HomeLiving";
 import Electronics from "../pages/Categories/Electronics";
 import Gifts from "../pages/Categories/Gifts";
+import Groceries from "../pages/Categories/Groceries";
 
 const CustomerRoutes = () => {
   return (
@@ -27,6 +28,7 @@ const CustomerRoutes = () => {
           <Route path="/categories/home-living" element={<HomeLiving />} />
           <Route path="/categories/electronics" element={<Electronics />} />
           <Route path="/categories/gifts" element={<Gifts />} />
+          <Route path="/categories/groceries" element={<Groceries />} />
 
 
 
