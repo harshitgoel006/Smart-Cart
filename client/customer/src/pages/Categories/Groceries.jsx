@@ -1,4 +1,13 @@
 import { motion } from "framer-motion";
+import GroceriesHero from "../../components/categories/groceries/GroceriesHero";
+import GroceriesCategories from "../../components/categories/groceries/GroceriesCategories";
+import GroceriesNewArrivals from "../../components/categories/groceries/GroceriesNewArrivals";
+import GroceriesAISection from "../../components/categories/groceries/GroceriesAISection";
+import GroceriesPromoCategories from "../../components/categories/groceries/GroceriesPromoCategories";
+import GroceriesTrendingCategories from "../../components/categories/groceries/GroceriesTrendingCategories";
+import GroceriesExclusivePromo from "../../components/categories/groceries/GroceriesExclusivePromo";
+import GroceriesTopBrands from "../../components/categories/groceries/GroceriesTopBrands";
+import TrustBadgeSection from "../../components/TrustBadgeSection";
 
 
 
@@ -41,7 +50,15 @@ const Groceries = () => {
           }}
         />
       </div>
-
+      <GroceriesHero/>
+      <GroceriesCategories/>
+      <GroceriesNewArrivals/>
+      <GroceriesAISection/>
+      <GroceriesPromoCategories/>
+      <GroceriesTrendingCategories/>
+      <GroceriesExclusivePromo/>
+      <GroceriesTopBrands/>
+      <TrustBadgeSection/>
     </div>
   );
 };

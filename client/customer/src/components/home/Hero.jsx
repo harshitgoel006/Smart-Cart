@@ -38,7 +38,7 @@ const slides = [
     description:
       "Handpicked fruits, vegetables & daily essentials delivered fresh to your doorstep.",
     cta: "Order Groceries",
-    link: "/categories/grocery",
+    link: "/categories/groceries",
     image:
       "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1600&auto=format&fit=crop",
     color: "from-green-600 to-emerald-500",
