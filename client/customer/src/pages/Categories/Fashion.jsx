@@ -1,4 +1,13 @@
 import { motion } from "framer-motion";
+import FashionHero from "../../components/categories/fashion/FashionHero";
+import FashionCategories from "../../components/categories/fashion/FashionCategories";
+import FashionNewArrivals from "../../components/categories/fashion/FashionNewArrivals";
+import FashionAISection from "../../components/categories/fashion/FashionAISection";
+import FashionPromoCategories from "../../components/categories/fashion/FashionPromoCategories";
+import FashionTrendingCategories from "../../components/categories/fashion/FashionTrendingCategories";
+import FashionExclusivePromo from "../../components/categories/fashion/FashionExclusivePromo";
+import FashionTopBrands from "../../components/categories/fashion/FashionTopBrands";
+import TrustBadgeSection from "../../components/TrustBadgeSection";
 
 
 
@@ -41,8 +50,15 @@ const Fashion = () => {
           }}
         />
       </div>
-
-      
+      <FashionHero/>
+      <FashionCategories/>
+      <FashionNewArrivals/>
+      <FashionAISection/>
+      <FashionPromoCategories/>
+      <FashionTrendingCategories/>
+      <FashionExclusivePromo/>
+      <FashionTopBrands/>
+      <TrustBadgeSection/>
     </div>
   );
 };
