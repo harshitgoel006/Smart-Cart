@@ -7,7 +7,7 @@ import TopBrands from "../../components/home/TopBrands";
 import RazorpayPromo from "../../components/home/RazorpayPromo";
 import AIRecommendations from "../../components/home/AIRecommendations";
 import ExploreDepartments from "../../components/home/ExploreDepartments";
-import Testimonials from "../../components/home/Testimonials";
+import Testimonials from "../../components/Testimonials";
 import WhySmartCart from "../../components/home/WhySmartCart";
 
 const Home = () => {

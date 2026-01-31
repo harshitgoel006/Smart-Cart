@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import CategoryHero from "../../components/categories/mainPage/CategoryHero";
 import ExploreDepartments from "../../components/categories/mainPage/CategoryCategories";
 import TrustBadges from "../../components/categories/mainPage/TrustBadge";
+import Testimonials from "../../components/Testimonials";
 
 
 const Category = () => {
@@ -46,6 +47,7 @@ const Category = () => {
       <CategoryHero/>
       <ExploreDepartments/>
       <TrustBadges/>
+      <Testimonials/>
     </div>
   );
 };
