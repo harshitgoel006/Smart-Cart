@@ -1,4 +1,8 @@
-export const homeLivingImages = [
+// src/data/products/home-living.js
+
+const homeLivingProducts = [];
+
+const homeImages = [
   // 1–10 : Living Room / Interior Aesthetic
   "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1600&auto=format&fit=crop",
@@ -47,3 +51,44 @@ export const homeLivingImages = [
   "https://images.unsplash.com/photo-1598300053653-9a6f35d5b3db?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?q=80&w=1600&auto=format&fit=crop",
 ];
+
+
+const subCategories = [
+  "furniture",
+  "home-decor",
+  "lighting",
+  "kitchen-dining",
+  "bedding-bath",
+  "storage-organization",
+  "wall-decor",
+  "garden-outdoor",
+  "home-office",
+];
+
+// ~270 products (9 × 30)
+let idCounter = 4401;
+
+subCategories.forEach((sub) => {
+  for (let i = 1; i <= 30; i++) {
+    const price = 1499 + i * 80;
+    const discount =
+      i % 6 === 0 ? 35 : i % 4 === 0 ? 20 : 0;
+
+    homeLivingProducts.push({
+      id: idCounter++,
+      name: `${sub.replace("-", " ").toUpperCase()} Item ${i}`,
+      slug: `${sub}-home-living-${i}`,
+      category: "home-living",
+      subCategory: sub,
+      brand: "SmartCart Home",
+      price,
+      discount,
+      finalPrice: Math.round(price - (price * discount) / 100),
+      rating: (Math.random() * (5 - 4.0) + 4.0).toFixed(1),
+      reviews: Math.floor(Math.random() * 600 + 80),
+      image: homeImages[i % homeImages.length],
+    });
+  }
+});
+
+export default homeLivingProducts;

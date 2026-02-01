@@ -1,4 +1,6 @@
-export const menImages = [
+// src/data/products/men.js
+
+ const MEN_IMAGES = [
   // Casual / Street
   "https://i.pinimg.com/1200x/6b/2f/d8/6b2fd88b4065fc417cf1c7267d9c0892.jpg",
   "https://i.pinimg.com/1200x/87/8b/51/878b514cbf74837c2cb5c0fb598b96d2.jpg",
@@ -44,3 +46,73 @@ export const menImages = [
   "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1520975698519-59e6b3c61d7b?q=80&w=1600&auto=format&fit=crop"
 ];
+
+
+const SUB_CATEGORIES = ["T-Shirts","Shirts","Jeans","Trousers","Cargos","Hoodies","Sweatshirts","Jackets","Ethnic Wear","Innerwear","Footwear","Accessories"];
+
+const BRANDS = ["Nike", "Puma", "Adidas", "H&M", "Zara", "Levis"];
+
+let idCounter = 1;
+
+const menProducts = [];
+
+/* 🔁 GENERATE ~240 PRODUCTS (frontend mock) */
+SUB_CATEGORIES.forEach((subCategory) => {
+  MEN_IMAGES.forEach((img, index) => {
+    for (let i = 0; i < 3; i++) {
+      const price = 999 + i * 300;
+      const discount = i % 2 === 0 ? 20 : 0;
+
+      menProducts.push({
+        id: `men-${idCounter++}`,
+
+        name: `${subCategory} Premium ${i + 1}`,
+        slug: `men-${subCategory.toLowerCase().replace(/\s/g, "-")}-${idCounter}`,
+
+        description:
+          "Premium quality fabric with modern fit. Designed for everyday comfort and style.",
+
+        brand: BRANDS[index % BRANDS.length],
+
+        category: "men",
+        subCategory,
+
+        price,
+        discount,
+        finalPrice: price - (price * discount) / 100,
+
+        stock: 50 + i * 10,
+        sold: Math.floor(Math.random() * 200),
+
+        rating: (Math.random() * 1.5 + 3.5).toFixed(1),
+        reviews: Math.floor(Math.random() * 300),
+
+        image: img,
+        images: [
+          { url: img },
+          { url: img },
+          { url: img },
+        ],
+
+        tags: ["men", subCategory.toLowerCase(), "fashion"],
+
+        featured: i === 0,
+        isActive: true,
+
+        variants: [
+          {
+            label: "Size",
+            options: [
+              { value: "S", stock: 10, price },
+              { value: "M", stock: 15, price },
+              { value: "L", stock: 20, price },
+              { value: "XL", stock: 12, price },
+            ],
+          },
+        ],
+      });
+    }
+  });
+});
+
+export default menProducts;

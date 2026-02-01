@@ -1,4 +1,8 @@
-export const sportsImages = [
+// src/data/products/sports.js
+
+const sportsProducts = [];
+
+const sportsImages = [
   // 1–10 : Gym / Fitness
   "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1600&auto=format&fit=crop",
@@ -47,3 +51,44 @@ export const sportsImages = [
   "https://images.unsplash.com/photo-1586407014174-a1a0c95b6d80?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1505842465776-3d90f616310d?q=80&w=1600&auto=format&fit=crop",
 ];
+
+
+const subCategories = [
+  "gym-wear",
+  "footwear",
+  "sports-equipment",
+  "outdoor-sports",
+  "fitness-accessories",
+  "athleisure",
+  "winter-sports",
+  "team-sports",
+  "yoga-training",
+];
+
+// ~270 products (9 × 30)
+let idCounter = 4101;
+
+subCategories.forEach((sub) => {
+  for (let i = 1; i <= 30; i++) {
+    const price = 899 + i * 25;
+    const discount =
+      i % 5 === 0 ? 30 : i % 7 === 0 ? 20 : 0;
+
+    sportsProducts.push({
+      id: idCounter++,
+      name: `${sub.replace("-", " ").toUpperCase()} Product ${i}`,
+      slug: `${sub}-sports-${i}`,
+      category: "sports",
+      subCategory: sub,
+      brand: "SmartCart Sports",
+      price,
+      discount,
+      finalPrice: Math.round(price - (price * discount) / 100),
+      rating: (Math.random() * (5 - 4.1) + 4.1).toFixed(1),
+      reviews: Math.floor(Math.random() * 500 + 60),
+      image: sportsImages[i % sportsImages.length],
+    });
+  }
+});
+
+export default sportsProducts;

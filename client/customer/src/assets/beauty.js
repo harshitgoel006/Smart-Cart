@@ -1,4 +1,8 @@
-export const beautyImages = [
+// src/data/products/beauty.js
+
+const beautyProducts = [];
+
+const beautyImages = [
   // 1–10 : Skincare / Face
   "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=1600&auto=format&fit=crop",
@@ -47,3 +51,44 @@ export const beautyImages = [
   "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1621607512214-68297480165e?q=80&w=1600&auto=format&fit=crop",
 ];
+
+
+const subCategories = [
+  "skincare",
+  "makeup",
+  "haircare",
+  "fragrance",
+  "bath-body",
+  "mens-grooming",
+  "tools-accessories",
+  "ayurvedic",
+  "personal-care",
+];
+
+// ~270 products (9 × 30)
+let idCounter = 3501;
+
+subCategories.forEach((sub) => {
+  for (let i = 1; i <= 30; i++) {
+    const price = 199 + i * 18;
+    const discount =
+      i % 5 === 0 ? 20 : i % 7 === 0 ? 15 : 0;
+
+    beautyProducts.push({
+      id: idCounter++,
+      name: `${sub.replace("-", " ").toUpperCase()} Product ${i}`,
+      slug: `${sub}-beauty-${i}`,
+      category: "beauty",
+      subCategory: sub,
+      brand: "SmartCart Beauty",
+      price,
+      discount,
+      finalPrice: Math.round(price - (price * discount) / 100),
+      rating: (Math.random() * (5 - 4.1) + 4.1).toFixed(1),
+      reviews: Math.floor(Math.random() * 500 + 50),
+      image: beautyImages[i % beautyImages.length],
+    });
+  }
+});
+
+export default beautyProducts;

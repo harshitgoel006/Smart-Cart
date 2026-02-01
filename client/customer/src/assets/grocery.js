@@ -1,4 +1,8 @@
-export const groceryImages = [
+// src/data/products/grocery.js
+
+const groceryProducts = [];
+
+const groceryImages = [
   // 1–10 : Fresh Fruits & Vegetables
   "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?q=80&w=1600&auto=format&fit=crop",
@@ -47,3 +51,45 @@ export const groceryImages = [
   "https://images.unsplash.com/photo-1587334274531-6c31a6b52e3d?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1603052875542-2f9ed64a1d7b?q=80&w=1600&auto=format&fit=crop",
 ];
+
+const subCategories = [
+  "fruits",
+  "vegetables",
+  "dairy",
+  "snacks",
+  "beverages",
+  "breakfast",
+  "staples",
+  "spices",
+  "dry-fruits",
+  "bakery",
+  "frozen",
+  "household",
+];
+
+// generate ~360 products (12 × 30)
+let idCounter = 3001;
+
+subCategories.forEach((sub) => {
+  for (let i = 1; i <= 30; i++) {
+    const price = 40 + i * 12;
+    const discount = i % 4 === 0 ? 10 : i % 7 === 0 ? 15 : 0;
+
+    groceryProducts.push({
+      id: idCounter++,
+      name: `${sub.replace("-", " ").toUpperCase()} Item ${i}`,
+      slug: `${sub}-grocery-${i}`,
+      category: "grocery",
+      subCategory: sub,
+      brand: "SmartCart Fresh",
+      price,
+      discount,
+      finalPrice: Math.round(price - (price * discount) / 100),
+      rating: (Math.random() * (5 - 4.0) + 4.0).toFixed(1),
+      reviews: Math.floor(Math.random() * 300 + 30),
+      image: groceryImages[i % groceryImages.length],
+    });
+  }
+});
+
+export default groceryProducts;

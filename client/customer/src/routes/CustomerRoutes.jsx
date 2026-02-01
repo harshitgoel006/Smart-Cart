@@ -13,6 +13,7 @@ import Groceries from "../pages/Categories/Groceries";
 import Sports from "../pages/Categories/Sports";
 import Fashion from "../pages/Categories/Fashion";
 import Category from "../pages/Categories/Categories";
+import ProductsPage from "../pages/Products/Product";
 
 const CustomerRoutes = () => {
   return (
@@ -33,6 +34,7 @@ const CustomerRoutes = () => {
           <Route path="/categories/groceries" element={<Groceries />} />
           <Route path="/categories/sports-gym" element={<Sports />} />
           <Route path="/categories/fashion" element={<Fashion />} />
+          <Route path="/products" element={<ProductsPage />} />
 
 
 

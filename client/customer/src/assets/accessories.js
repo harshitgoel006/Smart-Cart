@@ -1,4 +1,8 @@
-export const accessoriesImages = [
+// src/data/products/accessories.js
+
+const accessoriesProducts = [];
+
+const accessoriesImages = [
   // 1–10 : Watches / Sunglasses
   "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1600&auto=format&fit=crop",
@@ -47,3 +51,43 @@ export const accessoriesImages = [
   "https://images.unsplash.com/photo-1602526216039-67e97b8c0d70?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1600&auto=format&fit=crop",
 ];
+
+const subCategories = [
+  "bags",
+  "wallets",
+  "watches",
+  "jewelry",
+  "sunglasses",
+  "belts",
+  "caps-hats",
+  "travel-accessories",
+  "tech-accessories",
+];
+
+// ~270 products (9 × 30)
+let idCounter = 4701;
+
+subCategories.forEach((sub) => {
+  for (let i = 1; i <= 30; i++) {
+    const price = 999 + i * 70;
+    const discount =
+      i % 7 === 0 ? 40 : i % 5 === 0 ? 25 : 0;
+
+    accessoriesProducts.push({
+      id: idCounter++,
+      name: `${sub.replace("-", " ").toUpperCase()} ${i}`,
+      slug: `${sub}-accessory-${i}`,
+      category: "accessories",
+      subCategory: sub,
+      brand: "SmartCart Accessories",
+      price,
+      discount,
+      finalPrice: Math.round(price - (price * discount) / 100),
+      rating: (Math.random() * (5 - 4.1) + 4.1).toFixed(1),
+      reviews: Math.floor(Math.random() * 700 + 120),
+      image: accessoriesImages[i % accessoriesImages.length],
+    });
+  }
+});
+
+export default accessoriesProducts;

@@ -1,4 +1,6 @@
-export const womenImages = [
+// src/data/products/women.js
+
+const WOMEN_IMAGES = [
   // Casual / Daily Wear
   "https://i.pinimg.com/736x/d6/bc/ce/d6bcce4be1856a743ff29adca04d49ac.jpg",
   "https://i.pinimg.com/736x/17/ec/e0/17ece08130b1c3f72ec8d73e8bb97bd8.jpg",
@@ -44,3 +46,74 @@ export const womenImages = [
   "https://images.unsplash.com/photo-1545912452-8aea7e25a3d3?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1600&auto=format&fit=crop"
 ];
+
+
+const SUB_CATEGORIES = ["Tops","Kurtis","Ethnic Sets","Jeans","Trousers","Skirts","Co-ords","Loungewear","Activewear","Footwear","Accessories"];
+
+
+const BRANDS = ["Zara", "H&M", "Forever 21", "Biba", "Only", "AND"];
+
+let idCounter = 1;
+const womenProducts = [];
+
+/* 🔁 AUTO GENERATE WOMEN PRODUCTS */
+SUB_CATEGORIES.forEach((subCategory) => {
+  WOMEN_IMAGES.forEach((img, index) => {
+    for (let i = 0; i < 3; i++) {
+      const price = 1299 + i * 400;
+      const discount = i % 2 === 0 ? 25 : 0;
+
+      womenProducts.push({
+        id: `women-${idCounter++}`,
+
+        name: `${subCategory} Elegant ${i + 1}`,
+        slug: `women-${subCategory.toLowerCase().replace(/\s/g, "-")}-${idCounter}`,
+
+        description:
+          "Elegant design with premium fabric. Crafted for modern women and everyday elegance.",
+
+        brand: BRANDS[index % BRANDS.length],
+
+        category: "women",
+        subCategory,
+
+        price,
+        discount,
+        finalPrice: price - (price * discount) / 100,
+
+        stock: 40 + i * 10,
+        sold: Math.floor(Math.random() * 300),
+
+        rating: (Math.random() * 1.2 + 3.8).toFixed(1),
+        reviews: Math.floor(Math.random() * 400),
+
+        image: img,
+        images: [
+          { url: img },
+          { url: img },
+          { url: img },
+        ],
+
+        tags: ["women", subCategory.toLowerCase(), "fashion"],
+
+        featured: i === 0,
+        isActive: true,
+
+        variants: [
+          {
+            label: "Size",
+            options: [
+              { value: "XS", stock: 8, price },
+              { value: "S", stock: 12, price },
+              { value: "M", stock: 18, price },
+              { value: "L", stock: 15, price },
+              { value: "XL", stock: 10, price },
+            ],
+          },
+        ],
+      });
+    }
+  });
+});
+
+export default womenProducts;

@@ -1,4 +1,8 @@
-export const kidsImages = [
+// src/data/products/kids.js
+
+const kidsProducts = [];
+
+const kidsImages = [
   // 1–10 : Kids Fashion / Studio
   "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?q=80&w=1600&auto=format&fit=crop",
@@ -47,3 +51,43 @@ export const kidsImages = [
   "https://images.unsplash.com/photo-1536640712-4d4c36ff0e4e?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1587652432438-7e6d8cc2a5c6?q=80&w=1600&auto=format&fit=crop"
 ];
+
+const subCategories = [
+  "boys-clothing",
+  "girls-clothing",
+  "baby-wear",
+  "toys",
+  "footwear",
+  "school-essentials",
+  "winter-wear",
+  "ethnic-wear",
+  "accessories",
+];
+
+// ~270 products (9 × 30)
+let idCounter = 3801;
+
+subCategories.forEach((sub) => {
+  for (let i = 1; i <= 30; i++) {
+    const price = 399 + i * 15;
+    const discount =
+      i % 4 === 0 ? 25 : i % 6 === 0 ? 15 : 0;
+
+    kidsProducts.push({
+      id: idCounter++,
+      name: `${sub.replace("-", " ").toUpperCase()} Item ${i}`,
+      slug: `${sub}-kids-${i}`,
+      category: "kids",
+      subCategory: sub,
+      brand: "SmartCart Kids",
+      price,
+      discount,
+      finalPrice: Math.round(price - (price * discount) / 100),
+      rating: (Math.random() * (5 - 4.2) + 4.2).toFixed(1),
+      reviews: Math.floor(Math.random() * 400 + 40),
+      image: kidsImages[i % kidsImages.length],
+    });
+  }
+});
+
+export default kidsProducts;

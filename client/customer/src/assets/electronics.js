@@ -1,4 +1,6 @@
-export const electronicsImages = [
+// src/data/products/electronics.js
+
+const ELECTRONICS_IMAGES = [
   // 1–10 : Premium Gadgets / Clean Shots
   "https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1600&auto=format&fit=crop",
@@ -47,3 +49,90 @@ export const electronicsImages = [
   "https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1585079374502-415f8516dcc3?q=80&w=1600&auto=format&fit=crop"
 ];
+
+const SUB_CATEGORIES = ["Smartphones", "Laptops", "Tablets", "Headphones", "Earbuds", "Smartwatches", "Cameras", "Gaming", "Accessories"];
+
+
+const BRANDS = [
+  "Apple",
+  "Samsung",
+  "OnePlus",
+  "Dell",
+  "HP",
+  "Lenovo",
+  "Sony",
+  "Boat",
+];
+
+let idCounter = 1;
+const electronicsProducts = [];
+
+/* 🔁 AUTO GENERATE ELECTRONICS PRODUCTS */
+SUB_CATEGORIES.forEach((subCategory) => {
+  ELECTRONICS_IMAGES.forEach((img, index) => {
+    for (let i = 0; i < 3; i++) {
+      const basePrice =
+        subCategory === "Mobiles"
+          ? 18999
+          : subCategory === "Laptops"
+          ? 54999
+          : 1499;
+
+      const price = basePrice + i * 3500;
+      const discount = i % 2 === 0 ? 15 : 0;
+
+      electronicsProducts.push({
+        id: `electronics-${idCounter++}`,
+
+        name: `${BRANDS[index % BRANDS.length]} ${subCategory} ${i + 1}`,
+        slug: `electronics-${subCategory.toLowerCase()}-${idCounter}`,
+
+        description:
+          "High-performance electronics built with cutting-edge technology and premium components.",
+
+        brand: BRANDS[index % BRANDS.length],
+
+        category: "electronics",
+        subCategory,
+
+        price,
+        discount,
+        finalPrice: price - (price * discount) / 100,
+
+        stock: 30 + i * 10,
+        sold: Math.floor(Math.random() * 500),
+
+        rating: (Math.random() * 1.2 + 3.8).toFixed(1),
+        reviews: Math.floor(Math.random() * 800),
+
+        image: img,
+        images: [
+          { url: img },
+          { url: img },
+          { url: img },
+        ],
+
+        tags: ["electronics", subCategory.toLowerCase(), "tech"],
+
+        featured: i === 0,
+        isActive: true,
+
+        variants:
+          subCategory === "Mobiles" || subCategory === "Laptops"
+            ? [
+                {
+                  label: "Storage",
+                  options: [
+                    { value: "64GB", stock: 10, price },
+                    { value: "128GB", stock: 15, price: price + 2000 },
+                    { value: "256GB", stock: 8, price: price + 4000 },
+                  ],
+                },
+              ]
+            : [],
+      });
+    }
+  });
+});
+
+export default electronicsProducts;

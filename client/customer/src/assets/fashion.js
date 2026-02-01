@@ -1,4 +1,8 @@
-export const fashionImages = [
+// src/data/products/fashion.js
+
+const fashionProducts = [];
+
+const fashionImages = [
   // 1–10 Street / Editorial
   "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1445205170230-053b830c6050?q=80&w=1600&auto=format&fit=crop",
@@ -47,3 +51,46 @@ export const fashionImages = [
   "https://i.pinimg.com/736x/77/e8/0f/77e80f235206dbb272e58e532a611a8e.jpg",
   "https://i.pinimg.com/736x/6c/51/42/6c514220a4604921eac04b489de49d93.jpg"
 ];
+
+
+const subCategories = [
+  "tshirts",
+  "shirts",
+  "jeans",
+  "trousers",
+  "jackets",
+  "hoodies",
+  "sweatshirts",
+  "co-ords",
+  "ethnic",
+  "streetwear",
+  "partywear",
+  "winterwear",
+];
+
+// generate ~360 products (12 subcats × 30)
+let idCounter = 2001;
+
+subCategories.forEach((sub) => {
+  for (let i = 1; i <= 30; i++) {
+    const price = 999 + i * 40;
+    const discount = i % 3 === 0 ? 20 : i % 5 === 0 ? 30 : 0;
+
+    fashionProducts.push({
+      id: idCounter++,
+      name: `${sub.toUpperCase()} Fashion Item ${i}`,
+      slug: `${sub}-fashion-${i}`,
+      category: "fashion",
+      subCategory: sub,
+      brand: "SmartCart Fashion",
+      price,
+      discount,
+      finalPrice: Math.round(price - (price * discount) / 100),
+      rating: (Math.random() * (5 - 3.8) + 3.8).toFixed(1),
+      reviews: Math.floor(Math.random() * 500 + 50),
+      image: fashionImages[i % fashionImages.length],
+    });
+  }
+});
+
+export default fashionProducts;
