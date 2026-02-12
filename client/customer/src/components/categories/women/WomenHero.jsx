@@ -3,7 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
-// Updated slides for Women's Collection [cite: 1, 11, 41]
+
+// Sample slides data for the WomenHero section - showcasing dynamic promotional content with vibrant images, titles, and descriptions to highlight the women's category. Each slide includes a tag, two-part title with gradient accents, a description, and a background image that creates an immersive visual experience for users visiting the women's category page.
+
 const slides = [
   {
     id: 1,
@@ -36,6 +38,8 @@ const slides = [
     accent: "from-indigo-400 to-purple-400",
   },
 ];
+
+// The WomenHero component renders a dynamic hero section for the women category, featuring a full-screen background that cycles through promotional slides. Each slide includes a tag, a bold two-part title with gradient accents, a descriptive paragraph, and call-to-action buttons. The component uses framer-motion for smooth transitions and animations, creating an engaging and visually appealing introduction to the women's category.Users can navigate through the slides using next/previous buttons or by clicking on the pagination indicators at the bottom.
 
 const WomenHero = () => {
   const [current, setCurrent] = useState(0);

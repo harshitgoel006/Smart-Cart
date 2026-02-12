@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
+// The SportsExclusivePromo component renders a visually striking promotional section for the sports category. It features a dynamic background with ambient glows and a textured overlay, creating an immersive atmosphere. The content includes a promotional tag, a bold title, a subline highlighting the discount offer, and a call-to-action button that encourages users to shop for performance gear. The component utilizes framer-motion for smooth animations and interactive effects, enhancing the overall user experience and drawing attention to the exclusive promotion.
+
 const SportsExclusivePromo = () => {
   return (
     <section className="w-full pt-2 pb-20 overflow-hidden">

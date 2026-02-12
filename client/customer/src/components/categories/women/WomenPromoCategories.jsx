@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiShoppingBag, FiMaximize2 } from "react-icons/fi";
 
+// This is the WomenPromoCategories component, which renders a visually engaging section that highlights various women fashion categories. It features a dynamic grid layout where each category is represented by a vibrant image, overlaid with a descriptive tag and title. The component incorporates subtle animations for an interactive user experience, making it easy for customers to explore different women's fashion categories and navigate to relevant product listings. The use of framer-motion adds smooth animations to enhance the overall user experience, while the design elements such as gradient text and hover effects create a modern and stylish aesthetic that appeals to fashion-conscious customers.
+
+
 const categories = [
   {
     title: "Mini Dresses",

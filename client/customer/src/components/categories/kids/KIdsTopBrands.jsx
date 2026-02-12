@@ -1,12 +1,16 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+// Sample brands data for the Kids Top Brands section
+
 const brands = [
   { name: "Hopscotch", slug: "hopscotch", logo: "https://i.pinimg.com/736x/6d/8e/e4/6d8ee4635fe1fd54e3e5c60b34836e46.jpg" },
   { name: "FirstCry", slug: "firstcry", logo: "https://i.pinimg.com/1200x/ca/a8/ff/caa8ff69f2134a8471e49ee0b7c9a418.jpg" },
   { name: "PatPat", slug: "patpat", logo: "https://i.pinimg.com/736x/0a/79/73/0a7973e21ad5a18ed7b5e15cb83b453d.jpg" },
   { name: "GAP Kids", slug: "gap-kids", logo: "https://i.pinimg.com/736x/3e/24/35/3e2435b1d5fc92c24be40ca86a74a94b.jpg" },
 ];
+
+// Kids Top Brands Component - Showcasing a curated selection of premium kids' brands with a modern, interactive design to drive brand exploration and engagement.
 
 const KidsTopBrands = () => {
   return (

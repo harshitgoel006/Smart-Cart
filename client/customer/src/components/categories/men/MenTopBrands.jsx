@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+// This is the MenTopBrands component that displays a section of top brands for men. It features a header with a title and a link to view all brands, followed by a grid of brand logos. Each logo is displayed in a card with a hover effect that reveals a "View Store" text. The component uses Tailwind CSS for styling and Framer Motion for animations to create an engaging user experience.
+
 const brands = [
   { name: "Nike", slug: "nike", logo: "https://cdn.simpleicons.org/nike/000000" },
   { name: "Adidas", slug: "adidas", logo: "https://cdn.simpleicons.org/adidas/000000" },
@@ -11,6 +13,8 @@ const brands = [
   { name: "Hugo Boss", slug: "hugo-boss", logo: "https://i.pinimg.com/1200x/89/fe/80/89fe8053b55fa135cb5155c9444ce4ba.jpg" },
   { name: "Ralph Lauren", slug: "ralphlauren", logo: "https://i.pinimg.com/1200x/59/5d/e5/595de5b5286b9ee0e47fe3fc89a8c68b.jpg" },
 ];
+
+
 
 const MenTopBrands = () => {
   return (

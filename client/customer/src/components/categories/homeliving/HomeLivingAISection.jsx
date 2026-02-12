@@ -9,6 +9,9 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 
+
+// Highly stylized and modern home & living AI section with a cinematic vibe, featuring large background images with inner shadows for depth, bold typography with gradient highlights, and sleek navigation buttons. The design emphasizes a luxurious and futuristic feel, perfect for showcasing AI-powered home design features.
+
 const slides = [
   {
     id: 1,
@@ -27,6 +30,9 @@ const slides = [
     accent: "from-amber-400 to-orange-500",
   },
 ];
+
+
+// The HomeLivingAISection component renders a visually stunning section with a Swiper carousel showcasing AI-powered home design features. Each slide features a captivating image, a compelling title with a gradient accent, and a description of the AI capabilities. The section includes smooth animations, custom pagination, and navigation buttons for an engaging user experience.
 
 const HomeLivingAISection = () => {
   return (

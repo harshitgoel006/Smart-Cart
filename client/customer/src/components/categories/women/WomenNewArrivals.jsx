@@ -3,7 +3,9 @@ import { motion } from "framer-motion";
 import { FiHeart, FiEye, FiShoppingCart, FiArrowRight } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 
-// Products based on WOMEN.pdf NEW ARRIVALS section
+
+// Sample products data for the Women's New Arrivals section - showcasing a selection of recently added women's fashion   items, including ethnic wear, western wear, co-ord sets, and footwear. Each product includes details such as name, category, price, rating, discount badge, and an image URL to visually represent the product. This data is used to dynamically render the new arrivals grid in the WomenNewArrivals component.
+
 const products = [
   {
     id: 1,
@@ -46,6 +48,8 @@ const products = [
     image: "https://i.pinimg.com/1200x/eb/06/4f/eb064f8ffabe4569b2b1de9bedb82690.jpg", // Green satin shirt
   },
 ];
+
+// The WomenNewArrivals component renders a visually engaging section that highlights the latest additions to the women's fashion category. It features a dynamic grid layout where each product is showcased with its image, name, category, price, rating, and discount information. The component incorporates interactive elements such as hover effects and call-to-action buttons for adding products to the cart or viewing details. The use of framer-motion adds smooth animations to enhance the user experience, making it easy for customers to explore and shop the newest fashion items in the women's category.
 
 const WomenNewArrivals = () => {
   const discount = (p, m) => Math.round(((m - p) / m) * 100);

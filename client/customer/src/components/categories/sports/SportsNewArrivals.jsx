@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { FiHeart, FiEye, FiShoppingCart, FiArrowRight } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 
+// Sample products data for the Sports New Arrivals section - showcasing a selection of recently added sports performance gear, including footwear, apparel, equipment, and accessories. Each product includes details such as name, category, price, rating, discount badge, and an image URL to visually represent the product. This data is used to dynamically render the new arrivals grid in the SportsNewArrivals component.
+
 const products = [
   {
     id: 1,
@@ -45,6 +47,8 @@ const products = [
     image: "https://i.pinimg.com/1200x/84/88/e5/8488e5716a81e522a5dd4f075efa9a4f.jpg",
   },
 ];
+
+// The SportsNewArrivals component renders a visually engaging section that highlights the latest additions to the sports category. It features a dynamic grid layout where each product is showcased with its image, name, category, price, rating, and discount information. The component incorporates interactive elements such as hover effects and call-to-action buttons for adding products to the cart or viewing details. The use of framer-motion adds smooth animations to enhance the user experience, making it easy for customers to explore and shop the newest performance gear in the sports category.
 
 const SportsNewArrivals = () => {
   const discount = (p, m) => Math.round(((m - p) / m) * 100);

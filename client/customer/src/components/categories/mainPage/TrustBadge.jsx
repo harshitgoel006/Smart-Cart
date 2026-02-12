@@ -2,6 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FiTruck, FiRotateCcw, FiShield, FiStar } from "react-icons/fi";
 
+// Data for the trust badges, including icons, titles, descriptions, and colors for gradients and glows.
+
 const badges = [
   {
     icon: <FiTruck />,
@@ -32,6 +34,8 @@ const badges = [
     glow: "shadow-orange-500/20",
   },
 ];
+
+// TrustBadges component that renders a section with a header and a grid of trust badges, each with animations and hover effects for an engaging user experience.
 
 const TrustBadges = () => {
   return (

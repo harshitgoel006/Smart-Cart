@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
+// Sample slides data for the Kids Hero section
+
 const slides = [
   {
     id: 1,
@@ -35,6 +37,8 @@ const slides = [
     accent: "from-green-400 to-emerald-600",
   },
 ];
+
+// This is the main Hero component for the Kids category page, featuring a dynamic slideshow with AI-themed content and strong visual appeal.
 
 const KidsHero = () => {
   const [current, setCurrent] = useState(0);

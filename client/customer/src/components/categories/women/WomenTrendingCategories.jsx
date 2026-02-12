@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+// Sample categories data for the Women Trending Categories section - showcasing popular women's fashion categories with vibrant images and links for navigation. Each category includes a title, link for routing, and an image URL to visually represent the category. This data is used to dynamically render the trending categories grid in the WomenTrendingCategories component.
+
 const trending = [
   {
     title: "Lehengas",
@@ -54,6 +56,9 @@ const trending = [
     image: "https://i.pinimg.com/1200x/c1/92/69/c19269a67700c580513527bbabac033a.jpg",
   },
 ];
+
+// The WomenTrendingCategories component renders a visually engaging section that highlights popular women fashion categories. It features a dynamic grid layout where each category is represented by a vibrant image, overlaid with a descriptive tag and title. The component incorporates subtle animations for an interactive user experience, making it easy for customers to explore different categories and navigate to relevant product listings. The use of framer-motion adds smooth animations to enhance the overall user experience, while the design elements such as gradient text and hover effects create a modern and stylish aesthetic that appeals to fashion-conscious customers. 
+
 
 const WomenTrendingCategories = () => {
   return (

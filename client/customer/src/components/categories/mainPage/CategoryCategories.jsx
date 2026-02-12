@@ -4,7 +4,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight, FiZap, FiShoppingBag } from "react-icons/fi";
 
-// dynamic animation variants
+
+// Sample departments data for the Explore Departments section
+
 const containerVariants = {
   hidden: { opacity: 0 },
   show: {
@@ -37,6 +39,8 @@ const departments = [
   { name: "Gifts", slug: "gifts", image: "https://i.pinimg.com/736x/ee/af/28/eeaf28115cb7c67b9357e9bb1669d143.jpg", gridSize: "md:col-span-1 md:row-span-1", accent: "from-fuchsia-500/40" },
   { name: "More", slug: "", image: "", gridSize: "md:col-span-1 md:row-span-1", comingSoon: true },
 ];
+
+// Explore Departments Component - A visually stunning, interactive grid showcasing all major shopping categories with dynamic hover effects and a modern design to drive user engagement and conversions.
 
 const ExploreDepartments = () => {
   return (

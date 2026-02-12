@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiShoppingBag, FiMaximize2 } from "react-icons/fi";
 
+// Sample categories data for the Sports Promo Categories section - showcasing premium performance collections with vibrant images, promotional tags, and call-to-action links. Each category includes a title, highlight, discount offer, link for navigation, background color, shadow effect, main image, and mini images to visually represent the category and entice customers to explore the collections.
+
 const categories = [
   {
     title: "Pro Training",
@@ -43,6 +45,8 @@ const categories = [
     ],
   },
 ];
+
+// The SportsPromoCategories component renders a visually engaging section that highlights various sports equipment and apparel categories. It features a dynamic grid layout where each category is represented by a vibrant image, overlaid with a descriptive tag and title. The component incorporates subtle animations for an interactive user experience, making it easy for customers to explore different sports categories and navigate to relevant product listings.
 
 const SportsPromoCategories = () => {
   return (

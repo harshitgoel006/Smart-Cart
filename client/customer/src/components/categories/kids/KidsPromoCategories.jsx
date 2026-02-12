@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiShoppingBag, FiMaximize2 } from "react-icons/fi";
 
+// Sample categories data for the Kids Promo Categories section
+
 const categories = [
   {
     title: "Co-ord Sets",
@@ -43,6 +45,8 @@ const categories = [
     ],
   },
 ];
+
+// Kids Promo Categories Component - A visually rich section showcasing key kids' categories with exclusive discounts, designed to drive engagement and conversions.
 
 const KidsPromoCategories = () => {
   return (

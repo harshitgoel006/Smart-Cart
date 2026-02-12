@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+// HomeLivingTopBrands component showcasing premium home design brands with a modern, interactive grid layout, featuring brand logos, hover effects, and a call-to-action to explore all brands in the home & living category.
+
 const brands = [
   { name: "IKEA", slug: "ikea", logo: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Ikea_logo.svg" },
   { name: "Philips", slug: "philips", logo: "https://images.philips.com/is/image/PhilipsConsumer/Philips_Wordmark-ALI-global" },

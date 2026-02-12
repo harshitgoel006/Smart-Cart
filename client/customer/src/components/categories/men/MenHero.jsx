@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
+// Hero Section for Men's Fashion - Showcasing a dynamic carousel of visually striking slides with cinematic transitions and interactive navigation controls. The design emphasizes a modern aesthetic with bold typography, ambient glows, and smooth animations to create an engaging and immersive shopping experience for customers.
+
 const slides = [
   {
     id: 1,
@@ -35,6 +37,8 @@ const slides = [
     accent: "from-amber-500 to-orange-500",
   },
 ];
+
+// This component implements a hero section with a carousel of slides that automatically transitions every 6.5 seconds. Each slide features a background image, a tag, a title with a gradient accent, a description, and call-to-action buttons. Users can also manually navigate through the slides using the provided controls. The design focuses on creating an immersive and visually appealing experience for customers exploring the men's fashion collection.
 
 const MenHero = () => {
   const [current, setCurrent] = useState(0);

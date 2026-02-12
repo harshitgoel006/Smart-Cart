@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
+// Kids Exclusive Promo Component
+
 const KidsExclusivePromo = () => {
   return (
     <section className="w-full pt-2 pb-20 overflow-hidden">

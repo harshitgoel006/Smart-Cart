@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+// Sample categories data for the Sports Trending Categories section - showcasing popular sports gear types with vibrant images and links for navigation. Each category includes a title, link for routing, and an image URL to visually represent the category. This data is used to dynamically render the trending categories grid in the SportsTrendingCategories component.
+
 const trending = [
   {
     title: "Compression Wear",
@@ -55,6 +57,7 @@ const trending = [
   },
 ];
 
+// The SportsTrendingCategories component renders a visually engaging section that highlights popular sports gear types. It features a dynamic grid layout where each category is represented by a vibrant image, overlaid with a descriptive tag and title. The component incorporates subtle animations for an interactive user experience, making it easy for customers to explore different sports categories and navigate to relevant product listings.
 const SportsTrendingCategories = () => {
   return (
     <section className="relative py-28 overflow-hidden bg-gradient-to-b from-purple-100 via-pink-100/40 to-white">

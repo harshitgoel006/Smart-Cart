@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiShoppingBag, FiMaximize2 } from "react-icons/fi";
 
+// This is the MenPromoCategories component that displays promotional categories for men. It features a header with a title and a link to view all drops, followed by a grid of category cards. Each card includes a main image, category details, discount information, and floating mini cards for additional products. The component uses Tailwind CSS for styling and Framer Motion for animations to create an engaging user experience.
+
 const categories = [
   {
     title: "Kurta Sets",
@@ -45,6 +47,8 @@ const categories = [
     ],
   },
 ];
+
+// This is the MenPromoCategories component that displays promotional categories for men. It features a header with a title and a link to view all drops, followed by a grid of category cards. Each card includes a main image, category details, discount information, and floating mini cards for additional products. The component uses Tailwind CSS for styling and Framer Motion for animations to create an engaging user experience.
 
 const MenPromoCategories = () => {
   return (

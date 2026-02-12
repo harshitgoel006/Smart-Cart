@@ -1,12 +1,16 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+// Sample brands data for the Sports Top Brands section - showcasing leading sports brands with their names, slugs for routing, and logo URLs. This data is used to dynamically render the brand grid in the SportsTopBrands component, allowing users to explore products from their favorite sports brands.
+
 const brands = [
   { name: "Nike", slug: "nike", logo: "https://cdn.simpleicons.org/nike/000000" },
   { name: "Adidas", slug: "adidas", logo: "https://cdn.simpleicons.org/adidas/000000" },
   { name: "Puma", slug: "puma", logo: "https://cdn.simpleicons.org/puma/000000" },
   { name: "Under Armour", slug: "underarmour", logo: "https://cdn.simpleicons.org/underarmour/000000" },
 ];
+
+// The SportsTopBrands component renders a visually engaging section that highlights the top sports brands available on the platform. It features a dynamic grid layout where each brand is represented by its logo, which is displayed in grayscale and partially transparent by default. When users hover over a brand, the logo becomes fully colored and slightly enlarged, creating an interactive experience. Each brand is also a clickable link that navigates to the respective brand's hub page, allowing users to explore products from their favorite sports brands. The section includes a header with a bold title and a descriptive paragraph, as well as a call-to-action at the bottom encouraging users to explore all brands. The use of framer-motion adds smooth animations to enhance the overall user experience.
 
 const SportsTopBrands = () => {
   return (

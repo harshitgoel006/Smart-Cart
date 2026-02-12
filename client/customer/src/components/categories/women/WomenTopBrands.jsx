@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+
+// Sample brands data for the Women Top Brands section - showcasing popular women's fashion brands with their logos and links for navigation. Each brand includes a name, slug for routing, and a logo URL to visually represent the brand. This data is used to dynamically render the top brands grid in the WomenTopBrands component, providing customers with an easy way to explore collections from their favorite brands in the women's category.
+
 const brands = [
   { name: "Zara", slug: "zara", logo: "https://cdn.simpleicons.org/zara/000000" },
   { name: "Mango", slug: "mango", logo: "https://i.pinimg.com/736x/e8/47/e4/e847e41ac9713cf26034ce6c40a31aed.jpg" },
@@ -11,6 +14,8 @@ const brands = [
   { name: "Gucci", slug: "gucci", logo: "https://i.pinimg.com/736x/1e/86/e3/1e86e3bc7cbfe84d730a36235c7a7f4b.jpg" },
   { name: "Prada", slug: "prada", logo: "https://i.pinimg.com/1200x/55/80/97/558097bf430af078a10fde2b3caf0806.jpg" },
 ];
+
+// The WomenTopBrands component renders a visually engaging section that highlights popular women's fashion brands. It features a dynamic grid layout where each brand is represented by its logo, overlaid with a call-to-action text on hover. The component incorporates subtle animations for an interactive user experience, making it easy for customers to explore different brands and navigate to relevant product listings. Additionally, a promotional card at the bottom encourages users to explore the full range of brands available in the women's category, enhancing the overall shopping experience and driving engagement with the brand collections.
 
 const WomenTopBrands = () => {
   return (

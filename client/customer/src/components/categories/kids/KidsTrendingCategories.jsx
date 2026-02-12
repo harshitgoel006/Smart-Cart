@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+// Sample trending categories data for the Kids Trending Categories section
+
 const trending = [
   {
     title: "Graphic Tees",
@@ -54,6 +56,8 @@ const trending = [
     image: "https://i.pinimg.com/1200x/ef/0d/2a/ef0d2a2dc2c8b82929833e68131c4e17.jpg",
   },
 ];
+
+// Kids Trending Categories Component - A dynamic, visually engaging section that highlights the hottest kids' fashion categories with interactive hover effects and a modern design to drive user engagement and conversions.
 
 const KidsTrendingCategories = () => {
   return (

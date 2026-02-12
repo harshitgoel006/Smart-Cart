@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+// TRENDING HOME & LIVING CATEGORIES DATA - In a real application, this would likely come from an API or CMS
+
 const trending = [
   {
     title: "Bedsheets",
@@ -54,6 +56,8 @@ const trending = [
     image: "https://i.pinimg.com/1200x/2b/d0/0d/2bd00de561bce37aa642ab8c69201747.jpg",
   },
 ];
+
+// HomeLivingTrendingCategories component presenting three distinct promotional categories for home & living, each with unique styling, hover animations, and direct links to filtered product listings for bedsheets, wall art, and lamps.
 
 const HomeLivingTrendingCategories = () => {
   return (

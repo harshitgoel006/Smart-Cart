@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
+// Sample slides data for the Category Hero section
+
 const slides = [
   {
     id: 1,
@@ -35,6 +37,8 @@ const slides = [
     link: "/categories/home-living"
   },
 ];
+
+// This is the main Hero component for the Categories main page, featuring a dynamic slideshow with strong visual appeal and clear calls to action for exploring key shopping categories.
 
 const CategoryHero = () => {
   const [current, setCurrent] = useState(0);

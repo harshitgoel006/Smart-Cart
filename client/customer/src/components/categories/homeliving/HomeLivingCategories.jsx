@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+
+// the categories and their details for the home & living section
+
 const categories = [
   {
     name: "Bedroom",
@@ -46,6 +49,9 @@ const categories = [
       "https://i.pinimg.com/736x/33/01/27/330127b569c0c8c69889908dd244e926.jpg", 
   },
 ];
+
+
+// the main component for the home & living categories section, showcasing the different subcategories with a stylish and interactive design
 
 const HomeLivingCategories = () => {
   return (

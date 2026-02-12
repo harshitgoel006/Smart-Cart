@@ -10,6 +10,8 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 
+// Enhanced AI Styling Section with Cinematic Visuals and Interactive Elements
+
 const slides = [
   {
     id: 1,
@@ -28,6 +30,8 @@ const slides = [
     accent: "from-pink-400 to-rose-500",
   },
 ];
+
+// This section combines cinematic imagery with interactive elements to create an immersive experience. The AI styling concept is brought to life through dynamic animations, modern design, and clear calls to action, all while maintaining a sleek and sophisticated aesthetic.
 
 const MenAISection = () => {
   return (

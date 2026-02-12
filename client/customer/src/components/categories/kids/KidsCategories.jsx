@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+// Sample categories data for the Kids Categories section
+
 const categories = [
   {
     name: "Topwear",
@@ -46,6 +48,8 @@ const categories = [
       "https://i.pinimg.com/736x/53/26/2e/53262e1af122f74f0f1c962743a54f17.jpg", // kids sleepwear
   },
 ];
+
+// Kids Categories Component
 
 const KidsCategories = () => {
   return (

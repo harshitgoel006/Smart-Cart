@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
+// HomeLivingExclusivePromo Component - A visually stunning, cinematic hero section for the Home & Living category, featuring bold typography, gradient accents, and a compelling call-to-action to entice users to explore the curated collection of home essentials with exclusive discounts.
+
 const HomeLivingExclusivePromo = () => {
   return (
     <section className="w-full pt-2 pb-20 overflow-hidden">

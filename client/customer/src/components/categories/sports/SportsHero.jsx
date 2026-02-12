@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
+// Sample slides data for the Sports Hero section - showcasing dynamic promotional content with vibrant images, titles, and descriptions to highlight the sports category. Each slide includes a tag, two-part title with gradient accents, a description, and a background image that creates an immersive visual experience for users visiting the sports category page.
+
 const slides = [
   {
     id: 1,
@@ -35,6 +37,8 @@ const slides = [
     accent: "from-amber-500 to-orange-500",
   },
 ];
+
+// The SportsHero component renders a dynamic hero section for the sports category, featuring a full-screen background that cycles through promotional slides. Each slide includes a tag, a bold two-part title with gradient accents, a descriptive paragraph, and call-to-action buttons. The component uses framer-motion for smooth transitions and animations, creating an engaging and visually appealing introduction to the sports category page. Users can navigate through the slides using next/previous buttons or by clicking on the pagination indicators at the bottom.
 
 const SportsHero = () => {
   const [current, setCurrent] = useState(0);

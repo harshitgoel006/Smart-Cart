@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { FiHeart, FiEye, FiShoppingCart, FiArrowRight } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 
+// Sample product data with new high-quality images and more realistic details for the men's new arrivals section. Each product has a unique image, category, price, MRP, rating, and badge to enhance the visual appeal and provide a better user experience.
+
 const products = [
   {
     id: 1,
@@ -48,6 +50,7 @@ const products = [
 ];
 
 
+// This is the MenNewArrivals component that displays a section of new arrivals for men. It includes a header with a title and a link to view the entire collection, as well as a grid of product cards. Each card features an image, category badge, discount badge, action icons for wishlist and quick view, product details, and an "Add to Bag" button with a gradient hover effect. The component uses Tailwind CSS for styling and Framer Motion for animations to create an engaging user experience.
 
 const MenNewArrivals = () => {
   const discount = (p, m) => Math.round(((m - p) / m) * 100);

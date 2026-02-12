@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+// Sample categories data for the Sports section - showcasing various sports equipment and apparel categories with vibrant images and tags. Each category includes a name, slug for routing, a descriptive tag, and an image URL to visually represent the category. This data is used to dynamically render the category grid in the SportsCategories component.
+
 const categories = [
   {
     name: "Training",
@@ -47,6 +49,7 @@ const categories = [
   },
 ];
 
+// The SportsCategories component renders a visually engaging section that highlights various sports equipment and apparel categories. It features a dynamic grid layout where each category is represented by a vibrant image, overlaid with a descriptive tag and title. The component incorporates subtle animations for an interactive user experience, making it easy for customers to explore different sports categories and navigate to relevant product listings.
 
 const SportsCategories = () => {
   return (

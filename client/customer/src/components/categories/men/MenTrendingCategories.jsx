@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+// This is the MenTrendingCategories component that displays trending categories for men. It features a header with a title and a link to view all categories, followed by a grid of category cards. Each card includes an image, category name, and a hover effect that reveals a "View Store" icon. The component uses Tailwind CSS for styling and Framer Motion for animations to create an engaging user experience.
+
 const trending = [
   {
     title: "T-Shirts",

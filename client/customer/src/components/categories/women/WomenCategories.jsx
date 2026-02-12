@@ -2,7 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
-// Updated categories based on WOMEN.pdf (Page 1)
+
+// Sample categories data for the Women Categories section - showcasing popular women's fashion categories with vibrant images and links for navigation. Each category includes a name, slug for routing, tag for description, and an image URL to visually represent the category. This data is used to dynamically render the categories grid in the WomenCategories component.
+
 const categories = [
   {
     name: "Ethnic Wear",
@@ -47,6 +49,8 @@ const categories = [
       "https://i.pinimg.com/736x/81/86/71/8186716805021fd2777a88d6a9770df1.jpg", // Women formal
   },
 ];
+
+// The WomenCategories component renders a visually engaging section that highlights various women fashion categories. It features a dynamic grid layout where each category is represented by a vibrant image, overlaid with a descriptive tag and title. The component incorporates subtle animations for an interactive user experience, making it easy for customers to explore different women's fashion categories and navigate to relevant product listings. The use of framer-motion adds smooth animations to enhance the overall user experience, while the design elements such as gradient text and hover effects create a modern and stylish aesthetic that appeals to fashion-conscious customers.
 
 const WomenCategories = () => {
   return (

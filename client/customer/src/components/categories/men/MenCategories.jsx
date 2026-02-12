@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+// This component presents a curated selection of men's fashion categories in a visually engaging grid format. Each category is showcased with a high-quality image, overlaid with a gradient for better text visibility, and includes a call-to-action that encourages users to explore the products within that category. The design emphasizes modern aesthetics with smooth animations and interactive hover effects, creating an inviting shopping experience for customers.
+
 const categories = [
   {
     name: "Topwear",
@@ -47,6 +49,8 @@ const categories = [
   },
 ];
 
+
+// Men's Categories Section Component - Showcasing a curated selection of fashion categories with cinematic visuals and interactive elements to enhance user engagement and drive exploration. Each category is presented with a high-quality image, overlaid with a gradient for better text visibility, and includes a call-to-action that encourages users to explore the products within that category. The design emphasizes modern aesthetics with smooth animations and interactive hover effects, creating an inviting shopping experience for customers.
 
 const MenCategories = () => {
   return (

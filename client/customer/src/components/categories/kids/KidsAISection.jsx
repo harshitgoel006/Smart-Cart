@@ -9,6 +9,8 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 
+// Sample slides data for the Kids AI Section
+
 const slides = [
   {
     id: 1,
@@ -27,6 +29,8 @@ const slides = [
     accent: "from-blue-400 to-cyan-500",
   },
 ];
+
+// Kids AI Section Component
 
 const KidsAISection = () => {
   return (

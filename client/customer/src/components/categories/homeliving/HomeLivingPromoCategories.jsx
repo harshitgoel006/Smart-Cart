@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiShoppingBag, FiMaximize2 } from "react-icons/fi";
 
+
+//  HomeLivingPromoCategories component presenting three distinct promotional categories for home & living, each with unique styling, hover animations, and direct links to filtered product listings for bedsheets, wall art, and lamps.
+
 const categories = [
   {
     title: "Luxury Bedsheets",

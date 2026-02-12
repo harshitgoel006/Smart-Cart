@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 import { FiHeart, FiEye, FiShoppingCart, FiArrowRight } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 
+
+// This is the HomeLivingNewArrivals component which showcases a curated selection of high-end home & living products with dynamic hover effects, discount highlights, and seamless navigation to product details and cart. Each product card features an image, category badge, discount badge, action icons for wishlist and quick view, and detailed information including name, price, rating, and an add to cart button. The design emphasizes a luxurious and modern aesthetic with smooth animations and vibrant colors to entice users to explore the new arrivals in the home & living category.
+
 const products = [
   {
     id: 1,

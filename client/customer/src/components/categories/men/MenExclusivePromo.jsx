@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
+// Exclusive Promotional Section for Men's Fashion - Showcasing a limited-time collection with cinematic visuals, dynamic animations, and a compelling call-to-action to drive user engagement and conversions. The design emphasizes a sleek and modern aesthetic, utilizing bold typography, ambient glows, and interactive elements to create an immersive shopping experience for customers.
+
 const MenExclusivePromo = () => {
   return (
     <section className="w-full pt-2 pb-20 overflow-hidden">

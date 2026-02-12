@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { FiHeart, FiEye, FiShoppingCart, FiArrowRight } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 
+// Sample products data for the Kids New Arrivals section
+
 const products = [
   {
     id: 101,
@@ -45,6 +47,8 @@ const products = [
     image: "https://i.pinimg.com/1200x/05/5b/b2/055bb222d6462ea3c91284f28f3d025d.jpg",
   },
 ];
+
+// Kids New Arrivals Component
 
 const KidsNewArrivals = () => {
   const discount = (p, m) => Math.round(((m - p) / m) * 100);

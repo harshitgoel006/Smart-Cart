@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
+// HomeLivingHero component with cinematic background slides, elegant typography, and interactive controls for a high-end home & living collection.
+
 const slides = [
   {
     id: 1,

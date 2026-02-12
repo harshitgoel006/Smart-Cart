@@ -9,6 +9,9 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 
+
+// Sample slides data for the Women AI section - showcasing AI-driven fashion insights and virtual trial experiences. Each slide includes a title, highlight, description, image URL, and accent colors for the gradient text. This data is used to dynamically render the Swiper carousel in the WomenAISection component, providing an engaging and visually appealing introduction to the AI-powered features
+
 const slides = [
   {
     id: 1,
@@ -28,6 +31,8 @@ const slides = [
     accent: "from-orange-400 to-rose-500",
   },
 ];
+
+// The WomenAISection component renders a visually striking section with a full-width Swiper carousel. Each slide features an image with an inner shadow effect, overlaid with content that includes a badge, title, description, and call-to-action buttons. The navigation buttons and pagination are styled to match the overall aesthetic of the section, creating an engaging user experience.
 
 const WomenAISection = () => {
   return (

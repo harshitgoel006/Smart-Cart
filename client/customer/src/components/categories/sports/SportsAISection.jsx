@@ -9,6 +9,8 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 
+// Sample slides data for the Sports AI section - showcasing AI-driven performance gear and training insights.
+
 const slides = [
   {
     id: 1,
@@ -27,6 +29,8 @@ const slides = [
     accent: "from-pink-400 to-rose-500",
   },
 ];
+
+// The SportsAISection component renders a visually striking section with a full-width Swiper carousel. Each slide features an image with an inner shadow effect, overlaid with content that includes a badge, title, description, and call-to-action buttons. The navigation buttons and pagination are styled to match the overall aesthetic of the section, creating an engaging user experience.
 
 const SportsAISection = () => {
   return (
