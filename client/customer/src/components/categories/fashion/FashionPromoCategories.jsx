@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiShoppingBag, FiMaximize2 } from "react-icons/fi";
 
+// Data structure for fashion categories with enhanced visuals and interactions
+
 const categories = [
   {
     title: "Women's Ethnic",
@@ -43,6 +45,9 @@ const categories = [
     ],
   },
 ];
+
+
+// FashionPromoCategories component with enhanced design, animations, and interactivity
 
 const FashionPromoCategories = () => {
   return (

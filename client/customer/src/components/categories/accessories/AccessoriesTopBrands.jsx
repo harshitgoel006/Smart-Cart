@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+
+// BRAND DATA - In a real app, this would come from an API
+
 const brands = [
   { name: "Fossil", slug: "fossil", logo: "https://i.pinimg.com/1200x/d0/d0/6f/d0d06fdb787d5764ce2e6b10ae8dfcdf.jpg" },
   { name: "Ray-Ban", slug: "ray-ban", logo: "https://i.pinimg.com/736x/d2/b1/a6/d2b1a649c89ec040e1c67d6281422568.jpg" },
   { name: "Wildcraft", slug: "wildcraft", logo: "https://upload.wikimedia.org/wikipedia/en/3/3d/Wildcraft_logo.png" },
   { name: "Casio", slug: "casio", logo: "https://i.pinimg.com/736x/6a/e9/aa/6ae9aa8a8f2a1c309e03235fb3471271.jpg" },
 ];
+
+// ACCESSORIES TOP BRANDS COMPONENT
 
 const AccessoriesTopBrands = () => {
   return (

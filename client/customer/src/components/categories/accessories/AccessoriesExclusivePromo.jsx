@@ -2,6 +2,9 @@ import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
+
+// a special promotional section for the accessories category, designed to captivate customers with an exclusive collection and enticing offers, encouraging them to explore the curated selection of statement pieces.
+
 const AccessoriesExclusivePromo = () => {
   return (
     <section className="w-full pt-2 pb-20 overflow-hidden">

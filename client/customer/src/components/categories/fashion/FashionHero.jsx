@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
+// This is a static array of slides for the hero section. In a real application, this could be fetched from an API or CMS.
+
 const slides = [
   {
     id: 1,
@@ -35,6 +37,8 @@ const slides = [
     link: "/products?category=kids"
   },
 ];
+
+// The FashionHero component is a dynamic hero section for the fashion category, featuring an auto-rotating slideshow with smooth transitions and interactive controls.
 
 const FashionHero = () => {
   const [current, setCurrent] = useState(0);

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+// A sleek and modern "Top Brands" section for the beauty and grooming category, featuring a clean grid layout of brand logos with subtle hover effects, a bold header with gradient text, and a stylish call-to-action button at the bottom. The design emphasizes a premium and curated selection of brands, using a light color palette with soft shadows to create an inviting and luxurious feel.
 const brands = [
   { name: "Garnier", slug: "garnier", logo: "https://i.pinimg.com/1200x/9a/0d/81/9a0d8188b493c166ed9fc55b0d82386b.jpg" },
   { name: "Mamaearth", slug: "mamaearth", logo: "https://i.pinimg.com/1200x/aa/37/80/aa3780a243c6317f45ad1281e168410f.jpg" },
@@ -9,6 +10,7 @@ const brands = [
   
 ];
 
+// A visually appealing "Top Brands" section for the beauty and grooming category, featuring a clean grid layout of brand logos with subtle hover effects, a bold header with gradient text, and a stylish call-to-action button at the bottom. The design emphasizes a premium and curated selection of brands, using a light color palette with soft shadows to create an inviting and luxurious feel.
 const BeautyTopBrands = () => {
   return (
     <section className="relative py-20 overflow-hidden">

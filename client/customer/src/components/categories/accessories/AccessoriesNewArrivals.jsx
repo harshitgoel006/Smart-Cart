@@ -3,6 +3,10 @@ import { motion } from "framer-motion";
 import { FiHeart, FiEye, FiShoppingCart, FiArrowRight } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 
+
+
+// AccessoriesNewArrivals component showcasing a curated selection of high-end accessories with dynamic hover effects, discount highlights, and seamless navigation to product details and cart.
+
 const products = [
   {
     id: 101,
@@ -45,6 +49,8 @@ const products = [
     image: "https://i.pinimg.com/1200x/a6/ba/c4/a6bac43df2e31e72b2beb03614586208.jpg",
   },
 ];
+
+// function to calculate discount percentage based on price and MRP, used to display discount badges on product cards in the AccessoriesNewArrivals component.
 
 const AccessoriesNewArrivals = () => {
   const discount = (p, m) => Math.round(((m - p) / m) * 100);
@@ -158,6 +164,7 @@ const AccessoriesNewArrivals = () => {
                     <span className="text-[10px] font-black">{p.rating}</span>
                   </div>
                 </div>
+
 
                 {/* ADD TO CART */}
                 <button className="relative w-full group/btn h-14 overflow-hidden rounded-2xl bg-gray-900 transition-all active:scale-95">

@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+
+// the categories and their details for the accessories section
+
 const categories = [
   {
     name: "Bags",
@@ -46,6 +49,9 @@ const categories = [
       "https://i.pinimg.com/736x/d1/c9/e6/d1c9e6282087c2f3cfd5e573619d29fa.jpg", // Hair accessories
   },
 ];
+
+
+// the main component for the accessories categories section, showcasing the different subcategories with a stylish and interactive design
 
 const AccessoriesCategories = () => {
   return (

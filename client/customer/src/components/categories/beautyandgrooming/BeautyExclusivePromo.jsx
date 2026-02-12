@@ -2,6 +2,9 @@ import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
+
+// This component serves as an exclusive promotional banner for the "Beauty & Grooming" category, designed to captivate users with its luxurious and elegant aesthetic. It features a rich, dark gradient background that evokes a sense of sophistication, complemented by subtle animated glows in purple and pink hues to enhance the beauty vibe. The content is centered around a bold, attention-grabbing headline with a gradient-highlighted subheading, creating a visually striking focal point. A stylish call-to-action button invites users to explore the collection, while the overall design maintains a cohesive and premium feel that perfectly aligns with the theme of beauty and grooming.
+
 const BeautyExclusivePromo = () => {
   return (
     <section className="w-full pt-2 pb-20 overflow-hidden">

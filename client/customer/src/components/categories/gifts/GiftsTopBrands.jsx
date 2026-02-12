@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+
+// This is the data for the GiftsTopBrands component showcasing premium gifting partners with a modern design, smooth animations, and enhanced user experience
+
 const brands = [
   { name: "IGP", slug: "igp", logo: "https://etimg.etb2bimg.com/photo/101282226.cms" },
   { name: "FNP", slug: "fnp", logo: "https://play-lh.googleusercontent.com/5AobDqCU-TbarD6OtDTDf5TVf-sY1ApObTxn_KB8EK6d3Ye-_pXPnwFAX52OWH-fjVqI" },
@@ -8,6 +11,9 @@ const brands = [
   { name: "Mini So", slug: "miniso", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRorwPxe9yKhCYtm1t8p6lO9NFdbWOdSPF2cg&s" },
   
 ];
+
+
+// This is the GiftsTopBrands component showcasing premium gifting partners with a modern design, smooth animations, and enhanced user experience
 
 const GiftsTopBrands = () => {
   return (

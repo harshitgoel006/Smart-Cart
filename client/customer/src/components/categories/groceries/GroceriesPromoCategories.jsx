@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiShoppingBag, FiMaximize2 } from "react-icons/fi";
 
+
+// Mock data for categories - In a real application, this would likely come from an API or CMS
+
 const categories = [
   {
     title: "Organic Fruits",
@@ -43,6 +46,9 @@ const categories = [
     ],
   },
 ];
+
+
+// GroceriesPromoCategories Component - A vibrant, interactive section showcasing various grocery categories with eye-catching visuals and smooth animations, designed to entice users to explore and shop.
 
 const GroceriesPromoCategories = () => {
   return (

@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+
+// This is a static array of top fashion brands. In a real application, this data would likely come from an API or database.
+
 const brands = [
   { name: "Nike", slug: "nike", logo: "https://cdn.simpleicons.org/nike/000000" },
   { name: "Adidas", slug: "adidas", logo: "https://cdn.simpleicons.org/adidas/000000" },
@@ -11,6 +14,9 @@ const brands = [
   { name: "Calvin Klein", slug: "calvinklein", logo: "https://i.pinimg.com/736x/7d/01/46/7d01464413d127551c979f7d1170aa1d.jpg" },
   { name: "Ralph Lauren", slug: "ralphlauren", logo: "https://images.seeklogo.com/logo-png/16/1/polo-ralph-lauren-logo-png_seeklogo-168430.png" },
 ];
+
+
+// The FashionTopBrands component is a dynamic showcase of leading fashion labels, featuring an interactive grid of brand logos with smooth animations and a compelling call-to-action to explore the full collection.
 
 const FashionTopBrands = () => {
   return (

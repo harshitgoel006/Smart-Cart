@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiShoppingBag, FiMaximize2 } from "react-icons/fi";
 
+// AccessoriesPromoCategories component presenting three distinct promotional categories for accessories, each with unique styling, hover animations, and direct links to filtered product listings for watches, bags, and jewellery.
+
 const categories = [
   {
     title: "Premium Watches",
@@ -44,6 +46,8 @@ const categories = [
   },
 ];
 
+
+// AccessoriesPromoCategories component presenting three distinct promotional categories for accessories, each with unique styling, hover animations, and direct links to filtered product listings for watches, bags, and jewellery.
 const AccessoriesPromoCategories = () => {
   return (
     <section className="pt-0 pb-18 overflow-hidden ">

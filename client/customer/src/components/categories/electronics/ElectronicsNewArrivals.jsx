@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { FiHeart, FiEye, FiShoppingCart, FiArrowRight } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 
+// DATA FOR THE PRODUCTS - CAN BE EXPANDED WITH MORE ENTRIES
 const products = [
   {
     id: 1,
@@ -46,6 +47,7 @@ const products = [
   },
 ];
 
+// The ElectronicsNewArrivals component renders a visually appealing section showcasing the latest arrivals in the electronics category. It features a grid of product cards, each displaying an image, category tag, discount badge, and interactive icons for wishlist and quick view. The section includes a header with a title and a call-to-action link, encouraging users to explore the full range of new tech products available on SmartCart. The design incorporates ambient background elements to enhance the overall aesthetic and draw attention to the featured products.
 const ElectronicsNewArrivals = () => {
   const discount = (p, m) => Math.round(((m - p) / m) * 100);
 

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+// DATA FOR THE BRANDS - CAN BE EXPANDED WITH MORE ENTRIES
 const brands = [
   { name: "Sony", slug: "sony", logo: "https://cdn.simpleicons.org/sony/000000" },
   { name: "Samsung", slug: "samsung", logo: "https://cdn.simpleicons.org/samsung/000000" },
@@ -8,6 +9,7 @@ const brands = [
   { name: "HP", slug: "hp", logo: "https://cdn.simpleicons.org/hp/000000" },
 ];
 
+// The ElectronicsTopBrands component renders a visually engaging section showcasing leading technology brands. It features a grid of brand logos with interactive hover effects, encouraging users to explore products from these top innovators. The section includes a header with a title and a call-to-action link, as well as ambient background glows to enhance the overall aesthetic and draw attention to the featured brands. A bottom call-to-action encourages users to browse the full catalog of electronics brands available on SmartCart.
 const ElectronicsTopBrands = () => {
   return (
     <section className="relative py-20 overflow-hidden">

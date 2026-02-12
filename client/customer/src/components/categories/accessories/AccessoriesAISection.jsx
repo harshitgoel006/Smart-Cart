@@ -3,11 +3,13 @@ import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation, EffectFade } from "swiper/modules";
 import { FiCpu, FiZap, FiChevronRight, FiShield, FiArrowLeft, FiArrowRight } from "react-icons/fi";
-
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
+
+
+// Slide data with high-end accessory images and compelling descriptions
 
 const slides = [
   {
@@ -27,6 +29,8 @@ const slides = [
     accent: "from-pink-400 to-rose-500",
   },
 ];
+
+// The AccessoriesAISection component renders a visually stunning section with a Swiper carousel showcasing high-end accessories. Each slide features a captivating image, a compelling title with a gradient accent, and a description of the AI-powered features. The section includes smooth animations, custom pagination, and navigation buttons for an engaging user experience.
 
 const AccessoriesAISection = () => {
   return (

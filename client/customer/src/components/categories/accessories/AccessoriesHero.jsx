@@ -3,6 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
+
+
+
+// High-end, fashion-forward accessory collection hero with cinematic background slides, elegant typography, and interactive controls.
+
 const slides = [
   {
     id: 1,
@@ -35,6 +40,10 @@ const slides = [
     accent: "from-amber-500 to-orange-500",
   },
 ];
+
+
+
+// AccessoriesHero component with cinematic background slides, elegant typography, and interactive controls for a high-end accessory collection.
 
 const AccessoriesHero = () => {
   const [current, setCurrent] = useState(0);

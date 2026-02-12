@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiShoppingBag, FiMaximize2 } from "react-icons/fi";
 
+// Category data for the Beauty Promo Categories section
 const categories = [
   {
     title: "Luxury Sunscreens",
@@ -44,6 +45,8 @@ const categories = [
   },
 ];
 
+
+// BeautyPromoCategories component with enhanced animations and styling
 const BeautyPromoCategories = () => {
   return (
     <section className="pt-0 pb-18 overflow-hidden ">

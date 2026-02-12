@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
+// The ElectronicsExclusivePromo component renders a visually striking promotional section for the electronics category. It features a futuristic design with ambient glows, animated text, and a compelling call-to-action button. The section is designed to capture user attention and drive engagement with the latest tech offerings, highlighting an exclusive promotion with up to 70% off on elite tech collections.
+
 const ElectronicsExclusivePromo = () => {
   return (
     <section className="w-full pt-2 pb-20 overflow-hidden">

@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 import { FiHeart, FiEye, FiShoppingCart, FiArrowRight } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 
+
+// Sample product data for the Beauty New Arrivals section
+
 const products = [
   {
     id: 1,
@@ -46,9 +49,12 @@ const products = [
   },
 ];
 
+
+// Utility function to calculate discount percentage
 const BeautyNewArrivals = () => {
   const discount = (p, m) => Math.round(((m - p) / m) * 100);
 
+  
   return (
     <section className="relative pt-16 pb-28 bg-gradient-to-b from-white via-purple-50/40 to-white overflow-hidden">
 

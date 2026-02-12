@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+
+// TRENDING ACCESSORIES DATA - In a real app, this would come from an API
+
 const trending = [
   {
     title: "Watches",
@@ -54,6 +57,10 @@ const trending = [
     image: "https://i.pinimg.com/736x/5a/0d/58/5a0d58ede6ba9b441c205bd7dc8cef09.jpg",
   },
 ];
+
+
+
+// ACCESSORIES TRENDING CATEGORIES COMPONENT
 
 const AccessoriesTrendingCategories = () => {
   return (

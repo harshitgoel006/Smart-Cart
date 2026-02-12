@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 import { FiHeart, FiEye, FiShoppingCart, FiArrowRight } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 
+
+// Mock data for products - In a real application, this would likely come from an API or CMS
+
 const products = [
   {
     id: 1,
@@ -45,6 +48,9 @@ const products = [
     image: "https://i.pinimg.com/1200x/a2/82/32/a282323984aabfa34dc0cfa14ef7ccc0.jpg",
   },
 ];
+
+
+// GroceriesNewArrivals Component - A vibrant, interactive section showcasing the latest grocery products with eye-catching visuals, smooth animations, and clear calls-to-action to entice users to explore and shop for fresh items with exclusive discounts.
 
 const GroceriesNewArrivals = () => {
   const discount = (p, m) => Math.round(((m - p) / m) * 100);

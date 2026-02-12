@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+// Mock data for trending categories - In a real application, this would likely come from an API or CMS
+
 const trending = [
   {
     title: "Vegetables",
@@ -54,6 +56,9 @@ const trending = [
     image: "https://i.pinimg.com/1200x/78/ff/bd/78ffbd68f660fb1b055e85ec8f6cca89.jpg",
   },
 ];
+
+
+// GroceriesTrendingCategories Component - A vibrant, interactive section showcasing various grocery categories with eye-catching visuals and smooth animations, designed to entice users to explore and shop.
 
 const GroceriesTrendingCategories = () => {
   return (

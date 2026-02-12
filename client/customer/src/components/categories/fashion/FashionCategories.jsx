@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+// A visually stunning and immersive fashion categories section that captures the essence of style and sophistication. The design features a clean and modern layout with a focus on high-quality imagery, bold typography, and subtle animations to create an engaging user experience. Each category is presented as a large, clickable card with a captivating image, a stylish overlay, and a clear call-to-action that invites users to explore the collection. The use of soft gradients, elegant fonts, and dynamic hover effects adds a touch of luxury and exclusivity to the overall design, making it an irresistible gateway to the world of fashion.
 const categories = [
   {
     name: "Women's Couture",

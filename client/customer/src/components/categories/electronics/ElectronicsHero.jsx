@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
+// DATA FOR THE SLIDES - CAN BE EXPANDED WITH MORE ENTRIES
+
 const slides = [
   {
     id: 1,
@@ -36,6 +38,7 @@ const slides = [
   },
 ];
 
+// The ElectronicsHero component renders a dynamic hero section for the electronics category, featuring a full-screen background slideshow with animated text and interactive buttons. The component uses Framer Motion for smooth transitions and animations, creating an engaging and visually appealing introduction to the electronics offerings on SmartCart. Users can navigate through the slides using the provided controls or let it autoplay for a seamless experience.
 const ElectronicsHero = () => {
   const [current, setCurrent] = useState(0);
 

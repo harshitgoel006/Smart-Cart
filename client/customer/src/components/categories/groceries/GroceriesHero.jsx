@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
+
+// Mock data for slides - In a real application, this would likely come from an API or CMS
+
 const slides = [
   {
     id: 1,
@@ -35,6 +38,8 @@ const slides = [
     accent: "from-teal-500 to-emerald-400",
   },
 ];
+
+// GroceriesHero Component - A visually captivating hero section for the groceries category, featuring a dynamic slideshow of vibrant images, compelling headlines, and clear calls-to-action to entice users to explore and shop for fresh produce and essentials.
 
 const GroceriesHero = () => {
   const [current, setCurrent] = useState(0);

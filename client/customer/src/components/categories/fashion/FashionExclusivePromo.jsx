@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
+// A visually stunning and immersive fashion exclusive promo section that captures the essence of style and sophistication. The design features a clean and modern layout with a focus on high-quality imagery, bold typography, and subtle animations to create an engaging user experience. The promo is presented as a large, captivating card with a stylish overlay, and a clear call-to-action that invites users to explore the exclusive collection. The use of soft gradients, elegant fonts, and dynamic hover effects adds a touch of luxury and exclusivity to the overall design, making it an irresistible gateway to the world of fashion.
+
 const FashionExclusivePromo = () => {
   return (
     <section className="w-full pt-2 pb-20 overflow-hidden">

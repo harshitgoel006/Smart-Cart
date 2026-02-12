@@ -3,11 +3,13 @@ import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation, EffectFade } from "swiper/modules";
 import { FiCpu, FiZap, FiChevronRight, FiShield, FiArrowLeft, FiArrowRight } from "react-icons/fi";
-
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
+
+
+// DATA FOR THE SLIDES - CAN BE EXPANDED WITH MORE ENTRIES
 
 const slides = [
   {
@@ -27,6 +29,9 @@ const slides = [
     accent: "from-indigo-400 to-blue-600",
   },
 ];
+
+
+// The ElectronicsAISection component renders a dynamic, AI-themed section with a Swiper carousel showcasing different AI features and benefits for electronics. Each slide includes an image with a vignette effect, animated text content, and interactive buttons for user engagement. The navigation buttons and pagination are styled to match the futuristic theme of the section.
 
 const ElectronicsAISection = () => {
   return (

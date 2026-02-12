@@ -9,6 +9,8 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 
+// Highly stylized and modern fashion AI section with cinematic visuals, smooth animations, and a sleek user interface. The design emphasizes the cutting-edge nature of the AI technology while maintaining a luxurious and aspirational aesthetic. Each slide features a bold headline, a captivating image with an inner shadow effect for depth, and a call-to-action button that invites users to explore the AI lab. The navigation buttons are designed to be unobtrusive yet easily accessible, enhancing the overall user experience without detracting from the visual impact of the slides.
+
 const slides = [
   {
     id: 1,
@@ -28,6 +30,7 @@ const slides = [
   },
 ];
 
+// The design emphasizes the cutting-edge nature of the AI technology while maintaining a luxurious and aspirational aesthetic. Each slide features a bold headline, a captivating image with an inner shadow effect for depth, and a call-to-action button that invites users to explore the AI lab. The navigation buttons are designed to be unobtrusive yet easily accessible, enhancing the overall user experience without detracting from the visual impact of the slides.
 const FashionAISection = () => {
   return (
     <section className="relative w-full py-20 mb-15 overflow-hidden ">

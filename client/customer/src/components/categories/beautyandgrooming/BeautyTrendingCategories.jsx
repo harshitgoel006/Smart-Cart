@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+
+// Hardcoded trending categories for the Beauty & Grooming section. Each category has a title, a link to the products page with appropriate query parameters, and an image URL for display.
+
 const trending = [
   {
     title: "Face Wash",
@@ -54,6 +57,9 @@ const trending = [
     image: "https://i.pinimg.com/736x/cb/e6/d9/cbe6d9e45cc5ec1a989b697dad6a129a.jpg",
   },
 ];
+
+
+// BeautyTrendingCategories Component
 
 const BeautyTrendingCategories = () => {
   return (

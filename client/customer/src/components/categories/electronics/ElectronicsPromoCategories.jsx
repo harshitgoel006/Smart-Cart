@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiShoppingBag, FiMaximize2 } from "react-icons/fi";
 
+// DATA FOR THE CATEGORIES - CAN BE EXPANDED WITH MORE ENTRIES
 const categories = [
   {
     title: "Flagship Phones",
@@ -44,6 +45,7 @@ const categories = [
   },
 ];
 
+// The ElectronicsPromoCategories component renders a visually engaging section showcasing different subcategories of electronics. Each category is displayed as a card with an image, title, and tag. The cards have interactive hover effects that reveal additional details and a call-to-action button, encouraging users to explore the products within each category. The layout is responsive, ensuring a seamless experience across devices.
 const ElectronicsPromoCategories = () => {
   return (
     <section className="pt-0 pb-18 overflow-hidden ">

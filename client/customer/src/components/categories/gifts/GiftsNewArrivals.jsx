@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { FiHeart, FiEye, FiShoppingCart, FiArrowRight } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 
+// GiftsNewArrivals component showcasing the latest and most popular gift items with a modern, visually appealing design, smooth animations, and clear calls to action for an enhanced shopping experience
+
 const products = [
   {
     id: 1,
@@ -45,6 +47,9 @@ const products = [
     image: "https://i.pinimg.com/1200x/4d/a1/d9/4da1d9802fa2915e6f49cb2070e7d5f7.jpg", // Chocolates/Dates
   },
 ];
+
+
+// This is the GiftsNewArrivals component showcasing the latest and most popular gift items with a modern, visually appealing design, smooth animations, and clear calls to action for an enhanced shopping experience
 
 const GiftsNewArrivals = () => {
   const discount = (p, m) => Math.round(((m - p) / m) * 100);

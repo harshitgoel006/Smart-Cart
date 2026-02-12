@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+
+// This is the GiftsTrendingCategories component showcasing trending gift categories with a modern design, smooth animations, and enhanced user experience
+
 const trending = [
   {
     title: "Gift Hampers",

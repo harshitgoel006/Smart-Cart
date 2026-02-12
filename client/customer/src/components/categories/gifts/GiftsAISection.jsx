@@ -9,6 +9,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 
+// Sample slides data with enhanced descriptions and modern styling cues
 const slides = [
   {
     id: 1,
@@ -27,6 +28,8 @@ const slides = [
     accent: "from-pink-400 to-rose-500",
   },
 ];
+
+// GiftsAISection component with modern design, smooth animations, and enhanced user experience
 
 const GiftsAISection = () => {
   return (

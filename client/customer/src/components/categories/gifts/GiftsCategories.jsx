@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+
+// Gift categories data with modern styling cues and high-quality images
+
 const categories = [
   {
     name: "Gift Hampers",
@@ -47,6 +50,7 @@ const categories = [
   },
 ];
 
+// GiftsCategories component with modern design, smooth animations, and enhanced user experience
 
 const GiftsCategories = () => {
   return (

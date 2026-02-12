@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+// Mock categories data - In a real application, this would likely come from an API or CMS
+
 const categories = [
   {
     name: "Fruits & Veggies",
@@ -46,6 +48,8 @@ const categories = [
       "https://i.pinimg.com/1200x/e8/55/bd/e855bde1c171ec5e3bea8ce668fb9a35.jpg",
   },
 ];
+
+// GroceriesCategories Component - A vibrant, interactive section showcasing various grocery categories with eye-catching visuals and smooth animations, designed to entice users to explore and shop.
 
 const GroceriesCategories = () => {
   return (

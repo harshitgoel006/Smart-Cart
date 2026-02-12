@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
+// GroceriesExclusivePromo Component - A visually striking promotional section for the groceries category, featuring dynamic animations, ambient glows, and a compelling call-to-action to entice users to explore fresh items with exclusive discounts.
+
 const GroceriesExclusivePromo = () => {
   return (
     <section className="w-full pt-2 pb-20 overflow-hidden">

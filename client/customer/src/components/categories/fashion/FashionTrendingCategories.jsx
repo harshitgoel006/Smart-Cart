@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+
+// This component showcases the top trending fashion categories with a modern design, smooth animations, and interactive elements to engage users and drive clicks. Each category is presented as a stylish card with a high-quality image, title, and a subtle hover effect that reveals a call-to-action icon. The background features a dynamic gradient animation to add visual interest without overwhelming the content.
+
 const trending = [
   {
     title: "Oversized Tees",
@@ -54,6 +57,8 @@ const trending = [
     image: "https://i.pinimg.com/1200x/bb/95/cf/bb95cf78d360ea0a96ab5b011e4b6d95.jpg",
   },
 ];
+
+// This is the FashionTrendingCategories component that renders the trending fashion categories in a visually appealing grid layout with animations and interactive elements to enhance user engagement. Each category card features a high-quality image, title, and a hover effect that reveals a call-to-action icon, encouraging users to explore the products within that category. The background includes a dynamic gradient animation to add visual interest without overwhelming the content.
 
 const FashionTrendingCategories = () => {
   return (

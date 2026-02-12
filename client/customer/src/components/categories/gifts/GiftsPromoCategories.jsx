@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowRight, FiShoppingBag, FiMaximize2 } from "react-icons/fi";
 
+
+// This is data for the GiftsPromoCategories component showcasing curated gift categories with a modern, visually appealing design, smooth animations, and clear calls to action for an enhanced shopping experience
+
 const categories = [
   {
     title: "Personalized",
@@ -43,6 +46,9 @@ const categories = [
     ],
   },
 ];
+
+
+// This is the GiftsPromoCategories component showcasing curated gift categories with a modern, visually appealing design, smooth animations, and clear calls to action for an enhanced shopping experience
 
 const GiftsPromoCategories = () => {
   return (

@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
+
+// Mock data for brands - In a real application, this would likely come from an API or CMS
+
 const brands = [
   { name: "Amul", slug: "amul", logo: "https://i.pinimg.com/1200x/81/01/75/81017562c8ea27537b44ad568f2867e2.jpg" },
   { name: "Nestle", slug: "nestle", logo: "https://i.pinimg.com/736x/ea/92/cc/ea92cc0b141df13a93095275323e1b50.jpg" },
   { name: "Britannia", slug: "britannia", logo: "https://i.pinimg.com/1200x/d3/54/38/d354388c7acee0093765050f5abf25e7.jpg" },
   { name: "PepsiCo", slug: "pepsico", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/PepsiCo_logo.svg/1200px-PepsiCo_logo.svg.png" },
 ];
+
+// GroceriesTopBrands Component - A vibrant, interactive section showcasing the top grocery brands with eye-catching visuals and smooth animations, designed to entice users to explore and shop for trusted products.
 
 const GroceriesTopBrands = () => {
   return (

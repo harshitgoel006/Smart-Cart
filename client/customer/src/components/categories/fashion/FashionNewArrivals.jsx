@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { FiHeart, FiEye, FiShoppingCart, FiArrowRight } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 
+
+// This is a static array of new arrival products for the fashion category. In a real application, this data would likely come from an API or database.
 const products = [
   {
     id: 1,
@@ -45,6 +47,9 @@ const products = [
     image: "https://i.pinimg.com/736x/b5/12/65/b51265ed6ca8cf5f500b637fe4912f42.jpg",
   },
 ];
+
+
+// The FashionNewArrivals component showcases the latest fashion products in a visually appealing grid layout, complete with interactive elements and dynamic styling to enhance user engagement.
 
 const FashionNewArrivals = () => {
   const discount = (p, m) => Math.round(((m - p) / m) * 100);

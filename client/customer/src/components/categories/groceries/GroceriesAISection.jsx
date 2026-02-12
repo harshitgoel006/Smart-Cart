@@ -9,6 +9,8 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 
+// Mock data for slides - In a real application, this would likely come from an API or CMS
+
 const slides = [
   {
     id: 1,
@@ -27,6 +29,9 @@ const slides = [
     accent: "from-lime-400 to-green-500",
   },
 ];
+
+
+// GroceriesAISection Component - A dynamic, visually rich section showcasing AI-powered grocery features with a sleek Swiper carousel and interactive elements.
 
 const GroceriesAISection = () => {
   return (

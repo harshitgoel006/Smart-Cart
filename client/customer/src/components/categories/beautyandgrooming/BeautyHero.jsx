@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
+// Slide data for the Beauty Hero section
 const slides = [
   {
     id: 1,
@@ -36,6 +37,8 @@ const slides = [
   },
 ];
 
+
+// BeautyHero component with enhanced animations and styling
 const BeautyHero = () => {
   const [current, setCurrent] = useState(0);
 

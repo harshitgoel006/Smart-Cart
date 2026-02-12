@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+
+// High-quality, royalty-free images sourced from Unsplash and Pinterest to perfectly complement the beauty and grooming theme. Each image is carefully selected to evoke a sense of luxury, care, and transformation, enhancing the visual appeal of the categories while maintaining a cohesive aesthetic with
+
 const categories = [
   {
     name: "Skincare",
@@ -47,6 +50,8 @@ const categories = [
   },
 ];
 
+
+// This component presents a visually stunning and engaging section for the "Beauty & Grooming" categories. It features a dynamic header with a gradient-highlighted title, a curated selection of categories displayed in an elegant grid layout, and subtle animated background elements that enhance the overall aesthetic without overpowering the content. Each category card includes a high-quality image, a descriptive tag, and an interactive hover effect that invites users to explore further. The design maintains a cohesive and luxurious feel, perfectly aligning with the theme of beauty and grooming.
 const BeautyCategories = () => {
   return (
     <section className="relative py-20 bg-[#fdfdfd] overflow-hidden">

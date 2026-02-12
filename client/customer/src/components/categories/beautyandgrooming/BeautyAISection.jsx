@@ -3,11 +3,13 @@ import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation, EffectFade } from "swiper/modules";
 import { FiZap, FiChevronRight, FiArrowLeft, FiArrowRight } from "react-icons/fi";
-
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "swiper/css/effect-fade";
+
+
+// Highly stylized and modern beauty AI section with a cinematic vibe, featuring large background images with inner shadows for depth, bold typography with gradient highlights, and sleek navigation buttons. The design emphasizes a luxurious and futuristic feel, perfect for showcasing AI-powered beauty features.
 
 const slides = [
   {
@@ -27,6 +29,8 @@ const slides = [
     accent: "from-pink-400 to-rose-500",
   },
 ];
+
+// The section features a full-width, cinematic design with large background images that have an inner shadow effect to create depth. The typography is bold and modern, with gradient highlights to draw attention to key phrases. Navigation buttons are sleek and only appear on hover, maintaining a clean look while allowing users to easily explore the content. The overall aesthetic is luxurious and futuristic, perfect for showcasing AI-powered beauty features in an engaging way.
 
 const BeautyAISection = () => {
   return (

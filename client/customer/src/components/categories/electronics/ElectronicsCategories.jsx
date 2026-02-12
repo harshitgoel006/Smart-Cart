@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+// DATA FOR THE CATEGORIES - CAN BE EXPANDED WITH MORE ENTRIES
+
 const categories = [
   {
     name: "Smartphones",
@@ -46,6 +48,8 @@ const categories = [
       "https://i.pinimg.com/736x/20/bb/81/20bb8165c7cd5a5919f66737773783a4.jpg", 
   },
 ];
+
+// The ElectronicsCategories component renders a visually engaging section showcasing different subcategories of electronics. Each category is displayed as a card with an image, title, and tag. The cards have interactive hover effects that reveal additional details and a call-to-action button, encouraging users to explore the products within each category. The layout is responsive, ensuring a seamless experience across devices.
 
 const ElectronicsCategories = () => {
   return (

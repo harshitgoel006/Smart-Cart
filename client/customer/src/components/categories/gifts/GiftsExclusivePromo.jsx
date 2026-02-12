@@ -2,6 +2,9 @@ import { motion } from "framer-motion";
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
+
+// Exclusive promotional banner for the Gifts category with a modern, luxurious design and smooth animations
+
 const GiftsExclusivePromo = () => {
   return (
     <section className="w-full pt-2 pb-20 overflow-hidden">

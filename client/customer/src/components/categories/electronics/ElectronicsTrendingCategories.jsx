@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FiArrowUpRight } from "react-icons/fi";
 
+// DATA FOR THE CATEGORIES - CAN BE EXPANDED WITH MORE ENTRIES
+
 const trending = [
   {
     title: "Smartphones",
@@ -55,6 +57,7 @@ const trending = [
   },
 ];
 
+// The ElectronicsTrendingCategories component renders a visually engaging section showcasing different subcategories of electronics. Each category is displayed as a card with an image, title, and tag. The cards have interactive hover effects that reveal additional details and a call-to-action button, encouraging users to explore the products within each category. The layout is responsive, ensuring a seamless experience across devices.
 const ElectronicsTrendingCategories = () => {
   return (
     <section className="relative py-28 overflow-hidden bg-gradient-to-b from-purple-100 via-pink-100/40 to-white">

@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
+
+// GiftsHero component with a dynamic, visually stunning hero section for the Gifts category, featuring smooth animations, high-quality imagery, and compelling calls to action
+
 const slides = [
   {
     id: 1,
@@ -35,6 +38,9 @@ const slides = [
     accent: "from-amber-500 to-orange-500",
   },
 ];
+
+
+// GiftsHero component with a dynamic, visually stunning hero section for the Gifts category, featuring smooth animations, high-quality imagery, and compelling calls to action
 
 const GiftsHero = () => {
   const [current, setCurrent] = useState(0);
