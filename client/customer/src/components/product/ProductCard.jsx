@@ -1,85 +1,63 @@
-import { motion } from "framer-motion";
-import { FiHeart, FiStar } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { FiStar, FiShoppingCart } from "react-icons/fi"
+import { Link } from "react-router-dom"
 
-const ProductCard = ({ product, index }) => {
+const ProductCard = ({ product }) => {
+  const discountPercentage = product.discount
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.03 }}
-      className="group"
-    >
-      <Link
-        to={`/product/${product.slug}`}
-        className="block bg-white rounded-3xl overflow-hidden border border-zinc-100
-        hover:shadow-[0_40px_80px_-30px_rgba(0,0,0,0.12)]
-        transition-all duration-500"
-      >
-        {/* IMAGE */}
-        <div className="relative aspect-[3/4] overflow-hidden bg-zinc-100">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="absolute inset-0 w-full h-full object-cover
-            transition-transform duration-700 group-hover:scale-110"
-          />
+    <div className="group bg-white rounded-2xl border p-3 hover:shadow-xl transition">
+      
+      <Link to={`/product/${product.slug}`}>
+      <div className="w-full h-64 overflow-hidden rounded-xl">
+  <img
+  src={product.images?.[0]?.url}
+  alt={product.name}
+  className="w-full h-full object-cover"
+/>
 
-          {/* Wishlist */}
-          <button
-            type="button"
-            className="absolute top-3 right-3 h-9 w-9 rounded-full bg-white/80 backdrop-blur
-            flex items-center justify-center hover:bg-black hover:text-white transition"
-          >
-            <FiHeart size={16} />
-          </button>
+</div>
 
-          {/* Discount */}
+      </Link>
+
+      <div className="mt-4">
+        <Link
+          to={`/product/${product.slug}`}
+          className="font-semibold text-gray-900 hover:text-purple-600"
+        >
+          {product.name}
+        </Link>
+
+        <div className="flex items-center gap-1 mt-2">
+          <FiStar className="text-yellow-500 fill-yellow-500" />
+          <span className="text-sm font-medium">
+            {product.ratings}
+          </span>
+        </div>
+
+        <div className="mt-2 flex items-baseline gap-2">
+          <span className="text-lg font-bold">
+            ₹{product.finalPrice.toLocaleString()}
+          </span>
+
           {product.discount > 0 && (
-            <div className="absolute top-3 left-3 bg-black text-white text-[10px] font-bold px-2 py-1 rounded-full">
-              {product.discount}% OFF
-            </div>
+            <>
+              <span className="line-through text-gray-400 text-sm">
+                ₹{product.price.toLocaleString()}
+              </span>
+              <span className="text-pink-600 text-sm font-bold">
+                {discountPercentage}% OFF
+              </span>
+            </>
           )}
         </div>
 
-        {/* CONTENT */}
-        <div className="p-4 space-y-2">
-          <h3 className="text-sm font-bold text-zinc-900 leading-tight line-clamp-2">
-            {product.name}
-          </h3>
+        <button className="mt-4 w-full bg-gray-900 text-white py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-purple-600 transition">
+          <FiShoppingCart />
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  )
+}
 
-          <p className="text-[11px] uppercase tracking-widest text-zinc-400">
-            {product.brand}
-          </p>
-
-          {/* RATING */}
-          <div className="flex items-center gap-1 text-amber-500 text-xs">
-            <FiStar />
-            <span className="font-bold text-zinc-900">
-              {product.rating || 4.5}
-            </span>
-            <span className="text-zinc-400">
-              ({product.reviews || 120})
-            </span>
-          </div>
-
-          {/* PRICE */}
-          <div className="flex items-center gap-2 pt-2">
-            <span className="text-base font-black text-zinc-900">
-              ₹{product.finalPrice}
-            </span>
-
-            {product.discount > 0 && (
-              <span className="text-xs line-through text-zinc-400">
-                ₹{product.price}
-              </span>
-            )}
-          </div>
-        </div>
-      </Link>
-    </motion.div>
-  );
-};
-
-export default ProductCard;
+export default ProductCard

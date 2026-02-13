@@ -40,7 +40,7 @@ const slides = [
 
 // This is the main Hero component for the Categories main page, featuring a dynamic slideshow with strong visual appeal and clear calls to action for exploring key shopping categories.
 
-const CategoryHero = () => {
+const CategoryHeros = () => {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
@@ -154,4 +154,4 @@ const CategoryHero = () => {
   );
 };
 
-export default CategoryHero;
+export default CategoryHeros;

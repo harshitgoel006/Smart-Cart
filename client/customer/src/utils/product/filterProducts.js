@@ -77,36 +77,20 @@
 // export default filterProducts;
 
 
-
-const filterProducts = (products, filters) => {
-  const {
-    category,
-    subCategory,
-    search,
-    minPrice,
-    maxPrice,
-    rating,
-  } = filters;
+export const filterProducts = (products = [], filters = {}) => {
+  const { category, search } = filters;
 
   return products.filter((product) => {
 
-    // CATEGORY
+    // CATEGORY FIX
     if (
       category &&
-      product.category?.toLowerCase() !== category.toLowerCase()
+      product.category?.slug !== category
     ) {
       return false;
     }
 
-    // SUB CATEGORY
-    if (
-      subCategory &&
-      product.subCategory?.toLowerCase() !== subCategory.toLowerCase()
-    ) {
-      return false;
-    }
-
-    // SEARCH
+    // SEARCH FIX
     if (
       search &&
       !product.name.toLowerCase().includes(search.toLowerCase())
@@ -114,15 +98,6 @@ const filterProducts = (products, filters) => {
       return false;
     }
 
-    // PRICE
-    if (minPrice && product.finalPrice < minPrice) return false;
-    if (maxPrice && product.finalPrice > maxPrice) return false;
-
-    // RATING
-    if (rating && product.rating < rating) return false;
-
     return true;
   });
 };
-
-export default filterProducts;

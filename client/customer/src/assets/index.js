@@ -1,30 +1,17 @@
-// src/data/products/index.js
+import { kids } from "./kids";
+import { men } from "./men";
+import { women } from "./women";
+import { sports } from "./sports";
+import { beauty } from "./beauty";
+import { accessories } from "./accessories";
+import { electronics } from "./electronics";
 
-import men from "./men";
-import women from "./women";
-import fashion from "./fashion";
-import electronics from "./electronics";
-import grocery from "./grocery";
-import beauty from "./beauty";
-import kids from "./kids";
-import sports from "./sports";
-import homeLiving from "./homeliving";
-import accessories from "./accessories";
-import gifts from "./gifts";
-
-// 🔥 MERGED PRODUCT LIST (SINGLE SOURCE OF TRUTH)
-const allProducts = [
+export const allProducts = [
+  ...kids,
   ...men,
   ...women,
-  ...fashion,
-  ...electronics,
-  ...grocery,
-  ...beauty,
-  ...kids,
   ...sports,
-  ...homeLiving,
+  ...beauty,
   ...accessories,
-  ...gifts,
+  ...electronics,
 ];
-
-export default allProducts;

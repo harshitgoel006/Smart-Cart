@@ -6,7 +6,7 @@
  * No UI dependency
  */
 
-const sortProducts = (products = [], sortBy = "latest") => {
+export const sortProducts = (products = [], sortBy = "latest") => {
   const sorted = [...products];
 
   switch (sortBy) {
@@ -23,9 +23,10 @@ const sortProducts = (products = [], sortBy = "latest") => {
       );
 
     case "rating":
-      return sorted.sort(
-        (a, b) => (b.rating || 0) - (a.rating || 0)
-      );
+  return sorted.sort(
+    (a, b) => (b.ratings || 0) - (a.ratings || 0)
+  );
+
 
     case "popular":
       return sorted.sort(
@@ -40,5 +41,3 @@ const sortProducts = (products = [], sortBy = "latest") => {
       );
   }
 };
-
-export default sortProducts;
