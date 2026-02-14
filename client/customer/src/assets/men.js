@@ -14,7 +14,7 @@ export const men = [
     "category": {
       "_id": "cat_men",
       "name": "Men",
-      "slug": "men",
+      "slug": "men-top-wear",
     },
     "ratings": 4.3,
     "reviews": 128,
@@ -46,7 +46,7 @@ export const men = [
     "category": {
       "_id": "cat_men",
       "name": "Men",
-      "slug": "men",
+      "slug": "men-top-wear",
     },
     "ratings": 4.5,
     "reviews": 64,
@@ -108,7 +108,7 @@ export const men = [
     "category": {
       "_id": "cat_men",
       "name": "Men",
-      "slug": "men",
+      "slug": "men-top-wear",
     },
     "ratings": 4.0,
     "reviews": 41,
@@ -139,7 +139,7 @@ export const men = [
     "category": {
       "_id": "cat_men",
       "name": "Men",
-      "slug": "men",
+      "slug": "men-bottom-wear",
     },
     "ratings": 4.4,
     "reviews": 173,

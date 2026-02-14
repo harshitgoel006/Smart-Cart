@@ -14,12 +14,19 @@ export const getAllProducts = async () => {
 ================================ */
 
 export const getProductsByCategorySlug = async (slug) => {
-  const slugsToInclude = getAllChildCategorySlugs(slug);
+  if (!slug) return [];
 
-  return products.filter((product) =>
-    slugsToInclude.includes(product.category?.slug)
-  );
+  const slugsToInclude = getAllChildCategorySlugs(slug);
+   console.log("Slug:", slug);
+console.log("Slugs Included:", slugsToInclude);
+
+  return products.filter((product) => {
+    if (!product?.category?.slug) return false;
+
+    return slugsToInclude.includes(product.category.slug);
+  });
 };
+
 
 /* ===============================
    TRENDING PRODUCTS
@@ -54,6 +61,9 @@ export const getNewArrivalsByCategory = async (slug) => {
   );
 };
 
+/* ===============================
+   HOME TRENDING PRODUCTS
+================================ */
 
 export const getHomeTrendingProducts = async () => {
   return products
@@ -66,4 +76,48 @@ export const getHomeTrendingProducts = async () => {
     }))
     .sort((a, b) => b.score - a.score)
     .slice(0, 8);
+};
+
+
+
+/* ===============================
+   PROMO PRODUCTS
+================================ */
+
+export const getPromoProductsByCategory = async (
+  slug,
+  limit = 3
+) => {
+  const filtered = await getProductsByCategorySlug(slug);
+
+  return filtered
+    .filter(
+      (product) =>
+        product.discount > 0 &&
+        product.isActive &&
+        !product.isDeleted
+    )
+    .sort((a, b) => b.discount - a.discount)
+    .slice(0, limit);
+};
+
+/* ===============================
+   TOP BRANDS
+================================ */
+
+export const getTopBrandsByCategory = async (slug, limit = 4) => {
+  const filtered = await getProductsByCategorySlug(slug);
+
+  const brandMap = {};
+
+  filtered.forEach((product) => {
+    if (!brandMap[product.brand]) {
+      brandMap[product.brand] = {
+        name: product.brand,
+        slug: product.brand.toLowerCase().replace(/\s+/g, "-"),
+      };
+    }
+  });
+
+  return Object.values(brandMap).slice(0, limit);
 };

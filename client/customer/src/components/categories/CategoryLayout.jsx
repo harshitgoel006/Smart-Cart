@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import {
   getTrendingProductsByCategory,
@@ -13,83 +13,97 @@ import {
 
 import ProductSection from "../product/ProductSection";
 import CategoryHero from "./CategoryHero";
+import CategorySubcategoryGrid from "./CategorySubcategoryGrid";
+import CategoryNewArrivals from "./CategoryNewArrivals";
+import CategoryAISection from "./CategoryAISection";
+import CategoryPromoSection from "./CategoryPromoSection";
+import CategoryTrendingCategories from "./CategoryTrendingCategories";
+import CategoryExclusivePromo from "./CategoryExclusivePromo";
+import CategoryTopBrands from "./CategoryTopBrands";
+import TrustBadgeSection from "../TrustBadgeSection";
+
+
 
 const CategoryLayout = ({ pathSegments }) => {
+  const navigate = useNavigate();
+
   const [category, setCategory] = useState(null);
-  const [subcategories, setSubcategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]); // ✅ FIXED
   const [trendingProducts, setTrendingProducts] = useState([]);
   const [newArrivals, setNewArrivals] = useState([]);
 
   const currentSlug =
-    pathSegments && pathSegments.length > 0
+    pathSegments?.length > 0
       ? pathSegments[pathSegments.length - 1]
       : null;
 
-  useEffect(() => {
-    const loadData = async () => {
-      if (!currentSlug) return;
+  const isSubcategory = pathSegments?.length > 1;
 
+  useEffect(() => {
+    if (!currentSlug) return;
+
+    // 🔥 If subcategory → redirect to products page
+    if (isSubcategory) {
+      navigate(`/products?category=${currentSlug}`);
+      return;
+    }
+
+    const loadData = async () => {
       const cat = await getCategoryBySlug(currentSlug);
       setCategory(cat);
 
-      if (cat) {
-        const subs = await getDirectSubcategories(cat._id);
-        setSubcategories(subs);
-      }
+      if (!cat) return;
 
+      // ✅ Load subcategories
+      const subs = await getDirectSubcategories(cat._id);
+      setSubcategories(subs);
+
+      // ✅ Load trending
       const trending =
         await getTrendingProductsByCategory(currentSlug);
       setTrendingProducts(trending);
 
+      // ✅ Load new arrivals
       const arrivals =
         await getNewArrivalsByCategory(currentSlug);
       setNewArrivals(arrivals);
     };
 
     loadData();
-  }, [currentSlug]);
+  }, [currentSlug, isSubcategory, navigate]);
+
+  if (isSubcategory) return null;
 
   return (
     <>
-      <CategoryHero
-        category={category}
-        pathSegments={pathSegments}
-      />
+      {/* HERO */}
+      <CategoryHero category={category} />
 
-      {subcategories.length > 0 && (
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <h2 className="text-3xl font-bold mb-6">
-            Shop by Subcategory
-          </h2>
+      {/* SUBCATEGORY GRID (limit inside component if needed) */}
+      <CategorySubcategoryGrid category={category} />
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {subcategories.map((sub) => (
-              <Link
-                key={sub._id}
-                to={`/categories/${[
-                  ...pathSegments,
-                  sub.slug,
-                ].join("/")}`}
-                className="p-6 bg-white rounded-xl shadow hover:shadow-lg transition text-center"
-              >
-                <div className="font-semibold capitalize">
-                  {sub.name}
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* NEW ARRIVALS (limit 8 inside component OR slice here) */}
+      <CategoryNewArrivals products={newArrivals} />
 
-      <ProductSection
-        title="Trending in this Category"
-        products={trendingProducts}
-      />
+      {/* AI SECTION */}
+      <CategoryAISection category={category} />
 
-      <ProductSection
-        title="New Arrivals"
-        products={newArrivals}
-      />
+      {/* PROMO SECTION (dynamic from DB) */}
+      <CategoryPromoSection subcategories={subcategories} />
+
+        {/* TRENDING SUBCATEGORIES */}
+      <CategoryTrendingCategories category={category} />
+
+        {/* EXCLUSIVE PROMO */}
+        <CategoryExclusivePromo category={category} />
+
+        {/* TOP BRANDS */}
+        <CategoryTopBrands category={category} />
+
+      <TrustBadgeSection/>
+
+
+      
     </>
   );
 };

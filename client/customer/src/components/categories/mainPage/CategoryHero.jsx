@@ -2,41 +2,12 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { mainCategoryHeroSlides } from "../../../data/categories/mainCategoryHeroSlides";
+
 
 // Sample slides data for the Category Hero section
 
-const slides = [
-  {
-    id: 1,
-    tag: "SmartCart Universe • 2026",
-    title1: "FASHION &",
-    title2: "LIFESTYLE. ",
-    desc: "Vast collections from global brands. Explore the latest trends in Men's, Women's and Kids' fashion all in one place.",
-    bgImage: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2000&auto=format&fit=crop",
-    accent: "from-purple-400 to-pink-500",
-    link: "/categories/fashion"
-  },
-  {
-    id: 2,
-    tag: "Future Tech • Now Available",
-    title1: "ELITE",
-    title2: "ELECTRONICS. ",
-    desc: "From AI-powered gadgets to high-performance computing. Upgrade your lifestyle with our premium electronics category.",
-    bgImage: "https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=2000&auto=format&fit=crop",
-    accent: "from-blue-400 to-cyan-500",
-    link: "/categories/electronics"
-  },
-  {
-    id: 3,
-    tag: "Modern Spaces • Home Decor",
-    title1: "HOME &",
-    title2: "ESSENTIALS.  ",
-    desc: "Turn your house into a home. Discover curated furniture, decor, and daily essentials for every modern living space.",
-    bgImage: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1600&auto=format&fit=crop",
-    accent: "from-orange-400 to-yellow-500",
-    link: "/categories/home-living"
-  },
-];
+const slides = mainCategoryHeroSlides;
 
 // This is the main Hero component for the Categories main page, featuring a dynamic slideshow with strong visual appeal and clear calls to action for exploring key shopping categories.
 

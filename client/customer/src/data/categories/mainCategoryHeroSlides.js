@@ -1,0 +1,32 @@
+export const mainCategoryHeroSlides = [
+  {
+    id: 1,
+    tag: "SmartCart Universe • 2026",
+    title1: "FASHION &",
+    title2: "LIFESTYLE.",
+    desc: "Vast collections from global brands. Explore the latest trends in Men's, Women's and Kids' fashion all in one place.",
+    bgImage: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2000&auto=format&fit=crop",
+    accent: "from-purple-400 to-pink-500",
+    link: "/categories/fashion",
+  },
+  {
+    id: 2,
+    tag: "Future Tech • Now Available",
+    title1: "ELITE",
+    title2: "ELECTRONICS.",
+    desc: "Upgrade your lifestyle with premium electronics.",
+    bgImage: "https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=2000&auto=format&fit=crop",
+    accent: "from-blue-400 to-cyan-500",
+    link: "/categories/electronics",
+  },
+  {
+    id: 3,
+    tag: "Modern Spaces • Home Decor",
+    title1: "HOME &",
+    title2: "ESSENTIALS.",
+    desc: "Curated furniture and essentials for modern living.",
+    bgImage: "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=1600&auto=format&fit=crop",
+    accent: "from-orange-400 to-yellow-500",
+    link: "/categories/home-living",
+  },
+];
