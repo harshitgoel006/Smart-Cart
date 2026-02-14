@@ -1,165 +1,161 @@
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FiArrowUpRight, FiSearch } from "react-icons/fi";
-
-const departments = [
-  {
-    name: "Men",
-    slug: "men",
-    image: "https://images.unsplash.com/photo-1488161628813-04466f872be2?q=80&w=800&auto=format&fit=crop",
-    gridSize: "md:col-span-1",
-    accent: "bg-blue-400",
-  },
-  {
-    name: "Women",
-    slug: "women",
-    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=800&auto=format&fit=crop",
-    gridSize: "md:col-span-2",
-    accent: "bg-pink-400",
-  },
-  {
-    name: "Beauty & Grooming",
-    slug: "beauty",
-    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=800&auto=format&fit=crop",
-    gridSize: "md:col-span-2",
-    accent: "bg-teal-400",
-  },
-  {
-    name: "Kids",
-    slug: "kids",
-    // New working Kids image link
-    image: "https://images.unsplash.com/photo-1537655780520-1e392ead81f2?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    gridSize: "md:col-span-1",
-    accent: "bg-yellow-400",
-  },
-  {
-    name: "Accessories",
-    slug: "accessories",
-    image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=800&auto=format&fit=crop",
-    gridSize: "md:col-span-1",
-    accent: "bg-orange-400",
-  },
-  {
-    name: "Home & Living",
-    slug: "home-living",
-    image: "https://images.unsplash.com/photo-1616486029423-aaa4789e8c9a?q=80&w=800&auto=format&fit=crop",
-    gridSize: "md:col-span-2",
-    accent: "bg-stone-400",
-  },
-  {
-    name: "Electronics",
-    slug: "electronics",
-    image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=800&auto=format&fit=crop",
-    gridSize: "md:col-span-2",
-    accent: "bg-indigo-400",
-  },
-  {
-    name: "Gifts",
-    slug: "gifts",
-    image: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800&auto=format&fit=crop",
-    gridSize: "md:col-span-1",
-    accent: "bg-red-400",
-  },
-];
+import { FiArrowUpRight, FiCommand } from "react-icons/fi";
+import { getTopLevelCategories } from "../../features/categories/categoryService";
+import { departmentLayoutConfig } from "../../data/home/departmentLayoutConfig";
 
 const ExploreDepartments = () => {
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
+    const loadDepartments = async () => {
+      const data = await getTopLevelCategories();
+      const filtered = data.filter(item => departmentLayoutConfig[item.slug]);
+      setDepartments(filtered);
+    };
+    loadDepartments();
+  }, []);
+
+  // ANIMATIONS
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15, delayChildren: 0.3 }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 40, scale: 0.95, filter: "blur(4px)" },
+    show: { 
+      opacity: 1, y: 0, scale: 1, filter: "blur(0px)",
+      transition: { type: "spring", stiffness: 50, damping: 15 } 
+    }
+  };
+
   return (
-    <section className="relative py-32 overflow-hidden bg-[#fafafa]">
+    <section className="relative py-32 bg-[#ffffff] overflow-hidden">
       
-      {/*  Dynamic Glows */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute top-1/4 left-0 h-[600px] w-[600px] rounded-full bg-purple-500/30 blur-[180px]" />
-        <div className="absolute bottom-0 right-0 h-[600px] w-[600px] rounded-full bg-pink-500/25 blur-[180px]" />
+      {/* DYNAMIC MOVING BACKGROUND GLOWS */}
+      <div className="absolute inset-0 pointer-events-none">
+        <motion.div 
+          animate={{ 
+            x: [0, 50, 0], 
+            y: [0, 30, 0],
+            scale: [1, 1.1, 1] 
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[-10%] right-[10%] w-[600px] h-[600px] bg-purple-200/30 blur-[150px] rounded-full" 
+        />
+        <motion.div 
+          animate={{ 
+            x: [0, -40, 0], 
+            y: [0, 60, 0],
+            scale: [1, 1.2, 1] 
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-[-10%] left-[5%] w-[600px] h-[600px] bg-orange-100/40 blur-[150px] rounded-full" 
+        />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6">
-
-        {/* NEW ENHANCED HEADER */}
-        <div className="flex flex-col md:flex-row items-center justify-between mb-24 gap-10">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
+      <div className="max-w-[1440px] mx-auto px-10 relative z-10">
+        
+        {/* HEADER SECTION */}
+        <div className="mb-24 flex flex-col md:flex-row items-end justify-between border-b border-zinc-100 pb-16">
+          <motion.div 
+            initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="text-center md:text-left"
+            className="space-y-6"
           >
-            <div className="flex items-center gap-2 mb-4 justify-center md:justify-start">
-                <FiSearch className="text-purple-600" />
-                <span className="text-xs font-black tracking-[0.5em] text-purple-600 uppercase">
-                    Browse Universe
-                </span>
+            <div className="flex items-center gap-3">
+              <div className="h-[1px] w-12 bg-purple-600" />
+              <span className="text-[11px] font-black tracking-[0.6em] uppercase text-purple-600">Premium Curations</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter leading-[0.9]">
-              SHOP BY <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500">
-                LIFESTYLE.
-              </span>
+            <h2 className="text-5xl md:text-6xl font-black tracking-tighter uppercase leading-[0.75] text-zinc-900">
+              Style <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 italic font-serif lowercase tracking-tight">Vanguard.</span>
             </h2>
           </motion.div>
-
+          
           <motion.div 
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            className="flex flex-col items-center md:items-end"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="hidden md:block max-w-[300px] text-zinc-400 text-sm font-medium leading-relaxed italic border-l-2 border-zinc-100 pl-8 mb-4"
           >
-             <p className="text-gray-500 font-medium mb-6 text-lg md:text-right max-w-xs">
-                Premium collections tailored for every chapter of your daily life.
-             </p>
-             <Link
-                to="/categories"
-                className="group flex items-center gap-3 px-12 py-5 rounded-full bg-gray-900 text-white font-black hover:bg-purple-600 transition-all duration-700 shadow-2xl hover:shadow-purple-500/40"
-              >
-                DISCOVER ALL
-                <FiArrowUpRight className="text-xl group-hover:rotate-45 transition-transform duration-500" />
-              </Link>
+            Redefining the digital shopping experience through architectural grids and curated aesthetics.
           </motion.div>
         </div>
 
-        {/* BENTO GRID WITH ROUNDED CORNERS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 auto-rows-[340px]">
-          {departments.map((item, i) => (
-            <motion.div
-              key={item.slug}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.08, type: "spring", stiffness: 100 }}
-              viewport={{ once: true }}
-              className={`${item.gridSize} group relative`}
-            >
-              <Link
-                to={`/categories/${item.slug}`}
-                // rounded-[3.5rem] ensures extreme roundness top to bottom
-                className="relative block h-full w-full overflow-hidden rounded-[3.5rem] bg-white border border-gray-100 hover:shadow-[0_50px_100px_-30px_rgba(0,0,0,0.2)] transition-all duration-700"
+        {/* BENTO GRID */}
+        <motion.div 
+  variants={containerVariants}
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true }}
+  // Column size 5 rakha hai symmetry ke liye
+  className="grid grid-cols-1 md:grid-cols-5 gap-5 auto-rows-[200px]"
+>
+          {departments.map((item) => {
+            const layout = departmentLayoutConfig[item.slug] || { gridSize: "md:col-span-2" };
+
+            return (
+              <motion.div
+                key={item.slug}
+                variants={cardVariants}
+                whileHover={{ 
+                  y: -15, 
+                  rotateZ: 0.5,
+                  transition: { type: "spring", stiffness: 200 } 
+                }}
+                className={`${layout.gridSize} relative group`}
               >
-                {/* Visual Depth Accent */}
-                <div className={`absolute -inset-2 w-full h-full ${item.accent} rounded-full blur-[100px] opacity-0 group-hover:opacity-15 transition-opacity duration-700`} />
+                {/* DYNAMIC SHADOW (Changes color based on config) */}
+                <div className={`absolute inset-10 bg-gradient-to-br ${layout.accent || 'from-zinc-400/20'} to-transparent blur-3xl opacity-0 group-hover:opacity-60 transition-all duration-700 -z-10`} />
 
-                {/* Main Product/Category Image */}
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="absolute inset-0 h-full w-full object-cover rounded-[3.5rem] grayscale-[20%] group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 ease-out"
-                />
+                <Link to={`/categories/${item.slug}`} className="block h-full w-full relative overflow-hidden rounded-[3.5rem] bg-white border border-zinc-100 transition-all duration-700 shadow-sm group-hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.1)]">
+                  
+                  {/* Persistent Image */}
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-[2s] group-hover:scale-110"
+                  />
 
-                {/* Refined Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60 opacity-60 group-hover:opacity-40 transition-opacity" />
+                  {/* Overlays */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent opacity-60 group-hover:opacity-80 transition-opacity" />
+                  <div className={`absolute inset-0 bg-gradient-to-tr ${layout.accent} to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-700`} />
 
-                {/* Content Overlay */}
-                <div className="relative z-10 p-12 flex flex-col justify-between h-full">
-                  <div>
-                    <h3 className="text-4xl font-black text-black tracking-tighter drop-shadow-2xl">
-                      {item.name}
-                    </h3>
-                    <div className="mt-3 h-1.5 w-0 bg-black group-hover:w-16 transition-all duration-700 rounded-full" />
+                  {/* Content */}
+                  <div className="absolute inset-0 p-10 flex flex-col justify-between z-10">
+                    <div className="flex justify-end">
+                      <motion.div 
+                        whileHover={{ rotate: 45 }}
+                        className="h-14 w-14 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center opacity-0 -translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500"
+                      >
+                        <FiArrowUpRight className="text-white text-2xl" />
+                      </motion.div>
+                    </div>
+                    
+                    <div className="overflow-hidden">
+                      <motion.h3 
+                        initial={{ y: 20 }}
+                        whileInView={{ y: 0 }}
+                        className="text-white text-3xl md:text-4xl font-black tracking-tighter uppercase"
+                      >
+                        {item.name}
+                      </motion.h3>
+                      <div className="mt-4 h-[2px] w-0 bg-gradient-to-r from-white via-white/50 to-transparent group-hover:w-full transition-all duration-1000" />
+                    </div>
                   </div>
 
-                  <span className="self-start px-6 py-3 rounded-2xl bg-white/20 backdrop-blur-xl border border-white/30 text-xs font-black tracking-widest uppercase text-white opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700">
-                    Explore Store
-                  </span>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+                  {/* Inner Glassy Stroke */}
+                  <div className="absolute inset-6 border border-white/5 rounded-[2.5rem] pointer-events-none group-hover:border-white/20 transition-colors duration-700" />
+                </Link>
+              </motion.div>
+            );
+          })}
+        </motion.div>
       </div>
     </section>
   );

@@ -1,65 +1,41 @@
 import { motion } from "framer-motion";
 import { FiArrowRight, FiZap, FiTrendingUp, FiBox } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { aiRecommendationsData as recommendations } from "../../data/home/aiRecommendationsData";
 
-const recommendations = [
-  {
-    id: 1,
-    title: "Picked Just For You",
-    desc: "Personalized recommendations based on your searches, clicks and purchases.",
-    icon: <FiZap />,
-    gradient: "from-purple-600 to-pink-500",
-    bgImage: "https://images.unsplash.com/photo-1607082349566-1870e31f7d1c?q=80&w=1200&auto=format&fit=crop",
-    link: "/recommendations/personalized",
-  },
-  {
-    id: 2,
-    title: "Trending Near You",
-    desc: "Products that people around you are buying the most right now.",
-    icon: <FiTrendingUp />,
-    gradient: "from-blue-600 to-cyan-500",
-    bgImage: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=1200&auto=format&fit=crop",
-    link: "/recommendations/trending",
-  },
-  {
-    id: 3,
-    title: "Smart Value Bundles",
-    desc: "AI-curated product combinations that save money and time together.",
-    icon: <FiBox />,
-    gradient: "from-amber-500 to-orange-500",
-    bgImage: "https://images.unsplash.com/photo-1585386959984-a41552231693?q=80&w=1200&auto=format&fit=crop",
-    link: "/recommendations/bundles",
-  },
-];
+
 
 const AIRecommendations = () => {
   return (
-    <section className="relative py-32 overflow-hidden">
+    <section className="relative py-24 overflow-hidden bg-white">
       
       {/* --- BACKGROUND GLOW EFFECTS --- */}
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute top-1/4 -left-32 w-[420px] h-[420px] bg-purple-400/20 blur-[140px] rounded-full" />
-        <div className="absolute bottom-1/4 -right-32 w-[480px] h-[480px] bg-pink-400/20 blur-[160px] rounded-full" />
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] bg-purple-100/40 blur-[120px] rounded-full" />
+        <div className="absolute bottom-1/4 -right-32 w-[500px] h-[500px] bg-orange-100/30 blur-[120px] rounded-full" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-8 relative z-10">
         
         {/* --- HEADER SECTION --- */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-10 mb-24">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-20">
           <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="max-w-2xl"
           >
-            <span className="inline-block mb-4 text-sm font-black tracking-[0.35em] uppercase text-purple-600">
-              SmartCart AI
-            </span>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-[1px] w-10 bg-purple-200" />
+              <span className="text-[10px] font-black tracking-[0.4em] uppercase text-purple-600">
+                SmartCart AI
+              </span>
+            </div>
 
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight tracking-tight">
+            <h2 className="text-4xl md:text-6xl font-black text-zinc-900 leading-[0.9] tracking-tighter uppercase">
               Shopping that <br />
-              <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-blue-600 bg-clip-text text-transparent">
-                Understands You
+              <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 bg-clip-text text-transparent italic font-serif lowercase tracking-normal">
+                Understands You.
               </span>
             </h2>
           </motion.div>
@@ -68,67 +44,72 @@ const AIRecommendations = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="max-w-sm text-lg text-gray-500 font-medium lg:text-right"
+            className="max-w-xs text-sm text-zinc-400 font-medium leading-relaxed italic font-serif"
           >
             Our AI learns your preferences and delivers smarter, faster and more
-            relevant product discovery.
+            relevant product discovery tailored to your lifestyle.
           </motion.p>
         </div>
 
         {/* --- RECOMMENDATION CARDS --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {recommendations.map((item, i) => (
             <motion.div
               key={item.id}
-              initial={{ opacity: 0, y: 60 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.15 }}
+              transition={{ delay: i * 0.1, duration: 0.6 }}
               viewport={{ once: true }}
-              className="group relative h-[460px] rounded-[3rem] overflow-hidden bg-gray-900"
+              className="group relative h-[480px] rounded-[2.5rem] overflow-hidden bg-zinc-950 shadow-2xl"
             >
               {/* IMAGE OVERLAY LAYER */}
               <div className="absolute inset-0">
                 <img
                   src={item.bgImage}
                   alt={item.title}
-                  className="w-full h-full object-cover opacity-45 group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover opacity-50 group-hover:scale-110 group-hover:opacity-30 transition-all duration-1000 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/60 to-black" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black" />
               </div>
 
               {/* CARD CONTENT */}
-              <div className="relative h-full p-10 flex flex-col justify-end">
+              <div className="relative h-full p-10 flex flex-col justify-end z-20">
+                {/* Mechanical Icon Box */}
                 <div
                   className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${item.gradient}
-                  flex items-center justify-center text-white text-2xl mb-6 shadow-xl`}
+                  flex items-center justify-center text-white text-2xl mb-6 shadow-[0_0_20px_rgba(168,85,247,0.4)]
+                  group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}
                 >
                   {item.icon}
                 </div>
 
-                <h3 className="text-3xl font-bold text-white mb-4">
+                <h3 className="text-3xl font-black text-white mb-3 tracking-tighter uppercase">
                   {item.title}
                 </h3>
 
-                <p className="text-gray-300 leading-relaxed mb-8 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                <p className="text-zinc-400 text-sm leading-relaxed mb-8 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 font-medium">
                   {item.desc}
                 </p>
 
                 <Link
                   to={item.link}
-                  className="inline-flex items-center gap-4 text-white font-black tracking-widest text-xs uppercase"
+                  className="inline-flex items-center gap-4 text-white font-black tracking-[0.2em] text-[10px] uppercase group/link"
                 >
                   <span className="relative">
-                    Explore
-                    <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-white group-hover:w-full transition-all duration-300" />
+                    Explore Dimensions
+                    <span className="absolute left-0 -bottom-1 h-[1px] w-0 bg-gradient-to-r from-purple-500 to-orange-500 group-hover:w-full transition-all duration-500" />
                   </span>
-                  <span className="w-9 h-9 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all">
-                    <FiArrowRight />
-                  </span>
+                  <div className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center group-hover/link:bg-white group-hover/link:text-black group-hover/link:border-white transition-all duration-500">
+                    <FiArrowRight size={16} />
+                  </div>
                 </Link>
               </div>
 
               {/* INTERACTIVE BORDER GLOW */}
-              <div className="absolute inset-0 rounded-[3rem] border border-white/0 group-hover:border-white/10 transition pointer-events-none" />
+              <div className="absolute inset-0 rounded-[2.5rem] border border-white/0 group-hover:border-white/10 transition-colors duration-500 pointer-events-none" />
+              
+              {/* Inner Gradient Shine */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/0 via-white/5 to-orange-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
             </motion.div>
           ))}
         </div>

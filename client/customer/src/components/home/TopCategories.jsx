@@ -1,151 +1,158 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FiArrowRight } from "react-icons/fi";
-
-const categories = [
-    { 
-        name: "Electronics", 
-        slug: "electronics", 
-        image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=600&auto=format&fit=crop", 
-        color: "from-blue-500/20" 
-    },
-    {
-  name: "Fashion",
-  slug: "fashion",
-  image: "https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=600&auto=format&fit=crop",
-  color: "from-pink-500/20",
-},
-    { 
-        name: "Groceries", 
-        slug: "groceries", 
-        image: "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=600&auto=format&fit=crop", 
-        color: "from-green-500/20" 
-    },
-    { 
-        name: "Home & Kitchen", 
-        slug: "home-living", 
-        image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=600&auto=format&fit=crop", 
-        color: "from-orange-500/20" 
-    },
-    { 
-        name: "Beauty", 
-        slug: "beauty", 
-        image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=600&auto=format&fit=crop", 
-        color: "from-purple-500/20" 
-    },
-    { 
-        name: "Sports & Gym", 
-        slug: "sports-gym", 
-        image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=600&auto=format&fit=crop", 
-        color: "from-red-500/20" 
-    },
-    {
-  name: "Kids & Toys",
-  slug: "kids",
-  image: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=600&auto=format&fit=crop",
-  color: "from-yellow-500/20",
-},
-
-    { 
-        name: "Accessories", 
-        slug: "accessories", 
-        image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=600&auto=format&fit=crop", 
-        color: "from-cyan-500/20" 
-    },
-];
-
-
+import { FiArrowRight, FiArrowUpRight } from "react-icons/fi";
+import { getTopLevelCategories } from "../../features/categories/categoryService";
 
 const TopCategories = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      
+      try {
+        const data = await getTopLevelCategories();
+        // Forcefully taking only the first 8 items
+        if (data && Array.isArray(data)) {
+          setCategories(data.slice(0, 8));
+        }
+      } catch (error) {
+        console.error("Error loading categories:", error);
+      }
+    };
+    loadCategories();
+  }, []);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 40, scale: 0.95 },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: { type: "spring", stiffness: 70, damping: 15 } 
+    }
+  };
+
   return (
-    <section className="
-  relative
-  py-20
-  bg-gradient-to-b from-purple-50/60 via-white to-pink-50/60
-  overflow-hidden
-">
-    <div className="pointer-events-none absolute inset-0">
-    <div className="
-      absolute -top-24 left-1/2
-      h-96 w-96
-      -translate-x-1/2
-      rounded-full
-      bg-purple-300/20
-      blur-3xl
-    " />
-  </div>
+    <section className="relative py-32 bg-[#fafafa] overflow-hidden">
+      {/* Background Royal Accents */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-48 left-1/2 h-[600px] w-[600px] -translate-x-1/2 rounded-full bg-purple-100/30 blur-[120px]" />
+        <div className="absolute top-1/2 -right-24 h-96 w-96 rounded-full bg-pink-100/20 blur-[100px]" />
+      </div>
 
-      <div className=" relative max-w-7xl mx-auto px-6">
+      <div className="relative max-w-[1400px] mx-auto px-6">
         
-        {/* HEADER SECTION */}
-        <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
-  <div>
-    <h2 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter">
-      Shop by{" "}
-      <span className="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-        Category
-      </span>
-    </h2>
-    <p className="text-gray-500 mt-2 font-medium">
-      Curated collections for your lifestyle
-    </p>
+        {/* HEADER SECTION - ROYAL LOOK */}
+        <div className="mb-20 flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+          >
+            <span className="text-[11px] font-black tracking-[0.5em] uppercase text-purple-500 mb-4 block">
+              Curated Selection
+            </span>
+            <h2 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tighter leading-[0.85] uppercase">
+              Elite <br />
+              <span className="bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 bg-clip-text text-transparent italic font-serif lowercase tracking-tight">
+                Dimensions.
+              </span>
+            </h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <Link
+  to="/categories"
+  className="group flex items-center gap-6"
+>
+  {/* Gradient Text */}
+  <span className="text-[11px] font-black tracking-[0.4em] uppercase bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 bg-clip-text text-transparent transition-opacity group-hover:opacity-80">
+    Explore All Spheres
+  </span>
+
+  {/* Gradient Icon Box */}
+  <div className="relative h-16 w-16 flex items-center justify-center overflow-hidden rounded-2xl shadow-[0_10px_30px_-10px_rgba(147,51,234,0.3)] transition-all duration-500 group-hover:scale-110">
+    {/* Background Gradient Layer */}
+    <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 transition-transform duration-500 group-hover:rotate-90" />
+    
+    {/* Arrow Icon */}
+    <FiArrowRight className="relative z-10 text-white text-xl group-hover:translate-x-1 transition-transform" />
+    
+    {/* Glass Shine Effect */}
+    <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
   </div>
+</Link>
+          </motion.div>
+        </div>
 
-  {/* SEE ALL */}
-  <Link
-    to="/categories"
-    className="
-      group inline-flex items-center gap-2
-      text-sm font-semibold text-purple-600
-      hover:text-purple-700 transition
-    "
-  >
-    See all categories
-    <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
-  </Link>
-</div>
-
-
-        {/* CATEGORIES GRID */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        {/* CATEGORIES GRID - BENTO INSPIRED */}
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.1 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-8"
+        >
           {categories.map((cat) => (
-            <div key={cat.slug}>
+            <motion.div key={cat.slug} variants={itemVariants}>
               <Link
                 to={`/categories/${cat.slug}`}
-                className="group relative block aspect-[4/5] overflow-hidden rounded-[2.5rem] bg-gray-100 transition-all duration-500 ease-out 
-                           /* HOVER EFFECTS */
-                           hover:-translate-y-3 
-                           hover:shadow-[0_30px_60px_-15px_rgba(147,51,234,0.35)]"
+                className="group relative block aspect-[3/4] overflow-hidden rounded-[3rem] bg-white transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]
+                           hover:shadow-[0_40px_80px_-15px_rgba(147,51,234,0.25)] hover:-translate-y-4"
               >
-                {/* 1. Image Zoom */}
-                <img
-                  src={cat.image}
-                  alt={cat.name}
-                  className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                />
-
-                {/* 2. Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-70 group-hover:opacity-80 transition-opacity" />
-
-                {/* 3. Shadow/Glow Internal Highlight */}
-                <div className="absolute inset-0 border-[1px] border-white/0 group-hover:border-white/20 rounded-[2.5rem] transition-all duration-500" />
-
-                {/* 4. Text Content */}
-                <div className="absolute bottom-8 left-8 right-8 z-10">
-                  <span className="inline-block px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-[9px] font-bold tracking-[0.2em] text-white uppercase mb-3 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                    Explore
-                  </span>
-                  <h3 className="text-xl md:text-2xl font-bold text-white tracking-tight drop-shadow-lg">
-                    {cat.name}
-                  </h3>
+                {/* Image Zoom & Fade */}
+                <div className="absolute inset-0 overflow-hidden">
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-out"
+                  />
                 </div>
+
+                {/* Royal Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
                 
-                {/* 5. Bottom Gradient Glow (The "Shadow" extension) */}
-                <div className="absolute -bottom-2 inset-x-0 h-10 bg-gradient-to-t from-purple-500/20 to-transparent blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                {/* Hover Accent Color (Glass) */}
+                <div className="absolute inset-0 bg-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                {/* Content */}
+                <div className="absolute inset-0 p-8 flex flex-col justify-between z-10">
+                  <div className="flex justify-end translate-y-[-20px] opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                    <div className="h-12 w-12 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center shadow-2xl">
+                      <FiArrowUpRight className="text-white text-xl" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-[9px] font-black tracking-[0.2em] text-white uppercase opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100">
+                      View Sphere
+                    </span>
+                    <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter uppercase leading-none drop-shadow-2xl">
+                      {cat.name}
+                    </h3>
+                    <div className="h-[2px] w-0 bg-gradient-to-r from-purple-500 to-pink-500 group-hover:w-full transition-all duration-700 ease-in-out" />
+                  </div>
+                </div>
+
+                {/* Inner Border Glow */}
+                <div className="absolute inset-4 border border-white/5 rounded-[2.2rem] group-hover:border-white/20 transition-all duration-700 pointer-events-none" />
               </Link>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

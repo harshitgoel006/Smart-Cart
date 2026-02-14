@@ -1,0 +1,32 @@
+export const offersData = [
+  {
+    id: 1,
+    badge: "SMART DEAL",
+    title: "Premium Tech Deals",
+    subtitle: "UP TO 50% OFF",
+    desc: "Top-rated headphones, smartwatches & accessories at unbeatable prices.",
+    cta: "Shop Electronics",
+    link: "/categories/electronics",
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=2000&auto=format&fit=crop",
+  },
+  {
+    id: 2,
+    badge: "SEASON SALE",
+    title: "Fashion Fest",
+    subtitle: "MIN 40% OFF",
+    desc: "Trending outfits, summer essentials & new arrivals curated for you.",
+    cta: "Explore Fashion",
+    link: "/categories/fashion",
+    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2000&auto=format&fit=crop",
+  },
+  {
+    id: 3,
+    badge: "DAILY ESSENTIALS",
+    title: "Home & Kitchen",
+    subtitle: "SMART SAVINGS",
+    desc: "Upgrade your home with modern appliances and daily-use essentials.",
+    cta: "View Deals",
+    link: "/categories/home-living",
+    image: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=2000&auto=format&fit=crop",
+  },
+];

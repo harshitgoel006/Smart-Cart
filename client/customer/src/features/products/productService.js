@@ -53,3 +53,17 @@ export const getNewArrivalsByCategory = async (slug) => {
       new Date(a.createdAt || 0)
   );
 };
+
+
+export const getHomeTrendingProducts = async () => {
+  return products
+    .map((product) => ({
+      ...product,
+      score:
+        (product.ratings || 0) * 2 +
+        (product.sold || 0) +
+        (product.featured ? 20 : 0),
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 8);
+};

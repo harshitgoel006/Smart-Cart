@@ -1,107 +1,60 @@
-// import { motion } from "framer-motion";
-// import Hero from "../../components/home/Hero";
-// import TopCategories from "../../components/home/TopCategories";
-// import FeaturedProducts from "../../components/home/FeaturedProducts";
-// import OffersSlider from "../../components/home/OffersSlider";
-// import TopBrands from "../../components/home/TopBrands";
-// import RazorpayPromo from "../../components/home/RazorpayPromo";
-// import AIRecommendations from "../../components/home/AIRecommendations";
-// import ExploreDepartments from "../../components/home/ExploreDepartments";
-// import Testimonials from "../../components/Testimonials";
-// import WhySmartCart from "../../components/home/WhySmartCart";
-
-// const Home = () => {
-//   return (
-//     <div className="relative overflow-hidden">
-
-//       {/* 🌈 GLOBAL ANIMATED BACKGROUND GRADIENT */}
-//       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-
-//         {/* PURPLE GLOW */}
-//         <motion.div
-//           className="
-//             absolute -top-24 -left-24
-//             h-[520px] w-[520px]
-//             rounded-full
-//             bg-purple-400/40
-//             blur-[100px]
-//           "
-//           animate={{ x: [0, 40, 0], y: [0, 30, 0] }}
-//           transition={{
-//             duration: 14,
-//             repeat: Infinity,
-//             ease: "easeInOut",
-//           }}
-//         />
-
-//         {/* PINK GLOW */}
-//         <motion.div
-//           className="
-//             absolute top-1/3 -right-24
-//             h-[520px] w-[520px]
-//             rounded-full
-//             bg-pink-400/40
-//             blur-[100px]
-//           "
-//           animate={{ x: [0, -40, 0], y: [0, -30, 0] }}
-//           transition={{
-//             duration: 16,
-//             repeat: Infinity,
-//             ease: "easeInOut",
-//           }}
-//         />
-//       </div>
-
-//       {/* PAGE CONTENT */}
-//       <Hero />
-//       <TopCategories />
-//       <FeaturedProducts/>
-//       <OffersSlider/>
-//       <TopBrands/>
-//       <AIRecommendations/>
-//       <RazorpayPromo/>
-//       <ExploreDepartments/>
-//       <Testimonials/>
-//       <WhySmartCart/>
-//       {/* next sections yaha add honge */}
-
-//     </div>
-//   );
-// };
-
-// export default Home;
-
-
-
 import { useEffect, useState } from "react"
-import { getAllProducts } from "../../features/products/productService"
-import { getTrendingProducts } from "../../utils/product/getTrendingProducts"
+import { getHomeTrendingProducts } from "../../features/products/productService"
 import ProductSection from "../../components/product/ProductSection"
 import { heroSlides } from "../../data/home/heroSlides"
 import Hero from "../../components/home/Hero"
+import TopCategories from "../../components/home/TopCategories"
+import OffersSlider from "../../components/home/OffersSlider";
+import { offersData } from "../../data/home/offersData"
+import RazorpayPromo from "../../components/home/RazorpayPromo";
+import { paymentPromoData } from "../../data/home/paymentPromoData";
+import AIRecommendations from "../../components/home/AIRecommendations";
+import { aiRecommendationsData } from "../../data/home/aiRecommendationsData";
+import ExploreDepartments from "../../components/home/ExploreDepartments"
+import TopBrands from "../../components/home/TopBrands"
+import WhySmartCart from "../../components/home/WhySmartCart"
+import Testimonials from "../../components/Testimonials"
+import TrustBadgeSection from "../../components/TrustBadgeSection"
+
+
+
+
+
+
 const Home = () => {
-  const [products, setProducts] = useState([])
+  const [trending, setTrending] = useState([])
 
   useEffect(() => {
-    const loadProducts = async () => {
-      const data = await getAllProducts()
-      setProducts(data)
+    const loadTrending = async () => {
+      const data = await getHomeTrendingProducts()
+      setTrending(data)
     }
 
-    loadProducts()
+    loadTrending()
   }, [])
-
-  const trending = getTrendingProducts(products)
 
   return (
     <>
       <Hero slides={heroSlides} />
+      <TopCategories/>
       <ProductSection
         title="Trending Now"
         subtitle="Handpicked items loved by SmartCart users"
         products={trending}
       />
+      <OffersSlider offers={offersData} />
+      <RazorpayPromo data={paymentPromoData} />
+      <AIRecommendations recommendations={aiRecommendationsData} />
+      <ExploreDepartments/>
+      <TopBrands/>
+      <WhySmartCart/>
+      <Testimonials/>
+      <TrustBadgeSection/>
+
+
+
     </>
   )
 }
-export default Home;
+
+export default Home

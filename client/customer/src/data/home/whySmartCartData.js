@@ -1,0 +1,38 @@
+export const whySmartCartData = [
+  {
+    id: 1,
+    icon: "zap",
+    title: "Instant Gratification",
+    desc: "Experience lightning-fast browsing and a checkout process that stays ahead of your pace.",
+    color: "bg-indigo-500",
+    glow: "shadow-indigo-500/40",
+    badge: "Performance",
+  },
+  {
+    id: 2,
+    icon: "shield",
+    title: "Fortified Security",
+    desc: "Your data is locked behind multi-layer encryption. Shop with 100% peace of mind.",
+    color: "bg-rose-500",
+    glow: "shadow-rose-500/40",
+    badge: "Protection",
+  },
+  {
+    id: 3,
+    icon: "trending",
+    title: "AI-First Curation",
+    desc: "No more scrolling. Our AI predicts your needs and delivers personalized styles daily.",
+    color: "bg-amber-500",
+    glow: "shadow-amber-500/40",
+    badge: "Intelligence",
+  },
+  {
+    id: 4,
+    icon: "smile",
+    title: "Human Support",
+    desc: "Technology is great, but our real-world experts are available 24/7 to help you out.",
+    color: "bg-emerald-500",
+    glow: "shadow-emerald-500/40",
+    badge: "Service",
+  },
+];

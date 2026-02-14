@@ -8,8 +8,8 @@ const BadgeCard = ({ icon, title, delay, themeColor }) => {
   const mouseXSpring = useSpring(x);
   const mouseYSpring = useSpring(y);
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["12deg", "-12deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-12deg", "12deg"]);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
 
   const handleMouseMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -22,54 +22,59 @@ const BadgeCard = ({ icon, title, delay, themeColor }) => {
     y.set(0);
   };
 
-  // Dynamic Shadow based on theme color
-  const shadowClass = themeColor === "pink" 
-    ? "group-hover:shadow-[0_20px_50px_-10px_rgba(236,72,153,0.3)]" 
-    : "group-hover:shadow-[0_20px_50px_-10px_rgba(139,92,246,0.3)]";
-
-  const iconBg = themeColor === "pink" ? "bg-pink-50" : "bg-purple-50";
-  const iconColor = themeColor === "pink" ? "text-pink-500" : "text-purple-500";
-  const barColor = themeColor === "pink" ? "bg-pink-500" : "bg-purple-500";
+  // Modernized Colors
+  const isPink = themeColor === "pink";
+  const iconBg = isPink ? "bg-pink-50" : "bg-purple-50";
+  const iconColor = isPink ? "text-pink-500" : "text-purple-600";
+  const glowColor = isPink ? "bg-pink-400/20" : "bg-purple-400/20";
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.8, delay }}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
       className="relative group cursor-pointer"
     >
-      {/* Outer Glow Layer */}
-      <div className={`absolute -inset-1 rounded-[3rem] opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 ${themeColor === 'pink' ? 'bg-pink-200/20' : 'bg-purple-200/20'}`} />
+      {/* Outer Glow Effect */}
+      <div className={`absolute -inset-4 rounded-[3.5rem] opacity-0 group-hover:opacity-100 blur-3xl transition-opacity duration-700 ${glowColor}`} />
       
-      <div className={`relative w-64 h-72 bg-white border border-gray-50 rounded-[3rem] flex flex-col items-center justify-center p-8 transition-all duration-500 shadow-[0_10px_30px_rgba(0,0,0,0.03)] ${shadowClass}`}>
+      {/* Main Glass Card */}
+      <div className="relative w-72 h-80 bg-white/70 backdrop-blur-md border border-white/40 rounded-[3.5rem] flex flex-col items-center justify-center p-10 transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.02)] group-hover:shadow-[0_30px_70px_rgba(0,0,0,0.08)] group-hover:bg-white/90">
         
-        {/* Animated Icon Container */}
+        {/* Floating Icon Container */}
         <motion.div 
-          style={{ translateZ: 50 }}
-          className={`w-24 h-24 rounded-full ${iconBg} flex items-center justify-center mb-8 relative`}
+          style={{ translateZ: 60 }}
+          className={`w-28 h-28 rounded-[2.5rem] ${iconBg} flex items-center justify-center mb-8 relative shadow-inner`}
         >
-          <div className={`absolute inset-0 rounded-full border-2 border-dashed ${themeColor === 'pink' ? 'border-pink-200' : 'border-purple-200'} animate-[spin_20s_linear_infinite] opacity-40`} />
+          {/* Decorative Rotating Border */}
+          <div className={`absolute inset-[-8px] rounded-[3rem] border border-dashed ${isPink ? 'border-pink-200' : 'border-purple-200'} animate-[spin_15s_linear_infinite] opacity-60`} />
           
-          <div className={`text-4xl ${iconColor} transition-all duration-500 group-hover:scale-110 group-hover:rotate-[360deg]`}>
+          <div className={`text-4xl ${iconColor} transition-all duration-700 group-hover:scale-110 group-hover:rotate-[360deg]`}>
             {icon}
           </div>
         </motion.div>
 
-        {/* Text */}
-        <motion.h3 
-          style={{ translateZ: 40 }}
-          className="text-gray-800 font-extrabold tracking-tight text-lg text-center"
-        >
-          {title}
-        </motion.h3>
+        {/* Typography - Matching the Royal Style */}
+        <motion.div style={{ translateZ: 40 }} className="text-center">
+          <h3 className="text-zinc-900 font-black tracking-[0.02em] text-xl uppercase leading-none">
+            {title}
+          </h3>
+          <p className="text-zinc-400 text-[10px] font-bold tracking-[0.2em] uppercase mt-3">
+            Premium Service
+          </p>
+        </motion.div>
 
-        {/* Dynamic Animated Bar */}
-        <div className="absolute bottom-8 w-10 h-1 bg-gray-100 rounded-full overflow-hidden">
-          <div className={`w-full h-full ${barColor} scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left`} />
+        {/* Dynamic Interactive Bar */}
+        <div className="absolute bottom-10 w-12 h-1 bg-zinc-100 rounded-full overflow-hidden">
+          <motion.div 
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 0.3 }}
+            className={`w-full h-full ${isPink ? 'bg-pink-500' : 'bg-purple-600'} scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left`}
+          />
         </div>
       </div>
     </motion.div>
@@ -84,15 +89,15 @@ const TrustBadgeSection = () => {
   ];
 
   return (
-    <section className="w-full py-25 bg-white flex flex-col items-center justify-center overflow-hidden">
-      <div className="flex flex-wrap justify-center gap-12 px-6">
+    <section className="w-full py-32 bg-white flex flex-col items-center justify-center overflow-hidden border-t border-zinc-50">
+      <div className="flex flex-wrap justify-center gap-16 px-8">
         {badges.map((badge, idx) => (
           <BadgeCard 
             key={idx} 
             icon={badge.icon} 
             title={badge.title} 
             themeColor={badge.color} 
-            delay={idx * 0.1} 
+            delay={idx * 0.15} 
           />
         ))}
       </div>

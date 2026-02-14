@@ -38,3 +38,26 @@ export const getAllChildCategorySlugs = (parentSlug) => {
 
   return result;
 };
+
+
+export const getTopLevelCategories = async () => {
+  const topLevel = categories.filter(
+    (cat) =>
+      cat.parentCategory === null &&
+      cat.isActive &&
+      !cat.isDeleted &&
+      cat.status === "approved"
+  );
+
+  const featured = topLevel.filter((cat) => cat.isFeatured);
+  const others = topLevel.filter((cat) => !cat.isFeatured);
+
+  return [
+    ...featured.sort((a, b) => a.order - b.order),
+    ...others.sort((a, b) => a.order - b.order),
+  ];
+};
+
+
+
+
