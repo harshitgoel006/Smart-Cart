@@ -28,54 +28,120 @@ function sortHandler(sort) {
 
 
 // Customer get all products
-const customerGetAllProducts = asyncHandler(async (req, res)=>{
-    const {search , category, minPrice, maxPrice, sort , page = 1, limit = 10} = req.query;
-    const filter = {isActive: true, isDeleted: false, approvalStatus: "approved"};
-    if(search){
-        filter.$or = [
-            {title: {$regex: search, $options: "i"}},
-            {description: {$regex: search, $options: "i"}}
-        ];
-    }
-    if(category){
-        filter.category = category;
-    }
-    if(minPrice || maxPrice){
-        filter.price = {};
-        if(minPrice){
-            filter.price.$gte = Number(minPrice);
-        }
-        if(maxPrice){
-            filter.price.$lte  = Number(maxPrice);
-        }
-    }
+const customerGetAllProducts = asyncHandler(async (req, res) => {
+  const {
+    search,
+    category,
+    brand,
+    minPrice,
+    maxPrice,
+    rating,
+    discount,
+    size,
+    inStock,
+    sort,
+    page = 1,
+    limit = 12
+  } = req.query;
 
-    const sortOption = sortHandler(sort);
-    const totalProducts = await Product.countDocuments(filter);
-    const products = await Product.find(filter)
-        .sort(sortOption)
-        .skip((page - 1) * limit)
-        .limit(Number(limit))
-        .select("title price discount rating images stock category")
-        .populate({
-            path: "seller",
-            select: "fullname email username avatar"
-        });
-        return res
-        .status(200)
-        .json(
-            new ApiResponse(
-                200,
-                {
-                    total: totalProducts,
-                    page: Number(page),
-                    limit: Number(limit),
-                    products,
-                },
-                "Products fetched successfully"
-            )
-        )
+  const filter = {
+    isActive: true,
+    isDeleted: false,
+    approvalStatus: "approved"
+  };
 
+  // 🔎 Search
+  if (search) {
+    filter.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { description: { $regex: search, $options: "i" } }
+    ];
+  }
+
+  // 📂 Category
+  if (category) {
+    filter.category = category;
+  }
+
+  // 🏷 Brand (multi-select)
+  if (brand) {
+    filter.brand = { $in: brand.split(",") };
+  }
+
+  // 💰 Price Range (use finalPrice)
+  if (minPrice || maxPrice) {
+    filter.finalPrice = {};
+    if (minPrice) filter.finalPrice.$gte = Number(minPrice);
+    if (maxPrice) filter.finalPrice.$lte = Number(maxPrice);
+  }
+
+  // ⭐ Rating
+  if (rating) {
+    filter.ratings = { $gte: Number(rating) };
+  }
+
+  // 🔥 Discount
+  if (discount) {
+    filter.discount = { $gte: Number(discount) };
+  }
+
+  // 📦 In Stock
+  if (inStock === "true") {
+    filter.stock = { $gt: 0 };
+  }
+
+  // 👕 Variant Size
+  if (size) {
+    filter["variants.options.value"] = { $in: size.split(",") };
+  }
+
+  // 🔄 Sorting
+  let sortOption = { createdAt: -1 };
+
+  switch (sort) {
+    case "priceLowToHigh":
+      sortOption = { finalPrice: 1 };
+      break;
+    case "priceHighToLow":
+      sortOption = { finalPrice: -1 };
+      break;
+    case "ratingHighToLow":
+      sortOption = { ratings: -1 };
+      break;
+    case "bestSelling":
+      sortOption = { sold: -1 };
+      break;
+    case "discountHighToLow":
+      sortOption = { discount: -1 };
+      break;
+  }
+
+  const pageNum = parseInt(page);
+  const limitNum = parseInt(limit);
+
+  const total = await Product.countDocuments(filter);
+
+  const products = await Product.find(filter)
+    .sort(sortOption)
+    .skip((pageNum - 1) * limitNum)
+    .limit(limitNum)
+    .select(
+      "name slug finalPrice price discount ratings images stock brand category"
+    )
+    .populate("category", "name slug");
+
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        total,
+        page: pageNum,
+        totalPages: Math.ceil(total / limitNum),
+        products
+      },
+      "Products fetched successfully"
+    )
+  );
 });
 
 // Get product by ID
