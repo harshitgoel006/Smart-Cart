@@ -5,6 +5,7 @@ import { Coupon } from "../models/coupon.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import {ApiError} from "../utils/ApiError.js";
 import createAndSendNotification from "../utils/sendNotification.js";
+import { cartService } from '../services/cart.service.js';
 
 
 
@@ -17,58 +18,27 @@ import createAndSendNotification from "../utils/sendNotification.js";
 
 
 // add items to cart
-const addItems = asyncHandler(async(req, res) =>{
-    const userId = req.user._id;
-    const {productId, quantity} = req.body;
+const addItems = asyncHandler(async (req, res) => {
+  const cart = await cartService.addItems(
+    req.user._id,
+    req.body.productId,
+    req.body.quantity
+  );
 
-    if(!productId){
-        throw new ApiError(400, "Product ID is required");
-    }
-
-    if(!quantity || quantity<1){
-        throw new ApiError(400, "Quantity should be at least 1");
-    }
-
-    const product = await Product.findById(productId);
-
-    if(!product){
-        throw new ApiError(404, "Product not found");
-    }
-    let cart = await Cart.findOne({user:userId});
-
-    if(!cart){
-        cart = new Cart({user:userId, items:[]});
-    }
-    await cart.addItems(productId, quantity || 1, product.price);
-
-    return res
-    .status(200)
-    .json(
-        new ApiResponse(
-            200, 
-            true,
-            "Items added to cart successfully",
-            cart
-        )
-    );
-
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      true,
+      "Items added to cart successfully",
+      cart
+    )
+  );
 });
 
 // get cart items
 const getCartItems = asyncHandler(async(req, res) =>{
 
-    const userId = req.user._id;
-    console.log("🔍 Getting cart for user:", userId);
-
-    const cart = await Cart.findOne({user:userId})
-    .populate("items.product" , "name price images ");
-
-    console.log("🔍 Cart found:", !!cart);             
-    console.log("🔍 Cart items:", cart?.items);
-
-    if (!cart || !cart.items || cart.items.length === 0) {
-      throw new ApiError(400, "Cart is empty.");
-    }
+    const cart = await cartService.getCartItems(req.user._id);
 
     return res
     .status(200)
@@ -85,41 +55,11 @@ const getCartItems = asyncHandler(async(req, res) =>{
 
 // update cart item quantity
 const updateCartItem = asyncHandler(async(req, res) =>{
-    const userId = req.user._id;
-    const {productId, quantity} = req.body;
-
-    if(!productId){
-        throw new ApiError(400, "Product ID is required");
-    }
-
-    if(!quantity || quantity<1){
-        throw new ApiError(400, "Quantity should be at least 1");
-    }
-
-    const cart = await Cart.findOne({user:userId});
-
-    if(!cart){
-        throw new ApiError(404, "Cart not found");
-    }
-
-    const index = cart.items.findIndex(item=> item.product.toString() === productId.toString());
-
-    if(index === -1){
-        throw new ApiError(404, "Product not found in cart");
-    }
-
-    const product = await Product.findById(productId);
-  if(!product || !product.isActive){
-    throw new ApiError(404, "Product not available");
-  }
-
-  if(quantity > product.stock){
-    throw new ApiError(400, `Only ${product.stock} items available in stock`);
-  }
-    cart.items[index].quantity = quantity;
-
-    await cart.calculateTotals();
-    await cart.save();
+    const cart = await cartService.updateCartItem(
+        req.user._id,
+        req.body.productId,
+        req.body.quantity
+    );
 
     return res 
     .status(200)
@@ -136,29 +76,10 @@ const updateCartItem = asyncHandler(async(req, res) =>{
 
 // remove cart item
 const removeCartItem = asyncHandler(async(req, res) =>{
-    const userId = req.user._id;
-
-    const {itemId} = req.params;
-
-    if(!itemId || !itemId.match(/^[0-9a-fA-F]{24}$/)){
-    throw new ApiError(400, "Valid item ID required");
-  }
-
-    const cart  = await Cart.findOne({user:userId});
-
-    if(!cart){
-        throw new ApiError(404, "Cart not found");
-    }
-
-    const initialCount = cart.items.length;
-  cart.items = cart.items.filter(item => item._id.toString() !== itemId);
-  
-  if(cart.items.length === initialCount){
-    throw new ApiError(404, "Item not found in cart");
-  }
-
-  await cart.calculateTotals();
-  await cart.save();
+    const cart = await cartService.removeCartItem(
+        req.user._id,
+        req.params.itemId
+    )
 
     return res 
     .status(200)
@@ -175,16 +96,8 @@ const removeCartItem = asyncHandler(async(req, res) =>{
 
 // clear cart
 const clearCart = asyncHandler(async(req, res) =>{
-
     const userId = req.user._id;
-
-    const cart = await Cart.findOne({user:userId});
-
-    if(!cart){
-        throw new ApiError(404, "Cart not found");
-    }
-
-    await cart.clearCart();
+    const cart = await cartService.clearCart(userId);
 
     return res
     .status(200)
@@ -200,75 +113,18 @@ const clearCart = asyncHandler(async(req, res) =>{
 
 // apply coupon
 const applyCoupon = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
-  const { couponCode } = req.body;
+  const cart = await cartService.applyCoupon(
+    req.user,
+    req.body.couponCode
+  );
 
-  if (!couponCode) {
-    throw new ApiError(400, "Coupon code is required");
-  }
-
-  const coupon = await Coupon.findOne({ code: couponCode.toUpperCase() });
-  if (!coupon) {
-    throw new ApiError(404, "Invalid or inactive coupon code");
-  }
-
-  const now = new Date();
-  if (coupon.expiryDate && coupon.expiryDate < now) {
-    throw new ApiError(400, "Coupon code has expired");
-  }
-
-
-  let cart = await Cart.findOne({ user: userId });
-  if (!cart) {
-    throw new ApiError(404, "Cart not found");
-  }
-
-  let discountAmount = 0;
-
-  if (coupon.discountAmount) {
-    discountAmount = coupon.discountAmount;
-  } else if (coupon.discountPercent) {
-    discountAmount = (coupon.discountPercent / 100) * cart.totalPrice;
-  }
-
-  cart.couponCode = coupon.code;
-  cart.discountAmount = discountAmount;
-  await cart.save();
-  await cart.calculateTotals();
-
-  await cart.save();
-
-  try {
-    await createAndSendNotification({
-      recipientId: userId,
-      recipientRole: "customer",
-      recipientEmail: req.user.email,
-      type: "COUPON_APPLIED",
-      title: "Coupon applied successfully",
-      message: `Coupon ${coupon.code} applied on your cart.`,
-      relatedEntity: {
-        entityType: "cart",
-        entityId: cart._id,
-      },
-      channels: ["in-app", "email"],
-      meta: {
-        couponCode: coupon.code,
-        discount: discountAmount,
-      },
-    });
-  } catch (e) {
-    console.error("COUPON_APPLIED notification failed", e);
-  }
-
-  return res
-    .status(200)
-    .json(
-        new ApiResponse(
-            true, 
-            "Coupon applied successfully", 
-            cart
-        )
-    );
+  return res.status(200).json(
+    new ApiResponse(
+      true,
+      "Coupon applied successfully",
+      cart
+    )
+  );
 });
 
 
@@ -285,42 +141,11 @@ const applyCoupon = asyncHandler(async (req, res) => {
 const getCartAnalytics = asyncHandler(async(req, res) =>{
 
     const {startDate, endDate} = req.body;
+    const analytics = await cartService.getCartAnalytics(
+        startDate,
+        endDate
+    )
 
-    const matchStage = {};
-
-    if(startDate || endDate){
-        matchStage.updatedAt = {};
-    }
-
-    if(startDate){
-        matchStage.updatedAt.$gte = new Date(startDate);
-    }
-    if(endDate){
-        matchStage.updatedAt.$lte = new Date(endDate);
-    }
-
-    const activeCarts = await Cart.countDocuments(matchStage);
-
-    const avgCartValue = await Cart.aggregate([
-
-        {
-            $match: matchStage
-
-        },
-        {
-            $group:{
-                _id:null,
-                avgTotal : {
-                    $avg: "$totalPrice"
-                }
-            }
-        },
-    ]);
-
-    const analytics = {
-        activeCarts,
-        avgCartValue: avgCartValue[0] ? avgCartValue[0].avgTotal : 0
-    };
     return res 
     .status(200)
     .json(
@@ -336,22 +161,9 @@ const getCartAnalytics = asyncHandler(async(req, res) =>{
 
 // coupon management
 const createCoupon = asyncHandler(async (req, res) => {
-  const data = req.body;
-  if (!data.code || !data.discountType || data.discountValue == null) {
-    throw new ApiError(400, "Required fields missing");
-  }
 
-  const exist = await Coupon.findOne({ code: data.code.toUpperCase() });
-  if (exist) {
-    throw new ApiError(400, "Coupon code already exists");
-  }
-
-  const coupon = new Coupon({
-    ...data,
-    code: data.code.toUpperCase(),
-  });
-
-  await coupon.save();
+  const coupon = await cartService.createCoupon(req.body);
+  
 
   return res
   .status(201)
@@ -367,19 +179,10 @@ const createCoupon = asyncHandler(async (req, res) => {
 
 // update coupon
  const updateCoupon = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const data = req.body;
-
-  const coupon = await Coupon.findById(id);
-  if (!coupon) {
-    throw new ApiError(404, "Coupon not found");
-  }
-
-  Object.assign(coupon, data);
-
-  if (data.code) coupon.code = data.code.toUpperCase();
-
-  await coupon.save();
+  const coupon = await cartService.updateCoupon(
+    req.params.id,
+    req.body
+  );
 
   return res
   .status(200)
@@ -398,12 +201,7 @@ const createCoupon = asyncHandler(async (req, res) => {
   const limit = parseInt(req.query.limit) || 20;
   const page = parseInt(req.query.page) || 1;
 
-  const coupons = await Coupon.find({})
-    .skip((page - 1) * limit)
-    .limit(limit)
-    .sort({ createdAt: -1 });
-
-  const totalCount = await Coupon.countDocuments();
+ const result = await cartService.listCoupons(page,limit);
 
   return res
   .status(200)
@@ -412,12 +210,7 @@ const createCoupon = asyncHandler(async (req, res) => {
         200,
         true, 
         "Coupons list", 
-        {
-            coupons,
-            totalCount,
-            page,
-            limit,
-        }
+        result
     )
   );
 });
@@ -425,19 +218,7 @@ const createCoupon = asyncHandler(async (req, res) => {
 // reset user cart
 const resetUserCart = asyncHandler(async(req, res) =>{
 
-    const {userId} = req.params;
-
-    if(!userId){
-        throw new ApiError(400, "User ID is required");
-    }
-
-    const cart =await Cart.findOne({user:userId});
-
-    if(!cart){
-        throw new ApiError(404, "Cart not found");
-    }
-
-    await cart.clearCart();
+   const cart = await cartService.resetUserCart(req.params.userId);
 
     return res
     .status(200)
