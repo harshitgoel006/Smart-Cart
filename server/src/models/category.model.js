@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import slugify from "slugify";
 
 const categorySchema = new mongoose.Schema(
   {
@@ -65,6 +66,11 @@ const categorySchema = new mongoose.Schema(
       default: false,
       index: true
     },
+    
+    rejectionReason: {
+      type: String,
+      default: ""
+    },
 
     status: {
       type: String,
@@ -106,27 +112,40 @@ const categorySchema = new mongoose.Schema(
 // SLUG + TREE PATH GENERATION
 //////////////////////////////////////////////////////////
 
-categorySchema.pre("save", async function (next) {
-  if (this.isModified("name")) {
-    const baseSlug = this.name
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-");
 
-    this.slug = `${baseSlug}-${Date.now()}`;
+categorySchema.pre("save", async function (next) {
+
+  // 🔹 Slug Generation
+  if (this.isModified("name")) {
+    const baseSlug = slugify(this.name, {
+      lower: true,
+      strict: true,
+      trim: true
+    });
+
+    const existing = await mongoose.model("Category").findOne({
+      slug: baseSlug,
+      _id: { $ne: this._id }
+    });
+
+    this.slug = existing
+      ? `${baseSlug}-${Date.now()}`
+      : baseSlug;
   }
 
+  // 🔹 Hierarchy Logic
   if (this.parent) {
-    const parent = await mongoose
-      .model("Category")
-      .findById(this.parent);
+    const parent = await mongoose.model("Category").findById(this.parent);
 
-    if (parent) {
-      this.level = parent.level + 1;
-      this.path = parent.path
-        ? `${parent.path}/${parent._id}`
-        : `${parent._id}`;
+    if (!parent) {
+      return next(new Error("Invalid parent category"));
     }
+
+    this.level = parent.level + 1;
+
+    this.path = parent.path
+      ? `${parent.path}/${parent._id}`
+      : `${parent._id}`;
   } else {
     this.level = 0;
     this.path = "";
@@ -140,7 +159,7 @@ categorySchema.pre("save", async function (next) {
 //////////////////////////////////////////////////////////
 
 categorySchema.pre(/^find/, function (next) {
-  this.where({ isDeleted: false, isActive: true });
+  this.where({ isDeleted: false });
   next();
 });
 

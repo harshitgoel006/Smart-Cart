@@ -407,6 +407,43 @@ REVIEW_REJECTED_CUSTOMER: {
     `,
   },
 
+  CATEGORY_APPROVED: {
+  subject: "Your category has been approved",
+  html: (d) => `
+    <h2>Category Approved 🎉</h2>
+    <p>Hello,</p>
+
+    <p>Your proposed category has been approved by the admin.</p>
+
+    <ul>
+      <li><strong>Category Name:</strong> ${d.categoryName || ""}</li>
+    </ul>
+
+    <p>You can now use this category for your products.</p>
+
+    <p>— SmartCart Team</p>
+  `,
+},
+
+CATEGORY_REJECTED: {
+  subject: "Your category proposal was rejected",
+  html: (d) => `
+    <h2>Category Proposal Update</h2>
+    <p>Hello,</p>
+
+    <p>Your proposed category has been reviewed by the admin.</p>
+
+    <ul>
+      <li><strong>Category Name:</strong> ${d.categoryName || ""}</li>
+      <li><strong>Reason:</strong> ${d.reason || "No reason provided"}</li>
+    </ul>
+
+    <p>You may review the feedback and submit a new proposal if needed.</p>
+
+    <p>— SmartCart Team</p>
+  `,
+},
+
   ESCALATION_CREATED_AGAINST_SELLER: {
     subject: "New escalation raised",
     html: (d) => `
@@ -530,6 +567,16 @@ LOW_RATING_REVIEW_ALERT: {
       <p>${d.message || ""}</p>
     `,
   },
+
+  CATEGORY_PROPOSED: {
+  subject: "New category proposal received",
+  html: (d) => `
+    <h2>New Category Proposal</h2>
+    <p>A seller has proposed a new category for approval.</p>
+    <p><strong>Category Name:</strong> ${d.categoryName || ""}</p>
+    <p>Please review this proposal in the admin dashboard.</p>
+  `,
+},
 
   PAYMENT_GATEWAY_ISSUE: {
     subject: "Payment gateway issue detected",
