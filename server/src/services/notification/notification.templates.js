@@ -1,4 +1,4 @@
-// utils/notificationEmailTemplates.js
+// services/notification/notification.templates.js
 
 const emailTemplates = {
   // ======================
@@ -592,160 +592,38 @@ LOW_RATING_REVIEW_ALERT: {
   },
 };
 
-// For Shipped orders
-export const orderShippedEmailTemplate = (order) => {
-  const tracking = order.items[0]?.shipment || {};
-  return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px;">
-      <h2 style="color: #2c3e50;">Order Shipped! 📦</h2>
-      <p>Hi ${order.user.fullname},</p>
-      <p>Your order #${order._id} has been shipped!</p>
-      <div style="background: #f8f9fa; padding: 15px; border-radius: 5px;">
-        <p><strong>Courier:</strong> ${tracking.courierName || 'N/A'}</p>
-        <p><strong>Tracking:</strong> ${tracking.trackingNumber || 'N/A'}</p>
-      </div>
-      <p>Thank you for ordering!</p>
-    </div>
-  `;
-};
-
-// For Delivered orders
-export const orderDeliveredEmailTemplate = (order) => {
-  return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px;">
-      <h2 style="color: #27ae60;">Order Delivered! ✅</h2>
-      <p>Hi ${order.user.fullname},</p>
-      <p>Your order #${order._id} has been delivered!</p>
-      <p><a href="${process.env.FRONTEND_URL}/orders/${order._id}/review" style="background: #3498db; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Leave a Review</a></p>
-      <p>Thank you!</p>
-    </div>
-  `;
-};
-
-// For Confirmed orders
-export const orderConfirmedEmailTemplate = (order) => {
-  return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px;">
-      <h2 style="color: #f39c12;">Order Confirmed! 🎉</h2>
-      <p>Hi ${order.user.fullname},</p>
-      <p>Your order #${order._id} has been confirmed by the seller.</p>
-      <p>It will ship within 1-2 days.</p>
-      <p>Thank you!</p>
-    </div>
-  `;
-};
-
-// For Packed orders
-export const orderPackedEmailTemplate = (order) => {
-  return `
-    <div style="font-family: Arial, sans-serif; max-width: 600px;">
-      <h2 style="color: #9b59b6;">Order Packed! 📦</h2>
-      <p>Hi ${order.user.fullname},</p>
-      <p>Your order #${order._id} is being packed and will ship very soon.</p>
-      <p>Thank you!</p>
-    </div>
-  `;
-};
 
 
 
-// ✅ INVOICE EMAIL TEMPLATE - ADD THIS AT THE END
-export const invoiceEmailTemplate = (orderData) => {
-  const itemsHTML = orderData.items
-    .map(
-      (item, idx) => `
-    <tr style="border-bottom: 1px solid #ddd;">
-      <td style="padding: 12px; text-align: center;">${idx + 1}</td>
-      <td style="padding: 12px;">${item.product?.name || "Product"}</td>
-      <td style="padding: 12px; text-align: center;">${item.quantity}</td>
-      <td style="padding: 12px; text-align: right;">₹${item.price?.toFixed(2)}</td>
-      <td style="padding: 12px; text-align: right;">₹${(item.quantity * item.price)?.toFixed(2)}</td>
-    </tr>
-  `
-    )
-    .join("");
+class TemplateResolver {
 
-  return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <style>
-        body { font-family: Arial, sans-serif; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; background: #f9f9f9; }
-        .invoice-box { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #2ecc71; padding-bottom: 20px; }
-        .header h1 { color: #2ecc71; margin: 0; font-size: 28px; }
-        .order-info { background: #f0f0f0; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
-        .order-info p { margin: 8px 0; font-size: 14px; }
-        .items-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        .items-table th { background: #f0f0f0; padding: 12px; text-align: left; border-bottom: 2px solid #333; font-weight: bold; }
-        .items-table td { padding: 12px; }
-        .summary { text-align: right; margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 5px; }
-        .summary-row { display: flex; justify-content: space-between; margin: 8px 0; font-size: 14px; }
-        .total-row { font-size: 18px; font-weight: bold; color: #2ecc71; border-top: 2px solid #333; padding-top: 10px; margin-top: 10px; }
-        .footer { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666; font-size: 12px; }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="invoice-box">
-          <div class="header">
-            <h1>📋 SmartCart Invoice</h1>
-          </div>
+  static resolve(event, meta = {}) {
 
-          <div class="order-info">
-            <p><strong>Order ID:</strong> ${orderData._id}</p>
-            <p><strong>Order Date:</strong> ${new Date(orderData.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</p>
-            <p><strong>Status:</strong> ${orderData.orderStatus || "Pending"}</p>
-          </div>
+    const tmpl = emailTemplates[event] || emailTemplates.DEFAULT;
 
-          <h3 style="margin-top: 25px;">Order Items</h3>
-          <table class="items-table">
-            <thead>
-              <tr>
-                <th>S.No</th>
-                <th>Product Name</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${itemsHTML}
-            </tbody>
-          </table>
+    const subject =
+      typeof tmpl.subject === "function"
+        ? tmpl.subject(meta)
+        : tmpl.subject;
 
-          <div class="summary">
-            <div class="summary-row">
-              <span>Subtotal:</span>
-              <span>₹${(orderData.subtotal || 0)?.toFixed(2)}</span>
-            </div>
-            <div class="summary-row">
-              <span>Shipping Charges:</span>
-              <span>₹${(orderData.shippingCost || 0)?.toFixed(2)}</span>
-            </div>
-            <div class="summary-row">
-              <span>Discount:</span>
-              <span>-₹${(orderData.discountAmount || 0)?.toFixed(2)}</span>
-            </div>
-            <div class="summary-row total-row">
-              <span>Final Amount:</span>
-              <span>₹${(orderData.finalAmount || 0)?.toFixed(2)}</span>
-            </div>
-          </div>
+    const html =
+      typeof tmpl.html === "function"
+        ? tmpl.html(meta)
+        : tmpl.html;
 
-          <div class="footer">
-            <p>Thank you for shopping with SmartCart! 🙏</p>
-            <p>If you have any questions, please contact our support team.</p>
-            <p style="margin-top: 15px; color: #999;">© 2025 SmartCart. All rights reserved.</p>
-          </div>
-        </div>
-      </div>
-    </body>
-    </html>
-  `;
-};
+    // Create clean text version for DB
+    const textMessage = html
+      .replace(/<[^>]*>?/gm, "") // strip html tags
+      .trim();
 
+    return {
+      title: subject,
+      message: textMessage,
+      emailSubject: subject,
+      emailHTML: html
+    };
+  }
 
-export { emailTemplates };
+}
+
+export default TemplateResolver;
