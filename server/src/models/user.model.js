@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
 const addressSchema = new mongoose.Schema(
   {
@@ -36,6 +37,7 @@ const sellerProfileSchema = new mongoose.Schema(
     bankAccountNumber: String,
     ifscCode: String,
     upiId: String,
+    storeBanner_public_id: String,
     isSellerApproved: { type: Boolean, default: false },
     isSellerSuspended: { type: Boolean, default: false },
     isSellerProfileComplete: { type: Boolean, default: false }
@@ -92,11 +94,21 @@ const userSchema = new mongoose.Schema(
     },
 
     refreshTokens: [
-      {
-        token: String,
-        createdAt: { type: Date, default: Date.now }
-      }
-    ],
+  {
+    tokenHash: {
+      type: String,
+      required: true
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
+    },
+    expiresAt: {
+      type: Date,
+      required: true
+    }
+  }
+],
 
     isActive: { type: Boolean, default: true, index: true },
     isDeleted: { type: Boolean, default: false, index: true },
@@ -110,6 +122,7 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 
 //////////////////////////////////////////////////////////
 // INDEX OPTIMIZATION
@@ -167,6 +180,14 @@ userSchema.methods.toJSON = function () {
   delete obj.password;
   delete obj.refreshTokens;
   return obj;
+};
+
+
+userSchema.methods.hashToken = function (token) {
+  return crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
 };
 
 export const User = mongoose.model("User", userSchema);

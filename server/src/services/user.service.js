@@ -6,70 +6,93 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken";
 import sendEmail from "../utils/sendEmail.js";
 import {OTP} from "../models/otp.model.js";
+import { VerifiedEmail } from "../models/verifiedEmail.model.js";
 import cloudinary from "cloudinary";
 import{Order} from "../models/order.model.js";
 import {Product} from "../models/product.model.js";
 import mongoose from "mongoose"
-import createAndSendNotification from "../utils/sendNotification.js";
+import NotificationService from "../services/notification/notification.service.js";
+
 
 export const userService = {
 
-//  This function will generate an access token and a refresh token for the user. It retrieves the user from the database using the provided user ID, generates the tokens using methods defined in the User model, saves the refresh token to the user's record in the database, and returns both tokens.
+async generateAccessAndRefreshToken(userId) {
+  const user = await User.findById(userId);
 
-  async generateAccessAndRefreshToken(userId) {
-    try {
-      const user = await User.findById(userId);
+  const accessToken = user.generateAccessToken();
+  const refreshToken = user.generateRefreshToken();
 
-      const accessToken = user.generateAccessToken();
-      const refreshToken = user.generateRefreshToken();
+  const tokenHash = user.hashToken(refreshToken);
 
-      user.refreshToken = refreshToken;
-      await user.save({ validateBeforeSave: false });
+  const expiryDate = new Date();
+  expiryDate.setDate(expiryDate.getDate() + 7); // match JWT expiry
 
-      return { accessToken, refreshToken };
-    } catch (error) {
-      throw new ApiError(
-        500,
-        "Something went wrong while generate access and refresh token"
-      );
-    }
-  },
+  user.refreshTokens.push({
+    tokenHash,
+    expiresAt: expiryDate
+  });
 
-//  This function will send an OTP to the user's email for verification during registration. It checks if the email and role are provided, verifies that the user does not already exist, generates a random OTP, saves it to the database, and sends an email with the OTP to the user.
+  await user.save({ validateBeforeSave: false });
 
-  async sendOtp(email, role){
+  return { accessToken, refreshToken };
+},
 
-    if(!(email && role)){
-        throw new ApiError(400, "Email and role are required");
-    }
+async sendOtp(email, role) {
 
-    const existingUser = await User.findOne({email});
+  if (!email || !role) {
+    throw new ApiError(400, "Email and role are required");
+  }
 
-    if(existingUser){
-        throw new ApiError(400, "User with this email is already exist");
-    }
+  email = email.toLowerCase().trim();
 
+  if (!["customer", "seller"].includes(role)) {
+    throw new ApiError(403, "Invalid role selection");
+  }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    await OTP.deleteMany({email}); // Clear any existing OTP for the email
-    await OTP.create({email, otp});
+  const existingUser = await User.findOne({ email });
 
-    const subject = "Verify your email to complete registration - SmartCart";
-    const html = `<p>Hello 👋,</p>
-                  <p>Thank you for choosing <strong>SmartCart</strong>.</p>
-                  <p>Your One-Time Password (OTP) to complete your sign-up is:</p>
-                  <h2 style="color: #007bff;">${otp}</h2>
-                  <p>This OTP is valid for <strong>1 minutes</strong>. Please do not share this code with anyone.</p>
-                  <p>If you did not initiate this request, please ignore this email.</p>
-                  <p>Regards,<br> Team SmartCart</p>`;
+  if (existingUser) {
+    throw new ApiError(400, "User with this email already exists");
+  }
 
-    await sendEmail(email, subject, html);
-  },
+  // Prevent OTP spam (cooldown 60 sec)
+  const recentOtp = await OTP.findOne({
+    email,
+    purpose: "email_verification",
+    createdAt: { $gt: new Date(Date.now() - 60 * 1000) }
+  });
 
+  if (recentOtp) {
+    throw new ApiError(429, "Please wait before requesting another OTP");
+  }
 
-//  This function will handle the user registration process. It validates the input data, checks for existing users, uploads the avatar to Cloudinary, creates a new user in the database, and sends a notification to the admin about the new registration.
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-  async registerUser({
+  await OTP.deleteMany({
+    email,
+    purpose: "email_verification"
+  });
+
+  await OTP.create({
+    email,
+    otpHash: otp,
+    purpose: "email_verification",
+    role
+  });
+
+  const subject = "Verify your email - SmartCart";
+
+  const html = `
+    <p>Hello 👋,</p>
+    <p>Your OTP for email verification is:</p>
+    <h2>${otp}</h2>
+    <p>This OTP is valid for 5 minutes.</p>
+  `;
+
+  await sendEmail(email, subject, html);
+},
+
+async registerUser({
     email, username, fullname, password, role, phone, files
   }) {
     if (!email || !fullname || !username || !password || !role || !phone) {
@@ -90,6 +113,16 @@ export const userService = {
 
     const avatar = await uploadOnCloudinary(avatarLocalPath);
 
+    const verified = await VerifiedEmail.findOne({ email });
+
+if (!verified) {
+  throw new ApiError(403, "Email not verified via OTP");
+}
+
+if (verified.role !== role) {
+  throw new ApiError(403, "Role mismatch with verified email");
+}
+
     const user = await User.create({
       email,
       username,
@@ -101,415 +134,682 @@ export const userService = {
       isEmailVerified: true
     });
 
+    await VerifiedEmail.deleteOne({ email });
+
     const createdUser = await User.findById(user._id).select("-password -refreshToken");
     if (!createdUser) {
       throw new ApiError(500, "Something went wrong while registering user");
     }
+    const admins = await User.find({ role: "admin", isActive: true });
 
     try {
-      await createAndSendNotification({
-        recipientId: "6946fbc63074456aa4c2906c",
-        recipientRole: "admin",
-        recipientEmail: "harshitgoel885@gmail.com",
-        type: "NEW_USER_REGISTERED",
-        title: "New user registered",
-        message: `New ${role} registered: ${fullname} (${email})`,
-        relatedEntity: { entityType: "user", entityId: user._id },
-        channels: ["in-app", "email"],
-        meta: {
-          userId: user._id,
-          role,
-          email,
-        },
-      });
+      for (const admin of admins) {
+  await NotificationService.emit("NEW_USER_REGISTERED", {
+    recipient: admin._id,
+    recipientRole: "admin",
+    category: "account",
+    entityType: "User",
+    entityId: user._id,
+    priority: "medium",
+    meta: {
+      role,
+      fullname,
+      email
+    },
+    email: admin.email
+  });
+}
     } catch (e) {}
 
     return createdUser;
-  },
+},
 
+async verifyOtp(email, otp) {
 
-//   This function will verify the OTP sent to user's email during registration. It checks if the OTP is valid and not expired, and then deletes it from the database.
-
-  async verifyOtp(email, otp) {
-    if (!email || !otp) {
-    throw new ApiError(400, "Email and OTP are required");
-  }
-  const existingOtp = await OTP.findOne({ email });
-  if (!existingOtp || existingOtp.otp !== otp) {
-    throw new ApiError(400, "Invalid  OTP");
+  if (!email || !otp) {
+    throw new ApiError(400, "Email and OTP required");
   }
 
-  if (existingOtp.expiresAt < Date.now()) {
-    await OTP.deleteOne({ email });
-    throw new ApiError(400, "OTP has expired. Please request a new one.");
+  email = email.toLowerCase().trim();
+
+  const record = await OTP.findOne({
+    email,
+    purpose: "email_verification"
+  }).select("+otpHash");
+
+  if (!record) {
+    throw new ApiError(400, "OTP expired or not found");
   }
 
-  await OTP.deleteOne({ email });
-  },
-
-// This function will handle the user login process. It validates the input data, checks if the user exists and is active, verifies the password, checks if the email is verified, and returns the user data if all checks pass.
-
-  async loginUser(email, password) {
-    if (!email) {
-      throw new ApiError(400, " email is required");
-    }
-
-    const user = await User.findOne({ email }).select("+password +refreshToken");
-    if (!user) {
-      throw new ApiError(404, "User does not exist");
-    }
-
-    if (!user.isActive || user.isDeleted) {
-      throw new ApiError(403, "Your account is inactive or deleted. Contact support.");
-    }
-
-    if (user.role === "seller") {
-      if (!user.isSellerApproved) {
-        throw new ApiError(403, "Seller account is not approved yet");
-      }
-      if (user.isSellerSuspended) {
-        throw new ApiError(403, "Your account is suspended. Contact support.");
-      }
-    }
-
-    const isPasswordValid = await user.isPasswordCorrect(password);
-    if (!isPasswordValid) {
-      throw new ApiError(401, "Invalid user credentials");
-    }
-
-    if (!user.isEmailVerified) {
-      throw new ApiError(401, "Email not verified yet. Please verify your email first.");
-    }
-
-    return user; 
-  },
-
-//  This function will handle the user logout process. It takes the user ID as input, finds the user in the database, and sets the refresh token to undefined, effectively logging the user out.
-  async logoutUser(userId) {
-    await User.findByIdAndUpdate(
-      userId,
-      {
-        $set: {
-          refreshToken: undefined,
-        },
-      },
-      {
-        new: true,
-      }
-    );
-    // No return (same as original)
-  },
-
-
-  async changeCurrentPassword(userId, oldPassword, newPassword) {
-    if (!(oldPassword && newPassword)) {
-      throw new ApiError(400, "Old password and new password are required");
-    }
-
-    const user = await User.findById(userId).select("+password");
-
-    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword);
-    if (!isPasswordCorrect) {
-      throw new ApiError(401, "Old password is incorrect");
-    }
-
-    const isSame = await user.isPasswordCorrect(newPassword);
-    if (isSame) {
-      throw new ApiError(400, "Old and new password cannot be the same");
-    }
-
-    user.password = newPassword;
-    await user.save({ validateBeforeSave: false });
-
-    try {
-      await createAndSendNotification({
-        recipientId: user._id,
-        recipientRole: user.role,
-        recipientEmail: user.email,
-        type: "PASSWORD_CHANGED",
-        title: "Password changed successfully",
-        message: "Your password was changed from your account settings.",
-        relatedEntity: { entityType: "user", entityId: user._id },
-        channels: ["in-app", "email"],
-        meta: {
-          userId: user._id,
-        },
-      });
-    } catch (e) {
-      console.error("Failed to send PASSWORD_CHANGED notification", e);
-    }
-
-    // no return (same as original logic)
-  },
-
-  async sendResetOtp(email) {
-    if (!email) {
-      throw new ApiError(400, "Email is required");
-    }
-
-    const existingUser = await User.findOne({ email });
-    if (!existingUser) {
-      throw new ApiError(400, "User with this email is not exist");
-    }
-
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    await OTP.deleteMany({ email });
-    await OTP.create({ email, otp });
-
-    const subject = "OTP for resetting your SmartCart password";
-    const html = `<p>Hello 👋,</p>
-
-<p>We received a request to reset the password for your <strong>SmartCart</strong> account.</p>
-
-<p>Your One-Time Password (OTP) for password reset is:</p>
-
-<h2 style="color: #d9534f;">${otp}</h2>
-
-<p>This OTP is valid for <strong>10 minutes</strong>. Please do not share it with anyone to keep your account secure.</p>
-
-<p>If you did not request a password reset, please contact our support team immediately or ignore this email.</p>
-
-<p>Stay safe,<br>
-Team SmartCart</p>`;
-
-    await sendEmail(email, subject, html);
-  },
-
-  async verifyResetOtp(email, otp) {
-    if (!email || !otp) {
-      throw new ApiError(400, "Email and OTP are required");
-    }
-
-    const existingOtp = await OTP.findOne({ email });
-    if (!existingOtp || existingOtp.otp !== otp) {
-      throw new ApiError(400, "Invalid  OTP");
-    }
-
-    if (existingOtp.expiresAt < Date.now()) {
-      await OTP.deleteOne({ email });
-      throw new ApiError(400, "OTP has expired. Please request a new one.");
-    }
-
-    await OTP.deleteOne({ email });
-  },
-
-  async resetPassword(email, newPassword) {
-    if (!(email && newPassword)) {
-      throw new ApiError(400, "Email and new password are required");
-    }
-
-    const user = await User.findOne({ email }).select("+password");
-    if (!user) {
-      throw new ApiError(404, "User does not exist");
-    }
-
-    const isSame = await user.isPasswordCorrect(newPassword);
-    if (isSame) {
-      throw new ApiError(400, "New password cannot be the same as the old password");
-    }
-
-    user.password = newPassword;
-    await user.save({ validateBeforeSave: false });
-
-    try {
-      await createAndSendNotification({
-        recipientId: user._id,
-        recipientRole: user.role,
-        recipientEmail: user.email,
-        type: "PASSWORD_RESET",
-        title: "Password reset successfully",
-        message: "Your password was reset using the OTP password reset flow.",
-        relatedEntity: { entityType: "user", entityId: user._id },
-        channels: ["in-app", "email"],
-        meta: {
-          userId: user._id,
-        },
-      });
-    } catch (e) {
-      console.error("Failed to send PASSWORD_RESET notification", e);
-    }
-  },
-
-
-  async refreshAccessToken(incomingRefreshToken) {
-    if (!incomingRefreshToken) {
-      throw new ApiError(400, "Refresh token is required");
-    }
-
-    try {
-      const decodedToken = jwt.verify(
-        incomingRefreshToken,
-        process.env.REFRESH_TOKEN_SECRET
-      );
-
-      const user = await User.findById(decodedToken?._id);
-      if (!user) {
-        throw new ApiError(404, "Invalid refresh token");
-      }
-
-      if (!user.refreshToken || user.refreshToken !== incomingRefreshToken.trim()) {
-        throw new ApiError(401, "Refresh token is expired or invalid");
-      }
-
-      return user; // token rotate controller karega
-    } catch (error) {
-      throw new ApiError(401, error?.message || "Invalid refresh token");
-    }
-  },
-
-
-
-  async updateUserAvatar(userId, file) {
-    const avatarLocalPath = file?.path;
-
-    if (!avatarLocalPath) {
-      return null; // controller same response bhejega
-    }
-
-    const user = await User.findById(userId);
-
-    if (user?.avatar_public_id) {
-      await cloudinary.v2.uploader.destroy(user.avatar_public_id);
-    }
-
-    const avatar = await uploadOnCloudinary(avatarLocalPath);
-
-    if (!avatar?.url || !avatar?.public_id) {
-      throw new ApiError(400, "Failed to upload new avatar");
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      {
-        $set: {
-          avatar: avatar.url,
-          avatar_public_id: avatar.public_id,
-        },
-      },
-      { new: true }
-    ).select("-password -refreshToken");
-
-    return updatedUser;
-  },
-
-  async updateAddress(userId, data) {
-  const { label, street, city, state, country, pinCode, isDefault } = data;
-
-  if (!(label && street && city && state && country && pinCode && isDefault)) {
-    throw new ApiError(400, "All fields are required");
+  if (record.expiresAt < Date.now()) {
+    await OTP.deleteOne({ _id: record._id });
+    throw new ApiError(400, "OTP expired");
   }
 
-  const user = await User.findById(userId);
+  if (record.attempts >= record.maxAttempts) {
+    await OTP.deleteOne({ _id: record._id });
+    throw new ApiError(429, "Too many attempts");
+  }
+
+  const valid = await record.verifyOTP(otp);
+
+  if (!valid) {
+    record.attempts += 1;
+    await record.save();
+    throw new ApiError(400, "Invalid OTP");
+  }
+
+  // Save temporary verified email
+  await VerifiedEmail.findOneAndUpdate(
+    { email },
+    {
+      email,
+      role: "customer", // IMPORTANT: you must store role in OTP if you want to enforce role locking
+      expiresAt: new Date(Date.now() + 10 * 60 * 1000)
+    },
+    { upsert: true }
+  );
+
+  await OTP.deleteOne({ _id: record._id });
+},
+
+async loginUser(email, password) {
+
+  if (!email || !password) {
+    throw new ApiError(400, "Email and password are required");
+  }
+
+  email = email.toLowerCase().trim();
+
+  const user = await User.findOne({ email })
+    .select("+password +refreshTokens");
+
+  if (!user) {
+    throw new ApiError(401, "Invalid credentials");
+  }
+
+  if (!user.isActive || user.isDeleted) {
+    throw new ApiError(403, "Account inactive");
+  }
+
+  if (user.role === "seller") {
+
+    if (!user.sellerProfile?.isSellerApproved) {
+      throw new ApiError(403, "Seller account not approved");
+    }
+
+    if (user.sellerProfile?.isSellerSuspended) {
+      throw new ApiError(403, "Seller account suspended");
+    }
+  }
+
+  const valid = await user.isPasswordCorrect(password);
+
+  if (!valid) {
+    throw new ApiError(401, "Invalid credentials");
+  }
+
+  if (!user.isEmailVerified) {
+    throw new ApiError(401, "Email not verified");
+  }
+
+  // 🔹 Cleanup expired refresh tokens
+  const now = new Date();
+  user.refreshTokens = user.refreshTokens.filter(
+    t => t.expiresAt > now
+  );
+
+  await user.save({ validateBeforeSave: false });
+
+  // 🔹 Generate new tokens
+  const { accessToken, refreshToken } =
+    await this.generateAccessAndRefreshToken(user._id);
+
+  const safeUser = await User.findById(user._id)
+    .select("-password -refreshTokens");
+
+  return {
+    user: safeUser,
+    accessToken,
+    refreshToken
+  };
+},
+
+async logoutUser(userId, refreshToken) {
+
+  if (!refreshToken) {
+    throw new ApiError(400, "Refresh token required");
+  }
+
+  const user = await User.findById(userId)
+    .select("+refreshTokens");
+
   if (!user) {
     throw new ApiError(404, "User not found");
   }
 
-  const updatedAddress = {
+  const tokenHash = user.hashToken(refreshToken);
+
+  const tokenExists = user.refreshTokens.some(
+    t => t.tokenHash === tokenHash
+  );
+
+  if (!tokenExists) {
+    // Token already revoked or invalid
+    return;
+  }
+
+  user.refreshTokens = user.refreshTokens.filter(
+    t => t.tokenHash !== tokenHash
+  );
+
+  await user.save({ validateBeforeSave: false });
+},
+
+async changeCurrentPassword(userId, oldPassword, newPassword) {
+
+  if (!oldPassword || !newPassword) {
+    throw new ApiError(400, "Old and new password required");
+  }
+
+  if (oldPassword === newPassword) {
+    throw new ApiError(400, "New password cannot be same as old password");
+  }
+
+  const user = await User.findById(userId)
+    .select("+password +refreshTokens");
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const valid = await user.isPasswordCorrect(oldPassword);
+
+  if (!valid) {
+    throw new ApiError(401, "Old password incorrect");
+  }
+
+  user.password = newPassword;
+
+  user.refreshTokens = [];
+
+  await user.save({ validateBeforeSave: false });
+
+  try {
+    await NotificationService.emit("PASSWORD_CHANGED", {
+      recipient: user._id,
+      recipientRole: user.role,
+      category: "security",
+      entityType: "User",
+      entityId: user._id,
+      priority: "high",
+      meta: {
+        fullname: user.fullname
+      },
+      email: user.email
+    });
+  } catch (e) {
+    console.error("Password change notification failed", e);
+  }
+},
+
+async sendResetOtp(email) {
+
+  if (!email) {
+    throw new ApiError(400, "Email is required");
+  }
+
+  email = email.toLowerCase().trim();
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return;
+  }
+
+  const recentOtp = await OTP.findOne({
+    email,
+    purpose: "password_reset",
+    createdAt: { $gt: new Date(Date.now() - 60 * 1000) }
+  });
+
+  if (recentOtp) {
+    throw new ApiError(429, "Please wait before requesting another OTP");
+  }
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  await OTP.deleteMany({
+    email,
+    purpose: "password_reset"
+  });
+
+  await OTP.create({
+    email,
+    otpHash: otp,
+    purpose: "password_reset"
+  });
+
+  const subject = "Password Reset OTP - SmartCart";
+
+  const html = `
+    <p>Hello ${user.fullname},</p>
+    <p>Your OTP for password reset is:</p>
+    <h2>${otp}</h2>
+    <p>This OTP is valid for 5 minutes.</p>
+    <p>If you did not request this, ignore this email.</p>
+  `;
+
+  await sendEmail(email, subject, html);
+},
+
+async verifyResetOtp(email, otp) {
+
+  if (!email || !otp) {
+    throw new ApiError(400, "Email and OTP required");
+  }
+
+  email = email.toLowerCase().trim();
+
+  const record = await OTP.findOne({
+    email,
+    purpose: "password_reset"
+  }).select("+otpHash");
+
+  if (!record) {
+    throw new ApiError(400, "OTP expired or invalid");
+  }
+
+  if (record.expiresAt < Date.now()) {
+    await OTP.deleteOne({ _id: record._id });
+    throw new ApiError(400, "OTP expired");
+  }
+
+  if (record.attempts >= record.maxAttempts) {
+    await OTP.deleteOne({ _id: record._id });
+    throw new ApiError(429, "Too many attempts. Request new OTP.");
+  }
+
+  const valid = await record.verifyOTP(otp);
+
+  if (!valid) {
+    record.attempts += 1;
+    await record.save();
+    throw new ApiError(400, "Invalid OTP");
+  }
+
+  // ✅ DO NOT DELETE YET
+  // Let resetPassword delete it after successful password change
+
+  return true;
+},
+
+async resetPassword(email, otp, newPassword) {
+
+  if (!email || !otp || !newPassword) {
+    throw new ApiError(400, "Email, OTP and new password required");
+  }
+
+  email = email.toLowerCase().trim();
+
+  const record = await OTP.findOne({
+    email,
+    purpose: "password_reset"
+  }).select("+otpHash");
+
+  if (!record) {
+    throw new ApiError(400, "OTP expired or invalid");
+  }
+
+  if (record.expiresAt < Date.now()) {
+    await OTP.deleteOne({ _id: record._id });
+    throw new ApiError(400, "OTP expired");
+  }
+
+  if (record.attempts >= record.maxAttempts) {
+    await OTP.deleteOne({ _id: record._id });
+    throw new ApiError(429, "Too many attempts");
+  }
+
+  const valid = await record.verifyOTP(otp);
+
+  if (!valid) {
+    record.attempts += 1;
+    await record.save();
+    throw new ApiError(400, "Invalid OTP");
+  }
+
+  const user = await User.findOne({ email })
+    .select("+password +refreshTokens");
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const isSame = await user.isPasswordCorrect(newPassword);
+
+  if (isSame) {
+    throw new ApiError(400, "New password cannot be same as old password");
+  }
+
+  user.password = newPassword;
+
+  user.refreshTokens = [];
+
+  await user.save({ validateBeforeSave: false });
+
+  await OTP.deleteOne({ _id: record._id });
+
+  try {
+    await NotificationService.emit("PASSWORD_RESET", {
+      recipient: user._id,
+      recipientRole: user.role,
+      category: "security",
+      entityType: "User",
+      entityId: user._id,
+      priority: "high",
+      meta: {
+        fullname: user.fullname
+      },
+      email: user.email
+    });
+  } catch (e) {
+    console.error("Password reset notification failed", e);
+  }
+},
+
+
+async refreshAccessToken(incomingRefreshToken) {
+
+  if (!incomingRefreshToken) {
+    throw new ApiError(400, "Refresh token required");
+  }
+
+  let decoded;
+
+  try {
+    decoded = jwt.verify(
+      incomingRefreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+  } catch {
+    throw new ApiError(401, "Invalid refresh token");
+  }
+
+  const user = await User.findById(decoded._id)
+    .select("+refreshTokens");
+
+  if (!user) {
+    throw new ApiError(401, "Invalid refresh token");
+  }
+
+  const incomingHash = user.hashToken(incomingRefreshToken);
+
+  const tokenIndex = user.refreshTokens.findIndex(
+    t => t.tokenHash === incomingHash
+  );
+
+  // 🔥 REUSE ATTACK DETECTED
+  if (tokenIndex === -1) {
+
+    // Possible token theft
+    user.refreshTokens = [];
+    await user.save({ validateBeforeSave: false });
+
+    throw new ApiError(
+      401,
+      "Refresh token reuse detected. All sessions revoked."
+    );
+  }
+
+  // Remove used token (rotation)
+  user.refreshTokens.splice(tokenIndex, 1);
+
+  await user.save({ validateBeforeSave: false });
+
+  // Issue new tokens
+  const accessToken = user.generateAccessToken();
+  const newRefreshToken = user.generateRefreshToken();
+
+  const newHash = user.hashToken(newRefreshToken);
+
+  const expiryDate = new Date();
+  expiryDate.setDate(expiryDate.getDate() + 7);
+
+  user.refreshTokens.push({
+    tokenHash: newHash,
+    expiresAt: expiryDate
+  });
+
+  await user.save({ validateBeforeSave: false });
+
+  return {
+    user,
+    accessToken,
+    refreshToken: newRefreshToken
+  };
+},
+
+async updateUserAvatar(userId, file) {
+
+  if (!file) {
+    throw new ApiError(400, "Avatar file required");
+  }
+
+  const user = await User.findById(userId)
+    .select("+avatar_public_id");
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  // 🔹 Delete old avatar safely
+  if (user.avatar_public_id) {
+    try {
+      await cloudinary.v2.uploader.destroy(user.avatar_public_id);
+    } catch (err) {
+      console.error("Old avatar delete failed", err);
+    }
+  }
+
+  // 🔹 Upload new avatar
+  const uploaded = await uploadOnCloudinary(file.path);
+
+  if (!uploaded?.url || !uploaded?.public_id) {
+    throw new ApiError(400, "Avatar upload failed");
+  }
+
+  user.avatar = uploaded.url;
+  user.avatar_public_id = uploaded.public_id;
+
+  await user.save({ validateBeforeSave: false });
+
+  const safeUser = await User.findById(userId)
+    .select("-password -refreshTokens");
+
+  return safeUser;
+},
+
+async updateAddress(userId, data) {
+
+  const {
+    label,
+    street,
+    city,
+    state,
+    country,
+    pincode,
+    isDefault
+  } = data;
+
+  if (!label || !street || !city || !state || !pincode) {
+    throw new ApiError(400, "Required address fields missing");
+  }
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  // 🔹 Limit max addresses
+  if (!user.addresses) {
+    user.addresses = [];
+  }
+
+  if (
+    user.addresses.length >= 5 &&
+    !user.addresses.find(addr => addr.label === label)
+  ) {
+    throw new ApiError(400, "Maximum 5 addresses allowed");
+  }
+
+  // 🔹 If setting default → unset others
+  if (isDefault) {
+    user.addresses.forEach(addr => {
+      addr.isDefault = false;
+    });
+  }
+
+  const existingIndex = user.addresses.findIndex(
+    addr => addr.label === label
+  );
+
+  const newAddress = {
     label,
     street,
     city,
     state,
     country: country || "India",
-    pincode: pinCode,
-    isDefault: isDefault || false,
+    pincode,
+    isDefault: !!isDefault
   };
 
-  if (user.address.length === 0) {
-    user.address.push(updatedAddress);
+  if (existingIndex !== -1) {
+    user.addresses[existingIndex] = newAddress;
   } else {
-    user.address[0] = updatedAddress;
+    user.addresses.push(newAddress);
   }
 
   await user.save();
 
-  return user.address[0];
+  return user.addresses;
 },
 
-  async updateAccountDetails(userId, data) {
+async updateAccountDetails(userId, data) {
+
   const { fullname, username, phone, email } = data;
 
-  if (!(fullname || username || phone || email)) {
-    throw new ApiError(400, "At least one field is required to update");
+  if (!fullname && !username && !phone && !email) {
+    throw new ApiError(400, "At least one field required to update");
   }
 
-  const user = await User.findById(userId).select("-password -refreshToken");
+  const user = await User.findById(userId)
+    .select("-password -refreshTokens");
+
   if (!user) {
     throw new ApiError(404, "User not found");
   }
 
-  if (email && email !== user.email) {
-    const emailExists = await User.findOne({ email });
-    if (emailExists && emailExists._id.toString() !== userId.toString()) {
-      throw new ApiError(400, "Email is already taken");
-    }
-  }
-
+  // 🔹 Username uniqueness
   if (username && username !== user.username) {
+
     const usernameExists = await User.findOne({ username });
+
     if (usernameExists && usernameExists._id.toString() !== userId.toString()) {
-      throw new ApiError(400, "Username is already taken");
+      throw new ApiError(400, "Username already taken");
     }
+
+    user.username = username;
   }
 
-  const updatedUser = await User.findByIdAndUpdate(
-    userId,
-    {
-      $set: {
-        fullname: fullname || user.fullname,
-        username: username || user.username,
-        phone: phone || user.phone,
-        email: email || user.email,
-      },
-    },
-    { new: true }
-  ).select("-password -refreshToken");
+  if (email && email !== user.email) {
+
+    email = email.toLowerCase().trim();
+
+    const emailExists = await User.findOne({ email });
+
+    if (emailExists && emailExists._id.toString() !== userId.toString()) {
+      throw new ApiError(400, "Email already taken");
+    }
+
+    user.email = email;
+    user.isEmailVerified = false;
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    await OTP.deleteMany({
+      email,
+      purpose: "email_verification"
+    });
+
+    await OTP.create({
+      email,
+      otpHash: otp,
+      purpose: "email_verification"
+    });
+
+    await sendEmail(
+      email,
+      "Verify your new email - SmartCart",
+      `<h2>Your OTP: ${otp}</h2>`
+    );
+  }
+
+  if (fullname) user.fullname = fullname;
+  if (phone) user.phone = phone;
+
+  await user.save();
 
   try {
-    await createAndSendNotification({
-      recipientId: updatedUser._id,
-      recipientRole: updatedUser.role,
-      recipientEmail: updatedUser.email,
-      type: "PROFILE_UPDATED",
-      title: "Profile updated",
-      message: "Your account details were updated.",
-      relatedEntity: { entityType: "user", entityId: updatedUser._id },
-      channels: ["in-app","email"],
+    await NotificationService.emit("PROFILE_UPDATED", {
+      recipient: user._id,
+      recipientRole: user.role,
+      category: "account",
+      entityType: "User",
+      entityId: user._id,
+      priority: "medium",
       meta: {
-        userId: updatedUser._id,
+        fullname: user.fullname
       },
+      email: user.email
     });
   } catch (e) {
-    console.error("Failed to send PROFILE_UPDATED notification", e);
+    console.error("PROFILE_UPDATED notification failed", e);
   }
 
-  return updatedUser;
+  return user;
 },
 
-
-
-async getSellerProfile(userId, role) {
-  if (!userId || role !== "seller") {
-    throw new ApiError(403, "Acess denied. Only seller can access ");
-  }
+async getSellerProfile(userId) {
 
   const seller = await User.findById(userId)
-    .select("-password -refreshToken -otp");
+    .select("-password -refreshTokens");
 
   if (!seller) {
     throw new ApiError(404, "Seller not found");
   }
 
-  return seller;
+  if (seller.role !== "seller") {
+    throw new ApiError(403, "Only sellers can access this resource");
+  }
+
+  return {
+    basicInfo: {
+      fullname: seller.fullname,
+      email: seller.email,
+      username: seller.username,
+      phone: seller.phone,
+      avatar: seller.avatar
+    },
+    sellerProfile: seller.sellerProfile
+  };
 },
 
 async updateSellerProfile(userId, data, file) {
-  const {
-    fullname, email, username, phone,
-    shopName, shopAddress, gstNumber, businessType,
-    accountHolderName, bankAccountNumber, ifscCode, upiId
-  } = data;
 
-  const seller = await User.findById(userId);
+  const seller = await User.findById(userId)
+    .select("+sellerProfile");
 
   if (!seller) {
     throw new ApiError(404, "Seller not found");
@@ -519,293 +819,504 @@ async updateSellerProfile(userId, data, file) {
     throw new ApiError(403, "Only sellers can update seller profile");
   }
 
-  if (fullname) seller.fullname = fullname;
-  if (email) seller.email = email;
-  seller.isEmailVerified = false;
-  if (username) seller.username = username;
-  if (phone) seller.phone = phone;
+  if (!seller.sellerProfile) {
+    seller.sellerProfile = {};
+  }
 
-  if (shopName) seller.shopName = shopName;
-  if (shopAddress) seller.shopAddress = shopAddress;
-  if (gstNumber) seller.gstNumber = gstNumber;
-  if (businessType) seller.businessType = businessType;
-  if (accountHolderName) seller.accountHolderName = accountHolderName;
-  if (bankAccountNumber) seller.bankAccountNumber = bankAccountNumber;
-  if (ifscCode) seller.ifscCode = ifscCode;
-  if (upiId) seller.upiId = upiId;
+  const profile = seller.sellerProfile;
 
+  // 🔹 Basic user fields
+  if (data.fullname) seller.fullname = data.fullname;
+
+  if (data.username && data.username !== seller.username) {
+
+    const exists = await User.findOne({ username: data.username });
+
+    if (exists && exists._id.toString() !== userId.toString()) {
+      throw new ApiError(400, "Username already taken");
+    }
+
+    seller.username = data.username;
+  }
+
+  if (data.phone) seller.phone = data.phone;
+
+  // 🔹 Email change (require verification)
+  if (data.email && data.email !== seller.email) {
+
+    const email = data.email.toLowerCase().trim();
+
+    const exists = await User.findOne({ email });
+
+    if (exists && exists._id.toString() !== userId.toString()) {
+      throw new ApiError(400, "Email already taken");
+    }
+
+    seller.email = email;
+    seller.isEmailVerified = false;
+
+    // Send OTP for verification
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    await OTP.deleteMany({
+      email,
+      purpose: "email_verification"
+    });
+
+    await OTP.create({
+      email,
+      otpHash: otp,
+      purpose: "email_verification"
+    });
+
+    await sendEmail(
+      email,
+      "Verify your new email - SmartCart",
+      `<h2>Your OTP: ${otp}</h2>`
+    );
+  }
+
+  // 🔹 Nested sellerProfile updates
+  const fields = [
+    "shopName",
+    "shopAddress",
+    "gstNumber",
+    "businessType",
+    "accountHolderName",
+    "bankAccountNumber",
+    "ifscCode",
+    "upiId"
+  ];
+
+  fields.forEach(field => {
+    if (data[field]) {
+      profile[field] = data[field];
+    }
+  });
+
+  // 🔹 Banner upload
   if (file) {
-    if (seller.storeBanner) {
-      await cloudinary.v2.uploader.destroy(seller.storeBanner_public_id);
+
+    if (profile.storeBanner_public_id) {
+      try {
+        await cloudinary.v2.uploader.destroy(
+          profile.storeBanner_public_id
+        );
+      } catch (err) {
+        console.error("Old banner delete failed", err);
+      }
     }
 
-    const uploadResult = await uploadOnCloudinary(file.path);
+    const uploaded = await uploadOnCloudinary(file.path);
 
-    if (!uploadResult.url || !uploadResult.public_id) {
-      throw new ApiError(400, "Failed to upload new store Banner");
+    if (!uploaded?.url || !uploaded?.public_id) {
+      throw new ApiError(400, "Banner upload failed");
     }
 
-    seller.storeBanner = uploadResult.url;
-    seller.storeBanner_public_id = uploadResult.public_id;
+    profile.storeBanner = uploaded.url;
+    profile.storeBanner_public_id = uploaded.public_id;
   }
 
-  const allFieldsFilled =
-    seller.shopName &&
-    seller.shopAddress &&
-    seller.gstNumber &&
-    seller.businessType &&
-    seller.accountHolderName &&
-    seller.bankAccountNumber &&
-    seller.ifscCode &&
-    seller.upiId &&
-    seller.storeBanner;
+  // 🔹 Profile completeness check
+  const requiredFields = [
+    profile.shopName,
+    profile.shopAddress,
+    profile.gstNumber,
+    profile.businessType,
+    profile.accountHolderName,
+    profile.bankAccountNumber,
+    profile.ifscCode,
+    profile.upiId,
+    profile.storeBanner
+  ];
 
-  if (allFieldsFilled) {
-    seller.isSellerProfileComplete = true;
-  } else {
-    seller.isSellerProfileComplete = false;
-  }
+  profile.isSellerProfileComplete = requiredFields.every(Boolean);
 
   await seller.save();
 
-  try {
-    await createAndSendNotification({
-      recipientId: seller._id,
-      recipientRole: "seller",
-      recipientEmail: seller.email,
-      type: "SELLER_PROFILE_UPDATED",
-      title: "Store profile updated",
-      message:
-        "Your seller/store profile has been updated. If you changed business or bank details, they may be reviewed.",
-      relatedEntity: { entityType: "user", entityId: seller._id },
-      channels: ["in-app", "email"],
-      meta: {
-        userId: seller._id,
-      },
-    });
-  } catch (e) {
-    console.error("Failed to send SELLER_PROFILE_UPDATED notification", e);
-  }
-
-  return seller;
+  return {
+    basicInfo: {
+      fullname: seller.fullname,
+      email: seller.email,
+      username: seller.username,
+      phone: seller.phone,
+      avatar: seller.avatar
+    },
+    sellerProfile: seller.sellerProfile
+  };
 },
 
 async getProductWiseBreakdown(sellerId) {
-    const data = await Order.aggregate([
-      { $unwind: "$items" },
-      { $match: { "items.seller": new mongoose.Types.ObjectId(sellerId) } },
-      {
-        $group: {
-          _id: "$items.product",
-          totalUnitsSold: { $sum: "$items.quantity" },
-          totalRevenue: {
-            $sum: { $multiply: ["$items.quantity", "$items.price"] },
-          },
-        },
-      },
-      {
-        $lookup: {
-          from: "products",
-          localField: "_id",
-          foreignField: "_id",
-          as: "productDetails",
-        },
-      },
-      { $unwind: "$productDetails" },
-      {
-        $project: {
-          _id: 0,
-          productId: "$_id",
-          name: "$productDetails.name",
-          totalUnitsSold: 1,
-          totalRevenue: 1,
-        },
-      },
-    ]);
 
-    return data;
-  },
+  if (!sellerId) {
+    throw new ApiError(400, "Seller ID required");
+  }
+
+  const seller = await User.findById(sellerId);
+
+  if (!seller || seller.role !== "seller") {
+    throw new ApiError(403, "Access denied");
+  }
+
+  const objectId = new mongoose.Types.ObjectId(sellerId);
+
+  const data = await Order.aggregate([
+
+    // 🔹 Only completed orders
+    { $match: { orderStatus: "delivered" } },
+
+    { $unwind: "$items" },
+
+    { $match: { "items.seller": objectId } },
+
+    {
+      $group: {
+        _id: "$items.product",
+        totalUnitsSold: { $sum: "$items.quantity" },
+        totalRevenue: {
+          $sum: { $multiply: ["$items.quantity", "$items.price"] }
+        }
+      }
+    },
+
+    {
+      $lookup: {
+        from: "products",
+        localField: "_id",
+        foreignField: "_id",
+        as: "productDetails"
+      }
+    },
+
+    { $unwind: "$productDetails" },
+
+    {
+      $project: {
+        _id: 0,
+        productId: "$_id",
+        productName: "$productDetails.name",
+        totalUnitsSold: 1,
+        totalRevenue: 1
+      }
+    },
+
+    { $sort: { totalRevenue: -1 } }
+
+  ]);
+
+  return data;
+},
 
 async getTopSellingItems(sellerId) {
-    const topProducts = await Order.aggregate([
-      { $unwind: "$items" },
-      { $match: { "items.seller": new mongoose.Types.ObjectId(sellerId) } },
-      {
-        $group: {
-          _id: "$items.product",
-          totalUnitsSold: { $sum: "$items.quantity" },
-        },
-      },
-      { $sort: { totalUnitsSold: -1 } },
-      { $limit: 5 },
-      {
-        $lookup: {
-          from: "products",
-          localField: "_id",
-          foreignField: "_id",
-          as: "productDetails",
-        },
-      },
-      { $unwind: "$productDetails" },
-      {
-        $project: {
-          productId: "$_id",
-          name: "$productDetails.name",
-          totalUnitsSold: 1,
-        },
-      },
-    ]);
 
-    return topProducts;
-  },
+  if (!sellerId) {
+    throw new ApiError(400, "Seller ID required");
+  }
+
+  const seller = await User.findById(sellerId);
+
+  if (!seller || seller.role !== "seller") {
+    throw new ApiError(403, "Access denied");
+  }
+
+  const objectId = new mongoose.Types.ObjectId(sellerId);
+
+  const topProducts = await Order.aggregate([
+
+    // 🔹 Only delivered orders
+    { $match: { orderStatus: "delivered" } },
+
+    { $unwind: "$items" },
+
+    { $match: { "items.seller": objectId } },
+
+    {
+      $group: {
+        _id: "$items.product",
+        totalUnitsSold: { $sum: "$items.quantity" }
+      }
+    },
+
+    { $sort: { totalUnitsSold: -1 } },
+
+    { $limit: 5 },
+
+    {
+      $lookup: {
+        from: "products",
+        localField: "_id",
+        foreignField: "_id",
+        as: "productDetails"
+      }
+    },
+
+    { $unwind: "$productDetails" },
+
+    {
+      $project: {
+        _id: 0,
+        productId: "$_id",
+        productName: "$productDetails.name",
+        totalUnitsSold: 1
+      }
+    }
+
+  ]);
+
+  return topProducts;
+},
 
 
-  async getDailySalesData(sellerId) {
-    const dailyData = await Order.aggregate([
-      { $unwind: "$items" },
-      { $match: { "items.seller": new mongoose.Types.ObjectId(sellerId) } },
-      {
-        $group: {
-          _id: {
-            date: {
-              $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
-            },
+async getDailySalesData(sellerId) {
+
+  if (!sellerId) {
+    throw new ApiError(400, "Seller ID required");
+  }
+
+  const seller = await User.findById(sellerId);
+
+  if (!seller || seller.role !== "seller") {
+    throw new ApiError(403, "Access denied");
+  }
+
+  const objectId = new mongoose.Types.ObjectId(sellerId);
+
+  const dailyData = await Order.aggregate([
+
+    // 🔹 Only delivered orders
+    { $match: { orderStatus: "delivered" } },
+
+    { $unwind: "$items" },
+
+    { $match: { "items.seller": objectId } },
+
+    {
+      $group: {
+        _id: {
+          date: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$createdAt",
+              timezone: "Asia/Kolkata"
+            }
           },
-          totalRevenue: {
-            $sum: { $multiply: ["$items.quantity", "$items.price"] },
-          },
-          totalOrders: { $sum: 1 },
+          orderId: "$_id"
         },
-      },
-      { $sort: { "_id.date": 1 } },
-      {
-        $project: {
-          date: "$_id.date",
-          totalRevenue: 1,
-          totalOrders: 1,
-          _id: 0,
-        },
-      },
-    ]);
+        revenue: {
+          $sum: { $multiply: ["$items.quantity", "$items.price"] }
+        }
+      }
+    },
 
-    return dailyData;
-  },
+    // 🔹 Now group again by date (to fix order counting)
+    {
+      $group: {
+        _id: "$_id.date",
+        totalRevenue: { $sum: "$revenue" },
+        totalOrders: { $sum: 1 }
+      }
+    },
 
+    { $sort: { _id: 1 } },
 
-  async approveSeller(id) {
-    const seller = await User.findById(id);
-
-    if (!seller || seller.role !== "seller") {
-      throw new ApiError(404, "Seller not found or invalid");
+    {
+      $project: {
+        _id: 0,
+        date: "$_id",
+        totalRevenue: 1,
+        totalOrders: 1
+      }
     }
 
-    if (seller.isSellerApproved) {
-      return { alreadyApproved: true };
-    }
+  ]);
 
-    seller.isSellerApproved = true;
-    seller.isSellerSuspended = false;
+  return dailyData;
+},
 
-    await seller.save();
+async approveSeller(id) {
 
-    try {
-      await createAndSendNotification({
-        recipientId: seller._id,
-        recipientRole: "seller",
-        recipientEmail: seller.email,
-        type: "SELLER_APPROVED",
-        title: "Seller account approved",
-        message:
-          "Congratulations! Your seller account has been approved. You can now start selling on SmartCart.",
-        relatedEntity: { entityType: "user", entityId: seller._id },
-        channels: ["in-app", "email"],
-        meta: {
-          userId: seller._id,
-        },
-      });
-    } catch (e) {
-      console.error("Failed to send SELLER_APPROVED notification", e);
-    }
-
-    return { alreadyApproved: false, seller };
-  },
-
-  async suspendSeller(id) {
   const seller = await User.findById(id);
 
   if (!seller || seller.role !== "seller") {
-    throw new ApiError(404, "Seller not found or invalid");
+    throw new ApiError(404, "Seller not found");
   }
 
-  if (seller.isSellerSuspended) {
-    return { alreadySuspended: true };
+  if (!seller.sellerProfile) {
+    throw new ApiError(400, "Seller profile incomplete");
   }
 
-  seller.isSellerSuspended = true;
+  if (seller.sellerProfile.isSellerApproved) {
+    return { alreadyApproved: true };
+  }
+
+  seller.sellerProfile.isSellerApproved = true;
+  seller.sellerProfile.isSellerSuspended = false;
+
   await seller.save();
 
   try {
-    await createAndSendNotification({
-      recipientId: seller._id,
+    await NotificationService.emit("SELLER_APPROVED", {
+      recipient: seller._id,
       recipientRole: "seller",
-      recipientEmail: seller.email,
-      type: "SELLER_SUSPENDED",
-      title: "Seller account suspended",
-      message:
-        "Your seller account has been suspended by admin. Please contact support for more details.",
-      relatedEntity: { entityType: "user", entityId: seller._id },
-      channels: ["in-app", "email"],
+      category: "account",
+      entityType: "User",
+      entityId: seller._id,
+      priority: "high",
       meta: {
-        userId: seller._id,
+        fullname: seller.fullname
       },
+      email: seller.email
     });
   } catch (e) {
-    console.error("Failed to send SELLER_SUSPENDED notification", e);
+    console.error("SELLER_APPROVED notification failed", e);
+  }
+
+  return { alreadyApproved: false, seller };
+},
+
+async suspendSeller(id) {
+
+  const seller = await User.findById(id);
+
+  if (!seller || seller.role !== "seller") {
+    throw new ApiError(404, "Seller not found");
+  }
+
+  if (!seller.sellerProfile?.isSellerApproved) {
+    throw new ApiError(400, "Seller not approved yet");
+  }
+
+  if (seller.sellerProfile.isSellerSuspended) {
+    return { alreadySuspended: true };
+  }
+
+  seller.sellerProfile.isSellerSuspended = true;
+
+  await seller.save();
+
+  try {
+    await NotificationService.emit("SELLER_SUSPENDED", {
+      recipient: seller._id,
+      recipientRole: "seller",
+      category: "account",
+      entityType: "User",
+      entityId: seller._id,
+      priority: "high",
+      meta: {
+        fullname: seller.fullname
+      },
+      email: seller.email
+    });
+  } catch (e) {
+    console.error("SELLER_SUSPENDED notification failed", e);
   }
 
   return { alreadySuspended: false, seller };
 },
 
-
 async unsuspendSeller(id) {
+
   const seller = await User.findById(id);
 
   if (!seller || seller.role !== "seller") {
-    throw new ApiError(404, "Seller not found or invalid");
+    throw new ApiError(404, "Seller not found");
   }
 
-  if (!seller.isSellerSuspended) {
+  if (!seller.sellerProfile?.isSellerSuspended) {
     return { notSuspended: true };
   }
 
-  seller.isSellerSuspended = false;
+  seller.sellerProfile.isSellerSuspended = false;
+
   await seller.save();
 
   try {
-    await createAndSendNotification({
-      recipientId: seller._id,
+    await NotificationService.emit("SELLER_UNSUSPENDED", {
+      recipient: seller._id,
       recipientRole: "seller",
-      recipientEmail: seller.email,
-      type: "SELLER_UNSUSPENDED",
-      title: "Seller account unsuspended",
-      message:
-        "Your seller account suspension has been removed. You can now continue selling.",
-      relatedEntity: { entityType: "user", entityId: seller._id },
-      channels: ["in-app", "email"],
+      category: "account",
+      entityType: "User",
+      entityId: seller._id,
+      priority: "medium",
       meta: {
-        userId: seller._id,
+        fullname: seller.fullname
       },
+      email: seller.email
     });
   } catch (e) {
-    console.error("Failed to send SELLER_UNSUSPENDED notification", e);
+    console.error("SELLER_UNSUSPENDED notification failed", e);
   }
 
   return { notSuspended: false, seller };
 },
 
+async getAllUsers({ page = 1, limit = 10 }) {
+
+  page = Number(page);
+  limit = Number(limit);
+
+  const skip = (page - 1) * limit;
+
+  const users = await User.find()
+    .select("-password -refreshTokens")
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const total = await User.countDocuments();
+
+  return {
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+    users
+  };
+},
+
+async getAllCustomers({ page = 1, limit = 10 }) {
+
+  const skip = (page - 1) * limit;
+
+  const customers = await User.find({ role: "customer" })
+    .select("-password -refreshTokens")
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const total = await User.countDocuments({ role: "customer" });
+
+  return {
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+    customers
+  };
+},
+
+async getAllSellers({ page = 1, limit = 10 }) {
+
+  const skip = (page - 1) * limit;
+
+  const sellers = await User.find({ role: "seller" })
+    .select("-password -refreshTokens")
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
+
+  const total = await User.countDocuments({ role: "seller" });
+
+  return {
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+    sellers
+  };
+},
 
 async deactivateUserAccount(id) {
-  const user = await User.findById(id);
+
+  const user = await User.findById(id)
+    .select("+refreshTokens");
 
   if (!user) {
     throw new ApiError(404, "User not found");
@@ -816,31 +1327,31 @@ async deactivateUserAccount(id) {
   }
 
   user.isActive = false;
+
+  user.refreshTokens = [];
+
   await user.save();
 
   try {
-    await createAndSendNotification({
-      recipientId: user._id,
+    await NotificationService.emit("ACCOUNT_DEACTIVATED", {
+      recipient: user._id,
       recipientRole: user.role,
-      recipientEmail: user.email,
-      type: "ACCOUNT_DEACTIVATED",
-      title: "Account deactivated",
-      message:
-        "Your account has been deactivated by admin. You can no longer access SmartCart until it is reactivated.",
-      relatedEntity: { entityType: "user", entityId: user._id },
-      channels: ["in-app", "email"],
-      meta: {
-        userId: user._id,
-      },
+      category: "account",
+      entityType: "User",
+      entityId: user._id,
+      priority: "high",
+      meta: { fullname: user.fullname },
+      email: user.email
     });
   } catch (e) {
-    console.error("Failed to send ACCOUNT_DEACTIVATED notification", e);
+    console.error("ACCOUNT_DEACTIVATED notification failed", e);
   }
 
   return { alreadyDeactivated: false, user };
 },
 
 async reactivateUserAccount(id) {
+
   const user = await User.findById(id);
 
   if (!user) {
@@ -852,29 +1363,27 @@ async reactivateUserAccount(id) {
   }
 
   user.isActive = true;
+
   await user.save();
 
   try {
-    await createAndSendNotification({
-      recipientId: user._id,
+    await NotificationService.emit("ACCOUNT_REACTIVATED", {
+      recipient: user._id,
       recipientRole: user.role,
-      recipientEmail: user.email,
-      type: "ACCOUNT_REACTIVATED",
-      title: "Account reactivated",
-      message:
-        "Your account has been reactivated by admin. You can now access SmartCart again.",
-      relatedEntity: { entityType: "user", entityId: user._id },
-      channels: ["in-app", "email"],
-      meta: {
-        userId: user._id,
-      },
+      category: "account",
+      entityType: "User",
+      entityId: user._id,
+      priority: "medium",
+      meta: { fullname: user.fullname },
+      email: user.email
     });
   } catch (e) {
-    console.error("Failed to send ACCOUNT_REACTIVATED notification", e);
+    console.error("ACCOUNT_REACTIVATED notification failed", e);
   }
 
   return { alreadyActive: false, user };
-},
+}
 
   
 };
+

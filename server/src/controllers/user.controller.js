@@ -73,50 +73,55 @@ await userService.verifyOtp(email, otp);
 
 // login of user - {customer, seller, admin}
 const loginUser = asyncHandler(async (req, res) => {
-   
 
-const {email,  password} = req.body
+  const { email, password } = req.body;
 
-const user = await userService.loginUser(email, password);
-const {accessToken, refreshToken} = await userService.generateAccessAndRefreshToken(user._id);
+  const { user, accessToken, refreshToken } =
+    await userService.loginUser(email, password);
 
-const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
-
-const options = {
+  const options = {
     httpOnly: true,
-    secure: false,
-}
+    secure: true,
+    sameSite: "Strict"
+  };
 
-return res
-.status(200)
-.cookie("accessToken",accessToken, options)
-.cookie("refreshToken",refreshToken, options)
-.json(
-    new ApiResponse(
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(
         200,
-        {
-            user: loggedInUser, accessToken, refreshToken
-        },
-        "User logged in Successfully"
-    )
-)
-
+        { user, accessToken, refreshToken },
+        "User logged in successfully"
+      )
+    );
 });
 
 // logout of user -{customer, seller, admin}
-const logoutUser = asyncHandler(async(req,res) =>{
-    await userService.logoutUser(req.user._id); 
-    const options = {
+const logoutUser = asyncHandler(async (req, res) => {
+
+  const incomingRefreshToken =
+    req.cookies.refreshToken ||
+    req.body.refreshToken ||
+    req.query.refreshToken;
+
+  await userService.logoutUser(
+    req.user._id,
+    incomingRefreshToken
+  );
+
+  const options = {
     httpOnly: true,
     secure: true,
-}
+    sameSite:"Strict"
+  };
 
-return res
-.status(200)
-.clearCookie("accessToken",options)
-.clearCookie("refreshToken",options)
-.json(new ApiResponse(200, {}, "User logout Successfully"))
-    
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, {}, "User logout Successfully"));
 });
 
 // change of current password through old password
@@ -168,9 +173,9 @@ const verifyResetOtp = asyncHandler(async (req, res) => {
 
 // change the password through otp via email
 const resetPassword = asyncHandler(async (req, res)=>{
-  const {email, newPassword} = req.body;
+  const {email,otp, newPassword} = req.body;
   
-  await userService.resetPassword(email, newPassword);
+  await userService.resetPassword(email,otp, newPassword);
 
   return res
   .status(200)
@@ -185,38 +190,39 @@ const resetPassword = asyncHandler(async (req, res)=>{
 
 //  refreshing access token
 const refreshAccessToken = asyncHandler(async (req, res) => {
+
   const incomingRefreshToken =
-    req.cookies.refreshToken || req.body.refreshToken || req.query.refreshToken;
-     
-  const user = await userService.refreshAccessToken(incomingRefreshToken);
+    req.cookies.refreshToken ||
+    req.body.refreshToken ||
+    req.query.refreshToken;
 
-    const { accessToken, refreshToken: newRefreshToken } =
-      await userService.generateAccessAndRefreshToken(user._id);
+  const { user, accessToken, refreshToken } =
+    await userService.refreshAccessToken(incomingRefreshToken);
 
-    const options = {
-      httpOnly: true,
-      secure: true,
-    };
+  const options = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "Strict"
+  };
 
-    return res
-      .status(200)
-      .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", newRefreshToken, options)
-      .json(
-        new ApiResponse(
-          200,
-          { accessToken, refreshToken: newRefreshToken },
-          "Access token refreshed successfully"
-        )
-      );
-  
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(
+        200,
+        { user, accessToken, refreshToken },
+        "Token refreshed successfully"
+      )
+    );
 });
 
 // update user avatar - {customer, seller, admin}
 const updateUserAvatar = asyncHandler(async (req, res) => {
   
   const updatedUser = await userService.updateUserAvatar(
-    req.user?.id,
+    req.user?._id,
     req.file
   )
 
@@ -291,9 +297,9 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 //  seller fetch profile 
 
 const getSellerProfile = asyncHandler(async (req, res) => {
+
   const seller = await userService.getSellerProfile(
-    req.user?._id,
-    req.user?.role
+    req.user._id
   );
 
   return res.status(200).json(
@@ -306,6 +312,7 @@ const getSellerProfile = asyncHandler(async (req, res) => {
 });
 
 // seller update profile or complete profile if not
+
 const updateSellerProfile = asyncHandler(async (req, res) => {
   const seller = await userService.updateSellerProfile(
     req.user._id,
@@ -406,54 +413,54 @@ const unsuspendSeller = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Seller unsuspended successfully",
-    seller,
+    seller: result.seller
   });
 });
 
 // admin get all user- (customer + seller)
-const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find()
-    .select("-password -refreshToken")
-    .sort({ createdAt: -1 });
 
-  res.status(200).json({
-    success: true,
-    count: users.length,
-    users,
-  });
+const getAllUsers = asyncHandler(async (req, res) => {
+
+  const { page, limit } = req.query;
+
+  const result = await userService.getAllUsers({ page, limit });
+
+  return res.status(200).json(
+    new ApiResponse(200, result, "Users fetched successfully")
+  );
 });
 
 // admin get all customer
-const getAllCustomers = asyncHandler(async (req, res) => {
-  const customers = await User.find({ role: "customer" })
-    .select("-password -refreshToken")
-    .sort({ createdAt: -1 });
 
-  res.status(200).json({
-    success: true,
-    count: customers.length,
-    customers,
-  });
+const getAllCustomers = asyncHandler(async (req, res) => {
+
+  const { page, limit } = req.query;
+
+  const result = await userService.getAllCustomers({ page, limit });
+
+  return res.status(200).json(
+    new ApiResponse(200, result, "Customers fetched successfully")
+  );
 });
 
 // admin get all seller
-const getAllSellers = asyncHandler(async (req, res) => {
-  const sellers = await User.find({ role: "seller" })
-    .select("-password -refreshToken")
-    .sort({ createdAt: -1 });
 
-  res.status(200).json({
-    success: true,
-    count: sellers.length,
-    sellers,
-  });
+const getAllSellers = asyncHandler(async (req, res) => {
+
+  const { page, limit } = req.query;
+
+  const result = await userService.getAllSellers({ page, limit });
+
+  return res.status(200).json(
+    new ApiResponse(200, result, "Sellers fetched successfully")
+  );
 });
 
 // admin can deactivate user account
 const deactivateUserAccount = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
-  const result = await adminService.deactivateUserAccount(id);
+  const result = await userService.deactivateUserAccount(id);
 
   if (result.alreadyDeactivated) {
     return res.status(400).json({
@@ -470,20 +477,21 @@ const deactivateUserAccount = asyncHandler(async (req, res) => {
 
 // admin can activate user account again
 const reactivateUserAccount = asyncHandler(async (req, res) => {
+
   const { id } = req.params;
 
-  const result = await adminService.reactivateUserAccount(id);
+  const result = await userService.reactivateUserAccount(id);
 
   if (result.alreadyActive) {
     return res.status(400).json({
-      message: "User account is already active",
+      message: "User already active"
     });
   }
 
   return res.status(200).json({
     success: true,
-    message: "User account reactivated successfully",
-    user: result.user,
+    message: "User reactivated successfully",
+    user: result.user
   });
 });
 
