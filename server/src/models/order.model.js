@@ -1,30 +1,84 @@
 import mongoose from "mongoose";
 
-const trackingEventSchema = new mongoose.Schema({
-  event: {
-    type: String,
-    required: true,
-  },
-  scannedAt:{
-    type: Date,
-    required: true,
-    default: Date.now
-  },
-  scannedBy:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
-  location:{
-    type: String,
-    required: true,
-  },
-  remarks:{
-    type: String,
-  },
+//////////////////////////////////////////////////////////
+// TRACKING EVENT
+//////////////////////////////////////////////////////////
 
-},
-{  _id: false
-});
+const trackingEventSchema = new mongoose.Schema(
+  {
+    event: { type: String, required: true },
+    scannedAt: { type: Date, default: Date.now },
+    scannedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    location: String,
+    remarks: String
+  },
+  { _id: true }
+);
+
+//////////////////////////////////////////////////////////
+// ORDER ITEM
+//////////////////////////////////////////////////////////
+
+const orderItemSchema = new mongoose.Schema(
+  {
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true
+    },
+
+    seller: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true
+    },
+
+    quantity: { type: Number, required: true, min: 1 },
+
+    price: {
+      type: mongoose.Schema.Types.Decimal128,
+      required: true
+    },
+
+    total: {
+      type: mongoose.Schema.Types.Decimal128,
+      required: true
+    },
+
+    fulfillmentStatus: {
+      type: String,
+      enum: ["processing", "packed", "shipped", "delivered", "cancelled"],
+      default: "processing"
+    },
+
+    returnStatus: {
+      type: String,
+      enum: ["none", "requested", "approved", "rejected", "returned"],
+      default: "none"
+    },
+
+    refundStatus: {
+      type: String,
+      enum: ["none", "pending", "processed"],
+      default: "none"
+    },
+
+    shipment: {
+      courierName: String,
+      trackingNumber: String,
+      estimatedDelivery: Date,
+      shippedAt: Date,
+      deliveredAt: Date,
+      trackingEvents: [trackingEventSchema]
+    }
+  },
+  { _id: true }
+);
+
+//////////////////////////////////////////////////////////
+// ORDER
+//////////////////////////////////////////////////////////
 
 const orderSchema = new mongoose.Schema(
   {
@@ -34,170 +88,95 @@ const orderSchema = new mongoose.Schema(
       required: true,
       index: true
     },
-    items: [
-      {
-        product: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Product",
-          required: true,
-        },
-        seller:{
-          type:  mongoose.Schema.Types.ObjectId,
-          ref: "User",
-          required: true
-        },
-        quantity: {
-          type: Number,
-          required: true,
-          min: 1,
-        },
-        price: {
-          type: Number,
-          required: true,
-        },
-        fulfillmentStatus: {
-          type: String,
-          enum: ["Processing", "Packed", "Shipped","Delivered", "Cancelled"],
-          default: "Processing",
-        },
-        shipment: {                                
-          courierName: { type: String },
-          shipmentStatus: { type: String, default: "Pending" },
-          estimatedDelivery: { type: Date },
-          shippedAt: { type: Date },
-        },
-      },
-    ],
+
+    items: [orderItemSchema],
+
     shippingAddress: {
-      fullName: { 
-        type: String, 
-        required: true 
-      },
-      mobile: { 
-        type: String, 
-        required: true 
-      },
-      addressLine: { 
-        type: String, 
-        required: true 
-      },
-      city: { 
-        type: String, 
-        required: true 
-      },
-      state: { 
-        type: String, 
-        required: true 
-      },
-      pincode: { 
-        type: String, 
-        required: true 
-      },
-      country: { 
-        type: String, 
-        required: true 
-      },
+      fullName: String,
+      mobile: String,
+      addressLine: String,
+      city: String,
+      state: String,
+      pincode: String,
+      country: String
     },
+
     paymentMethod: {
       type: String,
       enum: ["COD", "Online", "Blockchain"],
-      default: "COD",
+      default: "COD"
     },
+
     paymentStatus: {
       type: String,
-      enum: ["Pending", "Paid", "Failed", "Refunded"],
-      default: "Pending",
+      enum: ["pending", "paid", "failed", "refunded"],
+      default: "pending",
+      index: true
     },
-    transactionId: {
-      type: String,
-      default: null,
-    },
-    smartContractTxHash: { 
-      type: String, 
-      default: null 
-    },
+
+    transactionId: String,
+    smartContractTxHash: String,
+
     totalAmount: {
-      type: Number,
-      required: true,
+      type: mongoose.Schema.Types.Decimal128,
+      required: true
     },
-    discount:{
-      type: Number,
+
+    discount: {
+      type: mongoose.Schema.Types.Decimal128,
       default: 0
     },
+
     finalAmount: {
-       type: Number, 
-       required: true 
+      type: mongoose.Schema.Types.Decimal128,
+      required: true
     },
-    couponUsed: { 
+
+    couponUsed: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Coupon" 
+      ref: "Coupon"
     },
-    isPaid: { 
-      type: Boolean, 
-      default: false 
-    },
-    paidAt: { 
-      type: Date 
-    },
+
     orderStatus: {
       type: String,
       enum: [
-        "Pending", "Confirmed", "Processing", "Packed", "Shipped",
-        "OutForDelivery", "Delivered", "Cancelled", "Returned", "Refunded"
+        "pending",
+        "confirmed",
+        "processing",
+        "partially_shipped",
+        "shipped",
+        "partially_delivered",
+        "delivered",
+        "cancelled",
+        "returned",
+        "refunded"
       ],
-      default: "Pending",
+      default: "pending",
       index: true
     },
-    shipmentDetails: {
-      trackingNumber: String,
-      courierName: String,
-      shipmentStatus: String,
-      estimatedDeliveryDate: Date,
-    },
-    deliveredAt: { 
-      type: Date ,
-      default:null
-    },
-    returnStatus: {
-      type: String,
-      enum: ["None", "Requested", "Returned", "ReplacementInProgress"],
-      default: "None",
-    },
-    refundRequestStatus:{
-      type: String,
-      enum: ["None", "Requested", "Approved", "Rejected"],
-      default: "None",
-    },
+
     statusHistory: [
       {
-        status: { type: String, required: true },
+        status: String,
         updatedAt: { type: Date, default: Date.now },
-        changedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, 
-        role: { type: String, enum: ["admin", "seller", "user"], default: "user" }, 
-        comment: { type: String }  
+        changedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        role: { type: String, enum: ["admin", "seller", "user"] },
+        comment: String
       }
     ],
 
-    trackingEvents: [ trackingEventSchema ],
-    qrCode: { 
-      type: String, 
-      unique: true 
-    }, 
-    qrCodeImage: { 
-      type: String 
-    },
-    invoiceUrl: { 
-      type: String 
-    }, 
-    notes: { 
-      type: String 
-    },
+    invoiceUrl: String,
+    notes: String
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
+//////////////////////////////////////////////////////////
+// INDEXES
+//////////////////////////////////////////////////////////
+
+orderSchema.index({ user: 1, createdAt: -1 });
+orderSchema.index({ orderStatus: 1 });
+orderSchema.index({ paymentStatus: 1 });
+
 export const Order = mongoose.model("Order", orderSchema);
-
-

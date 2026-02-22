@@ -1,62 +1,121 @@
 import mongoose from "mongoose";
 
+const refundSchema = new mongoose.Schema(
+  {
+    amount: {
+      type: Number, // stored in paise
+      required: true
+    },
+    status: {
+      type: String,
+      enum: ["initiated", "processed", "failed"],
+      default: "initiated"
+    },
+    providerRefundId: String,
+    reason: String,
+    processedAt: Date
+  },
+  { _id: true }
+);
+
 const paymentSchema = new mongoose.Schema(
   {
     order: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Order",
       required: true,
+      index: true
     },
 
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true
     },
 
-    // For now: "dummy", future: "razorpay", "stripe", etc.
     provider: {
       type: String,
       enum: ["dummy", "razorpay", "stripe"],
       default: "dummy",
+      index: true
     },
 
-    amount: {
+    amountInPaise: {
       type: Number,
-      required: true,
+      required: true
     },
 
     currency: {
       type: String,
-      default: "INR",
+      default: "INR"
     },
 
     status: {
       type: String,
-      enum: ["created", "pending", "success", "failed", "refunded"],
+      enum: [
+        "created",
+        "pending",
+        "authorized",
+        "success",
+        "failed",
+        "partially_refunded",
+        "refunded"
+      ],
       default: "created",
+      index: true
     },
 
-    // For real gateways, we can save their IDs here
+    idempotencyKey: {
+      type: String,
+      unique: true,
+      sparse: true
+    },
+
     providerPaymentId: {
       type: String,
+      unique: true,
+      sparse: true
     },
-    providerOrderId: {
-      type: String,
-    },
+
+    providerOrderId: String,
 
     method: {
-      type: String, // "card", "upi", "netbanking", "wallet", "dummy"
-      default: "dummy",
+      type: String,
+      enum: ["card", "upi", "netbanking", "wallet", "dummy"],
+      default: "dummy"
     },
 
-    // Extra data (like gateway raw response, error codes, etc.)
-    meta: {
-      type: Object,
-      default: {},
-    },
+    failureReason: String,
+    errorCode: String,
+
+    refunds: [refundSchema],
+
+    meta: mongoose.Schema.Types.Mixed,
+
+    isDeleted: {
+      type: Boolean,
+      default: false
+    }
   },
   { timestamps: true }
 );
+
+//////////////////////////////////////////////////////////
+// PERFORMANCE INDEXES
+//////////////////////////////////////////////////////////
+
+paymentSchema.index({ user: 1, createdAt: -1 });
+paymentSchema.index({ order: 1 });
+paymentSchema.index({ status: 1 });
+
+//////////////////////////////////////////////////////////
+// SOFT DELETE FILTER
+//////////////////////////////////////////////////////////
+
+paymentSchema.pre(/^find/, function (next) {
+  this.where({ isDeleted: false });
+  next();
+});
 
 export const Payment = mongoose.model("Payment", paymentSchema);

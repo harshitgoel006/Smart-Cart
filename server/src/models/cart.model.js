@@ -1,127 +1,142 @@
 import mongoose from "mongoose";
 
-const cartSchema = new mongoose.Schema
-(
-    {
-        user:{
-            type: mongoose.Schema.Types.ObjectId,
-            ref:"User",
-            required:true,
-            unique:true
-        },
-        items:[
-            {
-                product:{
-                    type:mongoose.Schema.Types.ObjectId,
-                    ref:"Product",
-                    required:true
-                },
-                quantity:{
-                    type:Number,
-                    required:true,
-                    min:[1,"quantity can not be less than 1"],
-                    default:1
-                },
-                priceSnapshot:{
-                    type:Number,
-                    required:true
-                }
-            }
-        ],
-        totalItems:{
-            type:Number,
-            default:0
-        },
-        totalPrice:{
-            type: Number,
-            default:0
-        },
-        couponCode: {  
-            type: String,
-            default: null
-        },
-        discountAmount: {
-            type: Number,
-            default: 0
-        },
-        finalPrice: {  
-            type: Number,
-            default: 0
-        }
+//////////////////////////////////////////////////////////
+// CART ITEM
+//////////////////////////////////////////////////////////
+
+const cartItemSchema = new mongoose.Schema(
+  {
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true
     },
-    {
-        timestamps:true
+
+    quantity: {
+      type: Number,
+      required: true,
+      min: 1,
+      default: 1
+    },
+
+    priceSnapshot: {
+      type: mongoose.Schema.Types.Decimal128,
+      required: true
     }
-)
+  },
+  { _id: true }
+);
 
+//////////////////////////////////////////////////////////
+// CART
+//////////////////////////////////////////////////////////
 
-//  calculate totals
+const cartSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      unique: true,
+      index: true
+    },
 
-cartSchema.methods.calculateTotals = async function(){
-    let totalItems = 0;
-    let subTotal = 0;
+    items: [cartItemSchema],
 
-    const productIds = this.items.map(item => item.product);
-    const products = await mongoose.model("Product").find({_id: {$in: productIds}});
+    totalItems: {
+      type: Number,
+      default: 0
+    },
 
-    for(const item of this.items){
-        const product = products.find(p => p._id.toString() === item.product.toString());
-        if(product){
-            totalItems += item.quantity;
-            subTotal += item.quantity*product.price;
-        }
+    subtotal: {
+      type: mongoose.Schema.Types.Decimal128,
+      default: 0
+    },
+
+    coupon: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Coupon",
+      default: null
+    },
+
+    discountAmount: {
+      type: mongoose.Schema.Types.Decimal128,
+      default: 0
+    },
+
+    finalAmount: {
+      type: mongoose.Schema.Types.Decimal128,
+      default: 0
     }
+  },
+  { timestamps: true }
+);
 
-    this.totalItems = totalItems;
-    this.totalPrice = subTotal;
+//////////////////////////////////////////////////////////
+// CALCULATE TOTALS (NO PRODUCT FETCH)
+//////////////////////////////////////////////////////////
 
-    if (this.couponCode && this.discountAmount > 0) {
-        this.finalPrice = Math.max(0, this.totalPrice - this.discountAmount);
-    } else {
-        this.finalPrice = this.totalPrice;
-        this.discountAmount = 0;
-        this.couponCode = null;
-    }
+cartSchema.methods.calculateTotals = function () {
+  let totalItems = 0;
+  let subtotal = 0;
+
+  for (const item of this.items) {
+    const price = parseFloat(item.priceSnapshot.toString());
+    totalItems += item.quantity;
+    subtotal += item.quantity * price;
+  }
+
+  this.totalItems = totalItems;
+  this.subtotal = subtotal.toFixed(2);
+
+  const discount = parseFloat(this.discountAmount?.toString() || 0);
+
+  this.finalAmount = Math.max(0, subtotal - discount).toFixed(2);
 };
 
+//////////////////////////////////////////////////////////
+// ADD ITEM
+//////////////////////////////////////////////////////////
 
-//  add items 
+cartSchema.methods.addItem = function (productId, quantity, priceSnapshot) {
+  const existing = this.items.find(
+    item => item.product.toString() === productId.toString()
+  );
 
-cartSchema.methods.addItems = async function(productId, quantity =1, priceSnapshot){
-    const index = this.items.findIndex(
-        item => item.product.toString() === productId.toString()
-    );
-    if(index>-1){
-        this.items[index].quantity += quantity;
-    }
-    else{
-        this.items.push({product: productId, quantity, priceSnapshot});
-    }
-    
-    await this.calculateTotals();
-    return this.save();
+  if (existing) {
+    existing.quantity += quantity;
+  } else {
+    this.items.push({
+      product: productId,
+      quantity,
+      priceSnapshot
+    });
+  }
 
-}
+  this.calculateTotals();
+};
 
-//  remove items
+//////////////////////////////////////////////////////////
+// REMOVE ITEM
+//////////////////////////////////////////////////////////
 
-cartSchema.methods.removeItems = async function(productId){
-    this.items = this.items.filter(
-        item => item.product.toString() !== productId.toString()
-    );
+cartSchema.methods.removeItem = function (productId) {
+  this.items = this.items.filter(
+    item => item.product.toString() !== productId.toString()
+  );
 
-    await this.calculateTotals();
-    return this.save();
-}
+  this.calculateTotals();
+};
 
-//  clear cart
+//////////////////////////////////////////////////////////
+// CLEAR
+//////////////////////////////////////////////////////////
 
-cartSchema.methods.clearCart = async function(){
-    this.items = [];
-    this.totalItems = 0;
-    this.totalPrice = 0;
-    return this.save();
-}
+cartSchema.methods.clearCart = function () {
+  this.items = [];
+  this.discountAmount = 0;
+  this.coupon = null;
+  this.calculateTotals();
+};
 
 export const Cart = mongoose.model("Cart", cartSchema);
-

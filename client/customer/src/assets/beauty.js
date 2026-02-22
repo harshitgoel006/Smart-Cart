@@ -14,7 +14,7 @@ export const beauty = [
     "category": {
       "_id": "cat_beauty",
       "name": "Beauty",
-      "slug": "beauty",
+      "slug": "beauty-fragrances",
     },
     "ratings": 4.6,
     "reviews": 128,
@@ -43,7 +43,7 @@ export const beauty = [
     "category": {
       "_id": "cat_beauty",
       "name": "Beauty",
-      "slug": "beauty",
+      "slug": "beauty-fragrances",
     },
     "ratings": 4.5,
     "reviews": 97,

@@ -1,184 +1,170 @@
 import mongoose from "mongoose";
 
-const reviewSchema = new mongoose.Schema(
-    {
-        product:{
-            type: mongoose.Schema.Types.ObjectId,
-            ref:"Product",
-            required: true,
-            index: true,
-        },
-        user:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User",
-            required: true,
-            index: true,
-        },
+//////////////////////////////////////////////////////////
+// ASPECT SCHEMA
+//////////////////////////////////////////////////////////
 
-        order:{
-            type: mongoose.Schema.Types.ObjectId,
-            ref:"Order",
-            required: true,
-            index: true,
-        },
-        orderItem:{
-            type: mongoose.Schema.Types.ObjectId,
-            default: null,
-        },
-        rating:{
-            type: Number,
-            required: [true, "Rating must be provided"],
-            min: 1,
-            max: 5,
-        },
-        title:{
-            type: String,
-            default: "",
-            trim: true,
-            maxlength: 150,
-        },
-        comment:{
-            type: String,
-            trim: true,
-            maxlength: 4000,
-            default: "",
-        },
-        images:[
-            {
-                url:{
-                    type:String,
-                    required: true,
-                },
-                altText:{
-                    type:String,
-                    default: "",
-                    trim: true,
-                }
-            }
-        ],
-
-        aspects:[
-            {
-                key: {
-                    type: String,
-                    required: true,
-                    trim: true,
-                },
-                score:{
-                    type:String,
-                    min:1,
-                    max:5,
-                    required: true,
-                }
-
-            }
-        ],
-        isVerifiedPurchase:{
-            type: Boolean,
-            default: false,
-            index: true,
-        },
-        isFeatured:{
-            type: Boolean,
-            default: false,
-        },
-        status:{
-            type: String,
-            enum: ["pending", "approved", "rejected"],
-            default: "pending",
-            index: true,
-        },
-        rejectionReason:{
-            type: String,
-            default: "",
-            trim: true,
-        },
-        helpfulCount:{
-            type: Number,
-            default: 0,
-        },
-        notHelpfulCount:{
-            type: Number,
-            default: 0,
-        },
-        helpfulVotes:[
-            {
-                user:{
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref:"User",
-                },
-                value:{
-                    type:String,
-                    enum:["up","down"],
-                },
-            }
-        ],
-        reportedCount: {
-            type: Number,
-            default: 0,
-        },
-        reports: [
-            {
-                user: {
-                    type: mongoose.Schema.Types.ObjectId,
-                    ref: "User",
-                },
-                reason: {
-                    type: String,
-                    trim: true,
-                    default: "",
-                },
-                reportedAt: {
-                    type: Date,
-                    default: Date.now,
-                },
-            },
-        ],
-        sellerResponse: {
-            message: {
-                type: String,
-                trim: true,
-                default: "",
-            },
-            respondedBy: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "User",
-                default: null,
-            },
-            respondedAt: {
-                type: Date,
-                default: null,
-            },
-        },
-        isDeleted: {
-            type: Boolean,
-            default: false,
-            index: true,
-        },
-        createdBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-        },
-        updatedBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-        },
+const aspectSchema = new mongoose.Schema(
+  {
+    key: {
+      type: String,
+      required: true,
+      trim: true
     },
-    {
-        timestamps: true,
+    score: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 5
     }
+  },
+  { _id: false }
 );
+
+//////////////////////////////////////////////////////////
+// REVIEW SCHEMA
+//////////////////////////////////////////////////////////
+
+const reviewSchema = new mongoose.Schema(
+  {
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+      index: true
+    },
+
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true
+    },
+
+    order: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order",
+      required: true
+    },
+
+    orderItem: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true
+    },
+
+    rating: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 5
+    },
+
+    title: {
+      type: String,
+      maxlength: 150,
+      trim: true
+    },
+
+    comment: {
+      type: String,
+      maxlength: 4000,
+      trim: true
+    },
+
+    images: [
+      {
+        url: { type: String, required: true },
+        altText: String
+      }
+    ],
+
+    aspects: [aspectSchema],
+
+    isVerifiedPurchase: {
+      type: Boolean,
+      default: true,
+      index: true
+    },
+
+    isFeatured: {
+      type: Boolean,
+      default: false
+    },
+
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
+      index: true
+    },
+
+    rejectionReason: String,
+
+    helpfulCount: {
+      type: Number,
+      default: 0
+    },
+
+    notHelpfulCount: {
+      type: Number,
+      default: 0
+    },
+
+    reportedCount: {
+      type: Number,
+      default: 0
+    },
+
+    sellerResponse: {
+      message: String,
+      respondedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+      },
+      respondedAt: Date
+    },
+
+    isDeleted: {
+      type: Boolean,
+      default: false,
+      index: true
+    }
+  },
+  { timestamps: true }
+);
+
+//////////////////////////////////////////////////////////
+// UNIQUE REVIEW PER ORDER ITEM
+//////////////////////////////////////////////////////////
 
 reviewSchema.index(
-  { product: 1, user: 1, orderItem: 1 },
-  { unique: true, sparse: true }
+  { user: 1, orderItem: 1 },
+  { unique: true }
 );
+
+//////////////////////////////////////////////////////////
+// PRODUCT LISTING PERFORMANCE INDEX
+//////////////////////////////////////////////////////////
 
 reviewSchema.index({
   product: 1,
   status: 1,
   isDeleted: 1,
+  createdAt: -1
 });
+
+//////////////////////////////////////////////////////////
+// SOFT DELETE FILTER
+//////////////////////////////////////////////////////////
+
+reviewSchema.pre(/^find/, function (next) {
+  this.where({ isDeleted: false });
+  next();
+});
+
+//////////////////////////////////////////////////////////
+// STATIC: RECALCULATE PRODUCT RATING
+//////////////////////////////////////////////////////////
 
 reviewSchema.statics.calculateProductRating = async function (productId) {
   const mongooseId = new mongoose.Types.ObjectId(productId);
@@ -188,27 +174,24 @@ reviewSchema.statics.calculateProductRating = async function (productId) {
       $match: {
         product: mongooseId,
         status: "approved",
-        isDeleted: false,
-      },
+        isDeleted: false
+      }
     },
     {
       $group: {
         _id: "$product",
         avgRating: { $avg: "$rating" },
-        totalReviews: { $sum: 1 },
-      },
-    },
+        totalReviews: { $sum: 1 }
+      }
+    }
   ]);
 
-  if (!result.length) {
-    return { avgRating: 0, totalReviews: 0 };
-  }
-  return {
-    avgRating: result[0].avgRating,
-    totalReviews: result[0].totalReviews,
-  };
+  return result.length
+    ? {
+        avgRating: Number(result[0].avgRating.toFixed(2)),
+        totalReviews: result[0].totalReviews
+      }
+    : { avgRating: 0, totalReviews: 0 };
 };
 
-
 export const Review = mongoose.model("Review", reviewSchema);
-    

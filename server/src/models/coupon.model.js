@@ -8,72 +8,75 @@ const couponSchema = new mongoose.Schema(
       unique: true,
       uppercase: true,
       trim: true,
+      index: true
     },
-    description: {
-      type: String,
-    },
+
+    description: String,
+
     discountType: {
       type: String,
-      enum: ["percentage", "fixed"],  // Controller uses discountPercent/discountAmount
-      required: true,
+      enum: ["percentage", "fixed"],
+      required: true
     },
-    discountValue: {  // ✅ Used for both percentage & fixed
+
+    discountValue: {
       type: Number,
       required: true,
-      min: 0,
+      min: 0
     },
-    discountPercent: {  // ✅ MISSING - Controller expects this!
-      type: Number,
-      min: 0,
-      max: 100,
-    },
-    discountAmount: {  // ✅ MISSING - Controller expects this!
-      type: Number,
-      min: 0,
-    },
+
     applicableProducts: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
-      },
+      { type: mongoose.Schema.Types.ObjectId, ref: "Product" }
     ],
+
     applicableCategories: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
-      },
+      { type: mongoose.Schema.Types.ObjectId, ref: "Category" }
     ],
+
     usageLimitPerUser: {
       type: Number,
-      default: 1,
-      min: 1,
+      default: 1
     },
+
     totalUsageLimit: {
       type: Number,
-      default: 1000,
-      min: 1,
+      default: 1000
     },
+
     usageCount: {
       type: Number,
       default: 0,
-      min: 0,
+      index: true
     },
+
+    usedBy: [
+      {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        count: { type: Number, default: 1 }
+      }
+    ],
+
     startDate: {
       type: Date,
-      default: Date.now,
+      default: Date.now
     },
-    expiryDate: {
-      type: Date,
-    },
+
+    expiryDate: Date,
+
     active: {
       type: Boolean,
       default: true,
-    },
+      index: true
+    }
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-const Coupon = mongoose.model("Coupon", couponSchema);
-export { Coupon };
+//////////////////////////////////////////////////////////
+// PERFORMANCE INDEX
+//////////////////////////////////////////////////////////
+
+couponSchema.index({ code: 1, active: 1 });
+couponSchema.index({ expiryDate: 1 });
+
+export const Coupon = mongoose.model("Coupon", couponSchema);

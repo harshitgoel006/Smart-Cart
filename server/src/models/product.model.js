@@ -1,246 +1,193 @@
 import mongoose from "mongoose";
 
-/* ================================
-   VARIANT OPTION SCHEMA
-================================ */
+//////////////////////////////////////////////////////////
+// OPTION SCHEMA
+//////////////////////////////////////////////////////////
+
 const optionSchema = new mongoose.Schema(
   {
-    value: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    stock: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
-    price: {
-      type: Number,
-      min: 0,
-    },
+    value: { type: String, required: true, trim: true },
+    stock: { type: Number, default: 0, min: 0 },
+    price: { type: mongoose.Schema.Types.Decimal128 }
   },
   { _id: false }
 );
 
-/* ================================
-   VARIANT SCHEMA
-================================ */
+//////////////////////////////////////////////////////////
+// VARIANT SCHEMA
+//////////////////////////////////////////////////////////
+
 const variantSchema = new mongoose.Schema(
   {
-    label: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    options: [optionSchema],
+    label: { type: String, required: true, trim: true },
+    options: [optionSchema]
   },
   { _id: false }
 );
 
-/* ================================
-   PRODUCT SCHEMA
-================================ */
+//////////////////////////////////////////////////////////
+// PRODUCT SCHEMA
+//////////////////////////////////////////////////////////
+
 const productSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
       trim: true,
-      index: true,
+      index: true
     },
 
     slug: {
       type: String,
       unique: true,
       lowercase: true,
-      trim: true,
+      trim: true
     },
 
     description: {
       type: String,
-      required: true,
-      trim: true,
+      required: true
     },
 
     price: {
-      type: Number,
-      required: true,
-      min: 0,
+      type: mongoose.Schema.Types.Decimal128,
+      required: true
     },
 
     discount: {
       type: Number,
       default: 0,
       min: 0,
-      max: 90,
+      max: 90
     },
 
     finalPrice: {
-      type: Number,
-      min: 0,
+      type: mongoose.Schema.Types.Decimal128
     },
 
     stock: {
       type: Number,
-      required: true,
-      min: 0,
+      default: 0,
+      min: 0
     },
 
     sold: {
       type: Number,
       default: 0,
-      min: 0,
+      min: 0
     },
 
     images: [
       {
-        public_id: {
-          type: String,
-          required: true,
-        },
-        url: {
-          type: String,
-          required: true,
-        },
-      },
+        public_id: { type: String, required: true },
+        url: { type: String, required: true }
+      }
     ],
 
-    brand: {
-      type: String,
-      required: true,
-      index: true,
-    },
+    brand: { type: String, required: true, index: true },
 
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
-      index: true,
+      index: true
     },
 
-    ratings: {
-      type: Number,
-      default: 0,
-      min: 0,
-      max: 5,
-      index: true,
-    },
+    ratings: { type: Number, default: 0, min: 0, max: 5 },
+    reviews: { type: Number, default: 0 },
 
-    reviews: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
-
-    tags: [
-      {
-        type: String,
-        trim: true,
-      },
-    ],
+    tags: [{ type: String, trim: true }],
 
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
+      index: true
     },
 
-    isActive: {
-      type: Boolean,
-      default: true,
-      index: true,
-    },
-
-    isArchived: {
-      type: Boolean,
-      default: false,
-    },
-
-    isDeleted: {
-      type: Boolean,
-      default: false,
-      index: true,
-    },
+    isActive: { type: Boolean, default: true },
+    isArchived: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
 
     approvalStatus: {
       type: String,
       enum: ["pending", "approved", "rejected"],
-      default: "pending",
-      index: true,
+      default: "pending"
     },
 
     variants: [variantSchema],
 
-    featured: {
-      type: Boolean,
-      default: false,
-      index: true,
-    },
+    featured: { type: Boolean, default: false },
 
     flashSale: {
       start: Date,
       end: Date,
-      discount: {
-        type: Number,
-        min: 0,
-        max: 90,
-      },
-      isActive: {
-        type: Boolean,
-        default: false,
-      },
-    },
+      discount: { type: Number, min: 0, max: 90 },
+      isActive: { type: Boolean, default: false }
+    }
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-/* ================================
-   SLUG + FINAL PRICE GENERATION
-================================ */
-productSchema.pre("save", function (next) {
-  // Generate slug if name changed
+//////////////////////////////////////////////////////////
+// SLUG GENERATION
+//////////////////////////////////////////////////////////
+
+productSchema.pre("save", async function (next) {
   if (this.isModified("name")) {
-    this.slug = this.name
+    const baseSlug = this.name
       .toLowerCase()
-      .trim()
       .replace(/[^a-z0-9\s-]/g, "")
       .replace(/\s+/g, "-");
+
+    this.slug = `${baseSlug}-${Date.now()}`;
   }
 
-  // Calculate final price
-  this.finalPrice =
-    this.price - (this.price * this.discount) / 100;
+  // calculate final price safely
+  const price = parseFloat(this.price.toString());
+  const final = price - (price * this.discount) / 100;
+  this.finalPrice = final.toFixed(2);
 
   next();
 });
 
-/* ================================
-   TEXT SEARCH INDEX
-================================ */
-productSchema.index({
-  name: "text",
-  description: "text",
+//////////////////////////////////////////////////////////
+// GLOBAL QUERY FILTER (SOFT DELETE)
+//////////////////////////////////////////////////////////
+
+productSchema.pre(/^find/, function (next) {
+  this.where({ isDeleted: false, isActive: true });
+  next();
 });
 
-/* ================================
-   FILTERING INDEXES
-================================ */
-productSchema.index({ category: 1 });
-productSchema.index({ brand: 1 });
+//////////////////////////////////////////////////////////
+// TEXT SEARCH
+//////////////////////////////////////////////////////////
+
+productSchema.index({ name: "text", description: "text" });
+
+//////////////////////////////////////////////////////////
+// COMPOUND PERFORMANCE INDEX
+//////////////////////////////////////////////////////////
+
+productSchema.index({
+  category: 1,
+  approvalStatus: 1,
+  isDeleted: 1,
+  isActive: 1
+});
+
+productSchema.index({
+  seller: 1,
+  approvalStatus: 1,
+  isDeleted: 1
+});
+
 productSchema.index({ finalPrice: 1 });
 productSchema.index({ ratings: -1 });
-productSchema.index({ discount: -1 });
-productSchema.index({ stock: 1 });
 productSchema.index({ createdAt: -1 });
 
-/* ================================
-   EXPORT MODEL
-================================ */
-export const Product = mongoose.model(
-  "Product",
-  productSchema
-);
+//////////////////////////////////////////////////////////
+
+export const Product = mongoose.model("Product", productSchema);

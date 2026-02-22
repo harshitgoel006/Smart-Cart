@@ -1,76 +1,85 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const wishlistItemSchema = new mongoose.Schema(
-    {
-        product:{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Product',
-            required: true,
-            unique: true
-        },
-        
-        dateAdded:{
-            type:Date,
-            default:Date.now
-        },
-        note:{
-            type:String,
-            default:'',
-            maxlength:500,
-        },
-        isAvailable:{
-            type:Boolean,
-            default:true,
-        },
-        
+  {
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true
     },
-    {
-        timestamps:true,
+
+    note: {
+      type: String,
+      maxlength: 500,
+      default: ""
     },
+
+    addedAt: {
+      type: Date,
+      default: Date.now
+    }
+  },
+  { _id: true }
 );
 
 const wishlistSchema = new mongoose.Schema(
-    {
-        user:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'User',
-            required:true,
-        },
-        name:{
-            type:String,
-            required:true,
-            default:'My Wishlist',
-        },
-        items:[wishlistItemSchema],
-        privacy:{
-            type:String,
-            enum:['public','private'],
-            default:'private',
-        },
-        isDefault:{
-            type:Boolean,
-            default:true,
-        },
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true
     },
-    {
-        timestamps:true,
+
+    name: {
+      type: String,
+      default: "My Wishlist"
+    },
+
+    items: [wishlistItemSchema],
+
+    privacy: {
+      type: String,
+      enum: ["public", "private"],
+      default: "private"
+    },
+
+    isDefault: {
+      type: Boolean,
+      default: true
+    },
+
+    isDeleted: {
+      type: Boolean,
+      default: false
     }
-)
+  },
+  { timestamps: true }
+);
 
-
-
+//////////////////////////////////////////////////////////
+// UNIQUE USER + NAME
+//////////////////////////////////////////////////////////
 
 wishlistSchema.index({ user: 1, name: 1 }, { unique: true });
-wishlistSchema.methods.addProduct = async function(productId, note = "") {
+
+//////////////////////////////////////////////////////////
+// PREVENT DUPLICATE PRODUCTS
+//////////////////////////////////////////////////////////
+
+wishlistSchema.methods.addProduct = function (productId, note = "") {
   const exists = this.items.some(
-    (item) => item.product.toString() === productId.toString()
+    item => item.product.toString() === productId.toString()
   );
+
   if (!exists) {
     this.items.push({ product: productId, note });
-    await this.save();
   }
 };
 
+wishlistSchema.pre(/^find/, function (next) {
+  this.where({ isDeleted: false });
+  next();
+});
 
-
-export const Wishlist = mongoose.model('Wishlist',wishlistSchema);
+export const Wishlist = mongoose.model("Wishlist", wishlistSchema);
