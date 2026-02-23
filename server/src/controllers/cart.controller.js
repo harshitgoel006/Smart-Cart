@@ -4,8 +4,7 @@ import { Product } from "../models/product.model.js";
 import { Coupon } from "../models/coupon.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import {ApiError} from "../utils/ApiError.js";
-import createAndSendNotification from "../utils/sendNotification.js";
-import { cartService } from '../services/cart.service.js';
+// import { cartService } from '../services/cart.service.js';
 
 
 

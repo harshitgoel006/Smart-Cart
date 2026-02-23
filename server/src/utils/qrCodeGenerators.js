@@ -4,7 +4,6 @@ import { ApiError } from "./ApiError.js";
 import path from "path";
 import fs from "fs/promises";                   
 import fsSync from 'fs';  
-import { uploadOnCloudinary } from "./cloudinary.js";  
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 

@@ -1,7 +1,7 @@
 import {asyncHandler} from "../utils/asyncHandler.js";
 import{ApiError} from "../utils/ApiError.js"
 import {User} from "../models/user.model.js"
-import{uploadOnCloudinary} from "../utils/cloudinary.js"
+// import{uploadOnCloudinary} from "../utils/cloudinary.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken";
 import sendEmail from "../utils/sendEmail.js";
@@ -10,7 +10,6 @@ import cloudinary from "cloudinary";
 import{Order} from "../models/order.model.js";
 import {Product} from "../models/product.model.js";
 import mongoose from "mongoose"
-import createAndSendNotification from "../utils/sendNotification.js";
 import { userService } from "../services/user.service.js";
 
 

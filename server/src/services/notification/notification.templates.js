@@ -629,6 +629,20 @@ LOW_RATING_REVIEW_ALERT: {
     `,
   },
 
+  PRODUCT_CREATED_PENDING: {
+  subject: "New product pending approval",
+  html: (d) => `
+    <h2>New product submitted</h2>
+    <p>Product: ${d.productName}</p>
+  `
+},
+PRODUCT_UPDATED_PENDING: {
+  subject: "Product update pending approval",
+  html: (d) => `
+    <h2>Product updation is  submitted</h2>
+    <p>Product: ${d.productName}</p>
+  `
+},
   // Fallback
   DEFAULT: {
     subject: (d) => d.subject || "SmartCart Notification",

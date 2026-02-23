@@ -1,7 +1,10 @@
 import {asyncHandler} from "../utils/asyncHandler.js";
 import{ApiError} from "../utils/ApiError.js"
 import {User} from "../models/user.model.js"
-import{uploadOnCloudinary} from "../utils/cloudinary.js"
+import {
+  uploadSingle,
+  deleteFromCloudinary
+} from "../utils/cloudinary.js";
 import {ApiResponse} from "../utils/ApiResponse.js"
 import jwt from "jsonwebtoken";
 import sendEmail from "../utils/sendEmail.js";
@@ -111,7 +114,9 @@ async registerUser({
       throw new ApiError(400, "Avatar is required");
     }
 
-    const avatar = await uploadOnCloudinary(avatarLocalPath);
+    const avatar = await uploadSingle(avatarLocalPath, {
+  folder: "SmartCart/avatars"
+});
 
     const verified = await VerifiedEmail.findOne({ email });
 
@@ -519,75 +524,36 @@ async resetPassword(email, otp, newPassword) {
 },
 
 
-async refreshAccessToken(incomingRefreshToken) {
+async updateUserAvatar(userId, file) {
 
-  if (!incomingRefreshToken) {
-    throw new ApiError(400, "Refresh token required");
+  if (!file?.path) {
+    throw new ApiError(400, "Avatar file required");
   }
 
-  let decoded;
-
-  try {
-    decoded = jwt.verify(
-      incomingRefreshToken,
-      process.env.REFRESH_TOKEN_SECRET
-    );
-  } catch {
-    throw new ApiError(401, "Invalid refresh token");
-  }
-
-  const user = await User.findById(decoded._id)
-    .select("+refreshTokens");
+  const user = await User.findById(userId)
+    .select("+avatar_public_id");
 
   if (!user) {
-    throw new ApiError(401, "Invalid refresh token");
+    throw new ApiError(404, "User not found");
   }
 
-  const incomingHash = user.hashToken(incomingRefreshToken);
-
-  const tokenIndex = user.refreshTokens.findIndex(
-    t => t.tokenHash === incomingHash
-  );
-
-  // 🔥 REUSE ATTACK DETECTED
-  if (tokenIndex === -1) {
-
-    // Possible token theft
-    user.refreshTokens = [];
-    await user.save({ validateBeforeSave: false });
-
-    throw new ApiError(
-      401,
-      "Refresh token reuse detected. All sessions revoked."
-    );
+  // 🔹 Delete old avatar via abstraction
+  if (user.avatar_public_id) {
+    await deleteFromCloudinary(user.avatar_public_id);
   }
 
-  // Remove used token (rotation)
-  user.refreshTokens.splice(tokenIndex, 1);
-
-  await user.save({ validateBeforeSave: false });
-
-  // Issue new tokens
-  const accessToken = user.generateAccessToken();
-  const newRefreshToken = user.generateRefreshToken();
-
-  const newHash = user.hashToken(newRefreshToken);
-
-  const expiryDate = new Date();
-  expiryDate.setDate(expiryDate.getDate() + 7);
-
-  user.refreshTokens.push({
-    tokenHash: newHash,
-    expiresAt: expiryDate
+  // 🔹 Upload new avatar
+  const uploaded = await uploadSingle(file.path, {
+    folder: "SmartCart/avatars"
   });
 
+  user.avatar = uploaded.url;
+  user.avatar_public_id = uploaded.public_id;
+
   await user.save({ validateBeforeSave: false });
 
-  return {
-    user,
-    accessToken,
-    refreshToken: newRefreshToken
-  };
+  return await User.findById(userId)
+    .select("-password -refreshTokens");
 },
 
 async updateUserAvatar(userId, file) {
@@ -895,27 +861,20 @@ async updateSellerProfile(userId, data, file) {
   });
 
   // 🔹 Banner upload
-  if (file) {
+  // 🔹 Banner upload
+if (file?.path) {
 
-    if (profile.storeBanner_public_id) {
-      try {
-        await cloudinary.v2.uploader.destroy(
-          profile.storeBanner_public_id
-        );
-      } catch (err) {
-        console.error("Old banner delete failed", err);
-      }
-    }
-
-    const uploaded = await uploadOnCloudinary(file.path);
-
-    if (!uploaded?.url || !uploaded?.public_id) {
-      throw new ApiError(400, "Banner upload failed");
-    }
-
-    profile.storeBanner = uploaded.url;
-    profile.storeBanner_public_id = uploaded.public_id;
+  if (profile.storeBanner_public_id) {
+    await deleteFromCloudinary(profile.storeBanner_public_id);
   }
+
+  const uploaded = await uploadSingle(file.path, {
+    folder: "SmartCart/banners"
+  });
+
+  profile.storeBanner = uploaded.url;
+  profile.storeBanner_public_id = uploaded.public_id;
+}
 
   // 🔹 Profile completeness check
   const requiredFields = [

@@ -3,7 +3,6 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { Category } from '../models/category.model.js';
 import { Order } from '../models/order.model.js';
-import createAndSendNotification from "../utils/sendNotification.js";
 import { categoryService } from '../services/category.service.js';
 
 

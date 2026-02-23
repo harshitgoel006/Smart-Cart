@@ -1,8 +1,8 @@
 // services/notification/notification.service.js
 
 import NotificationDispatcher from "./notification.dispatcher.js";
-import { Notification } from "../models/notification.model.js";
-import { ApiError } from "../utils/ApiError.js";
+import { Notification } from "../../models/notification.model.js";
+import { ApiError } from "../../utils/ApiError.js";
 
 class NotificationService {
 
