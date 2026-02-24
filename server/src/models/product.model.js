@@ -6,9 +6,32 @@ import mongoose from "mongoose";
 
 const optionSchema = new mongoose.Schema(
   {
-    value: { type: String, required: true, trim: true },
-    stock: { type: Number, default: 0, min: 0 },
-    price: { type: mongoose.Schema.Types.Decimal128 }
+    value: {
+      type: String,
+      required: true,
+      trim: true
+    },
+
+    sku: {
+      type: String,
+      required: true
+    },
+
+    stock: {
+      type: Number,
+      default: 0,
+      min: 0
+    },
+
+    price: {
+      type: mongoose.Schema.Types.Decimal128
+    },
+
+    sold: {
+      type: Number,
+      default: 0,
+      min: 0
+    }
   },
   { _id: false }
 );
@@ -141,13 +164,14 @@ productSchema.pre("save", async function (next) {
       .replace(/[^a-z0-9\s-]/g, "")
       .replace(/\s+/g, "-");
 
-    this.slug = `${baseSlug}-${Date.now()}`;
+    this.slug = `${baseSlug}-${Math.floor(Math.random() * 10000)}`;
   }
 
   // calculate final price safely
   const price = parseFloat(this.price.toString());
-  const final = price - (price * this.discount) / 100;
-  this.finalPrice = final.toFixed(2);
+  const discount = this.discount || 0;
+  const final = price - (price * discount) / 100;
+  this.finalPrice = mongoose.Types.Decimal128.fromString(final.toFixed(2));
 
   next();
 });
@@ -156,10 +180,18 @@ productSchema.pre("save", async function (next) {
 // GLOBAL QUERY FILTER (SOFT DELETE)
 //////////////////////////////////////////////////////////
 
-productSchema.pre(/^find/, function (next) {
-  this.where({ isDeleted: false, isActive: true });
-  next();
-});
+productSchema.query.active = function () {
+  return this.where({
+    isDeleted: false,
+    isActive: true
+  });
+};
+
+productSchema.query.approved = function () {
+  return this.where({
+    approvalStatus: "approved"
+  });
+};
 
 //////////////////////////////////////////////////////////
 // TEXT SEARCH
@@ -182,6 +214,12 @@ productSchema.index({
   seller: 1,
   approvalStatus: 1,
   isDeleted: 1
+});
+
+productSchema.index({
+  "flashSale.isActive": 1,
+  "flashSale.start": 1,
+  "flashSale.end": 1
 });
 
 productSchema.index({ finalPrice: 1 });

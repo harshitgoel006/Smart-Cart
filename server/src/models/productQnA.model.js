@@ -42,6 +42,8 @@ const productQnASchema = new mongoose.Schema(
       ref: "User"
     },
 
+    answeredAt: Date,
+
     status: {
       type: String,
       enum: ["pending", "answered", "rejected", "hidden"],
@@ -51,7 +53,8 @@ const productQnASchema = new mongoose.Schema(
 
     helpfulCount: {
       type: Number,
-      default: 0
+      default: 0,
+      index:true
     },
 
     isDeleted: {
@@ -67,10 +70,14 @@ const productQnASchema = new mongoose.Schema(
 // AUTO FILTER SOFT DELETED
 //////////////////////////////////////////////////////////
 
-productQnASchema.pre(/^find/, function (next) {
-  this.where({ isDeleted: false });
-  next();
-});
+productQnASchema.query.active = function () {
+  return this.where(
+    { 
+      isDeleted: false 
+    }
+  );
+  
+};
 
 //////////////////////////////////////////////////////////
 // PERFORMANCE INDEXES
