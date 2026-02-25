@@ -1,107 +1,214 @@
-import {asyncHandler} from '../utils/asyncHandler.js';
 import { Cart } from "../models/cart.model.js";
 import { Product } from "../models/product.model.js";
 import { Coupon } from "../models/coupon.model.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
 import {ApiError} from "../utils/ApiError.js";
-import createAndSendNotification from "../utils/sendNotification.js";
-
-
 
 
 
 export const cartService = {
 
 
+  // ======================================================
+  // =============== CUSTOMER PANNEL HANDLERS =============
+  // ======================================================
 
 
-  async addItems(userId, productId, quantity) 
-  {
-    if (!productId) {
-      throw new ApiError(400, "Product ID is required");
-    }
+ 
+  async addItems(userId, productId, quantity, selectedVariant = null) {
 
-    if (!quantity || quantity < 1) {
-      throw new ApiError(400, "Quantity should be at least 1");
-    }
-
-    const product = await Product.findById(productId);
-
-    if (!product) {
-      throw new ApiError(404, "Product not found");
-    }
-
-    let cart = await Cart.findOne({ user: userId });
-
-    if (!cart) {
-      cart = new Cart({ user: userId, items: [] });
-    }
-
-    await cart.addItems(productId, quantity || 1, product.price);
-
-    return cart;
-  },
-
-  async getCartItems(userId) 
-  {
-    const cart = await Cart.findOne({ user: userId })
-    .populate("items.product", "name price images");
-    if (!cart || !cart.items || cart.items.length === 0) 
-        {
-            throw new ApiError(400, "Cart is empty.");
-        }
-        return cart;
-    
-  },
-
-  async updateCartItem(userId, productId, quantity) {
-  if (!productId) {
-    throw new ApiError(400, "Product ID is required");
+  if (!mongoose.Types.ObjectId.isValid(productId)) {
+    throw new ApiError(400, "Invalid product ID");
   }
 
   if (!quantity || quantity < 1) {
-    throw new ApiError(400, "Quantity should be at least 1");
+    throw new ApiError(400, "Quantity must be at least 1");
   }
 
-  const cart = await Cart.findOne({ user: userId });
+  const product = await Product.findOne({
+    _id: productId,
+    isDeleted: false,
+    isActive: true,
+    approvalStatus: "approved",
+    isArchived: false
+  });
 
-  if (!cart) {
-    throw new ApiError(404, "Cart not found");
-  }
-
-  const index = cart.items.findIndex(
-    item => item.product.toString() === productId.toString()
-  );
-
-  if (index === -1) {
-    throw new ApiError(404, "Product not found in cart");
-  }
-
-  const product = await Product.findById(productId);
-
-  if (!product || !product.isActive) {
+  if (!product) {
     throw new ApiError(404, "Product not available");
   }
 
-  if (quantity > product.stock) {
-    throw new ApiError(
-      400,
-      `Only ${product.stock} items available in stock`
+  let stock = product.stock;
+  let effectivePrice = parseFloat(product.finalPrice.toString());
+
+  if (selectedVariant?.label && selectedVariant?.value) {
+
+    const variant = product.variants.find(
+      v => v.label === selectedVariant.label
     );
+
+    if (!variant) {
+      throw new ApiError(400, "Invalid variant");
+    }
+
+    const option = variant.options.find(
+      o => o.value === selectedVariant.value
+    );
+
+    if (!option) {
+      throw new ApiError(400, "Invalid variant option");
+    }
+
+    stock = option.stock;
+
+    if (option.price) {
+      effectivePrice = parseFloat(option.price.toString());
+    }
   }
 
-  cart.items[index].quantity = quantity;
+  if (quantity > stock) {
+    throw new ApiError(400, `Only ${stock} items available`);
+  }
 
-  await cart.calculateTotals();
+  const now = new Date();
+
+  let flashDiscount = 0;
+
+  if (
+    product.flashSale?.isActive &&
+    product.flashSale.start <= now &&
+    product.flashSale.end >= now
+  ) {
+    flashDiscount = product.flashSale.discount;
+    effectivePrice =
+      effectivePrice -
+      (effectivePrice * flashDiscount) / 100;
+  }
+
+  let cart = await Cart.findOne({ user: userId });
+
+  if (!cart) {
+    cart = new Cart({ user: userId, items: [] });
+  }
+
+  if (cart.isLocked) {
+    throw new ApiError(400, "Cart is locked for checkout");
+  }
+
+  const existing = cart.items.find(
+    item =>
+      item.product.toString() === productId &&
+      item.selectedVariant?.value === selectedVariant?.value
+  );
+
+  if (existing) {
+
+    if (existing.quantity + quantity > stock) {
+      throw new ApiError(400, "Stock exceeded");
+    }
+
+    existing.quantity += quantity;
+
+  } else {
+
+    cart.items.push({
+      product: product._id,
+      seller: product.seller,
+      selectedVariant,
+      quantity,
+      unitPriceSnapshot:
+        mongoose.Types.Decimal128.fromString(
+          effectivePrice.toFixed(2)
+        ),
+      discountSnapshot: product.discount || 0,
+      flashSaleSnapshot: flashDiscount,
+      lineTotalSnapshot:
+        mongoose.Types.Decimal128.fromString(
+          (effectivePrice * quantity).toFixed(2)
+        )
+    });
+  }
+
+  cart.calculateTotals();
+
   await cart.save();
 
   return cart;
-},
+  },
+
+  async getCartItems(userId) {
+
+  let cart = await Cart.findOne({ user: userId })
+    .populate({
+      path: "items.product",
+      select: "name slug images isActive isDeleted approvalStatus stock variants"
+    });
 
 
-async removeCartItem(userId, itemId) {
-  if (!itemId || !itemId.match(/^[0-9a-fA-F]{24}$/)) {
-    throw new ApiError(400, "Valid item ID required");
+  if (!cart) {
+    return {
+      items: [],
+      totalItems: 0,
+      subtotal: 0,
+      discountAmount: 0,
+      finalAmount: 0
+    };
+  }
+
+  if (cart.expiresAt && cart.expiresAt < new Date()) {
+
+    cart.items = [];
+    cart.discountAmount =
+      mongoose.Types.Decimal128.fromString("0.00");
+    cart.coupon = null;
+
+    cart.calculateTotals();
+    await cart.save();
+  }
+
+  const validItems = [];
+
+  for (const item of cart.items) {
+
+    const product = item.product;
+
+    if (
+      product &&
+      !product.isDeleted &&
+      product.isActive &&
+      product.approvalStatus === "approved"
+    ) {
+      validItems.push(item);
+    }
+  }
+
+  if (validItems.length !== cart.items.length) {
+    cart.items = validItems;
+    cart.calculateTotals();
+    await cart.save();
+  }
+
+  return {
+    _id: cart._id,
+    items: cart.items,
+    totalItems: cart.totalItems,
+    subtotal: parseFloat(cart.subtotal.toString()),
+    discountAmount: parseFloat(
+      cart.discountAmount.toString()
+    ),
+    finalAmount: parseFloat(
+      cart.finalAmount.toString()
+    ),
+    isLocked: cart.isLocked
+  };
+  },
+
+  async updateCartItem(userId, itemId, quantity) {
+
+  if (!mongoose.Types.ObjectId.isValid(itemId)) {
+    throw new ApiError(400, "Invalid cart item ID");
+  }
+
+  if (!quantity || quantity < 1) {
+    throw new ApiError(400, "Quantity must be at least 1");
   }
 
   const cart = await Cart.findOne({ user: userId });
@@ -110,224 +217,648 @@ async removeCartItem(userId, itemId) {
     throw new ApiError(404, "Cart not found");
   }
 
-  const initialCount = cart.items.length;
+  if (cart.isLocked) {
+    throw new ApiError(400, "Cart is locked for checkout");
+  }
 
-  cart.items = cart.items.filter(
-    item => item._id.toString() !== itemId
-  );
+  const item = cart.items.id(itemId);
 
-  if (cart.items.length === initialCount) {
+  if (!item) {
     throw new ApiError(404, "Item not found in cart");
   }
 
-  await cart.calculateTotals();
+  const product = await Product.findOne({
+    _id: item.product,
+    isDeleted: false,
+    isActive: true,
+    approvalStatus: "approved",
+    isArchived: false
+  });
+
+  if (!product) {
+    throw new ApiError(400, "Product no longer available");
+  }
+
+  let stock = product.stock;
+
+  if (item.selectedVariant?.label && item.selectedVariant?.value) {
+
+    const variant = product.variants.find(
+      v => v.label === item.selectedVariant.label
+    );
+
+    if (!variant) {
+      throw new ApiError(400, "Variant no longer exists");
+    }
+
+    const option = variant.options.find(
+      o => o.value === item.selectedVariant.value
+    );
+
+    if (!option) {
+      throw new ApiError(400, "Variant option no longer exists");
+    }
+
+    stock = option.stock;
+  }
+
+  if (quantity > stock) {
+    throw new ApiError(
+      400,
+      `Only ${stock} items available`
+    );
+  }
+
+  item.quantity = quantity;
+
+  const unit = parseFloat(
+    item.unitPriceSnapshot.toString()
+  );
+
+  const lineTotal = unit * quantity;
+
+  item.lineTotalSnapshot =
+    mongoose.Types.Decimal128.fromString(
+      lineTotal.toFixed(2)
+    );
+
+
+  cart.calculateTotals();
+
   await cart.save();
 
-  return cart;
-},
+  return {
+    items: cart.items,
+    totalItems: cart.totalItems,
+    subtotal: parseFloat(cart.subtotal.toString()),
+    finalAmount: parseFloat(cart.finalAmount.toString())
+  };
+  },
 
+  async removeCartItem(userId, itemId) {
 
-async clearCart(userId) {
+  if (!mongoose.Types.ObjectId.isValid(itemId)) {
+    throw new ApiError(400, "Invalid cart item ID");
+  }
+
   const cart = await Cart.findOne({ user: userId });
 
   if (!cart) {
     throw new ApiError(404, "Cart not found");
   }
 
-  await cart.clearCart();
+  if (cart.isLocked) {
+    throw new ApiError(400, "Cart is locked for checkout");
+  }
 
-  return cart;
-},
+  const item = cart.items.id(itemId);
 
-async applyCoupon(user, couponCode) {
-  const userId = user._id;
+  if (!item) {
+    throw new ApiError(404, "Item not found in cart");
+  }
+
+  item.deleteOne();
+
+  if (cart.items.length === 0) {
+    cart.discountAmount =
+      mongoose.Types.Decimal128.fromString("0.00");
+    cart.coupon = null;
+  }
+
+  cart.calculateTotals();
+
+  await cart.save();
+
+  return {
+    items: cart.items,
+    totalItems: cart.totalItems,
+    subtotal: parseFloat(cart.subtotal.toString()),
+    discountAmount: parseFloat(
+      cart.discountAmount.toString()
+    ),
+    finalAmount: parseFloat(cart.finalAmount.toString())
+  };
+  },
+  
+  async clearCart(userId) {
+
+  const cart = await Cart.findOne({ user: userId });
+
+  if (!cart) {
+    return {
+      items: [],
+      totalItems: 0,
+      subtotal: 0,
+      discountAmount: 0,
+      finalAmount: 0
+    };
+  }
+
+  if (cart.isLocked) {
+    throw new ApiError(400, "Cart is locked for checkout");
+  }
+
+  cart.items = [];
+  cart.coupon = null;
+  cart.discountAmount = mongoose.Types.Decimal128.fromString("0.00");
+
+  cart.calculateTotals();
+  await cart.save();
+
+  return {
+    items: [],
+    totalItems: 0,
+    subtotal: 0,
+    discountAmount: 0,
+    finalAmount: 0
+  };
+  },
+
+  async applyCoupon(userId, couponCode) {
 
   if (!couponCode) {
-    throw new ApiError(400, "Coupon code is required");
+    throw new ApiError(400, "Coupon code required");
+  }
+
+  const cart = await Cart.findOne({ user: userId });
+
+  if (!cart || cart.items.length === 0) {
+    throw new ApiError(400, "Cart is empty");
+  }
+
+  if (cart.isLocked) {
+    throw new ApiError(400, "Cart is locked for checkout");
   }
 
   const coupon = await Coupon.findOne({
     code: couponCode.toUpperCase(),
+    isActive: true
   });
 
   if (!coupon) {
-    throw new ApiError(404, "Invalid or inactive coupon code");
+    throw new ApiError(404, "Invalid or inactive coupon");
   }
 
   const now = new Date();
 
   if (coupon.expiryDate && coupon.expiryDate < now) {
-    throw new ApiError(400, "Coupon code has expired");
+    throw new ApiError(400, "Coupon expired");
   }
 
-  const cart = await Cart.findOne({ user: userId });
+  const subtotal = parseFloat(cart.subtotal.toString());
 
-  if (!cart) {
-    throw new ApiError(404, "Cart not found");
+  if (coupon.minOrderValue && subtotal < coupon.minOrderValue) {
+    throw new ApiError(
+      400,
+      `Minimum order value is ₹${coupon.minOrderValue}`
+    );
+  }
+
+  if (coupon.usageLimitPerUser) {
+
+    const usageCount = await Order.countDocuments({
+      user: userId,
+      coupon: coupon._id
+    });
+
+    if (usageCount >= coupon.usageLimitPerUser) {
+      throw new ApiError(400, "Coupon usage limit exceeded");
+    }
   }
 
   let discountAmount = 0;
 
-  if (coupon.discountAmount) {
-    discountAmount = coupon.discountAmount;
-  } else if (coupon.discountPercent) {
+  if (coupon.discountType === "flat") {
+    discountAmount = coupon.discountValue;
+  }
+
+  if (coupon.discountType === "percent") {
     discountAmount =
-      (coupon.discountPercent / 100) * cart.totalPrice;
+      (coupon.discountValue / 100) * subtotal;
+
+    if (coupon.maxDiscount) {
+      discountAmount = Math.min(
+        discountAmount,
+        coupon.maxDiscount
+      );
+    }
   }
 
-  cart.couponCode = coupon.code;
-  cart.discountAmount = discountAmount;
+  discountAmount = Math.min(discountAmount, subtotal);
+  cart.coupon = coupon._id;
+
+  cart.discountAmount =
+    mongoose.Types.Decimal128.fromString(
+      discountAmount.toFixed(2)
+    );
+
+  cart.calculateTotals();
 
   await cart.save();
-  await cart.calculateTotals();
-  await cart.save();
 
-  try {
-    await createAndSendNotification({
-      recipientId: userId,
-      recipientRole: "customer",
-      recipientEmail: user.email,
-      type: "COUPON_APPLIED",
-      title: "Coupon applied successfully",
-      message: `Coupon ${coupon.code} applied on your cart.`,
-      relatedEntity: {
-        entityType: "cart",
-        entityId: cart._id,
-      },
-      channels: ["in-app", "email"],
-      meta: {
-        couponCode: coupon.code,
-        discount: discountAmount,
-      },
-    });
-  } catch (e) {
-    console.error("COUPON_APPLIED notification failed", e);
-  }
-
-  return cart;
-},
+  return {
+    items: cart.items,
+    subtotal,
+    discountAmount,
+    finalAmount: parseFloat(
+      cart.finalAmount.toString()
+    )
+  };
+  },
 
 
 
-async getCartAnalytics(startDate, endDate) {
-    const matchStage = {};
+  
+  // ======================================================
+  // ================= ADMIN PANNEL HANDLERS ==============
+  // ======================================================
 
-    if (startDate || endDate) {
-      matchStage.updatedAt = {};
+
+
+  
+  async getCartAnalytics(startDate, endDate){
+    const match = {};
+
+    if(startDate || endDate){
+      match.updatedAt = {};
+
+      if(startDate){
+        match.updatedAt.$gte = new Date(startDate);
+      }
+      if(endDate){
+        match.updatedAt.$lte = new Date(endDate);
+      }
     }
 
-    if (startDate) {
-      matchStage.updatedAt.$gte = new Date(startDate);
-    }
+    match.$or = [
+      {expiresAt: null},
+      {expiresAt: {$gt: new Date()}}
+    ];
 
-    if (endDate) {
-      matchStage.updatedAt.$lte = new Date(endDate);
-    }
-
-    const activeCarts = await Cart.countDocuments(matchStage);
-
-    const avgCartValue = await Cart.aggregate([
-      { $match: matchStage },
+    const analytics = await Cart.aggregate([
+      {$match: match},
       {
-        $group: {
-          _id: null,
-          avgTotal: { $avg: "$totalPrice" },
-        },
+        $addFields:{
+          finalAmountNumber:{
+            $toDouble: "$finalAmount"
+          }
+        }
       },
+      {
+        $group : {
+          _id: null,
+          totalCarts:{$sum:1},
+          activeCarts:{
+            $sum:{
+              $cond:[
+                {
+                  $gt:["$totalItems",0]
+                },
+                1,
+                0
+              ]
+            }
+          },
+          lockedCarts:{
+            $sum: {
+              $cond:[
+                {
+                  $eq: ["$isLocked", true]
+                },
+                1,
+                0
+              ]
+            }
+          },
+          avgCartValue:{
+            $avg:"$finalAmountNumber"
+          },
+          totalCartValue:{
+            $sum:"$finalAmountNumber"
+          }
+        }
+      }
     ]);
 
-    const analytics = {
-      activeCarts,
-      avgCartValue: avgCartValue[0]
-        ? avgCartValue[0].avgTotal
-        : 0,
-    };
+    if(!analytics.length){
+      return{
+        totalCarts:0,
+        activeCarts:0,
+        lockedCarts:0,
+        avgCartValue:0,
+        totalCartValue:0
+      };
+    }
 
-    return analytics;
+    return {
+      totalCarts: analytics[0].totalCarts,
+      activeCarts: analytics[0].activeCarts,
+      lockedCarts: analytics[0].lockedCarts,
+      avgCartValue: analytics[0].avgCartValue || 0,
+      totalCartValue: analytics[0].totalCartValue || 0
+    }
+
   },
-
-
 
   async createCoupon(data) {
-    if (!data.code || !data.discountType || data.discountValue == null) {
-      throw new ApiError(400, "Required fields missing");
-    }
 
-    const exist = await Coupon.findOne({
-      code: data.code.toUpperCase(),
-    });
+  const {
+    code,
+    discountType,
+    discountValue,
+    expiryDate,
+    minOrderValue = 0,
+    maxDiscount = null,
+    usageLimit = null,
+    usageLimitPerUser = null
+  } = data;
 
-    if (exist) {
-      throw new ApiError(400, "Coupon code already exists");
-    }
+  if (!code || !discountType || discountValue == null) {
+    throw new ApiError(400, "Required fields missing");
+  }
 
-    const coupon = new Coupon({
-      ...data,
-      code: data.code.toUpperCase(),
-    });
+  const normalizedCode = code.toUpperCase().trim();
 
-    await coupon.save();
+  const allowedTypes = ["flat", "percent"];
 
-    return coupon;
+  if (!allowedTypes.includes(discountType)) {
+    throw new ApiError(400, "Invalid discount type");
+  }
+
+  if (discountValue <= 0) {
+    throw new ApiError(400, "Discount value must be positive");
+  }
+
+  if (discountType === "percent" && discountValue > 100) {
+    throw new ApiError(400, "Percent cannot exceed 100");
+  }
+
+  if (minOrderValue < 0) {
+    throw new ApiError(400, "Invalid minimum order value");
+  }
+
+  if (usageLimit && usageLimit < 0) {
+    throw new ApiError(400, "Invalid usage limit");
+  }
+
+  if (usageLimitPerUser && usageLimitPerUser < 0) {
+    throw new ApiError(400, "Invalid per-user usage limit");
+  }
+
+  if (expiryDate && new Date(expiryDate) < new Date()) {
+    throw new ApiError(400, "Expiry date must be in future");
+  }
+
+  const exist = await Coupon.findOne({
+    code: normalizedCode
+  });
+
+  if (exist) {
+    throw new ApiError(400, "Coupon code already exists");
+  }
+
+  const coupon = await Coupon.create({
+    code: normalizedCode,
+    discountType,
+    discountValue,
+    expiryDate,
+    minOrderValue,
+    maxDiscount,
+    usageLimit,
+    usageLimitPerUser,
+    isActive: true
+  });
+
+  return coupon;
   },
 
+  async updateCoupon(couponId, data) {
 
-  async updateCoupon(id, data) {
-  const coupon = await Coupon.findById(id);
+  if (!mongoose.Types.ObjectId.isValid(couponId)) {
+    throw new ApiError(400, "Invalid coupon ID");
+  }
+
+  const coupon = await Coupon.findById(couponId);
 
   if (!coupon) {
     throw new ApiError(404, "Coupon not found");
   }
 
-  Object.assign(coupon, data);
+  const allowedFields = [
+    "code",
+    "discountType",
+    "discountValue",
+    "expiryDate",
+    "minOrderValue",
+    "maxDiscount",
+    "usageLimit",
+    "usageLimitPerUser",
+    "isActive"
+  ];
+
+  for (const key of Object.keys(data)) {
+    if (!allowedFields.includes(key)) {
+      delete data[key];
+    }
+  }
 
   if (data.code) {
-    coupon.code = data.code.toUpperCase();
+
+    const normalized = data.code.toUpperCase().trim();
+
+    const existing = await Coupon.findOne({
+      code: normalized,
+      _id: { $ne: couponId }
+    });
+
+    if (existing) {
+      throw new ApiError(400, "Coupon code already exists");
+    }
+
+    coupon.code = normalized;
+  }
+
+  if (data.discountType) {
+
+    const allowedTypes = ["flat", "percent"];
+
+    if (!allowedTypes.includes(data.discountType)) {
+      throw new ApiError(400, "Invalid discount type");
+    }
+
+    coupon.discountType = data.discountType;
+  }
+
+  if (data.discountValue != null) {
+
+    if (data.discountValue <= 0) {
+      throw new ApiError(400, "Discount must be positive");
+    }
+
+    if (
+      coupon.discountType === "percent" &&
+      data.discountValue > 100
+    ) {
+      throw new ApiError(400, "Percent cannot exceed 100");
+    }
+
+    coupon.discountValue = data.discountValue;
+  }
+
+  if (data.minOrderValue != null) {
+
+    if (data.minOrderValue < 0) {
+      throw new ApiError(400, "Invalid min order value");
+    }
+
+    coupon.minOrderValue = data.minOrderValue;
+  }
+
+  if (data.maxDiscount != null) {
+
+    if (data.maxDiscount < 0) {
+      throw new ApiError(400, "Invalid max discount");
+    }
+
+    coupon.maxDiscount = data.maxDiscount;
+  }
+
+  if (data.usageLimit != null && data.usageLimit < 0) {
+    throw new ApiError(400, "Invalid usage limit");
+  }
+
+  if (data.usageLimitPerUser != null &&
+      data.usageLimitPerUser < 0) {
+    throw new ApiError(400, "Invalid per-user usage limit");
+  }
+
+  if (data.expiryDate) {
+
+    if (new Date(data.expiryDate) < new Date()) {
+      throw new ApiError(400, "Expiry must be future date");
+    }
+
+    coupon.expiryDate = data.expiryDate;
+  }
+
+  if (typeof data.isActive === "boolean") {
+    coupon.isActive = data.isActive;
   }
 
   await coupon.save();
 
   return coupon;
-},
+  },
 
-async listCoupons(page, limit) {
+  async listCoupons(query) {
+
+  let {
+    page = 1,
+    limit = 20,
+    search,
+    status
+  } = query;
+
+  page = Math.max(1, Number(page));
+  limit = Math.min(50, Number(limit)); 
+
   const skip = (page - 1) * limit;
 
-  const coupons = await Coupon.find({})
-    .skip(skip)
-    .limit(limit)
-    .sort({ createdAt: -1 });
+  const filter = {};
 
-  const totalCount = await Coupon.countDocuments();
+  if (search) {
+    filter.code = {
+      $regex: search.toUpperCase(),
+      $options: "i"
+    };
+  }
+
+  const now = new Date();
+
+  if (status === "active") {
+    filter.isActive = true;
+    filter.$or = [
+      { expiryDate: null },
+      { expiryDate: { $gt: now } }
+    ];
+  }
+
+  if (status === "expired") {
+    filter.expiryDate = { $lt: now };
+  }
+
+  if (status === "exhausted") {
+    filter.$expr = {
+      $gte: ["$usageCount", "$totalUsageLimit"]
+    };
+  }
+
+  const [coupons, total] = await Promise.all([
+    Coupon.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean(),
+
+    Coupon.countDocuments(filter)
+  ]);
+
+  const formatted = coupons.map(c => ({
+    ...c,
+    isExpired:
+      c.expiryDate && c.expiryDate < now,
+    isExhausted:
+      c.usageCount >= c.totalUsageLimit
+  }));
 
   return {
-    coupons,
-    totalCount,
+    total,
     page,
-    limit,
+    totalPages: Math.ceil(total / limit),
+    coupons: formatted
   };
-},
+  },
 
-async resetUserCart(userId) {
-  if (!userId) {
-    throw new ApiError(400, "User ID is required");
+  async resetUserCart(userId) {
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new ApiError(400, "Invalid user ID");
   }
 
   const cart = await Cart.findOne({ user: userId });
 
   if (!cart) {
-    throw new ApiError(404, "Cart not found");
+    return {
+      items: [],
+      totalItems: 0,
+      subtotal: 0,
+      discountAmount: 0,
+      finalAmount: 0
+    };
   }
 
-  await cart.clearCart();
+  cart.items = [];
 
-  return cart;
-},
+  cart.coupon = null;
 
+  cart.discountAmount =
+    mongoose.Types.Decimal128.fromString("0.00");
 
+  cart.isLocked = false;
 
+  cart.expiresAt = null;
 
+  cart.calculateTotals();
 
+  await cart.save();
 
+  return {
+    items: [],
+    totalItems: 0,
+    subtotal: 0,
+    discountAmount: 0,
+    finalAmount: 0
+  };
+  },
 
 };

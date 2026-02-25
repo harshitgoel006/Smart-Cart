@@ -1,10 +1,7 @@
 import {asyncHandler} from '../utils/asyncHandler.js';
-import { Cart } from "../models/cart.model.js";
-import { Product } from "../models/product.model.js";
-import { Coupon } from "../models/coupon.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import {ApiError} from "../utils/ApiError.js";
-// import { cartService } from '../services/cart.service.js';
+import { cartService } from '../services/cart.service.js';
+
 
 
 
@@ -21,15 +18,15 @@ const addItems = asyncHandler(async (req, res) => {
   const cart = await cartService.addItems(
     req.user._id,
     req.body.productId,
-    req.body.quantity
+    req.body.quantity,
+    req.body.selectedVariant
   );
 
   return res.status(200).json(
     new ApiResponse(
       200,
-      true,
+      cart,
       "Items added to cart successfully",
-      cart
     )
   );
 });
@@ -44,7 +41,6 @@ const getCartItems = asyncHandler(async(req, res) =>{
     .json(
         new ApiResponse(
             200,
-            true,
             cart,
             "Cart fetched successfully",
             
@@ -56,7 +52,7 @@ const getCartItems = asyncHandler(async(req, res) =>{
 const updateCartItem = asyncHandler(async(req, res) =>{
     const cart = await cartService.updateCartItem(
         req.user._id,
-        req.body.productId,
+        req.params.itemId,
         req.body.quantity
     );
 
@@ -65,7 +61,6 @@ const updateCartItem = asyncHandler(async(req, res) =>{
     .json(
         new ApiResponse(
             200,
-            true,
             "Cart item updated successfully",
             cart
         )
@@ -85,7 +80,6 @@ const removeCartItem = asyncHandler(async(req, res) =>{
     .json(
         new ApiResponse(
             200,
-            true,
             "Cart item removed successfully",
             cart
         )
@@ -103,7 +97,6 @@ const clearCart = asyncHandler(async(req, res) =>{
     .json(
         new ApiResponse(
             200,
-            true, 
             "Cart cleared successfully",
             cart
         )
@@ -119,9 +112,8 @@ const applyCoupon = asyncHandler(async (req, res) => {
 
   return res.status(200).json(
     new ApiResponse(
-      true,
+      cart,
       "Coupon applied successfully",
-      cart
     )
   );
 });
@@ -150,9 +142,8 @@ const getCartAnalytics = asyncHandler(async(req, res) =>{
     .json(
         new ApiResponse(
             200,        
-            true,
+            analytics,
             "Cart analytics fetched successfully",
-            analytics
         )
     );
 
@@ -160,24 +151,21 @@ const getCartAnalytics = asyncHandler(async(req, res) =>{
 
 // coupon management
 const createCoupon = asyncHandler(async (req, res) => {
-
-  const coupon = await cartService.createCoupon(req.body);
-  
-
-  return res
-  .status(201)
-  .json(
-    new ApiResponse(
-        200,
-        true, 
-        "Coupon created successfully", 
-        coupon
-    )
-);
+    const coupon = await cartService.createCoupon(req.body);
+   
+    return res
+    .status(201)
+    .json(
+        new ApiResponse(
+            200,
+            coupon,
+            "Coupon created successfully", 
+        )
+    );
 });
 
 // update coupon
- const updateCoupon = asyncHandler(async (req, res) => {
+const updateCoupon = asyncHandler(async (req, res) => {
   const coupon = await cartService.updateCoupon(
     req.params.id,
     req.body
@@ -188,28 +176,24 @@ const createCoupon = asyncHandler(async (req, res) => {
   .json(
     new ApiResponse(
         200,
-        true, 
+        coupon,
         "Coupon updated successfully", 
-        coupon
     )
   );
 });
 
 // list coupons
- const listCoupons = asyncHandler(async (req, res) => {
-  const limit = parseInt(req.query.limit) || 20;
-  const page = parseInt(req.query.page) || 1;
+const listCoupons = asyncHandler(async (req, res) => {
 
- const result = await cartService.listCoupons(page,limit);
+  const result = await cartService.listCoupons(
+    req.query
+  );
 
-  return res
-  .status(200)
-  .json(
+  return res.status(200).json(
     new ApiResponse(
-        200,
-        true, 
-        "Coupons list", 
-        result
+      200,
+      result,
+      "Coupons fetched successfully"
     )
   );
 });
@@ -224,9 +208,8 @@ const resetUserCart = asyncHandler(async(req, res) =>{
     .json(
         new ApiResponse(
             200,
-            true,
+            cart,
             "User cart reset successfully",
-            cart
         )
     );
 });

@@ -1,35 +1,56 @@
 import mongoose from "mongoose";
 
-//////////////////////////////////////////////////////////
-// CART ITEM
-//////////////////////////////////////////////////////////
 
 const cartItemSchema = new mongoose.Schema(
-  {
-    product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: true
-    },
-
-    quantity: {
-      type: Number,
-      required: true,
-      min: 1,
-      default: 1
-    },
-
-    priceSnapshot: {
-      type: mongoose.Schema.Types.Decimal128,
-      required: true
-    }
+{
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+    required: true,
+    index: true
   },
-  { _id: true }
+
+  seller: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true
+  },
+
+  selectedVariant: {
+    label: String,
+    value: String
+  },
+
+  quantity: {
+    type: Number,
+    required: true,
+    min: 1
+  },
+
+  unitPriceSnapshot: {
+    type: mongoose.Schema.Types.Decimal128,
+    required: true
+  },
+
+  discountSnapshot: {
+    type: Number,
+    default: 0
+  },
+
+  flashSaleSnapshot: {
+    type: Number,
+    default: 0
+  },
+
+  lineTotalSnapshot: {
+    type: mongoose.Schema.Types.Decimal128,
+    required: true
+  }
+},
+{ _id: true }
 );
 
-//////////////////////////////////////////////////////////
-// CART
-//////////////////////////////////////////////////////////
 
 const cartSchema = new mongoose.Schema(
   {
@@ -50,7 +71,7 @@ const cartSchema = new mongoose.Schema(
 
     subtotal: {
       type: mongoose.Schema.Types.Decimal128,
-      default: 0
+      default: mongoose.Types.Decimal128.fromString("0.00")
     },
 
     coupon: {
@@ -61,82 +82,70 @@ const cartSchema = new mongoose.Schema(
 
     discountAmount: {
       type: mongoose.Schema.Types.Decimal128,
-      default: 0
+      default: mongoose.Types.Decimal128.fromString("0.00")
     },
 
     finalAmount: {
       type: mongoose.Schema.Types.Decimal128,
-      default: 0
+      default: mongoose.Types.Decimal128.fromString("0.00")
+    },
+    isLocked:{
+      type: Boolean,
+      default: false
+    },
+    expiresAt:{
+      type:Date,
+      default:null,
+      index:true
     }
+
   },
   { timestamps: true }
 );
 
-//////////////////////////////////////////////////////////
-// CALCULATE TOTALS (NO PRODUCT FETCH)
-//////////////////////////////////////////////////////////
+cartSchema.index({ user: 1, "items.product": 1 });
 
 cartSchema.methods.calculateTotals = function () {
+
   let totalItems = 0;
   let subtotal = 0;
 
   for (const item of this.items) {
-    const price = parseFloat(item.priceSnapshot.toString());
+
+    const unit = parseFloat(
+      item.unitPriceSnapshot.toString()
+    );
+
+    const lineTotal = unit * item.quantity;
+
+    item.lineTotalSnapshot =
+      mongoose.Types.Decimal128.fromString(
+        lineTotal.toFixed(2)
+      );
+
     totalItems += item.quantity;
-    subtotal += item.quantity * price;
+    subtotal += lineTotal;
   }
 
   this.totalItems = totalItems;
-  this.subtotal = subtotal.toFixed(2);
 
-  const discount = parseFloat(this.discountAmount?.toString() || 0);
+  this.subtotal =
+    mongoose.Types.Decimal128.fromString(
+      subtotal.toFixed(2)
+    );
 
-  this.finalAmount = Math.max(0, subtotal - discount).toFixed(2);
-};
-
-//////////////////////////////////////////////////////////
-// ADD ITEM
-//////////////////////////////////////////////////////////
-
-cartSchema.methods.addItem = function (productId, quantity, priceSnapshot) {
-  const existing = this.items.find(
-    item => item.product.toString() === productId.toString()
+  const discount = parseFloat(
+    this.discountAmount?.toString() || "0"
   );
 
-  if (existing) {
-    existing.quantity += quantity;
-  } else {
-    this.items.push({
-      product: productId,
-      quantity,
-      priceSnapshot
-    });
-  }
+  const final = Math.max(0, subtotal - discount);
 
-  this.calculateTotals();
+  this.finalAmount =
+    mongoose.Types.Decimal128.fromString(
+      final.toFixed(2)
+    );
 };
 
-//////////////////////////////////////////////////////////
-// REMOVE ITEM
-//////////////////////////////////////////////////////////
 
-cartSchema.methods.removeItem = function (productId) {
-  this.items = this.items.filter(
-    item => item.product.toString() !== productId.toString()
-  );
-
-  this.calculateTotals();
-};
-
-//////////////////////////////////////////////////////////
-// CLEAR
-//////////////////////////////////////////////////////////
-
-cartSchema.methods.clearCart = function () {
-  this.items = [];
-  this.discountAmount = 0;
-  this.coupon = null;
-  this.calculateTotals();
-};
 
 export const Cart = mongoose.model("Cart", cartSchema);
