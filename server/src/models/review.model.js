@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 
-//////////////////////////////////////////////////////////
-// ASPECT SCHEMA
-//////////////////////////////////////////////////////////
+
 
 const aspectSchema = new mongoose.Schema(
   {
@@ -21,9 +19,42 @@ const aspectSchema = new mongoose.Schema(
   { _id: false }
 );
 
-//////////////////////////////////////////////////////////
-// REVIEW SCHEMA
-//////////////////////////////////////////////////////////
+const voteSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+    type: {
+      type: String,
+      enum: ["helpful", "not_helpful"],
+      required: true
+    }
+  },
+  { _id: false }
+);
+
+const reportSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+    reason: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 500
+    },
+    reportedAt: {
+      type: Date,
+      default: Date.now
+    }
+  },
+  { _id: false }
+);
 
 const reviewSchema = new mongoose.Schema(
   {
@@ -47,16 +78,22 @@ const reviewSchema = new mongoose.Schema(
       required: true
     },
 
-    orderItem: {
-      type: mongoose.Schema.Types.ObjectId,
+    orderItemId: {
+      type: String, 
       required: true
+    },
+
+    variantSnapshot: {
+      label: String,
+      value: String
     },
 
     rating: {
       type: Number,
       required: true,
       min: 1,
-      max: 5
+      max: 5,
+      index: true
     },
 
     title: {
@@ -82,13 +119,7 @@ const reviewSchema = new mongoose.Schema(
 
     isVerifiedPurchase: {
       type: Boolean,
-      default: true,
-      index: true
-    },
-
-    isFeatured: {
-      type: Boolean,
-      default: false
+      required: true
     },
 
     status: {
@@ -98,22 +129,21 @@ const reviewSchema = new mongoose.Schema(
       index: true
     },
 
-    rejectionReason: String,
-
-    helpfulCount: {
-      type: Number,
-      default: 0
+    moderatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
     },
 
-    notHelpfulCount: {
-      type: Number,
-      default: 0
+    moderatedAt: Date,
+
+    rejectionReason: {
+      type: String,
+      maxlength: 500
     },
 
-    reportedCount: {
-      type: Number,
-      default: 0
-    },
+    votes: [voteSchema],
+
+    reports: [reportSchema],
 
     sellerResponse: {
       message: String,
@@ -133,65 +163,17 @@ const reviewSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-//////////////////////////////////////////////////////////
-// UNIQUE REVIEW PER ORDER ITEM
-//////////////////////////////////////////////////////////
-
 reviewSchema.index(
-  { user: 1, orderItem: 1 },
+  { user: 1, order: 1, orderItemId: 1 },
   { unique: true }
 );
-
-//////////////////////////////////////////////////////////
-// PRODUCT LISTING PERFORMANCE INDEX
-//////////////////////////////////////////////////////////
 
 reviewSchema.index({
   product: 1,
   status: 1,
   isDeleted: 1,
+  rating: 1,
   createdAt: -1
 });
-
-//////////////////////////////////////////////////////////
-// SOFT DELETE FILTER
-//////////////////////////////////////////////////////////
-
-reviewSchema.pre(/^find/, function (next) {
-  this.where({ isDeleted: false });
-  next();
-});
-
-//////////////////////////////////////////////////////////
-// STATIC: RECALCULATE PRODUCT RATING
-//////////////////////////////////////////////////////////
-
-reviewSchema.statics.calculateProductRating = async function (productId) {
-  const mongooseId = new mongoose.Types.ObjectId(productId);
-
-  const result = await this.aggregate([
-    {
-      $match: {
-        product: mongooseId,
-        status: "approved",
-        isDeleted: false
-      }
-    },
-    {
-      $group: {
-        _id: "$product",
-        avgRating: { $avg: "$rating" },
-        totalReviews: { $sum: 1 }
-      }
-    }
-  ]);
-
-  return result.length
-    ? {
-        avgRating: Number(result[0].avgRating.toFixed(2)),
-        totalReviews: result[0].totalReviews
-      }
-    : { avgRating: 0, totalReviews: 0 };
-};
 
 export const Review = mongoose.model("Review", reviewSchema);
