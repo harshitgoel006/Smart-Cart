@@ -14,7 +14,7 @@ export const cartService = {
 
 
  
-  async addItems(userId, productId, quantity, selectedVariant = null) {
+  async addItems(userId, productId, quantity, selectedVariant = null,session = null) {
 
   if (!mongoose.Types.ObjectId.isValid(productId)) {
     throw new ApiError(400, "Invalid product ID");
@@ -83,7 +83,15 @@ export const cartService = {
       (effectivePrice * flashDiscount) / 100;
   }
 
-  let cart = await Cart.findOne({ user: userId });
+  let cart = await Cart.findOne({ user: userId }).session(session);
+
+  if(!cart){
+    const [newCart] = await Cart.create(
+      [{user: userId, items: []}],
+      {session}
+    );
+    cart = newCart;
+  }
 
   if (!cart) {
     cart = new Cart({ user: userId, items: [] });

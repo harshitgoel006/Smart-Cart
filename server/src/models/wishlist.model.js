@@ -1,27 +1,5 @@
 import mongoose from "mongoose";
 
-const wishlistItemSchema = new mongoose.Schema(
-  {
-    product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-      required: true
-    },
-
-    note: {
-      type: String,
-      maxlength: 500,
-      default: ""
-    },
-
-    addedAt: {
-      type: Date,
-      default: Date.now
-    }
-  },
-  { _id: true }
-);
-
 const wishlistSchema = new mongoose.Schema(
   {
     user: {
@@ -33,53 +11,96 @@ const wishlistSchema = new mongoose.Schema(
 
     name: {
       type: String,
-      default: "My Wishlist"
+      required: true,
+      trim: true,
+      maxlength: 100
     },
-
-    items: [wishlistItemSchema],
 
     privacy: {
       type: String,
       enum: ["public", "private"],
-      default: "private"
+      default: "private",
+      index: true
     },
 
     isDefault: {
       type: Boolean,
-      default: true
+      default: false,
+      index: true
     },
 
     isDeleted: {
       type: Boolean,
-      default: false
+      default: false,
+      index: true
     }
   },
   { timestamps: true }
 );
 
-//////////////////////////////////////////////////////////
-// UNIQUE USER + NAME
-//////////////////////////////////////////////////////////
+wishlistSchema.index(
+  { user: 1, name: 1 },
+  { unique: true, collation: { locale: "en", strength: 2 } }
+);
 
-wishlistSchema.index({ user: 1, name: 1 }, { unique: true });
+wishlistSchema.index(
+  { user: 1, isDefault: 1 },
+  { unique: true, partialFilterExpression: { isDefault: true } }
+);
 
-//////////////////////////////////////////////////////////
-// PREVENT DUPLICATE PRODUCTS
-//////////////////////////////////////////////////////////
+const wishlistItemSchema = new mongoose.Schema(
+  {
+    wishlist: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Wishlist",
+      required: true,
+      index: true
+    },
 
-wishlistSchema.methods.addProduct = function (productId, note = "") {
-  const exists = this.items.some(
-    item => item.product.toString() === productId.toString()
-  );
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true
+    },
 
-  if (!exists) {
-    this.items.push({ product: productId, note });
-  }
-};
+    product: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+      index: true
+    },
 
-wishlistSchema.pre(/^find/, function (next) {
-  this.where({ isDeleted: false });
-  next();
+    note: {
+      type: String,
+      maxlength: 500,
+      default: ""
+    },
+
+    priceAtAdd: {
+      type: mongoose.Schema.Types.Decimal128,
+      default: null
+    },
+
+    isDeleted: {
+      type: Boolean,
+      default: false,
+      index: true
+    }
+  },
+  { timestamps: true }
+);
+
+wishlistItemSchema.index(
+  { wishlist: 1, product: 1 },
+  { unique: true }
+);
+
+wishlistItemSchema.index({
+  user: 1,
+  isDeleted: 1,
+  createdAt: -1
 });
 
 export const Wishlist = mongoose.model("Wishlist", wishlistSchema);
+export const WishlistItem = mongoose.model("WishlistItem", wishlistItemSchema);
