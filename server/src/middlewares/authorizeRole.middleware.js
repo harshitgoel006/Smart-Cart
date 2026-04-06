@@ -8,7 +8,7 @@ const ROLE_PRIORITY = Object.freeze({
   superadmin: 5
 });
 
-export const authorizeRoles = (options = {}) => {
+export const authorizedRole = (options = {}) => {
 
   const {
     allow = [],            
