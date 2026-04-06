@@ -29,739 +29,121 @@ import { Escalation } from "../models/escalation.model.js";
 
 // This controller allows a customer to place a new order
 const placeOrderController = asyncHandler(async (req, res) => {
-    const userId = req.user._id;
-    const { shippingAddress, paymentMethod, couponCode, notes, productId, quantity, formCart = false } = req.body;
+  const userId = req.user._id;
 
-    if (!shippingAddress || !paymentMethod) {
-        throw new ApiError(400, "Shipping address and payment method are required to place an order.");
-    }
-    
-    let orderItems = [];
-    let totalAmount = 0;
+  const order = await OrderService.placeOrder(userId, req.body, req.user);
 
-    if (formCart) {
-        const cart = await Cart.findOne({ user: userId })
-            .populate('items.product');
-
-        if (!cart || cart.items.length === 0) {
-            throw new ApiError(400, "Your cart is empty.");
-        }
-        
-        cart.items.forEach(cartItem => {
-            totalAmount += cartItem.priceSnapshot * cartItem.quantity;
-            orderItems.push({
-                product: cartItem.product._id,
-                quantity: cartItem.quantity,
-                price: cartItem.priceSnapshot,
-                seller: cartItem.product.seller,
-                fulfillmentStatus: "Processing"
-            });
-        });
-        console.log("🔍 Cart orderItems:", orderItems);  // DEBUG
-    } else {
-        if (!productId || !quantity) {
-            throw new ApiError(400, "Product ID and quantity are required to place an order.");
-        }
-        const product = await Product.findById(productId);
-        if (!product) {
-            throw new ApiError(404, "Product not found.");
-        }
-
-        if (product.stock < quantity) {
-            throw new ApiError(400, `Only ${product.stock} items left in stock.`);
-        }
-
-        totalAmount = product.price * quantity;
-        orderItems.push({
-            product: product._id,
-            quantity,
-            price: product.price,
-            seller: product.seller,
-            fulfillmentStatus: "Processing"
-        });
-    }
-
-    let discount = 0;
-    let couponUsed = null;
-    if (couponCode) {
-        const coupon = await Coupon.findOne({
-            code: couponCode.toUpperCase(),
-            active: true,
-            expiryDate: { $gt: new Date() }
-        });
-        if (!coupon) {
-            throw new ApiError(400, "Invalid or expired coupon code.");
-        }
-        if (coupon.usageCount >= coupon.totalUsageLimit) {
-            throw new ApiError(400, "Coupon usage limit reached.");
-        }
-
-        if (coupon.discountType === "percentage") {
-            discount = (totalAmount * coupon.discountValue) / 100;
-        } else {
-            discount = coupon.discountValue;
-        }
-        couponUsed = coupon._id;
-
-        await Coupon.findByIdAndUpdate(coupon._id, {
-            $inc: { usageCount: 1 }
-        });
-    }
-    
-    const finalAmount = totalAmount - discount;
-    const qrCode = await generateQRCode();
-    const qrCodeImageUrl = await generateAndUploadQRCode(qrCode);
-    
-    const newOrder = new Order({
-        user: userId,
-        items: orderItems,
-        shippingAddress,
-        paymentMethod,
-        paymentStatus: paymentMethod === "COD" ? "Pending" : "Pending",
-        totalAmount,
-        discount,
-        finalAmount,
-        couponUsed,
-        orderStatus: "Pending",
-        qrCode,
-        qrCodeImage: qrCodeImageUrl,
-        notes,
-        statusHistory: [
-            { 
-                status: "Pending",
-                updatedAt: new Date(),
-                role: "user"
-            }
-        ],
-        trackingEvents: [{
-            event: "Order Placed",
-            scannedAt: new Date(),
-            remarks: "Order successfully placed by customer",
-            location: "Warehouse"
-        }]
-    });
-
-    
-    await newOrder.save();
-
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
-    try {
-        for (const item of orderItems) {
-            await Product.findByIdAndUpdate(
-                item.product,
-                { 
-                    $inc: { 
-                        stock: -item.quantity,
-                        sold: item.quantity 
-                    }
-                },
-                { session }
-            );
-        }
-
-        // Clear user's cart
-        await Cart.findOneAndUpdate(
-            { user: userId },
-            { 
-                $set: { 
-                    items: [],
-                    totalItems: 0,
-                    totalPrice: 0 
-                }
-            },
-            { session }
-        );
-
-        await session.commitTransaction();
-    } catch (error) {
-        await session.abortTransaction();
-        throw new ApiError(500, "Failed to update inventory and cart");
-    } finally {
-        session.endSession();
-    }
-
-    const populatedOrder = await Order.findById(newOrder._id)
-        .populate("items.product", "name images")
-        .populate("items.seller", "shopName fullname");
-
-    // Customer notification
-    try {
-        await createAndSendNotification({
-            recipientId: userId,
-            recipientRole: "customer",
-            recipientEmail: req.user.email,
-            type: "ORDER_PLACED",
-            title: "Order placed successfully",
-            message: `Your order #${populatedOrder._id} has been placed.`,
-            relatedEntity: {
-                entityType: "order",
-                entityId: populatedOrder._id,
-            },
-            channels: ["in-app", "email"],
-            meta: {
-                orderId: populatedOrder._id,
-                amount: populatedOrder.finalAmount,
-            },
-        });
-    } catch (e) {
-        console.error("ORDER_PLACED notification (customer) failed", e);
-    }
-
-    // Seller notifications
-    try {
-
-      const populatedOrder = await Order.findById(order._id)
-        .populate("customer", "fullname email phone")
-        .populate("items.product", "name price images")
-        .populate("items.seller", "fullname email");
-        const sellerIds = [
-            ...new Set(
-                populatedOrder.items.map((i) =>
-                    i.seller._id.toString()
-                )
-            ),
-        ];
-
-        for (const sellerId of sellerIds) {
-            const sellerItem = populatedOrder.items.find(
-                (i) => i.seller._id.toString() === sellerId
-            );
-            await createAndSendNotification({
-                recipientId: sellerId,
-                recipientRole: "seller",
-                recipientEmail: sellerItem.seller.email ,
-                type: "NEW_ORDER_FOR_SELLER",
-                title: "New order received",
-                message: `You have received a new order #${populatedOrder._id}.`,
-                relatedEntity: {
-                    entityType: "order",
-                    entityId: populatedOrder._id,
-                },
-                channels: ["in-app", "email"],
-                meta: {
-                    orderId: populatedOrder._id,
-                    productName: sellerItem.product.name,
-                },
-            });
-        }
-    } catch (e) {
-        console.error("NEW_ORDER_FOR_SELLER notifications failed", e);
-    }
-
-    return res
-        .status(201)
-        .json(
-            new ApiResponse(
-                201,
-                "Order placed successfully",
-                populatedOrder
-            )
-        );
+  return res.status(201).json(
+    new ApiResponse(
+      201,
+      order,
+      "Order placed successfully"
+    )
+  );
 });
 
+
 // This controller fetches order history for the logged-in customer
-const getOrderHistoryController = asyncHandler(async( req, res) =>{
+
+const getOrderHistoryController = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const {page =1, limit =10, status , startDate, endDate} = req.query;
 
-  const filter = {user: userId};
+  const data = await OrderService.getOrderHistory(userId, req.query);
 
-  if(status){
-    filter.orderStatus = status;
-  }
-  if(startDate || endDate){
-    filter.createdAt = {};
-    if(startDate){
-      filter.createdAt.$gte = new Date(startDate);
-    }
-    if(endDate){
-      filter.createdAt.$lte = new Date(endDate);
-    }
-  }
-  const skip = (parseInt(page)-1) * parseInt(limit);
-  const ordersPromise = Order.find(filter)
-  .sort({createdAt: -1})
-  .skip(skip)
-  .limit(parseInt(limit));
-
-  const countPromise = Order.countDocuments(filter);
-
-  const [orders, total] = await Promise.all([ordersPromise, countPromise]);
-
-  const responseData = {
-    orders: orders.map(order => ({
-      _id: order._id,
-      orderStatus: order.orderStatus,
-      totalAmount: order.finalAmount,
-      createdAt: order.createdAt,
-
-    })),
-    pagination:{
-      total, 
-      page: parseInt(page),
-      pages: Math.ceil(total/limit)
-    }
-  };
-
-  return res 
-  .status(200)
-  .json(
+  return res.status(200).json(
     new ApiResponse(
       200,
-      responseData,
-      "Order history fetched successfully",
+      data,
+      "Order history fetched successfully"
     )
-  )
-
+  );
 });
 
 // This controller fetches detailed information for a specific order of the logged-in customer
-const getOrderDetailsController = asyncHandler(async( req, res) =>{
 
+const getOrderDetailsController = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const {orderId} = req.params;
 
-  const order = await Order.findOne({_id:orderId, user: userId})
-  .populate("items.product", "name images price")
-  .populate("items.seller", "shopName")
-  .populate("couponUsed");
+  const data = await OrderService.getOrderDetails(userId, req.params.orderId);
 
-  if(!order){
-    throw new ApiError(404, "Order not found.");
-  }
-  const responseData = {
-    _id: order._id,
-    orderStatus: order.orderStatus,
-    items: order.items,
-    shippingAddress: order.shippingAddress,
-    paymentMethod: order.paymentMethod,
-    paymentStatus: order.paymentStatus,
-    totalAmount: order.totalAmount,
-    finalAmount: order.finalAmount,
-    discount: order.discount,
-    couponUsed: order.couponUsed,
-    shipmentDetails: order.shipmentDetails,
-    deliveredAt: order.deliveredAt,
-    qrCode: order.qrCode,
-    trackingEvents: order.trackingEvents,
-    createdAt: order.createdAt,
-    updatedAt: order.updatedAt,
-  }
-  return res 
-  .status(200)
-  .json(
+  return res.status(200).json(
     new ApiResponse(
       200,
-      responseData,
+      data,
       "Order details fetched successfully"
     )
   );
-
 });
 
 // This controller fetches tracking information for a specific order of the logged-in customer
-const trackOrderController = asyncHandler(async( req, res) =>{
+// controllers/order.controller.js
 
+const trackOrderController = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const {orderId} = req.params;
 
-  const order = await Order.findOne({_id:orderId, user:userId})
-  .select("trackingEvents orderStatus shipmentDetails estimatedDelivery deliveredAt");
+  const data = await OrderService.trackOrder(userId, req.params.orderId);
 
-  if(!order){
-    throw new ApiError(404, "Order not found or access denied.");
-  }
-
-  order.trackingEvents.sort((a, b) => new Date(a.scannedAt) - new Date(b.scannedAt));
-
-  return res
-  .status(200)
-  .json(
+  return res.status(200).json(
     new ApiResponse(
       200,
-      order,
-      "Order tracking information fetched successfully"
+      data,
+      "Order tracking fetched successfully"
     )
   );
 });
 
 // This controller allows a customer to cancel an order
-const cancelOrderController = asyncHandler(async(req, res) =>{
-
+const cancelOrderController = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const {orderId} = req.params;
 
-  const order = await Order.findOne({_id: orderId, user: userId})
+  const order = await OrderService.cancelOrder(
+    userId,
+    req.params.orderId,
+    req.user
+  );
 
-  if(!order){
-    throw new ApiError(404, "Order not found.");
-  }
-  if(!["Pending", "Processing", "Cofirmed"].includes(order.orderStatus)){
-    throw new ApiError(400, `Order cannot be cancelled at this stage: ${order.orderStatus}`);
-  }
-
-  order.orderStatus = "Cancelled";
-
-  order.statusHistory.push({
-    status: "Cancelled",
-    updatedAt: new Date()
-  });
-
-  await order.save();
-
-  for(const item of order.items){
-    await Product.findByIdAndUpdate(
-      item.product,
-      {
-        $inc: {stock: item.quantity}
-      }
-    );
-  }
-
-  if(order.paymentStatus === "Paid"){
-    const refundResult = await processRefund(order);
-    if(!refundResult.success){
-      throw new ApiError(500, "Refund processing failed. Contact support.");
-    }
-    else{
-      order.paymentStatus = "Refunded";
-      order.refundRequestStatus = "Approved";
-      order.statusHistory.push({
-        status: "Refunded",
-        updatedAt: new Date()
-      })
-    }
-  }
-
-  await order.save();
-
-  await createAndSendNotification({
-    recipientId: userId,
-    recipientType: "customer",
-    type: "ORDER_CANCELLED",
-    title: "Order Cancelled",
-    message: `Your order #${order._id} has been cancelled.`,
-    relatedEntity: { entityType: "order", entityId: order._id },
-    channels: ["in-app", "email"]
-  });
-
-  const sellerIds = [...new Set(order.items.map(item => item.seller.toString()))];
-  for (const sellerId of sellerIds) {
-    await createAndSendNotification({
-      recipientId: sellerId,
-      recipientEmail: anyItem?.seller?.email,
-      recipientType: "seller",
-      type: "ORDER_CANCELLED",
-      title: "Order Cancelled",
-      message: `Order #${order._id} including your items has been cancelled.`,
-      relatedEntity: { entityType: "order", entityId: order._id },
-      channels: ["in-app","email"]
-    });
-  }
-
-  try {
-      await createAndSendNotification({
-        recipientId: userId,
-        recipientRole: "customer",
-        recipientEmail: req.user.email,
-        type: "ORDER_CANCELLED",
-        title: "Order cancelled",
-        message: `Your order #${order._id} has been cancelled.`,
-        relatedEntity: {
-          entityType: "order",
-          entityId: order._id,
-        },
-        channels: ["in-app", "email"],
-        meta: {
-          orderId: order._id,
-        },
-      });
-    } catch (e) {
-      console.error(
-        "ORDER_CANCELLED notification (customer) failed",
-        e
-      );
-    }
-
-    // Sellers
-    try {
-      const sellerIds = [
-        ...new Set(
-          order.items.map((item) =>
-            item.seller.toString()
-          )
-        ),
-      ];
-      for (const sellerId of sellerIds) {
-        const anyItem = order.items.find(
-          (i) => i.seller.toString() === sellerId
-        );
-        await createAndSendNotification({
-          recipientId: sellerId,
-          recipientRole: "seller",
-          recipientEmail: null,
-          type: "ORDER_ITEM_CANCELLED",
-          title: "Order cancelled",
-          message: `Order #${order._id} including your items has been cancelled.`,
-          relatedEntity: {
-            entityType: "order",
-            entityId: order._id,
-          },
-          channels: ["in-app"],
-          meta: {
-            orderId: order._id,
-            productName: anyItem?.product?.name,
-          },
-        });
-      }
-    } catch (e) {
-      console.error(
-        "ORDER_ITEM_CANCELLED notifications (sellers) failed",
-        e
-      );
-    }
-
-  return res 
-  .status(200)
-  .json(
+  return res.status(200).json(
     new ApiResponse(
       200,
       order,
       "Order cancelled successfully"
     )
   );
-
 });
 
 // This controller allows a customer to request a return for an order
-const requestReturnController = asyncHandler(async(req, res) =>{
+const requestReturnController = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const {orderId} = req.params;
-  const { reason, commets} = req.body;
 
-  const order = await Order.findOne({_id:orderId, user:userId});
-  if(!order){
-    throw new ApiError(404, "Order not found.");
-  }
+  const data = await OrderService.requestReturn(
+    userId,
+    req.params.orderId,
+    req.body
+  );
 
-  if(order.orderStatus !== "Delivered"){
-    throw new ApiError(400, "Return can only be requested for delivered orders.");
-  }
-
-  const deliveryDate = order.deliveredAt;
-  const now = new Date();
-  const returnWindowDays = 7;
-  
-  if(!deliveryDate || ((now - deliveryDate) / (1000 * 60* 60 *24)) > returnWindowDays){
-    throw new ApiError(400, "Return window has expired.");
-  }
-
-  order.returnStatus = "Requested";
-  order.statusHistory.push({
-    status:"Return Requested",
-    updatedAt: new Date()
-  });
-  order.notes = order.notes?order.notes + `\nReturn Reason: ${reason}\nComments: ${commets || ""}`:
-  `Return Reason: ${reason}\nComments: ${commets || ""}`;
-
-  await order.save();
-
-  const sellerIds = [...new Set(order.items.map(item => item.seller.toString()))];
-  for (const sellerId of sellerIds) {
-    await createAndSendNotification({
-      recipientId: sellerId,
-      recipientEmail: anyItem?.seller?.email,
-      recipientType: "seller",
-      type: "RETURN_REQUESTED",
-      title: "Return Request Submitted",
-      message: `Return requested for order #${order._id}. Please review.`,
-      relatedEntity: { entityType: "order", entityId: order._id },
-      channels: ["in-app", "email"]
-    });
-  }
-
-  try {
-      await createAndSendNotification({
-        recipientId: userId,
-        recipientRole: "customer",
-        recipientEmail: req.user.email,
-        type: "RETURN_REQUESTED_CUSTOMER",
-        title: "Return request submitted",
-        message: `Your return request for order #${order._id} has been submitted.`,
-        relatedEntity: {
-          entityType: "order",
-          entityId: order._id,
-        },
-        channels: ["in-app", "email"],
-        meta: {
-          orderId: order._id,
-          reason,
-        },
-      });
-    } catch (e) {
-      console.error(
-        "RETURN_REQUESTED_CUSTOMER notification failed",
-        e
-      );
-    }
-
-    // 🔔 Sellers
-    try {
-      const sellerIds = [
-        ...new Set(
-          order.items.map((item) =>
-            item.seller.toString()
-          )
-        ),
-      ];
-      for (const sellerId of sellerIds) {
-        const anyItem = order.items.find(
-          (i) => i.seller.toString() === sellerId
-        );
-        await createAndSendNotification({
-          recipientId: sellerId,
-          recipientRole: "seller",
-          recipientEmail: null,
-          type: "RETURN_REQUESTED_FOR_ITEM",
-          title: "Return requested",
-          message: `Return requested for order #${order._id}. Please review.`,
-          relatedEntity: {
-            entityType: "order",
-            entityId: order._id,
-          },
-          channels: ["in-app", "email"],
-          meta: {
-            orderId: order._id,
-            productName: anyItem?.product?.name,
-            reason,
-          },
-        });
-      }
-    } catch (e) {
-      console.error(
-        "RETURN_REQUESTED_FOR_ITEM notifications failed",
-        e
-      );
-    }
-
-
-  return res 
-  .status(200)
-  .json(
+  return res.status(200).json(
     new ApiResponse(
       200,
-      order,
+      data,
       "Return request submitted successfully"
     )
   );
-
 });
 
 // This controller allows a customer to request a refund for an order
-const requestRefundController = asyncHandler(async(req, res) =>{
-
+const requestRefundController = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const {orderId} = req.params;
-  const {reason, comments} = req.body;
 
-  const order = await Order.findOne({_id:orderId, user:userId});
+  const data = await OrderService.requestRefund(
+    userId,
+    req.params.orderId,
+    req.body
+  );
 
-  if(!order){
-    throw new ApiError(404, "Order not found.");
-  }
-
-  if (
-    !["Cancelled", "Returned"].includes(order.orderStatus) &&
-    !(order.orderStatus === "Delivered" && order.returnStatus === "Requested")
-  ) {
-    throw new ApiError(400, "Refund request not allowed for this order status.");
-  }
-
-  order.refundRequestStatus = "Requested";
-  order.statusHistory.push({
-    status: "Refund Requested",
-    updatedAt: new Date()
-  });
-  order.notes = order.notes
-    ? order.notes + `\nRefund Reason: ${reason}\nComments: ${comments || ""}`
-    : `Refund Reason: ${reason}\nComments: ${comments || ""}`;
-
-  await order.save();
-
-  await createAndSendNotification({
-    recipientId: process.env.ADMIN_USER_ID, // Set proper admin recipient
-    recipientType: "admin",
-    type: "REFUND_REQUESTED",
-    title: "Refund Request Submitted",
-    message: `Refund requested for order #${order._id}. Please review.`,
-    relatedEntity: { entityType: "order", entityId: order._id },
-    channels: ["in-app", "email"]
-  });
-
-  try {
-      await createAndSendNotification({
-        recipientId: userId,
-        recipientRole: "customer",
-        recipientEmail: req.user.email,
-        type: "REFUND_REQUESTED_CUSTOMER",
-        title: "Refund request submitted",
-        message: `Your refund request for order #${order._id} has been submitted.`,
-        relatedEntity: {
-          entityType: "order",
-          entityId: order._id,
-        },
-        channels: ["in-app", "email"],
-        meta: {
-          orderId: order._id,
-          reason,
-        },
-      });
-    } catch (e) {
-      console.error(
-        "REFUND_REQUESTED_CUSTOMER notification failed",
-        e
-      );
-    }
-
-    // 🔔 Admin notification for high-value refunds
-    try {
-      const threshold = 1000; // adjust
-      if (order.finalAmount >= threshold) {
-        // const admin = await User.findOne({ role: "admin" });
-        // if (admin)
-        await createAndSendNotification({
-          recipientId: "6946fbc63074456aa4c2906c",
-          recipientRole: "admin",
-          recipientEmail: "harshitgoel885@gmail.com",
-          type: "HIGH_VALUE_REFUND_REQUESTED",
-          title: "High value refund request",
-          message: `Refund requested for order #${order._id} (amount ₹${order.finalAmount}).`,
-          relatedEntity: {
-            entityType: "order",
-            entityId: order._id,
-          },
-          channels: ["in-app"],
-          meta: {
-            orderId: order._id,
-            amount: order.finalAmount,
-          },
-        });
-      }
-    } catch (e) {
-      console.error(
-        "HIGH_VALUE_REFUND_REQUESTED notification failed",
-        e
-      );
-    }
-
-  return res 
-  .status(200)
-  .json(
+  return res.status(200).json(
     new ApiResponse(
       200,
-      order,
+      data,
       "Refund request submitted successfully"
     )
   );
@@ -769,50 +151,20 @@ const requestRefundController = asyncHandler(async(req, res) =>{
 
 // This controller allows a customer to download the invoice for an order
 const downloadInvoiceController = asyncHandler(async (req, res) => {
-  const { orderId } = req.params;
   const userId = req.user._id;
 
-  // Populate needed fields
-  const order = await Order.findOne({
-    _id: orderId,
-    user: userId,
-  })
-    .populate("items.product", "name price")
-    .populate("user", "email fullname");
+  const { buffer, filename } = await OrderService.generateInvoice(
+    userId,
+    req.params.orderId
+  );
 
-  if (!order) {
-    throw new ApiError(404, "Order not found.");
-  }
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename=${filename}`
+  );
 
-  try {
-    console.log("📧 Preparing invoice email for order:", orderId);
-
-    // ✅ Generate HTML invoice using template
-    const invoiceHTML = invoiceEmailTemplate(order);
-
-    // ✅ Send email with invoice
-    await sendEmailWithHTML({
-      to: order.user.email,
-      subject: `SmartCart Invoice - Order #${order._id}`,
-      html: invoiceHTML,
-    });
-
-    console.log("✅ Invoice email sent to:", order.user.email);
-
-    return res.status(200).json(
-      new ApiResponse(
-        200,
-        { orderId: order._id, email: order.user.email },
-        "Invoice has been sent to your email successfully!"
-      )
-    );
-  } catch (error) {
-    console.error("❌ Invoice email failed:", error.message);
-    throw new ApiError(
-      500,
-      `Failed to send invoice: ${error.message}`
-    );
-  }
+  return res.send(buffer);
 });
 
 // This controller allows a customer to apply a coupon to an order
