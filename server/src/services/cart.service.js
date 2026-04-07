@@ -14,6 +14,10 @@ export const cartService = {
 
 
  
+
+
+  // This method is responsible for adding items to the cart. It takes the userId, productId, quantity, selectedVariant, and an optional session for transaction management. The method validates the input, checks product availability and stock, calculates the effective price considering any flash sales, and then either updates an existing cart item or adds a new item to the cart. Finally, it calculates the totals for the cart and saves it to the database.
+
   async addItems(userId, productId, quantity, selectedVariant = null,session = null) {
 
   if (!mongoose.Types.ObjectId.isValid(productId)) {
@@ -142,6 +146,10 @@ export const cartService = {
   return cart;
   },
 
+
+
+  // This controller is responsible for adding items to the cart. It takes the productId, quantity, and selectedVariant from the request body, along with the userId from the authenticated user information in the request object. It calls the cart service's addItems method to add the specified items to the user's cart. After adding the items, it returns a success response with the updated cart information.
+
   async getCartItems(userId) {
 
   let cart = await Cart.findOne({ user: userId })
@@ -208,6 +216,10 @@ export const cartService = {
     isLocked: cart.isLocked
   };
   },
+
+
+
+  // This controller is responsible for removing an item from the cart. It takes the itemId from the request parameters and the userId from the authenticated user information in the request object. The controller calls the cart service's removeCartItem method to remove the specified item from the user's cart. After removing the item, it returns a success response with the updated cart information, including the remaining items and updated totals.
 
   async updateCartItem(userId, itemId, quantity) {
 
@@ -303,6 +315,11 @@ export const cartService = {
   };
   },
 
+
+
+
+  // This controller is responsible for adding items to the cart. It takes the productId, quantity, and selectedVariant from the request body, along with the userId from the authenticated user information in the request object. It calls the cart service's addItems method to add the specified items to the user's cart. After adding the items, it returns a success response with the updated cart information.
+
   async removeCartItem(userId, itemId) {
 
   if (!mongoose.Types.ObjectId.isValid(itemId)) {
@@ -348,6 +365,11 @@ export const cartService = {
   };
   },
   
+
+
+
+  // This controller is responsible for clearing all items from the user's cart. It takes the user's ID from the authenticated user information in the request object and removes all items from the cart. After clearing the cart, it returns a success response with the updated (empty) cart information.
+
   async clearCart(userId) {
 
   const cart = await Cart.findOne({ user: userId });
@@ -381,6 +403,10 @@ export const cartService = {
     finalAmount: 0
   };
   },
+
+
+
+  // This controller is responsible for applying a coupon to the user's cart. It takes the userId and couponCode as parameters, validates the coupon, checks if it can be applied to the current cart, and then calculates the discount amount based on the coupon's rules. After applying the coupon, it updates the cart totals and returns the updated cart information, including the applied discount and final amount.
 
   async applyCoupon(userId, couponCode) {
 
@@ -476,6 +502,8 @@ export const cartService = {
 
 
 
+
+
   
   // ======================================================
   // ================= ADMIN PANNEL HANDLERS ==============
@@ -483,7 +511,10 @@ export const cartService = {
 
 
 
-  
+
+
+  // This controller is responsible for removing an item from the cart. It takes the itemId from the request parameters and the userId from the authenticated user information in the request object. The controller calls the cart service's removeCartItem method to remove the specified item from the user's cart. After removing the item, it returns a success response with the updated cart information, including the remaining items and updated totals.
+
   async getCartAnalytics(startDate, endDate){
     const match = {};
 
@@ -568,6 +599,10 @@ export const cartService = {
 
   },
 
+
+
+  // This controller is responsible for fetching cart analytics based on the provided date range. It takes the startDate and endDate from the request body, constructs a query to filter carts based on their update time and expiration status, and then performs an aggregation to calculate various metrics such as total carts, active carts, locked carts, average cart value, and total cart value. Finally, it returns the analytics data in a structured format.
+
   async createCoupon(data) {
 
   const {
@@ -639,6 +674,11 @@ export const cartService = {
 
   return coupon;
   },
+
+
+
+
+  // This controller is responsible for creating a new coupon. It takes the coupon details from the request body and calls the cart service to create the coupon. After successfully creating the coupon, it returns a success response with the newly created coupon information.
 
   async updateCoupon(couponId, data) {
 
@@ -758,6 +798,10 @@ export const cartService = {
   return coupon;
   },
 
+
+
+  // This controller is responsible for updating an existing coupon. It takes the coupon ID from the request parameters and the updated coupon details from the request body. The controller calls the cart service to update the coupon information and returns a success response with the updated coupon details.
+
   async listCoupons(query) {
 
   let {
@@ -826,6 +870,10 @@ export const cartService = {
     coupons: formatted
   };
   },
+
+
+
+// This controller is responsible for fetching a list of coupons based on the provided query parameters. It takes the query parameters from the request object and calls the cart service to retrieve the list of coupons that match the criteria. After fetching the coupons, it returns a success response with the list of coupons.
 
   async resetUserCart(userId) {
 

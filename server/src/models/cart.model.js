@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
 
+// This schema defines the structure of a cart item within the shopping cart. Each cart item references a product and its seller, along with details about the selected variant, quantity, unit price at the time of adding to the cart, any discounts or flash sales applied, and the total price for that line item. This schema is embedded within the main cart schema to represent the items in a user's cart.
+
 const cartItemSchema = new mongoose.Schema(
 {
   product: {
@@ -51,6 +53,8 @@ const cartItemSchema = new mongoose.Schema(
 { _id: true }
 );
 
+
+// This schema defines the structure of the shopping cart. Each cart is associated with a user and contains an array of cart items. The cart also keeps track of the total number of items, the subtotal price, any applied coupon, discount amount, final amount after discounts, and whether the cart is locked (e.g., during checkout). The schema includes methods to calculate totals based on the items in the cart.
 
 const cartSchema = new mongoose.Schema(
   {
@@ -103,7 +107,13 @@ const cartSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+
+// This index is created to optimize queries that filter by user and the products in the cart items. It allows for faster retrieval of a user's cart and efficient searching for specific products within carts, which can be beneficial for operations like adding items, updating quantities, or applying discounts based on the products in the cart.
+
 cartSchema.index({ user: 1, "items.product": 1 });
+
+
+// This method calculates the total number of items, subtotal, discount amount, and final amount for the cart based on the items it contains. It iterates through each cart item, calculates the line total for that item (unit price multiplied by quantity), and updates the total items and subtotal accordingly. It then applies any discounts to calculate the final amount. This method is typically called whenever there are changes to the cart items to ensure that the totals are accurate and up-to-date.
 
 cartSchema.methods.calculateTotals = function () {
 
