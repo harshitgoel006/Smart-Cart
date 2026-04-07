@@ -1,26 +1,27 @@
 import mongoose from "mongoose";
 
+// This schema defines the structure for product questions and answers (QnA). It includes references to the product, seller, and user, as well as fields for the question, answer, status, and helpful count. The schema also includes timestamps for when the QnA was created and updated. Indexes are created on relevant fields to optimize query performance.
 const productQnASchema = new mongoose.Schema(
   {
     product: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
       required: true,
-      index: true
+      index: true,
     },
 
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true
+      index: true,
     },
 
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true
+      index: true,
     },
 
     question: {
@@ -28,18 +29,18 @@ const productQnASchema = new mongoose.Schema(
       required: true,
       trim: true,
       minlength: 5,
-      maxlength: 1000
+      maxlength: 1000,
     },
 
     answer: {
       type: String,
       trim: true,
-      maxlength: 2000
+      maxlength: 2000,
     },
 
     answeredBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
+      ref: "User",
     },
 
     answeredAt: Date,
@@ -48,41 +49,32 @@ const productQnASchema = new mongoose.Schema(
       type: String,
       enum: ["pending", "answered", "rejected", "hidden"],
       default: "pending",
-      index: true
+      index: true,
     },
 
     helpfulCount: {
       type: Number,
       default: 0,
-      index:true
+      index: true,
     },
 
     isDeleted: {
       type: Boolean,
       default: false,
-      index: true
-    }
+      index: true,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-//////////////////////////////////////////////////////////
-// AUTO FILTER SOFT DELETED
-//////////////////////////////////////////////////////////
-
+// Static method to get only active (non-deleted) QnA entries
 productQnASchema.query.active = function () {
-  return this.where(
-    { 
-      isDeleted: false 
-    }
-  );
-  
+  return this.where({
+    isDeleted: false,
+  });
 };
 
-//////////////////////////////////////////////////////////
-// PERFORMANCE INDEXES
-//////////////////////////////////////////////////////////
-
+// Indexes to optimize queries based on product, seller, user, and status
 productQnASchema.index({ product: 1, status: 1 });
 productQnASchema.index({ seller: 1, status: 1 });
 productQnASchema.index({ user: 1 });

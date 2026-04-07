@@ -1,3 +1,5 @@
+// This module defines the routes for handling category-related operations in the e-commerce application. It includes routes for both customer and seller panels, as well as admin panel handlers for managing categories. The routes are protected with JWT authentication and role-based authorization to ensure that only authorized users can access certain endpoints. The route handlers are imported from the category.controller.js file, which contains the logic for processing the requests and interacting with the database to perform CRUD operations on categories, as well as other related functionalities such as searching, proposing new categories, and managing category performance metrics.
+
 import { Router } from "express";
 import {
   getAllCategories,

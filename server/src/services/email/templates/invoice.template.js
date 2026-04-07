@@ -1,3 +1,5 @@
+// This module exports a function `invoiceEmailTemplate` that generates an HTML email template for an invoice based on the provided order data. The template includes details such as order ID, order date, status, a table of ordered items, and a summary of costs. The design is clean and professional, making it suitable for sending to customers after they place an order.
+
 export const invoiceEmailTemplate = (orderData) => {
   const itemsHTML = orderData.items
     .map(
@@ -9,7 +11,7 @@ export const invoiceEmailTemplate = (orderData) => {
       <td style="padding: 12px; text-align: right;">₹${item.price?.toFixed(2)}</td>
       <td style="padding: 12px; text-align: right;">₹${(item.quantity * item.price)?.toFixed(2)}</td>
     </tr>
-  `
+  `,
     )
     .join("");
 

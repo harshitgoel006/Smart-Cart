@@ -1,5 +1,6 @@
-// services/notification/notification.templates.js
+// This module defines the email templates for various notification events in the SmartCart application. Each event has a corresponding subject and HTML content that can be dynamically generated based on the provided data. The TemplateResolver class provides a method to resolve the appropriate template for a given event and return the formatted subject and HTML content for sending notifications.
 
+// This object contains email templates for different notification events. Each key represents an event type, and the value is an object with a 'subject' and 'html' function. The 'subject' can be a string or a function that generates a string based on the input data. The 'html' is a function that takes data as input and returns a formatted HTML string for the email body. These templates are used by the NotificationDispatcher to create and send email notifications to users based on specific events in the application.
 const emailTemplates = {
   // ======================
   // CUSTOMER NOTIFICATIONS
@@ -173,32 +174,31 @@ const emailTemplates = {
   },
 
   REVIEW_SUBMITTED_CUSTOMER: {
-  subject: "Your review has been submitted",
-  html: (d) => `
+    subject: "Your review has been submitted",
+    html: (d) => `
     <h2>Review submitted</h2>
     <p>Product: ${d.productName || "-"}</p>
     <p>Status: Pending moderation.</p>
   `,
-},
+  },
 
-REVIEW_APPROVED_CUSTOMER: {
-  subject: "Your review is now live",
-  html: (d) => `
+  REVIEW_APPROVED_CUSTOMER: {
+    subject: "Your review is now live",
+    html: (d) => `
     <h2>Review approved</h2>
     <p>Product: ${d.productName || "-"}</p>
     <p>Your review is now visible on the product page.</p>
   `,
-},
+  },
 
-REVIEW_REJECTED_CUSTOMER: {
-  subject: "Your review was not approved",
-  html: (d) => `
+  REVIEW_REJECTED_CUSTOMER: {
+    subject: "Your review was not approved",
+    html: (d) => `
     <h2>Review rejected</h2>
     <p>Product: ${d.productName || "-"}</p>
     <p>Reason: ${d.reason || "Does not meet our review guidelines."}</p>
   `,
-},
-
+  },
 
   PROMO_CUSTOMER: {
     subject: (d) => d.subject || "New offer just for you",
@@ -408,8 +408,8 @@ REVIEW_REJECTED_CUSTOMER: {
   },
 
   CATEGORY_APPROVED: {
-  subject: "Your category has been approved",
-  html: (d) => `
+    subject: "Your category has been approved",
+    html: (d) => `
     <h2>Category Approved 🎉</h2>
     <p>Hello,</p>
 
@@ -423,11 +423,11 @@ REVIEW_REJECTED_CUSTOMER: {
 
     <p>— SmartCart Team</p>
   `,
-},
+  },
 
-CATEGORY_REJECTED: {
-  subject: "Your category proposal was rejected",
-  html: (d) => `
+  CATEGORY_REJECTED: {
+    subject: "Your category proposal was rejected",
+    html: (d) => `
     <h2>Category Proposal Update</h2>
     <p>Hello,</p>
 
@@ -442,7 +442,7 @@ CATEGORY_REJECTED: {
 
     <p>— SmartCart Team</p>
   `,
-},
+  },
 
   ESCALATION_CREATED_AGAINST_SELLER: {
     subject: "New escalation raised",
@@ -488,22 +488,22 @@ CATEGORY_REJECTED: {
   },
 
   NEW_REVIEW_FOR_PRODUCT: {
-  subject: "New review on your product",
-  html: (d) => `
+    subject: "New review on your product",
+    html: (d) => `
     <h2>New product review</h2>
     <p>Product: ${d.productName || "-"}</p>
     <p>Rating: ${d.rating}★</p>
   `,
-},
+  },
 
-LOW_RATING_REVIEW_ALERT: {
-  subject: "Low-rating review alert",
-  html: (d) => `
+  LOW_RATING_REVIEW_ALERT: {
+    subject: "Low-rating review alert",
+    html: (d) => `
     <h2>Low rating received</h2>
     <p>Product: ${d.productName || "-"}</p>
     <p>Rating: ${d.rating}★</p>
   `,
-},
+  },
 
   SYSTEM_ANNOUNCEMENT_SELLER: {
     subject: "Important update for sellers",
@@ -569,14 +569,14 @@ LOW_RATING_REVIEW_ALERT: {
   },
 
   CATEGORY_PROPOSED: {
-  subject: "New category proposal received",
-  html: (d) => `
+    subject: "New category proposal received",
+    html: (d) => `
     <h2>New Category Proposal</h2>
     <p>A seller has proposed a new category for approval.</p>
     <p><strong>Category Name:</strong> ${d.categoryName || ""}</p>
     <p>Please review this proposal in the admin dashboard.</p>
   `,
-},
+  },
 
   PAYMENT_GATEWAY_ISSUE: {
     subject: "Payment gateway issue detected",
@@ -612,14 +612,14 @@ LOW_RATING_REVIEW_ALERT: {
   },
 
   REVIEW_REPORTED_ADMIN: {
-  subject: "Review reported by users",
-  html: (d) => `
+    subject: "Review reported by users",
+    html: (d) => `
     <h2>Review reported</h2>
     <p>Product: ${d.productName || "-"}</p>
     <p>Review ID: ${d.reviewId}</p>
     <p>Reports count: ${d.reportCount}</p>
   `,
-},
+  },
 
   SYSTEM_ANNOUNCEMENT_ADMIN: {
     subject: "Admin announcement",
@@ -630,19 +630,19 @@ LOW_RATING_REVIEW_ALERT: {
   },
 
   PRODUCT_CREATED_PENDING: {
-  subject: "New product pending approval",
-  html: (d) => `
+    subject: "New product pending approval",
+    html: (d) => `
     <h2>New product submitted</h2>
     <p>Product: ${d.productName}</p>
-  `
-},
-PRODUCT_UPDATED_PENDING: {
-  subject: "Product update pending approval",
-  html: (d) => `
+  `,
+  },
+  PRODUCT_UPDATED_PENDING: {
+    subject: "Product update pending approval",
+    html: (d) => `
     <h2>Product updation is  submitted</h2>
     <p>Product: ${d.productName}</p>
-  `
-},
+  `,
+  },
   // Fallback
   DEFAULT: {
     subject: (d) => d.subject || "SmartCart Notification",
@@ -653,38 +653,25 @@ PRODUCT_UPDATED_PENDING: {
   },
 };
 
-
-
-
+// The TemplateResolver class provides a static method 'resolve' that takes an event name and metadata as input. It looks up the corresponding template for the event from the 'emailTemplates' object, generates the email subject and HTML content using the template functions, and also creates a plain text version of the message by stripping HTML tags. The resolved template data is returned in a structured format that can be used by the notification system to send emails or create in-app notifications.
 class TemplateResolver {
-
   static resolve(event, meta = {}) {
-
     const tmpl = emailTemplates[event] || emailTemplates.DEFAULT;
 
     const subject =
-      typeof tmpl.subject === "function"
-        ? tmpl.subject(meta)
-        : tmpl.subject;
+      typeof tmpl.subject === "function" ? tmpl.subject(meta) : tmpl.subject;
 
-    const html =
-      typeof tmpl.html === "function"
-        ? tmpl.html(meta)
-        : tmpl.html;
+    const html = typeof tmpl.html === "function" ? tmpl.html(meta) : tmpl.html;
 
-    // Create clean text version for DB
-    const textMessage = html
-      .replace(/<[^>]*>?/gm, "") // strip html tags
-      .trim();
+    const textMessage = html.replace(/<[^>]*>?/gm, "").trim();
 
     return {
       title: subject,
       message: textMessage,
       emailSubject: subject,
-      emailHTML: html
+      emailHTML: html,
     };
   }
-
 }
 
 export default TemplateResolver;
