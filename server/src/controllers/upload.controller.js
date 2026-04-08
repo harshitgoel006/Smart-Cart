@@ -1,31 +1,14 @@
-import { uploadSingle } from "../utils/cloudinary.js";
+import UploadService from "../services/upload.service.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
-const uploadFile = async (req, res) => {
+// This controller handles file uploads. It uses the UploadService to upload the file to Cloudinary and returns the URL and public ID of the uploaded file in the response.
+const uploadFile = asyncHandler(async (req, res) => {
+  const data = await UploadService.uploadFile(req.file);
 
-  if (!req.file?.path) {
-    return res.status(400).json({
-      message: "No file uploaded"
-    });
-  }
-
-  try {
-
-    const result = await uploadSingle(req.file.path, {
-      folder: "SmartCart/uploads"
-    });
-
-    return res.status(200).json({
-      message: "File uploaded successfully",
-      url: result.url
-    });
-
-  } catch (error) {
-
-    return res.status(500).json({
-      message: "File upload failed",
-      error: error.message
-    });
-  }
-};
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "File uploaded successfully"));
+});
 
 export { uploadFile };

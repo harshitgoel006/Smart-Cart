@@ -1,132 +1,33 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { ApiError } from "../utils/ApiError.js";
-
-import { Payment } from "../models/payment.model.js";
-import { Order } from "../models/order.model.js";
-
+import PaymentService from "../services/payment.service.js";
 
 // ======================================================
 // =============== CUSTOMER PANNEL HANDLERS =============
 // ======================================================
 
-
-
-// initiate dummy payment
+// This controller initiates a dummy payment for an order. It validates the order ID, checks if the order exists and belongs to the user, and ensures that the order is not already paid. It also implements idempotency by checking for existing payments with a "created" or "pending" status for the same order and user. If such a payment exists, it returns that payment instead of creating a new one. If no such payment exists, it creates a new payment record and updates the order's payment status to "pending". Finally, it returns the payment details in the response.
 const initiateDummyPayment = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
-  const { orderId } = req.body;
-
-  if (!orderId) {
-    throw new ApiError(400, "Order ID is required");
-  }
-
-  const order = await Order.findById(orderId);
-
-  if (!order) {
-    throw new ApiError(404, "Order not found");
-  }
-
-  if (order.user.toString() !== userId.toString()) {
-    throw new ApiError(403, "Not allowed for this order");
-  }
-
-  if (!order.totalAmount) {
-    throw new ApiError(400, "Order amount is missing");
-  }
-
-  const payment = await Payment.create({
-    order: order._id,
-    user: userId,
-    provider: "dummy",
-    amount: order.totalAmount,
-    currency: "INR",
-    status: "created",
-    method: "dummy",
-  });
-
-  order.paymentStatus = "pending";
-  await order.save();
+  const payment = await PaymentService.initiatePayment(
+    req.user._id,
+    req.body.orderId,
+  );
 
   return res
     .status(201)
-    .json(
-      new ApiResponse(
-        201,
-        true,
-        "Dummy payment initiated successfully",
-        {
-          paymentId: payment._id,
-          orderId: order._id,
-          amount: payment.amount,
-          currency: payment.currency,
-          status: payment.status,
-        }
-      )
-    );
+    .json(new ApiResponse(201, payment, "Payment initiated"));
 });
 
-
-// complete dummy payment (success / failed)
+// This controller completes a dummy payment by updating the payment status based on the provided payment ID and status. It calls the completePayment method of the PaymentService, passing the user ID, payment ID, and new status. The updated payment details are then returned in the response.
 const completeDummyPayment = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
-  const { paymentId, status } = req.body; // "success" | "failed"
+  const data = await PaymentService.completePayment(
+    req.user._id,
+    req.body.paymentId,
+    req.body.status,
+  );
 
-  if (!paymentId) {
-    throw new ApiError(400, "Payment ID is required");
-  }
-
-  if (!["success", "failed"].includes(status)) {
-    throw new ApiError(400, "Status must be 'success' or 'failed'");
-  }
-
-  const payment = await Payment.findById(paymentId).populate("order");
-
-  if (!payment) {
-    throw new ApiError(404, "Payment not found");
-  }
-
-  if (payment.user.toString() !== userId.toString()) {
-    throw new ApiError(403, "Not allowed for this payment");
-  }
-
-  const order = payment.order;
-
-  payment.status = status;
-  await payment.save();
-
-  if (status === "success") {
-    order.paymentStatus = "paid";
-    order.status = "confirmed"; // ya "processing" as per your flow
-  } else {
-    order.paymentStatus = "failed";
-    // order.status = "cancelled"; // agar chahiye
-  }
-
-  await order.save();
-
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        true,
-        `Dummy payment ${status} successfully`,
-        {
-          orderId: order._id,
-          orderStatus: order.status,
-          paymentStatus: payment.status,
-        }
-      )
-    );
+  return res.status(200).json(new ApiResponse(200, data, "Payment updated"));
 });
 
-
-
-
-
-
-export {
-  initiateDummyPayment,
-  completeDummyPayment,
-};
+// Exporting the controller functions for initiating and completing dummy payments, which can be used in the routes to handle payment-related requests from the client.
+export { initiateDummyPayment, completeDummyPayment };
