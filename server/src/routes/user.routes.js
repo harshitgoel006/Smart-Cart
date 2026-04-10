@@ -174,6 +174,7 @@ router
 .post(
     verifyJWT,
     authorizedRole("seller"), 
+    upload.single("storeBanner"),
     updateSellerProfile
 )
 

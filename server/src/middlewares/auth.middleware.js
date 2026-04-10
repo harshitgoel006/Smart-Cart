@@ -37,8 +37,7 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
 
   if (
     user.role === "seller" &&
-    (user.sellerProfile?.isSellerSuspended ||
-      !user.sellerProfile?.isSellerApproved)
+    (user.sellerProfile?.isSellerSuspended)
   ) {
     throw new ApiError(403, "Seller account not allowed. Contact support");
   }

@@ -43,7 +43,7 @@ export const userService = {
 
     email = email.toLowerCase().trim();
 
-    if (!["customer", "seller"].includes(role)) {
+    if (!["customer", "seller","admin"].includes(role)) {
       throw new ApiError(403, "Invalid role selection");
     }
 
@@ -122,9 +122,11 @@ export const userService = {
 
     const verified = await VerifiedEmail.findOne({ email });
 
+
     if (!verified) {
       throw new ApiError(403, "Email not verified via OTP");
     }
+
 
     if (verified.role !== role) {
       throw new ApiError(403, "Role mismatch with verified email");
@@ -184,7 +186,7 @@ export const userService = {
     const record = await OTP.findOne({
       email,
       purpose: "email_verification",
-    }).select("+otpHash");
+    }).select("+otpHash").sort({ createdAt: -1 });
 
     if (!record) {
       throw new ApiError(400, "OTP expired or not found");
@@ -213,7 +215,7 @@ export const userService = {
       { email },
       {
         email,
-        role: "customer", // IMPORTANT: you must store role in OTP if you want to enforce role locking
+        role: record.role, // IMPORTANT: you must store role in OTP if you want to enforce role locking
         expiresAt: new Date(Date.now() + 10 * 60 * 1000),
       },
       { upsert: true },
@@ -243,9 +245,7 @@ export const userService = {
     }
 
     if (user.role === "seller") {
-      if (!user.sellerProfile?.isSellerApproved) {
-        throw new ApiError(403, "Seller account not approved");
-      }
+      
 
       if (user.sellerProfile?.isSellerSuspended) {
         throw new ApiError(403, "Seller account suspended");

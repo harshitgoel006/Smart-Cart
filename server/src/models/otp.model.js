@@ -26,6 +26,12 @@ const otpSchema = new mongoose.Schema(
       index: true,
     },
 
+    role: {
+      type: String,
+      enum: ["customer", "seller", "admin"],
+      required: true,
+    },
+
     attempts: {
       type: Number,
       default: 0,

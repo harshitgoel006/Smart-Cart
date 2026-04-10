@@ -11,9 +11,17 @@ const ROLE_PRIORITY = Object.freeze({
 });
 
 export const authorizedRole = (options = {}) => {
+
+  // 🔥 SUPPORT STRING DIRECTLY (MAIN FIX)
+  if (typeof options === "string") {
+    options = { allow: [options] };
+  }
+
   const { allow = [], allowHierarchy = false } = options;
 
-  const allowedRoles = Object.freeze(allow.map((r) => String(r).toLowerCase()));
+  const allowedRoles = Object.freeze(
+    allow.map((r) => String(r).toLowerCase())
+  );
 
   return (req, res, next) => {
     if (!req.user) {
@@ -38,6 +46,10 @@ export const authorizedRole = (options = {}) => {
       throw new ApiError(403, "Invalid role");
     }
 
+    // 🔥 EXTRA DEBUG (optional)
+    // console.log("Allowed:", allowedRoles);
+    // console.log("User:", userRole);
+
     if (allowHierarchy) {
       const userPriority = ROLE_PRIORITY[userRole] || 0;
 
@@ -53,7 +65,7 @@ export const authorizedRole = (options = {}) => {
       if (!allowedRoles.includes(userRole)) {
         throw new ApiError(
           403,
-          "You do not have permission to access this resource",
+          "You do not have permission to access this resource"
         );
       }
     }

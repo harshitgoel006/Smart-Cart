@@ -1,5 +1,5 @@
 import UploadService from "../services/upload.service.js";
-import asyncHandler from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 // This controller handles file uploads. It uses the UploadService to upload the file to Cloudinary and returns the URL and public ID of the uploaded file in the response.
