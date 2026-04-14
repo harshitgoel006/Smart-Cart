@@ -98,13 +98,23 @@ const productSchema = new mongoose.Schema(
         url: { type: String, required: true },
       },
     ],
+    coverImage: {
+      public_id: { type: String },
+      url: { type: String },
+    },
 
     brand: { type: String, required: true, index: true },
+    badges: [String],
 
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
+      index: true,
+    },
+    subCategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
       index: true,
     },
 
@@ -179,7 +189,11 @@ productSchema.query.approved = function () {
 };
 
 // Indexes are created on various fields to optimize search and query performance. A text index is created on the name and description fields to allow for efficient text searching. Additional indexes are created on category, approval status, deletion status, active status, seller reference, flash sale status and timing, final price, ratings, and creation date to further enhance query performance for common filtering and sorting operations.
-productSchema.index({ name: "text", description: "text" });
+productSchema.index({
+  name: "text",
+  description: "text",
+  brand: "text",
+});
 
 // Compound index to optimize queries filtering by category, approval status, deletion status, and active status
 productSchema.index({

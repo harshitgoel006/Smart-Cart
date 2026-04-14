@@ -7,6 +7,8 @@ import {
   deleteMultipleFromCloudinary,
 } from "../utils/cloudinary.js";
 import { Order } from "../models/order.model.js";
+import { Category } from "../models/category.model.js";
+import { User } from "../models/user.model.js";
 import { ProductQnA } from "../models/productQnA.model.js";
 import { Review } from "../models/review.model.js";
 import NotificationService from "../services/notification/notification.service.js";
@@ -663,6 +665,7 @@ export const productService = {
         brand,
         category,
         images: uploadedImages,
+        coverImage: uploadedImages[0],
         seller: sellerId,
         variants: variants ? JSON.parse(variants) : [],
         approvalStatus: "pending",
@@ -694,9 +697,9 @@ export const productService = {
       return product;
     } catch (error) {
       // Rollback Cloudinary images
-      for (const img of uploadedImages) {
-        await cloudinary.uploader.destroy(img.public_id);
-      }
+      await deleteMultipleFromCloudinary(
+        uploadedImages.map((img) => img.public_id),
+      );
 
       throw error;
     }
@@ -741,7 +744,7 @@ export const productService = {
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum)
       .select(
-        "name slug finalPrice stock approvalStatus isActive isArchived createdAt",
+        "name slug finalPrice discount ratings coverImage stock brand category",
       )
       .lean();
 
@@ -769,10 +772,6 @@ export const productService = {
       throw new ApiError(404, "Product not found");
     }
 
-    /////////////////////////////////////////////////////////
-    // FIELD WHITELIST
-    /////////////////////////////////////////////////////////
-
     const allowedFields = [
       "name",
       "description",
@@ -791,10 +790,6 @@ export const productService = {
       }
     }
 
-    /////////////////////////////////////////////////////////
-    // CATEGORY VALIDATION
-    /////////////////////////////////////////////////////////
-
     if (updates.category) {
       if (!mongoose.Types.ObjectId.isValid(updates.category)) {
         throw new ApiError(400, "Invalid category ID");
@@ -812,52 +807,31 @@ export const productService = {
       }
     }
 
-    /////////////////////////////////////////////////////////
-    // DECIMAL SAFE PRICE
-    /////////////////////////////////////////////////////////
-
     if (updates.price) {
       updates.price = mongoose.Types.Decimal128.fromString(
         updates.price.toString(),
       );
     }
 
-    /////////////////////////////////////////////////////////
-    // IMAGE HANDLING (SAFE + ROLLBACK READY)
-    /////////////////////////////////////////////////////////
-
     if (files && files.length > 0) {
-      // 1️⃣ Upload new images first (atomic via cloudinary util)
       const newImages = await uploadMultiple(files, {
         folder: "SmartCart/products",
       });
 
-      // 2️⃣ Delete old images AFTER successful upload
       const oldPublicIds = product.images.map((img) => img.public_id);
 
       await deleteMultipleFromCloudinary(oldPublicIds);
 
       product.images = newImages;
+      product.coverImage = newImages[0];
     }
 
-    /////////////////////////////////////////////////////////
-    // APPLY UPDATES
-    /////////////////////////////////////////////////////////
-
     Object.assign(product, updates);
-
-    /////////////////////////////////////////////////////////
-    // RESET APPROVAL FLOW
-    /////////////////////////////////////////////////////////
 
     product.approvalStatus = "pending";
     product.isActive = false;
 
     await product.save();
-
-    /////////////////////////////////////////////////////////
-    // NOTIFY ADMINS
-    /////////////////////////////////////////////////////////
 
     const admins = await User.find({
       role: "admin",

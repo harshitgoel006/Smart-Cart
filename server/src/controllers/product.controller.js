@@ -118,7 +118,11 @@ const getProductReview = asyncHandler(async (req, res) => {
 const submitReview = asyncHandler(async (req, res) => {
   const { productId } = req.params;
   const userId = req.user._id;
-  const reviews = await productService(productId, userId, req.body);
+  const reviews = await productService.submitReview(
+    productId,
+    userId,
+    req.body,
+  );
   return res
     .status(201)
     .json(new ApiResponse(201, reviews.review, reviews.message));
@@ -137,13 +141,11 @@ const getProductQnA = asyncHandler(async (req, res) => {
 const askProductQuestion = asyncHandler(async (req, res) => {
   const { productId } = req.params;
   const { question } = req.body;
-  const userId = req.user._id; // Auth middleware
+  const userId = req.user._id;
 
-  const newQnA = await productService.askProductQuestion(
-    productId,
-    userId,
+  const newQnA = await productService.askProductQuestion(productId, userId, {
     question,
-  );
+  });
 
   return res
     .status(201)
@@ -278,7 +280,7 @@ const respondToProductQnA = asyncHandler(async (req, res) => {
 
 // This controller is used to archive a product by sellers. It allows sellers to temporarily remove their products from the active catalog without permanently deleting them. The controller processes the archive request, validates the seller's authorization to archive the product, and updates the product's status in the database to indicate that it is archived. Archived products are typically hidden from customers but can be restored later if needed.
 const archiveProduct = asyncHandler(async (req, res) => {
-  const productId = req.params;
+  const { productId } = req.params;
   const result = await productService.archiveProduct(productId, req.user._id);
 
   return res
@@ -296,7 +298,7 @@ const archiveProduct = asyncHandler(async (req, res) => {
 
 // This controller is used to restore an archived product by sellers. It allows sellers to reactivate their previously archived products and make them available in the active catalog again. The controller processes the restore request, validates the seller's authorization to restore the product, and updates the product's status in the database to indicate that it is no longer archived. Restored products become visible to customers once again.
 const restoreArchiveProduct = asyncHandler(async (req, res) => {
-  const productId = req.params;
+  const { productId } = req.params;
 
   const result = await productService.restoreArchiveProduct(
     productId,
@@ -379,7 +381,7 @@ const scheduleFlashSale = asyncHandler(async (req, res) => {
 
 // This controller is used to approve products by admin. It allows the admin to review and approve products submitted by sellers before they become visible in the catalog. The controller processes the product approval request, validates the admin's authorization to approve the product, and updates the product's status in the database to indicate that it has been approved. It may also trigger notifications to the seller about the approval status of their product.
 const approveProducts = asyncHandler(async (req, res) => {
-  const productId = req.params;
+  const { productId } = req.params;
   const product = await productService.approveProduct(productId);
 
   return res
@@ -397,7 +399,7 @@ const approveProducts = asyncHandler(async (req, res) => {
 
 // This controller is used to reject products by admin. It allows the admin to review and reject products submitted by sellers that do not meet the platform's guidelines or quality standards. The controller processes the product rejection request, validates the admin's authorization to reject the product, and updates the product's status in the database to indicate that it has been rejected. It also captures the reason for rejection provided by the admin and may trigger notifications to the seller about the rejection status of their product along with the reason for rejection.
 const rejectProduct = asyncHandler(async (req, res) => {
-  const productId = req.params;
+  const { productId } = req.params;
   const { reason } = req.body;
 
   const product = await productService.rejectProduct(productId, reason);
@@ -426,7 +428,7 @@ const adminGetAllProducts = asyncHandler(async (req, res) => {
 
 // This controller is used to moderate product content by admin. It allows the admin to review and moderate the content of products submitted by sellers, ensuring that they comply with the platform's guidelines and standards. The controller processes the content moderation request, validates the admin's authorization to moderate the product, and updates the product's content in the database based on the moderation actions taken (e.g., editing product description, removing inappropriate images). It may also trigger notifications to the seller about the moderation actions taken on their product.
 const moderateProductContent = asyncHandler(async (req, res) => {
-  const productId = req.params;
+  const { productId } = req.params;
   const product = await productService.moderateProductContent(
     productId,
     req.body,
