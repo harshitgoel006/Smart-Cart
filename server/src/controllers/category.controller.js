@@ -104,12 +104,7 @@ const proposeNewCategory = asyncHandler(async (req, res) => {
   return res
     .status(201)
     .json(
-      new ApiResponse(
-        201,
-        1,
-        newCategory,
-        "New category proposed successfully",
-      ),
+      new ApiResponse(201, newCategory, "New category proposed successfully"),
     );
 });
 
@@ -150,7 +145,7 @@ const updateCategoryStatus = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, 1, category, "Category updated successfully"));
+    .json(new ApiResponse(200, category, "Category updated successfully"));
 });
 
 // This controller is responsible for fetching the details of a specific category for editing purposes. It takes the category ID from the request parameters and the seller ID from the authenticated user. It then retrieves the category information from the service layer, allowing sellers to view and edit their proposed categories. This is particularly useful for sellers who want to make changes to their category proposals before they are approved by the admin. The response includes a success message and the category details for editing.
@@ -169,7 +164,6 @@ const getCategoryDetailsForEdit = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        1,
         category,
         "Category details fetched successfully for editing",
       ),
@@ -189,7 +183,7 @@ const deleteProposedCategory = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, 0, result, "Category deleted successfully"));
+    .json(new ApiResponse(200, result, "Category deleted successfully"));
 });
 
 // ======================================================

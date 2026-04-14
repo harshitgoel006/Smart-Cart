@@ -2,9 +2,27 @@
 import { ApiError } from "../utils/ApiError.js";
 import { Category } from "../models/category.model.js";
 import { Order } from "../models/order.model.js";
+import mongoose from "mongoose";
+import { User } from "../models/user.model.js";
+import NotificationService from "./notification/notification.service.js";
 
 // The categoryService object encapsulates all the methods related to category management, providing a clear and organized structure for handling category-related operations in the application. Each method is designed to perform specific tasks such as fetching categories, proposing new categories, updating existing ones, and managing the approval process for categories proposed by sellers. The service ensures that all operations are performed with proper validation and error handling, making it a robust component of the application's backend logic.
 export const categoryService = {
+  // This function takes a flat list of categories and builds a hierarchical tree structure based on the parent-child relationships defined by the parent field in the category documents. It recursively filters the categories to find those that have the specified parent ID and then maps them to include their children. This allows for easy representation of nested categories in the frontend.
+  buildTree(categories, parent = null) {
+    return categories
+      .filter((cat) => {
+        if (parent === null) {
+          return !cat.parent;
+        }
+        return String(cat.parent) === String(parent);
+      })
+      .map((cat) => ({
+        ...cat,
+        children: this.buildTree(categories, cat._id),
+      }));
+  },
+
   // ======================================================
   // =============== CUSTOMER PANNEL HANDLERS =============
   // ======================================================
@@ -12,7 +30,10 @@ export const categoryService = {
   // This function retrieves all active categories from the database, sorts them by their order and name, and then builds a hierarchical tree structure from the flat list of categories. If no categories are found, it throws a 404 error. The resulting tree structure allows for easy display of nested categories in the frontend.
 
   async getAllCategories() {
-    const categories = await Category.find({ isActive: true })
+    const categories = await Category.find({
+      isActive: true,
+      status: "approved",
+    })
       .sort({ order: 1, name: 1 })
       .lean();
 
@@ -36,7 +57,10 @@ export const categoryService = {
       throw new ApiError(404, "Category not found");
     }
 
-    const all = await Category.find({ isActive: true }).lean();
+    const all = await Category.find({
+      isActive: true,
+      status: "approved",
+    }).lean();
 
     return {
       ...category,
@@ -50,6 +74,7 @@ export const categoryService = {
     return await Category.find({
       isActive: true,
       isFeatured: true,
+      status: "approved",
     })
       .sort({ order: 1 })
       .lean();
@@ -69,6 +94,7 @@ export const categoryService = {
         $regex: regex,
       },
       isActive: true,
+      status: "approved",
     })
       .limit(20)
       .lean();
@@ -147,9 +173,21 @@ export const categoryService = {
       name: name.trim(),
       description: description || "",
       parent: parent || null,
-      status: "pending",
-      isActive: false,
-      proposedBy: sellerId,
+      isFeatured: !!isFeatured,
+
+      image: data.image || {},
+      bannerImage: data.bannerImage || {},
+      icon: data.icon || {},
+      sliderImages: data.sliderImages || [],
+      tagline: data.tagline || "",
+
+      metaTitle: metaTitle || "",
+      metaDescription: metaDescription || "",
+      metaKeywords: metaKeywords || "",
+
+      status: "approved",
+      isActive: true,
+      createdBy: adminId,
     });
 
     try {
@@ -259,6 +297,12 @@ export const categoryService = {
     if (data.description) {
       category.description = data.description;
     }
+
+    if (data.image) category.image = data.image;
+    if (data.bannerImage) category.bannerImage = data.bannerImage;
+    if (data.icon) category.icon = data.icon;
+    if (data.sliderImages) category.sliderImages = data.sliderImages;
+    if (data.tagline !== undefined) category.tagline = data.tagline;
 
     await category.save();
     return category;

@@ -25,8 +25,30 @@ const categorySchema = new mongoose.Schema(
     },
 
     image: {
+      public_id: { type: String },
+      url: { type: String },
+    },
+
+    bannerImage: {
+      public_id: { type: String },
+      url: { type: String },
+    },
+
+    sliderImages: [
+      {
+        public_id: String,
+        url: String,
+      },
+    ],
+
+    tagline: {
       type: String,
       default: "",
+    },
+
+    icon: {
+      public_id: { type: String },
+      url: { type: String },
     },
 
     parent: {
