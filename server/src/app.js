@@ -30,6 +30,7 @@ import orderRouter from "./routes/order.routes.js";
 import notificationRouter from "./routes/notification.routes.js";
 import reviewRouter from "./routes/review.routes.js";
 import paymentRouter from "./routes/payment.routes.js";
+import bannerRoutes from "./routes/banner.routes.js";
 
 // Mounting the imported routers on specific paths. Each router will handle requests that match its base path, allowing for organized and modular handling of different resources in the application. For example, requests to "/api/v1/users" will be handled by the userRouter, while requests to "/api/v1/products" will be handled by the productRouter, and so on for each resource type.
 app.use("/api/v1/uploads", uploadRouter);
@@ -42,5 +43,6 @@ app.use("/api/v1/orders", orderRouter);
 app.use("/api/v1/notifications", notificationRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/payments", paymentRouter);
+app.use("/api/v1/banners", bannerRoutes);
 
 export { app };
