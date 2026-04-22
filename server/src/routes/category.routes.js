@@ -36,14 +36,14 @@ const router = Router();
 // This route is used for getting all categories, with optional query parameters for filtering by status, searching by name, and pagination. It allows customers to browse through the available categories in the e-commerce application.
 router.route("/").get(getAllCategories);
 
-// This route is used for getting the details of a specific category by its ID. It allows customers to view the information about a particular category, including its name, description, image, and other relevant details.
-router.route("/:categoryId").get(getCategoryById);
-
 // This route is used for getting a list of featured categories. Featured categories are typically highlighted or promoted categories that may have special offers or be popular among customers. This allows customers to easily find and explore these highlighted categories.
 router.route("/featured").get(getFeaturedCategories);
 
 // This route is used for searching categories based on a query string. It allows customers to search for categories by name or other relevant fields, making it easier for them to find specific categories they are interested in. The search functionality can help improve the user experience by providing quick access to relevant categories based on customer input.
 router.route("/search").get(searchCategories);
+
+// This route is used for getting the details of a specific category by its ID. It allows customers to view the information about a particular category, including its name, description, image, and other relevant details.
+router.route("/:categoryId").get(getCategoryById);
 
 // ======================================================
 // =============== SELLER PANEL HANDLERS ================
