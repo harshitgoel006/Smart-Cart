@@ -11,4 +11,20 @@ const uploadFile = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, data, "File uploaded successfully"));
 });
 
-export { uploadFile };
+const uploadMultipleFiles = asyncHandler(async (req, res) => {
+  const files = req.files;
+
+  if (!files || files.length === 0) {
+    throw new ApiError(400, "No files uploaded");
+  }
+
+  const data = await Promise.all(
+    files.map((file) => UploadService.uploadFile(file)),
+  );
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, data, "Files uploaded successfully"));
+});
+
+export { uploadFile, uploadMultipleFiles };
