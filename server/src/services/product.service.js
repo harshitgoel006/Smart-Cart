@@ -628,6 +628,25 @@ export const productService = {
   async createProduct(sellerId, body, files) {
     const { name, description, price, stock, brand, category, variants } = body;
 
+    if (isNaN(price) || Number(price) <= 0) {
+      throw new ApiError(400, "Invalid price value");
+    }
+
+    if (isNaN(stock) || Number(stock) < 0) {
+      throw new ApiError(400, "Invalid stock value");
+    }
+
+    let parsedVariants = [];
+
+    if (variants) {
+      try {
+        parsedVariants =
+          typeof variants === "string" ? JSON.parse(variants) : variants;
+      } catch (err) {
+        throw new ApiError(400, "Invalid variants format");
+      }
+    }
+
     if (!name || !description || !price || !stock || !category) {
       throw new ApiError(400, "Required fields are missing");
     }
@@ -643,31 +662,55 @@ export const productService = {
       status: "approved",
     });
 
+    const hasChildren = await Category.exists({
+      parent: categoryDoc._id,
+      isDeleted: false,
+    });
+
+    if (hasChildren) {
+      throw new ApiError(
+        400,
+        "Please select a subcategory (leaf category only)",
+      );
+    }
+
     if (!categoryDoc) {
       throw new ApiError(400, "Invalid or inactive category");
+    }
+
+    const existingProduct = await Product.findOne({
+      name: name.trim(),
+      seller: sellerId,
+      isDeleted: false,
+    });
+
+    if (existingProduct) {
+      throw new ApiError(400, "Product with same name already exists");
     }
 
     if (!files || files.length === 0) {
       throw new ApiError(400, "At least one image is required");
     }
 
-    // Upload Images with rollback safety
-
     const uploadedImages = await uploadMultiple(files, {
       folder: "SmartCart/products",
     });
+
+    if (!uploadedImages || uploadedImages.length === 0) {
+      throw new ApiError(500, "Image upload failed");
+    }
     try {
       const product = await Product.create({
         name,
         description,
-        price: mongoose.Types.Decimal128.fromString(price.toString()),
-        stock: Number(stock),
+        price: mongoose.Types.Decimal128.fromString(Number(price).toString()),
+        stock: Math.floor(Number(stock)),
         brand,
         category,
         images: uploadedImages,
         coverImage: uploadedImages[0],
         seller: sellerId,
-        variants: variants ? JSON.parse(variants) : [],
+        variants: parsedVariants,
         approvalStatus: "pending",
         isActive: false, // IMPORTANT FIX
       });

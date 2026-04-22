@@ -601,6 +601,10 @@ export const categoryService = {
       category.name = data.name.trim();
     }
 
+    if (data.image?.url && data.image?.public_id) {
+  category.image = data.image;
+}
+
     if (data.parent) {
       if (!mongoose.Types.ObjectId.isValid(data.parent)) {
         throw new ApiError(400, "Invalid parent ID");

@@ -94,17 +94,17 @@ router.route("/create").post(
 
 // This route is for fetching the details of a specific product by its ID for the seller. It requires the user to be authenticated and have the "seller" role. The controller function `getSellerProduct` will handle the logic for retrieving the product information from the database based on the provided product ID in the request parameters, ensuring that the product belongs to the logged-in seller, and return it in the response.
 router
-  .route("/product/:productId")
+  .route("/seller/product/:productId")
   .get(verifyJWT, authorizedRole("seller"), getSellerProduct);
 
 // This route is for updating a specific product by its ID. It requires the user to be authenticated and have the "seller" role. The route also uses the multer middleware to handle file uploads for product images, allowing up to 5 images to be uploaded with the request. The controller function `updateProduct` will handle the logic for validating the updated product input, ensuring that the product belongs to the logged-in seller, updating the product information and associated images in the database, and returning an appropriate response indicating the success or failure of the product update.
 router
-  .route("/product/:productId")
+  .route("/seller/product/:productId")
   .put(verifyJWT, authorizedRole("seller"), updateProduct);
 
 // This route is for deleting a specific product by its ID. It requires the user to be authenticated and have the "seller" role. The controller function `deleteProduct` will handle the logic for ensuring that the product belongs to the logged-in seller, deleting the product from the database, and returning an appropriate response indicating the success or failure of the product deletion.
 router
-  .route("/product/:productId")
+  .route("/seller/product/:productId")
   .delete(verifyJWT, authorizedRole("seller"), deleteProduct);
 
 // This route is for managing the stock of a specific product by its ID. It requires the user to be authenticated and have the "seller" role. The controller function `manageProductStock` will handle the logic for validating the stock update input, ensuring that the product belongs to the logged-in seller, updating the stock information in the database, and returning an appropriate response indicating the success or failure of the stock update.

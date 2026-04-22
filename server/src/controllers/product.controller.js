@@ -189,7 +189,7 @@ const getSellerProduct = asyncHandler(async (req, res) => {
 
 // This controller is used to update an existing product by sellers. It allows sellers to modify the details of their products, such as name, description, price, images, and other relevant information. The controller processes the product update request, validates the input data, and updates the product in the database. It may also trigger notifications to the admin for re-approval if significant changes are made to the product.
 const updateProduct = asyncHandler(async (req, res) => {
-  const productId = req.params.id;
+  const productId = req.params.productId;
   const sellerId = req.user._id;
 
   const product = await productService.updateProduct(
@@ -250,7 +250,7 @@ const variantManagement = asyncHandler(async (req, res) => {
 
 //  This controller is used to fetch orders related to a specific product for sellers. It retrieves a list of orders that include the specified product, allowing sellers to view and manage orders associated with their products. The controller may also support pagination and filtering options to help sellers easily navigate through the orders.
 const getProductOrders = asyncHandler(async (req, res) => {
-  const productId = req.params.id;
+  const productId = req.params.productId;
   const sellerId = req.user._id;
   const order = await productService.getProductOrders(
     productId,
@@ -320,7 +320,7 @@ const restoreArchiveProduct = asyncHandler(async (req, res) => {
 
 // This controller is used to fetch feedback related to a specific product for sellers. It retrieves a list of feedback entries, including reviews, ratings, and questions from customers about the specified product. This allows sellers to gain insights into customer opinions and address any concerns or issues raised in the feedback. The controller may also support pagination to limit the number of feedback entries returned in a single response.
 const getProductFeedback = asyncHandler(async (req, res) => {
-  const productId = req.params.id;
+  const productId = req.params.productId;
   const productFeedback = await productService.getProductFeedback(
     productId,
     req.user._id,
@@ -381,7 +381,7 @@ const scheduleFlashSale = asyncHandler(async (req, res) => {
 
 // This controller is used to approve products by admin. It allows the admin to review and approve products submitted by sellers before they become visible in the catalog. The controller processes the product approval request, validates the admin's authorization to approve the product, and updates the product's status in the database to indicate that it has been approved. It may also trigger notifications to the seller about the approval status of their product.
 const approveProducts = asyncHandler(async (req, res) => {
-  const { productId } = req.params;
+  const  productId  = req.params.id;
   const product = await productService.approveProduct(productId);
 
   return res
