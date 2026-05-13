@@ -13,7 +13,7 @@ const verifiedEmailSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["customer", "seller","admin"],
+      enum: ["customer", "seller"],
       required: true,
     },
 

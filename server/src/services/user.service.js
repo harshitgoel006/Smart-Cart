@@ -43,7 +43,7 @@ export const userService = {
 
     email = email.toLowerCase().trim();
 
-    if (!["customer", "seller","admin"].includes(role)) {
+    if (!["customer", "seller"].includes(role)) {
       throw new ApiError(403, "Invalid role selection");
     }
 
@@ -537,12 +537,10 @@ export const userService = {
       throw new ApiError(404, "User not found");
     }
 
-    // 🔹 Delete old avatar via abstraction
     if (user.avatar_public_id) {
       await deleteFromCloudinary(user.avatar_public_id);
     }
 
-    // 🔹 Upload new avatar
     const uploaded = await uploadSingle(file.path, {
       folder: "SmartCart/avatars",
     });
@@ -555,45 +553,6 @@ export const userService = {
     return await User.findById(userId).select("-password -refreshTokens");
   },
 
-  // This method updates the user's avatar by uploading a new image file to Cloudinary and deleting the old avatar if it exists. It validates the input file, retrieves the user from the database, handles the avatar upload and deletion, updates the user's avatar URL and public ID in the database, and returns the updated user information without sensitive fields like password and refresh tokens.
-  async updateUserAvatar(userId, file) {
-    if (!file) {
-      throw new ApiError(400, "Avatar file required");
-    }
-
-    const user = await User.findById(userId).select("+avatar_public_id");
-
-    if (!user) {
-      throw new ApiError(404, "User not found");
-    }
-
-    // 🔹 Delete old avatar safely
-    if (user.avatar_public_id) {
-      try {
-        await cloudinary.v2.uploader.destroy(user.avatar_public_id);
-      } catch (err) {
-        console.error("Old avatar delete failed", err);
-      }
-    }
-
-    // 🔹 Upload new avatar
-    const uploaded = await uploadOnCloudinary(file.path);
-
-    if (!uploaded?.url || !uploaded?.public_id) {
-      throw new ApiError(400, "Avatar upload failed");
-    }
-
-    user.avatar = uploaded.url;
-    user.avatar_public_id = uploaded.public_id;
-
-    await user.save({ validateBeforeSave: false });
-
-    const safeUser = await User.findById(userId).select(
-      "-password -refreshTokens",
-    );
-
-    return safeUser;
-  },
 
   // This method updates the user's address information. It validates the required address fields, retrieves the user from the database, limits the maximum number of addresses to 5, allows setting one address as default while unsetting others, updates or adds the address based on the label, saves the changes to the database, and returns the updated list of addresses.
   async updateAddress(userId, data) {
@@ -655,7 +614,7 @@ export const userService = {
 
   // This method updates the user's account details such as fullname, username, phone number, and email. It validates that at least one field is provided for update, retrieves the user from the database, checks for username uniqueness if it's being updated, handles email change by enforcing uniqueness and sending a verification OTP, updates the provided fields, saves the changes to the database, emits a notification about the profile update, and returns the updated user information without sensitive fields like password and refresh tokens.
   async updateAccountDetails(userId, data) {
-    const { fullname, username, phone, email } = data;
+    let { fullname, username, phone, email } = data;
 
     if (!fullname && !username && !phone && !email) {
       throw new ApiError(400, "At least one field required to update");

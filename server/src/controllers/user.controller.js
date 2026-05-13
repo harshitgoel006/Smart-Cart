@@ -34,7 +34,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   return res
     .status(201)
-    .json(new ApiResponse(200, createdUser, "User registered successfully"));
+    .json(new ApiResponse(201, createdUser, "User registered successfully"));
 });
 
 // This controller is used for verifying the OTP sent to the user's email during registration or login. It expects email and otp in the request body. The service will handle the logic of verifying the OTP and activating the user account if it's for registration or allowing login if it's for login.
