@@ -10,7 +10,6 @@ const otpSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
       match: [/^\S+@\S+\.\S+$/, "Invalid email format"],
-      index: true,
     },
 
     otpHash: {
@@ -44,7 +43,6 @@ const otpSchema = new mongoose.Schema(
     expiresAt: {
       type: Date,
       default: () => Date.now() + 5 * 60 * 1000,
-      index: true,
     },
   },
   { timestamps: true },
