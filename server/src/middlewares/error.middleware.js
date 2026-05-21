@@ -1,7 +1,34 @@
 import { ApiError } from "../utils/ApiError.js";
+import multer from "multer";
 
 const errorHandler = (err, req, res, next) => {
   let error = err;
+
+  if (err instanceof multer.MulterError) {
+    let message = "File upload error";
+
+    if (err.code === "LIMIT_FILE_SIZE") {
+      message = "File size exceeds 5MB limit";
+    }
+
+    if (err.code === "LIMIT_FILE_COUNT") {
+      message = "Maximum 5 files allowed";
+    }
+
+    return res.status(400).json({
+      success: false,
+      message,
+      errors: [],
+    });
+  }
+
+  if (err.message?.includes("Only JPG, PNG, and WEBP image files are allowed")) {
+    return res.status(400).json({
+      success: false,
+      message: err.message,
+      errors: [],
+    });
+  }
 
   if (err.name === "ValidationError") {
     const formattedErrors = {};

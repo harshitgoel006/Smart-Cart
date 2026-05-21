@@ -122,11 +122,9 @@ export const userService = {
 
     const verified = await VerifiedEmail.findOne({ email });
 
-
     if (!verified) {
       throw new ApiError(403, "Email not verified via OTP");
     }
-
 
     if (verified.role !== role) {
       throw new ApiError(403, "Role mismatch with verified email");
@@ -186,7 +184,9 @@ export const userService = {
     const record = await OTP.findOne({
       email,
       purpose: "email_verification",
-    }).select("+otpHash").sort({ createdAt: -1 });
+    })
+      .select("+otpHash")
+      .sort({ createdAt: -1 });
 
     if (!record) {
       throw new ApiError(400, "OTP expired or not found");
@@ -245,8 +245,6 @@ export const userService = {
     }
 
     if (user.role === "seller") {
-      
-
       if (user.sellerProfile?.isSellerSuspended) {
         throw new ApiError(403, "Seller account suspended");
       }
@@ -537,9 +535,7 @@ export const userService = {
       throw new ApiError(404, "User not found");
     }
 
-    if (user.avatar_public_id) {
-      await deleteFromCloudinary(user.avatar_public_id);
-    }
+    const oldAvatarPublicId = user.avatar_public_id;
 
     const uploaded = await uploadSingle(file.path, {
       folder: "SmartCart/avatars",
@@ -550,9 +546,16 @@ export const userService = {
 
     await user.save({ validateBeforeSave: false });
 
+    if (oldAvatarPublicId) {
+      try {
+        await deleteFromCloudinary(oldAvatarPublicId);
+      } catch (err) {
+        console.error("Failed to delete old avatar:", err.message);
+      }
+    }
+
     return await User.findById(userId).select("-password -refreshTokens");
   },
-
 
   // This method updates the user's address information. It validates the required address fields, retrieves the user from the database, limits the maximum number of addresses to 5, allows setting one address as default while unsetting others, updates or adds the address based on the label, saves the changes to the database, and returns the updated list of addresses.
   async updateAddress(userId, data) {

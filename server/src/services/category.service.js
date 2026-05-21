@@ -68,6 +68,30 @@ export const categoryService = {
     };
   },
 
+  // This function retrieves a specific category by its slug, checks if it is active, and then builds a hierarchical tree structure of its child categories. It first fetches the category from the database using the slug. If the category is not found or inactive, it throws a 404 error. Finally, it retrieves all active categories to build the tree structure for the specified category.
+  
+  async getCategoryBySlug(slug) {
+    const category = await Category.findOne({
+      slug,
+      isActive: true,
+      status: "approved",
+    }).lean();
+
+    if (!category) {
+      throw new ApiError(404, "Category not found");
+    }
+
+    const all = await Category.find({
+      isActive: true,
+      status: "approved",
+    }).lean();
+
+    return {
+      ...category,
+      children: this.buildTree(all, category._id),
+    };
+  },
+
   // This function retrieves all categories that are marked as featured and active from the database, sorts them by their order, and returns the list. Featured categories are typically highlighted in the frontend to promote certain products or categories to customers.
 
   async getFeaturedCategories() {
@@ -141,11 +165,32 @@ export const categoryService = {
   // This function allows sellers to propose a new category by providing the necessary data such as name, description, and parent category. It validates the input data, checks for duplicate category names, and creates a new category with a status of "pending". After creating the category, it sends notifications to all active admins to review the proposed category. This function helps in maintaining a controlled process for adding new categories to the platform while involving the admin team for approval.
 
   async proposeCategory(data, sellerId) {
-    const { name, description, parent } = data;
+    const {
+      name,
+      description,
+      parent,
+      image,
+      bannerImage,
+      icon,
+      sliderImages,
+      tagline,
+      tags,
+      order,
+      isFeatured,
+      metaTitle,
+      metaDescription,
+      metaKeywords,
+    } = data;
+
+    if (typeof name !== "string") {
+      throw new ApiError(400, "Category name must be a string");
+    }
 
     if (!name || !name.trim()) {
       throw new ApiError(400, "Category name is required");
     }
+
+    const normalizedName = name.trim().replace(/\s+/g, " ");
 
     if (parent) {
       if (!mongoose.Types.ObjectId.isValid(parent)) {
@@ -161,7 +206,7 @@ export const categoryService = {
 
     const existing = await Category.findOne({
       name: {
-        $regex: new RegExp(`^${name.trim()}$`, "i"),
+        $regex: new RegExp(`^${normalizedName}$`, "i"),
       },
     });
 
@@ -170,24 +215,24 @@ export const categoryService = {
     }
 
     const category = await Category.create({
-      name: name.trim(),
+      name: normalizedName,
       description: description || "",
       parent: parent || null,
       isFeatured: !!isFeatured,
-
-      image: data.image || {},
-      bannerImage: data.bannerImage || {},
-      icon: data.icon || {},
-      sliderImages: data.sliderImages || [],
-      tagline: data.tagline || "",
-
+      image: image || {},
+      bannerImage: bannerImage || {},
+      icon: icon || {},
+      sliderImages: Array.isArray(sliderImages) ? sliderImages : [],
+      tagline: tagline || "",
+      tags: Array.isArray(tags) ? tags : [],
+      order: order !== undefined ? Number(order) : 0,
       metaTitle: metaTitle || "",
       metaDescription: metaDescription || "",
       metaKeywords: metaKeywords || "",
-
-      status: "approved",
-      isActive: true,
-      createdBy: adminId,
+      status: "pending",
+      isActive: false,
+      proposedBy: sellerId,
+      createdBy: sellerId,
     });
 
     try {
@@ -422,10 +467,9 @@ export const categoryService = {
     await category.save();
 
     // Notify seller
-    if (category.proposedBy) {
-      const seller = await User.findById(category.proposedBy).select(
-        "_id email fullname",
-      );
+    const sellerId = category.proposedBy || category.createdBy;
+    if (sellerId) {
+      const seller = await User.findById(sellerId).select("_id email fullname");
 
       if (seller) {
         try {
@@ -433,8 +477,10 @@ export const categoryService = {
             recipient: seller._id,
             recipientRole: "seller",
             category: "category",
-            entityType: "Category",
-            entityId: category._id,
+            relatedEntity: {
+              entityType: "Category",
+              entityId: category._id,
+            },
             priority: "high",
             meta: {
               categoryName: category.name,
@@ -474,10 +520,9 @@ export const categoryService = {
     await category.save();
 
     // Notify seller
-    if (category.proposedBy) {
-      const seller = await User.findById(category.proposedBy).select(
-        "_id email",
-      );
+    const sellerId = category.proposedBy || category.createdBy;
+    if (sellerId) {
+      const seller = await User.findById(sellerId).select("_id email");
 
       if (seller) {
         try {
@@ -485,8 +530,10 @@ export const categoryService = {
             recipient: seller._id,
             recipientRole: "seller",
             category: "category",
-            entityType: "Category",
-            entityId: category._id,
+            relatedEntity: {
+              entityType: "Category",
+              entityId: category._id,
+            },
             priority: "medium",
             meta: {
               categoryName: category.name,
@@ -510,22 +557,37 @@ export const categoryService = {
       name,
       description,
       parent,
+      image,
+      bannerImage,
+      icon,
+      sliderImages,
+      tagline,
+      tags,
+      order,
       isFeatured,
       metaTitle,
       metaDescription,
       metaKeywords,
     } = data;
 
+    if (typeof name !== "string") {
+      throw new ApiError(400, "Category name must be a string");
+    }
+
     if (!name || !name.trim()) {
       throw new ApiError(400, "Category name required");
     }
+
+    const normalizedName = name.trim().replace(/\s+/g, " ");
 
     if (parent && !mongoose.Types.ObjectId.isValid(parent)) {
       throw new ApiError(400, "Invalid parent category ID");
     }
 
     const exists = await Category.findOne({
-      name: { $regex: new RegExp(`^${name.trim()}$`, "i") },
+      name: {
+        $regex: new RegExp(`^${normalizedName}$`, "i"),
+      },
     });
 
     if (exists) {
@@ -533,9 +595,16 @@ export const categoryService = {
     }
 
     const category = await Category.create({
-      name: name.trim(),
+      name: normalizedName,
       description: description || "",
       parent: parent || null,
+      image: image || {},
+      bannerImage: bannerImage || {},
+      icon: icon || {},
+      sliderImages: Array.isArray(sliderImages) ? sliderImages : [],
+      tagline: tagline || "",
+      tags: Array.isArray(tags) ? tags : [],
+      order: order !== undefined ? Number(order) : 0,
       isFeatured: !!isFeatured,
       metaTitle: metaTitle || "",
       metaDescription: metaDescription || "",
@@ -598,12 +667,13 @@ export const categoryService = {
         throw new ApiError(409, "Category name already exists");
       }
 
-      category.name = data.name.trim();
+      const normalizedName = data.name.trim().replace(/\s+/g, " ");
+      category.name = normalizedName;
     }
 
     if (data.image?.url && data.image?.public_id) {
-  category.image = data.image;
-}
+      category.image = data.image;
+    }
 
     if (data.parent) {
       if (!mongoose.Types.ObjectId.isValid(data.parent)) {

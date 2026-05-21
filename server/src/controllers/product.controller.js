@@ -381,7 +381,7 @@ const scheduleFlashSale = asyncHandler(async (req, res) => {
 
 // This controller is used to approve products by admin. It allows the admin to review and approve products submitted by sellers before they become visible in the catalog. The controller processes the product approval request, validates the admin's authorization to approve the product, and updates the product's status in the database to indicate that it has been approved. It may also trigger notifications to the seller about the approval status of their product.
 const approveProducts = asyncHandler(async (req, res) => {
-  const  productId  = req.params.id;
+  const {productId}  = req.params.id;
   const product = await productService.approveProduct(productId);
 
   return res

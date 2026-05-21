@@ -30,6 +30,20 @@ const getCategoryById = asyncHandler(async (req, res) => {
     );
 });
 
+// This controller is used to fetch the details of a specific category based on its slug. It retrieves the category information from the service layer and returns it in the response. This allows customers to view detailed information about a category using a more user-friendly identifier (slug) instead of the category ID. The response includes a success message and the category data.
+const getCategoryBySlug = asyncHandler(async (req, res) => {
+  const { slug } = req.params;
+
+  const category = await categoryService.getCategoryBySlug(slug);
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, category, "Category details fetched successfully"),
+    );
+});
+
+
 // This controller is used to fetch a list of featured categories for customers. It retrieves the featured categories from the service layer and returns them in the response. This allows customers to easily discover popular or highlighted categories when browsing products. If no featured categories are found, it throws a 404 error. The response includes a success message and the list of featured categories.
 
 const getFeaturedCategories = asyncHandler(async (req, res) => {
@@ -235,7 +249,7 @@ const approveCategory = asyncHandler(async (req, res) => {
 
 const rejectCategory = asyncHandler(async (req, res) => {
   const { categoryId } = req.params;
-  const { rejectionReason } = req.body;
+  const rejectionReason = req.body.rejectionReason || req.body.reason;
 
   const category = await categoryService.rejectCategory(
     categoryId,
@@ -331,6 +345,7 @@ const bulkUpdateCategoriesStatus = asyncHandler(async (req, res) => {
 export {
   getAllCategories,
   getCategoryById,
+  getCategoryBySlug,
   getFeaturedCategories,
   searchCategories,
   getSellerCategoryList,

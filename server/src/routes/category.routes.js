@@ -4,6 +4,7 @@ import { Router } from "express";
 import {
   getAllCategories,
   getCategoryById,
+  getCategoryBySlug,
   getFeaturedCategories,
   searchCategories,
   getSellerCategoryList,
@@ -44,6 +45,10 @@ router.route("/search").get(searchCategories);
 
 // This route is used for getting the details of a specific category by its ID. It allows customers to view the information about a particular category, including its name, description, image, and other relevant details.
 router.route("/:categoryId").get(getCategoryById);
+
+
+router.route("/slug/:slug").get(getCategoryBySlug);
+
 
 // ======================================================
 // =============== SELLER PANEL HANDLERS ================

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import slugify from "slugify";
+import { ApiError } from "../utils/ApiError.js";
 
 // This schema defines the structure of the Category documents in the MongoDB database. It includes fields for the category name, slug, description, image, parent category reference, hierarchy level, path, product count, status flags (featured, active, deleted), rejection reason, proposed by user reference, tags, order for sorting, meta information for SEO, and references to the users who created and updated the category. The schema also includes timestamps for when each category document is created and last updated. This structure allows for efficient management of categories in an e-commerce application, supporting features like nested categories and SEO optimization.
 
@@ -7,8 +8,10 @@ const categorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "Category name is required"],
       trim: true,
+      minlength: [2, "Category name must be at least 2 characters"],
+      maxlength: [30, "Category name cannot exceed 100 characters"],
     },
 
     slug: {
@@ -141,7 +144,7 @@ categorySchema.pre("save", async function (next) {
       lower: true,
       strict: true,
       trim: true,
-    });
+    }).substring(0, 120);
 
     const existing = await mongoose.model("Category").findOne({
       slug: baseSlug,
@@ -156,7 +159,23 @@ categorySchema.pre("save", async function (next) {
     const parent = await mongoose.model("Category").findById(this.parent);
 
     if (!parent) {
-      return next(new Error("Invalid parent category"));
+      return next(new ApiError(404, "Parent category not found"));
+    }
+
+    if (String(parent._id) === String(this._id)) {
+      return next(new ApiError(400, "Category cannot be its own parent"));
+    }
+
+    let currentParent = parent;
+
+    while (currentParent) {
+      if (String(currentParent._id) === String(this._id)) {
+        return next(new ApiError(400, "Circular category hierarchy detected"));
+      }
+
+      currentParent = currentParent.parent
+        ? await mongoose.model("Category").findById(currentParent.parent)
+        : null;
     }
 
     this.level = parent.level + 1;

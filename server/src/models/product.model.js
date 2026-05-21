@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import crypto from "crypto";
 
 // This schema defines the structure for product options, which are specific variations of a product (e.g., size, color) that have their own SKU, stock, price, and sales data. Each option is associated with a variant (e.g., "Size" or "Color") and includes fields for tracking inventory and pricing.
 const optionSchema = new mongoose.Schema(
@@ -162,7 +163,17 @@ productSchema.pre("save", async function (next) {
       .replace(/[^a-z0-9\s-]/g, "")
       .replace(/\s+/g, "-");
 
-    this.slug = `${baseSlug}-${Math.floor(Math.random() * 10000)}`;
+    const existing = await mongoose.model("Product").findOne({
+      slug: baseSlug,
+      _id: { $ne: this._id },
+    });
+
+    if (existing) {
+      const uniqueSuffix = crypto.randomUUID().slice(0, 8);
+      this.slug = `${baseSlug}-${uniqueSuffix}`;
+    } else {
+      this.slug = baseSlug;
+    }
   }
 
   const price = parseFloat(this.price.toString());

@@ -100,7 +100,7 @@ router
 // This route is for updating a specific product by its ID. It requires the user to be authenticated and have the "seller" role. The route also uses the multer middleware to handle file uploads for product images, allowing up to 5 images to be uploaded with the request. The controller function `updateProduct` will handle the logic for validating the updated product input, ensuring that the product belongs to the logged-in seller, updating the product information and associated images in the database, and returning an appropriate response indicating the success or failure of the product update.
 router
   .route("/seller/product/:productId")
-  .put(verifyJWT, authorizedRole("seller"), updateProduct);
+  .put(verifyJWT, authorizedRole("seller"), upload.array("images", 5), updateProduct);
 
 // This route is for deleting a specific product by its ID. It requires the user to be authenticated and have the "seller" role. The controller function `deleteProduct` will handle the logic for ensuring that the product belongs to the logged-in seller, deleting the product from the database, and returning an appropriate response indicating the success or failure of the product deletion.
 router
@@ -163,27 +163,27 @@ router
 
 // This route is for approving a specific product by its ID. It requires the user to be authenticated and have the "admin" role. The controller function `approveProducts` will handle the logic for ensuring that the product exists, updating the product's approval status to approved in the database, and returning an appropriate response indicating the success or failure of the product approval.
 router
-  .route("/products/:id/approve")
+  .route("/products/:productId/approve")
   .post(verifyJWT, authorizedRole("admin"), approveProducts);
 
 // This route is for rejecting a specific product by its ID. It requires the user to be authenticated and have the "admin" role. The controller function `rejectProduct` will handle the logic for ensuring that the product exists, updating the product's approval status to rejected in the database, and returning an appropriate response indicating the success or failure of the product rejection.
 router
-  .route("/products/:id/reject")
+  .route("/products/:productId/reject")
   .post(verifyJWT, authorizedRole("admin"), rejectProduct);
 
 // This route is for moderating the content of a specific product by its ID. It requires the user to be authenticated and have the "admin" role. The controller function `moderateProductContent` will handle the logic for validating the moderation input (such as flags for inappropriate content), ensuring that the product exists, updating the product's moderation status in the database, and returning an appropriate response indicating the success or failure of the content moderation operation.
 router
-  .route("/products/:id/moderate")
+  .route("/products/:productId/moderate")
   .post(verifyJWT, authorizedRole("admin"), moderateProductContent);
 
 // This route is for toggling the active status of a specific product by its ID. It requires the user to be authenticated and have the "admin" role. The controller function `toggleProductStatus` will handle the logic for ensuring that the product exists, updating the product's active status in the database, and returning an appropriate response indicating the success or failure of the operation.
 router
-  .route("/products/:id/toggle-status")
+  .route("/products/:productId/toggle-status")
   .post(verifyJWT, authorizedRole("admin"), toggleProductStatus);
 
 // This route is for bulk moderating products. It requires the user to be authenticated and have the "admin" role. The controller function `bulkModerateProducts` will handle the logic for validating the bulk moderation input (such as a list of product IDs and their corresponding moderation actions), ensuring that the products exist, updating the moderation status of each specified product in the database accordingly, and returning an appropriate response indicating the success or failure of the bulk moderation operation.F
 router
-  .route("/products/:id/bulk-moderate")
+  .route("/products/bulk-moderate")
   .post(verifyJWT, authorizedRole("admin"), bulkModerateProducts);
 
 export default router;

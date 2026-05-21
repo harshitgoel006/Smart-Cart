@@ -10,12 +10,13 @@ class NotificationDispatcher {
     const {
       recipient,
       recipientRole,
-      entityType = null,
-      entityId = null,
+      relatedEntity = {},
       category = "system",
       priority = "medium",
       meta = {},
     } = payload;
+
+    const { entityType = null, entityId = null } = relatedEntity;
 
     const { title, message, emailSubject, emailHTML } =
       TemplateResolver.resolve(event, meta);

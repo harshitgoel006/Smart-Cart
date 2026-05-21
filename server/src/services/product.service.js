@@ -662,6 +662,10 @@ export const productService = {
       status: "approved",
     });
 
+    if (!categoryDoc) {
+      throw new ApiError(400, "Invalid or inactive category");
+    }
+
     const hasChildren = await Category.exists({
       parent: categoryDoc._id,
       isDeleted: false,
@@ -672,10 +676,6 @@ export const productService = {
         400,
         "Please select a subcategory (leaf category only)",
       );
-    }
-
-    if (!categoryDoc) {
-      throw new ApiError(400, "Invalid or inactive category");
     }
 
     const existingProduct = await Product.findOne({
@@ -856,14 +856,14 @@ export const productService = {
       );
     }
 
+    let oldPublicIds = [];
+
     if (files && files.length > 0) {
       const newImages = await uploadMultiple(files, {
         folder: "SmartCart/products",
       });
 
-      const oldPublicIds = product.images.map((img) => img.public_id);
-
-      await deleteMultipleFromCloudinary(oldPublicIds);
+      oldPublicIds = product.images.map((img) => img.public_id);
 
       product.images = newImages;
       product.coverImage = newImages[0];
@@ -875,6 +875,10 @@ export const productService = {
     product.isActive = false;
 
     await product.save();
+
+    if (oldPublicIds.length > 0) {
+      await deleteMultipleFromCloudinary(oldPublicIds);
+    }
 
     const admins = await User.find({
       role: "admin",
