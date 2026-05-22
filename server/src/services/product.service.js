@@ -25,7 +25,7 @@ export const productService = {
       minPrice,
       maxPrice,
       rating,
-      discount,
+      discountPercentage,
       size,
       inStock,
       sort,
@@ -40,6 +40,11 @@ export const productService = {
     };
 
     // SEARCH
+
+    if (search && search.length > 100) {
+      throw new ApiError(400, "Search query too long");
+    }
+
     if (search) {
       filter.$text = { $search: search };
     }
@@ -76,8 +81,8 @@ export const productService = {
     }
 
     // DISCOUNT
-    if (discount) {
-      filter.discount = { $gte: Number(discount) };
+    if (discountPercentage) {
+      filter.discountPercentage = { $gte: Number(discountPercentage) };
     }
 
     // STOCK
@@ -96,14 +101,16 @@ export const productService = {
       priceHighToLow: { finalPrice: -1 },
       ratingHighToLow: { ratings: -1 },
       bestSelling: { sold: -1 },
-      discountHighToLow: { discount: -1 },
+      discountHighToLow: { discountPercentage: -1 },
     };
 
     const sortQuery = sortOptions[sort] || { createdAt: -1 };
 
-    const pageNum = Number(page);
-    const limitNum = Number(limit);
+    const parsedPage = Number(page);
 
+    const pageNum =
+      Number.isNaN(parsedPage) || parsedPage <= 0 ? 1 : parsedPage;
+    const limitNum = Math.min(50, Number(limit));
     const total = await Product.countDocuments(filter);
 
     const products = await Product.find(filter)
@@ -154,7 +161,7 @@ export const productService = {
     })
       .sort({ ratings: -1 })
       .limit(Number(limit))
-      .select("name finalPrice discount ratings images stock");
+      .select("name finalPrice discountPercentage ratings images stock");
 
     return products;
   },
@@ -168,7 +175,7 @@ export const productService = {
     })
       .sort({ createdAt: -1 })
       .limit(Number(limit))
-      .select("name finalPrice discount ratings images stock");
+      .select("name finalPrice discountPercentage ratings images stock");
   },
 
   // This method retrieves products that belong to a specific category. It validates the category ID, constructs a filter to find products that match the category and are not deleted, active, and approved, and applies sorting based on query parameters. The results are paginated and returned along with metadata about the total number of products and total pages.
@@ -195,8 +202,11 @@ export const productService = {
 
     const sortQuery = sortOptions[sort] || { createdAt: -1 };
 
-    const pageNum = Number(page);
-    const limitNum = Number(limit);
+    const parsedPage = Number(page);
+
+    const pageNum =
+      Number.isNaN(parsedPage) || parsedPage <= 0 ? 1 : parsedPage;
+    const limitNum = Math.min(50, Number(limit));
 
     const total = await Product.countDocuments(filter);
 
@@ -234,6 +244,10 @@ export const productService = {
       isActive: true,
       approvalStatus: "approved",
     };
+
+    if (query && query.length > 100) {
+      throw new ApiError(400, "Search query too long");
+    }
 
     if (query) {
       filter.$text = { $search: query };
@@ -276,8 +290,11 @@ export const productService = {
 
     const sortQuery = sortOptions[sort] || { createdAt: -1 };
 
-    const pageNum = Number(page);
-    const limitNum = Number(limit);
+    const parsedPage = Number(page);
+
+    const pageNum =
+      Number.isNaN(parsedPage) || parsedPage <= 0 ? 1 : parsedPage;
+    const limitNum = Math.min(50, Number(limit));
 
     const total = await Product.countDocuments(filter);
 
@@ -285,7 +302,7 @@ export const productService = {
       .sort(sortQuery)
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum)
-      .select("name slug finalPrice discount ratings images stock brand");
+      .select("name slug finalPrice discountPercentage ratings images stock brand");
 
     return {
       total,
@@ -337,8 +354,11 @@ export const productService = {
       filter.$or = optionalConditions;
     }
 
-    const pageNum = Number(page);
-    const limitNum = Number(limit);
+    const parsedPage = Number(page);
+
+    const pageNum =
+      Number.isNaN(parsedPage) || parsedPage <= 0 ? 1 : parsedPage;
+    const limitNum = Math.min(50, Number(limit));
 
     const total = await Product.countDocuments(filter);
 
@@ -384,8 +404,11 @@ export const productService = {
       filter.rating = { $gte: Number(rating) };
     }
 
-    const pageNum = Number(page);
-    const limitNum = Number(limit);
+    const parsedPage = Number(page);
+
+    const pageNum =
+      Number.isNaN(parsedPage) || parsedPage <= 0 ? 1 : parsedPage;
+    const limitNum = Math.min(50, Number(limit));
 
     const total = await Review.countDocuments(filter);
 
@@ -513,8 +536,11 @@ export const productService = {
       status: { $in: ["pending", "answered"] },
     };
 
-    const pageNum = Number(page);
-    const limitNum = Number(limit);
+    const parsedPage = Number(page);
+
+    const pageNum =
+      Number.isNaN(parsedPage) || parsedPage <= 0 ? 1 : parsedPage;
+    const limitNum = Math.min(50, Number(limit));
 
     const total = await ProductQnA.countDocuments(filter);
 
@@ -628,6 +654,26 @@ export const productService = {
   async createProduct(sellerId, body, files) {
     const { name, description, price, stock, brand, category, variants } = body;
 
+    if (!name || !name.trim()) {
+      throw new ApiError(400, "Product name is required");
+    }
+
+    if (name.trim().length > 120) {
+      throw new ApiError(400, "Product name too long");
+    }
+
+    if (name.trim().length < 3) {
+      throw new ApiError(400, "Product name must be at least 3 characters");
+    }
+
+    if (!description || !description.trim()) {
+      throw new ApiError(400, "Description required");
+    }
+
+    if (description.trim().length > 5000) {
+      throw new ApiError(400, "Description too long");
+    }
+
     if (isNaN(price) || Number(price) <= 0) {
       throw new ApiError(400, "Invalid price value");
     }
@@ -647,7 +693,7 @@ export const productService = {
       }
     }
 
-    if (!name || !description || !price || !stock || !category) {
+    if (!price || !stock || !category) {
       throw new ApiError(400, "Required fields are missing");
     }
 
@@ -693,7 +739,7 @@ export const productService = {
     }
 
     const uploadedImages = await uploadMultiple(files, {
-      folder: "SmartCart/products",
+      folder: "products",
     });
 
     if (!uploadedImages || uploadedImages.length === 0) {
@@ -724,7 +770,7 @@ export const productService = {
 
       for (const admin of admins) {
         await NotificationService.emit("PRODUCT_CREATED_PENDING", {
-          recipient: admin._id, // ✅ REQUIRED
+          recipient: admin._id,
           recipientRole: "admin",
           entityType: "Product",
           entityId: product._id,
@@ -734,15 +780,19 @@ export const productService = {
             productName: product.name,
             sellerId,
           },
+          email: admin.email,
         });
       }
 
       return product;
     } catch (error) {
-      // Rollback Cloudinary images
-      await deleteMultipleFromCloudinary(
-        uploadedImages.map((img) => img.public_id),
-      );
+      try {
+        await deleteMultipleFromCloudinary(
+          uploadedImages.map((img) => img.public_id),
+        );
+      } catch (cleanupError) {
+        console.error("Rollback cleanup failed:", cleanupError.message);
+      }
 
       throw error;
     }
@@ -787,7 +837,7 @@ export const productService = {
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum)
       .select(
-        "name slug finalPrice discount ratings coverImage stock brand category",
+        "name slug finalPrice discountPercentage ratings coverImage stock brand category",
       )
       .lean();
 
@@ -833,12 +883,14 @@ export const productService = {
       }
     }
 
+    let categoryDoc = null;
+
     if (updates.category) {
       if (!mongoose.Types.ObjectId.isValid(updates.category)) {
         throw new ApiError(400, "Invalid category ID");
       }
 
-      const categoryDoc = await Category.findOne({
+      categoryDoc = await Category.findOne({
         _id: updates.category,
         isDeleted: false,
         isActive: true,
@@ -847,6 +899,18 @@ export const productService = {
 
       if (!categoryDoc) {
         throw new ApiError(400, "Invalid or inactive category");
+      }
+
+      const hasChildren = await Category.exists({
+        parent: categoryDoc._id,
+        isDeleted: false,
+      });
+
+      if (hasChildren) {
+        throw new ApiError(
+          400,
+          "Please select a subcategory (leaf category only)",
+        );
       }
     }
 
@@ -858,9 +922,13 @@ export const productService = {
 
     let oldPublicIds = [];
 
+    if (files && files.length > 5) {
+      throw new ApiError(400, "Maximum 5 images allowed");
+    }
+
     if (files && files.length > 0) {
       const newImages = await uploadMultiple(files, {
-        folder: "SmartCart/products",
+        folder: "products",
       });
 
       oldPublicIds = product.images.map((img) => img.public_id);
@@ -877,7 +945,11 @@ export const productService = {
     await product.save();
 
     if (oldPublicIds.length > 0) {
-      await deleteMultipleFromCloudinary(oldPublicIds);
+      try {
+        await deleteMultipleFromCloudinary(oldPublicIds);
+      } catch (error) {
+        console.error("Cloudinary cleanup failed:", error.message);
+      }
     }
 
     const admins = await User.find({
@@ -919,10 +991,6 @@ export const productService = {
       throw new ApiError(404, "Product not found");
     }
 
-    /////////////////////////////////////////////////////////
-    // CHECK ORDER DEPENDENCY
-    /////////////////////////////////////////////////////////
-
     const hasOrders = await Order.exists({
       "items.product": productId,
     });
@@ -938,23 +1006,19 @@ export const productService = {
       };
     }
 
-    /////////////////////////////////////////////////////////
-    // SOFT DELETE
-    /////////////////////////////////////////////////////////
-
     product.isDeleted = true;
     product.isActive = false;
     product.isArchived = false;
 
     await product.save();
 
-    /////////////////////////////////////////////////////////
-    // CLEANUP IMAGES SAFELY
-    /////////////////////////////////////////////////////////
-
     const publicIds = product.images.map((img) => img.public_id);
 
-    await deleteMultipleFromCloudinary(publicIds);
+    try {
+      await deleteMultipleFromCloudinary(publicIds);
+    } catch (error) {
+      console.error("Cloudinary cleanup failed:", error.message);
+    }
 
     return {
       message: "Product deleted successfully",
@@ -1003,6 +1067,10 @@ export const productService = {
     // Auto visibility control
     if (stock === 0) {
       product.isActive = false;
+    } else {
+      if (product.approvalStatus === "approved" && !product.isArchived) {
+        product.isActive = true;
+      }
     }
 
     await product.save();
@@ -1305,26 +1373,48 @@ export const productService = {
   },
 
   // This method allows sellers to toggle the featured status of a product. It validates the product ID, checks if the product exists and belongs to the seller, and then updates the featured status based on the provided value. The method includes checks to ensure that only approved and active products can be featured, and it enforces a limit of 5 active featured products per seller. The updated product is returned at the end.
-  async toggleProductFeature(productId, sellerId, featured) {
+  async toggleProductField({
+    productId,
+    actorId = null,
+    field,
+    value,
+    isAdmin = false,
+  }) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
     }
 
-    if (typeof featured !== "boolean") {
-      throw new ApiError(400, "featured must be true or false");
+    const allowedFields = ["featured", "isActive"];
+
+    if (!allowedFields.includes(field)) {
+      throw new ApiError(400, "Invalid toggle field");
     }
 
-    const product = await Product.findOne({
+    if (typeof value !== "boolean") {
+      throw new ApiError(400, `${field} must be true or false`);
+    }
+
+    const filter = {
       _id: productId,
-      seller: sellerId,
       isDeleted: false,
-    });
+    };
+
+    // seller ownership check
+    if (!isAdmin) {
+      filter.seller = actorId;
+    }
+
+    const product = await Product.findOne(filter).populate(
+      "seller",
+      "email fullname role",
+    );
 
     if (!product) {
       throw new ApiError(404, "Product not found");
     }
 
-    if (featured) {
+    // FEATURE VALIDATIONS
+    if (field === "featured" && value) {
       if (
         product.approvalStatus !== "approved" ||
         !product.isActive ||
@@ -1337,10 +1427,11 @@ export const productService = {
       }
 
       const featuredCount = await Product.countDocuments({
-        seller: sellerId,
+        seller: product.seller._id,
         featured: true,
         isActive: true,
         isDeleted: false,
+        _id: { $ne: product._id },
       });
 
       if (featuredCount >= 5) {
@@ -1351,11 +1442,77 @@ export const productService = {
       }
     }
 
-    product.featured = featured;
+    // ACTIVATE VALIDATIONS
+    if (field === "isActive" && value) {
+      if (product.approvalStatus !== "approved") {
+        throw new ApiError(400, "Only approved products can be activated");
+      }
+
+      if (product.isArchived) {
+        throw new ApiError(400, "Archived product cannot be activated");
+      }
+    }
+
+    // ALREADY SAME STATE
+    if (product[field] === value) {
+      return {
+        alreadyUpdated: true,
+        product,
+        message: `Product already ${
+          value
+            ? field === "featured"
+              ? "featured"
+              : "active"
+            : field === "featured"
+              ? "unfeatured"
+              : "inactive"
+        }`,
+      };
+    }
+
+    // CLEANUP LOGIC
+    if (field === "isActive" && value === false) {
+      product.featured = false;
+
+      if (product.flashSale?.isActive) {
+        product.flashSale.isActive = false;
+      }
+    }
+
+    product[field] = value;
 
     await product.save();
 
-    return product;
+    // ADMIN STATUS EMAIL ONLY
+    if (field === "isActive" && isAdmin) {
+      await NotificationService.emit("PRODUCT_STATUS_TOGGLED", {
+        recipient: product.seller._id,
+        recipientRole: "seller",
+        category: "product",
+        entityType: "Product",
+        entityId: product._id,
+        priority: "medium",
+        meta: {
+          productName: product.name,
+          status: value ? "active" : "inactive",
+        },
+        email: product.seller.email,
+      });
+    }
+
+    return {
+      alreadyUpdated: false,
+      product,
+      message: `Product ${
+        value
+          ? field === "featured"
+            ? "featured"
+            : "activated"
+          : field === "featured"
+            ? "unfeatured"
+            : "deactivated"
+      } successfully`,
+    };
   },
 
   // This method allows sellers to schedule a flash sale for a specific product. It validates the product ID, checks if the product exists and belongs to the seller, and then validates the provided start and end dates as well as the discount percentage. The method ensures that only approved and active products can have flash sales and that there are no overlapping flash sales for the same product. After setting up the flash sale details, it saves the product and returns the updated product information.
@@ -1364,10 +1521,10 @@ export const productService = {
       throw new ApiError(400, "Invalid product ID");
     }
 
-    const { start, end, discount } = body;
+    const { start, end, discountPercentage } = body;
 
-    if (!start || !end || discount === undefined) {
-      throw new ApiError(400, "Start, end and discount are required");
+    if (!start || !end || discountPercentage === undefined) {
+      throw new ApiError(400, "Start, end and discountPercentage are required");
     }
 
     const startDate = new Date(start);
@@ -1386,7 +1543,7 @@ export const productService = {
       throw new ApiError(400, "End date must be after start date");
     }
 
-    const discountNum = Number(discount);
+    const discountNum = Number(discountPercentage);
 
     if (isNaN(discountNum) || discountNum < 1 || discountNum > 90) {
       throw new ApiError(400, "Discount must be between 1 and 90");
@@ -1413,19 +1570,25 @@ export const productService = {
       );
     }
 
-    if (product.flashSale?.isActive && product.flashSale.end > now) {
+    if (product.flashSale?.isActive && new Date(product.flashSale.end) > now) {
       throw new ApiError(
         400,
         "An active flash sale already exists for this product",
       );
     }
 
+    if (product.flashSale?.isActive && new Date(product.flashSale.end) <= now) {
+      product.flashSale.isActive = false;
+    }
+
     product.flashSale = {
       start: startDate,
       end: endDate,
-      discount: discountNum,
+      discountPercentage: discountNum,
       isActive: true,
     };
+
+    product.markModified("flashSale");
 
     await product.save();
 
@@ -1460,6 +1623,7 @@ export const productService = {
 
     product.approvalStatus = "approved";
     product.isActive = true;
+    product.rejectionReason = "";
 
     await product.save();
 
@@ -1492,6 +1656,10 @@ export const productService = {
       throw new ApiError(400, "Rejection reason must be at least 5 characters");
     }
 
+    if (reason.trim().length > 200) {
+      throw new ApiError(400, "Rejection reason too long");
+    }
+
     const product = await Product.findOne({
       _id: productId,
       isDeleted: false,
@@ -1512,8 +1680,13 @@ export const productService = {
       };
     }
 
+    if (product.approvalStatus === "approved") {
+      throw new ApiError(400, "Approved products cannot be rejected");
+    }
+
     product.approvalStatus = "rejected";
     product.isActive = false;
+    product.rejectionReason = reason.trim();
 
     await product.save();
 
@@ -1638,7 +1811,7 @@ export const productService = {
       "stock",
       "brand",
       "category",
-      "discount",
+      "discountPercentage",
       "featured",
     ];
 
@@ -1653,6 +1826,17 @@ export const productService = {
     if (updates.category) {
       if (!mongoose.Types.ObjectId.isValid(updates.category)) {
         throw new ApiError(400, "Invalid category ID");
+      }
+
+      const categoryDoc = await Category.findOne({
+        _id: updates.category,
+        isDeleted: false,
+        isActive: true,
+        status: "approved",
+      });
+
+      if (!categoryDoc) {
+        throw new ApiError(400, "Invalid or inactive category");
       }
     }
 
@@ -1670,12 +1854,12 @@ export const productService = {
       updates.stock = stockNum;
     }
 
-    if (updates.discount !== undefined) {
-      const discountNum = Number(updates.discount);
+    if (updates.discountPercentage !== undefined) {
+      const discountNum = Number(updates.discountPercentage);
       if (isNaN(discountNum) || discountNum < 0 || discountNum > 90) {
         throw new ApiError(400, "Invalid discount value");
       }
-      updates.discount = discountNum;
+      updates.discountPercentage = discountNum;
     }
 
     Object.assign(product, updates);

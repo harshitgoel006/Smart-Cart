@@ -338,26 +338,39 @@ const getProductFeedback = asyncHandler(async (req, res) => {
     );
 });
 
-// This controller is used to toggle the featured status of a product by sellers. It allows sellers to mark their products as featured or unfeatured, which can help increase the visibility of the product in the catalog. The controller processes the toggle request, validates the seller's authorization to update the product, and updates the product's featured status in the database accordingly. It may also trigger notifications to the admin for approval if required by the platform's workflow.
-const toggleProductFeature = asyncHandler(async (req, res) => {
-  const productId = req.params.productId;
-  const { featured } = req.body;
 
-  const product = await productService.toggleProductFeature(
+// This controller is used to toggle the featured status of a product by sellers. It allows sellers to mark their products as featured or remove the featured status, which can help increase the visibility of their products in the catalog. The controller processes the toggle request, validates the seller's authorization to update the product, and updates the product's featured status in the database accordingly. It may also trigger notifications to the admin about the change in the product's featured status.
+const toggleSellerProductField = asyncHandler(async (req, res) => {
+  const { productId } = req.params;
+  const { featured, isActive } = req.body;
+
+  let field;
+  let value;
+
+  if (typeof featured === "boolean") {
+    field = "featured";
+    value = featured;
+  } else if (typeof isActive === "boolean") {
+    field = "isActive";
+    value = isActive;
+  } else {
+    throw new ApiError(
+      400,
+      "Either featured or isActive must be provided",
+    );
+  }
+
+  const result = await productService.toggleProductField({
     productId,
-    req.user._id,
-    featured,
-  );
+    actorId: req.user._id,
+    field,
+    value,
+    isAdmin: false,
+  });
 
   return res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        product,
-        `Product ${featured ? "featured" : "unfeatured"} successfully`,
-      ),
-    );
+    .json(new ApiResponse(200, result, result.message));
 });
 
 // This controller is used to schedule a flash sale for a specific product by sellers. It allows sellers to set up time-limited promotions for their products, offering discounts or special deals during the flash sale period. The controller processes the flash sale scheduling request, validates the input data (such as start and end times, discount details), and updates the product's flash sale information in the database. It may also trigger notifications to customers about the upcoming flash sale and update the product's visibility in the catalog during the sale period.
@@ -381,7 +394,7 @@ const scheduleFlashSale = asyncHandler(async (req, res) => {
 
 // This controller is used to approve products by admin. It allows the admin to review and approve products submitted by sellers before they become visible in the catalog. The controller processes the product approval request, validates the admin's authorization to approve the product, and updates the product's status in the database to indicate that it has been approved. It may also trigger notifications to the seller about the approval status of their product.
 const approveProducts = asyncHandler(async (req, res) => {
-  const {productId}  = req.params.id;
+  const { productId } = req.params;
   const product = await productService.approveProduct(productId);
 
   return res
@@ -439,22 +452,22 @@ const moderateProductContent = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, product, "Product moderated successfully"));
 });
 
-// This controller is used to toggle the active status of a product by admin. It allows the admin to activate or deactivate products in the catalog, controlling their visibility to customers. The controller processes the toggle request, validates the admin's authorization to update the product status, and updates the product's active status in the database accordingly. It may also trigger notifications to the seller about the change in their product's status.
-const toggleProductStatus = asyncHandler(async (req, res) => {
+
+// This controller is used to toggle the active status of a product by admin. It allows the admin to activate or deactivate products in the catalog, controlling their visibility to customers. The controller processes the toggle request, validates the admin's authorization to update the product status, and updates the product's active status in the database accordingly. It may also trigger notifications to the admin about the change in their product's status.
+const toggleAdminProductStatus = asyncHandler(async (req, res) => {
   const { productId } = req.params;
   const { isActive } = req.body;
 
-  const product = await productService.toggleProductStatus(productId, isActive);
+  const result = await productService.toggleProductField({
+    productId,
+    field: "isActive",
+    value: isActive,
+    isAdmin: true,
+  });
 
   return res
     .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        product,
-        `Product ${isActive ? "activated" : "deactivated"} successfully`,
-      ),
-    );
+    .json(new ApiResponse(200, result, result.message));
 });
 
 // This controller is used to perform bulk moderation of products by admin. It allows the admin to review and moderate multiple products at once, streamlining the moderation process for a large number of products. The controller processes the bulk moderation request, validates the admin's authorization to moderate the products, and updates the status or content of the specified products in the database based on the moderation actions taken (e.g., approving, rejecting, or editing multiple products). It may also trigger notifications to the respective sellers about the moderation actions taken on their products.
@@ -490,12 +503,12 @@ export {
   archiveProduct,
   restoreArchiveProduct,
   getProductFeedback,
-  toggleProductFeature,
+  toggleSellerProductField,
   scheduleFlashSale,
   approveProducts,
   rejectProduct,
   adminGetAllProducts,
   moderateProductContent,
-  toggleProductStatus,
+  toggleAdminProductStatus,
   bulkModerateProducts,
 };

@@ -24,14 +24,14 @@ import {
   archiveProduct,
   restoreArchiveProduct,
   getProductFeedback,
-  toggleProductFeature,
   scheduleFlashSale,
   approveProducts,
   rejectProduct,
   adminGetAllProducts,
   moderateProductContent,
-  toggleProductStatus,
   bulkModerateProducts,
+  toggleAdminProductStatus,
+  toggleSellerProductField,
 } from "../controllers/product.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -100,7 +100,12 @@ router
 // This route is for updating a specific product by its ID. It requires the user to be authenticated and have the "seller" role. The route also uses the multer middleware to handle file uploads for product images, allowing up to 5 images to be uploaded with the request. The controller function `updateProduct` will handle the logic for validating the updated product input, ensuring that the product belongs to the logged-in seller, updating the product information and associated images in the database, and returning an appropriate response indicating the success or failure of the product update.
 router
   .route("/seller/product/:productId")
-  .put(verifyJWT, authorizedRole("seller"), upload.array("images", 5), updateProduct);
+  .put(
+    verifyJWT,
+    authorizedRole("seller"),
+    upload.array("images", 5),
+    updateProduct,
+  );
 
 // This route is for deleting a specific product by its ID. It requires the user to be authenticated and have the "seller" role. The controller function `deleteProduct` will handle the logic for ensuring that the product belongs to the logged-in seller, deleting the product from the database, and returning an appropriate response indicating the success or failure of the product deletion.
 router
@@ -142,10 +147,15 @@ router
   .route("/product/:productId/feedback")
   .get(verifyJWT, authorizedRole("seller"), getProductFeedback);
 
-// This route is for toggling the featured status of a specific product by its ID. It requires the user to be authenticated and have the "seller" role. The controller function `toggleProductFeature` will handle the logic for ensuring that the product belongs to the logged-in seller, updating the product's featured status in the database, and returning an appropriate response indicating the success or failure of the operation.
+// This route is for toggling a specific field (such as "featured" or "active") of a product by its ID. It requires the user to be authenticated and have the "seller" role. The controller function `toggleSellerProductField` will handle the logic for validating the toggle input, ensuring that the product belongs to the logged-in seller, updating the specified field in the database, and returning an appropriate response indicating the success or failure of the toggle operation.
 router
   .route("/product/:productId/toggle-feature")
-  .post(verifyJWT, authorizedRole("seller"), toggleProductFeature);
+  .post(verifyJWT, authorizedRole("seller"), toggleSellerProductField);
+
+// This route is for toggling the active status of a product by its ID. It requires the user to be authenticated and have the "seller" role. The controller function `toggleSellerProductField` will handle the logic for validating the toggle input, ensuring that the product belongs to the logged-in seller, updating the active status in the database, and returning an appropriate response indicating the success or failure of the toggle operation.
+router
+  .route("/product/:productId/toggle-active")
+  .post(verifyJWT, authorizedRole("seller"), toggleSellerProductField);
 
 // This route is for scheduling a flash sale for a specific product by its ID. It requires the user to be authenticated and have the "seller" role. The controller function `scheduleFlashSale` will handle the logic for validating the flash sale input (such as discount percentage, start time, end time), ensuring that the product belongs to the logged-in seller, saving the flash sale information in the database, and returning an appropriate response indicating the success or failure of the flash sale scheduling.
 router
@@ -178,8 +188,8 @@ router
 
 // This route is for toggling the active status of a specific product by its ID. It requires the user to be authenticated and have the "admin" role. The controller function `toggleProductStatus` will handle the logic for ensuring that the product exists, updating the product's active status in the database, and returning an appropriate response indicating the success or failure of the operation.
 router
-  .route("/products/:productId/toggle-status")
-  .post(verifyJWT, authorizedRole("admin"), toggleProductStatus);
+  .route("/product/:productId/toggle-status")
+  .post(verifyJWT, authorizedRole("admin"), toggleAdminProductStatus);
 
 // This route is for bulk moderating products. It requires the user to be authenticated and have the "admin" role. The controller function `bulkModerateProducts` will handle the logic for validating the bulk moderation input (such as a list of product IDs and their corresponding moderation actions), ensuring that the products exist, updating the moderation status of each specified product in the database accordingly, and returning an appropriate response indicating the success or failure of the bulk moderation operation.F
 router

@@ -70,7 +70,7 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
 
-    discount: {
+    discountPercentage: {
       type: Number,
       default: 0,
       min: 0,
@@ -141,6 +141,12 @@ const productSchema = new mongoose.Schema(
       default: "pending",
     },
 
+    rejectionReason: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+
     variants: [variantSchema],
 
     featured: { type: Boolean, default: false },
@@ -148,7 +154,7 @@ const productSchema = new mongoose.Schema(
     flashSale: {
       start: Date,
       end: Date,
-      discount: { type: Number, min: 0, max: 90 },
+      discountPercentage: { type: Number, min: 0, max: 90 },
       isActive: { type: Boolean, default: false },
     },
   },
@@ -177,8 +183,21 @@ productSchema.pre("save", async function (next) {
   }
 
   const price = parseFloat(this.price.toString());
-  const discount = this.discount || 0;
-  const final = price - (price * discount) / 100;
+
+  let activeDiscount = this.discountPercentage || 0;
+
+  const now = new Date();
+
+  if (
+    this.flashSale?.isActive &&
+    this.flashSale?.start <= now &&
+    this.flashSale?.end >= now
+  ) {
+    activeDiscount = this.flashSale.discountPercentage;
+  }
+
+  const final = price - (price * activeDiscount) / 100;
+
   this.finalPrice = mongoose.Types.Decimal128.fromString(final.toFixed(2));
 
   next();
@@ -220,6 +239,9 @@ productSchema.index({
   approvalStatus: 1,
   isDeleted: 1,
 });
+
+// Index to optimize queries filtering by slug for product detail retrieval
+productSchema.index({ slug: 1 });
 
 // Compound index to optimize queries filtering by flash sale status and timing
 productSchema.index({
