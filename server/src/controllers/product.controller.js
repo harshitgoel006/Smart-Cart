@@ -388,6 +388,24 @@ const scheduleFlashSale = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, product, "Flash sale scheduled successfully"));
 });
 
+
+// This controller is used to remove a scheduled flash sale from a specific product by sellers. It allows sellers to cancel or end an active flash sale for their products, reverting any discounts or special promotions associated with the flash sale. The controller processes the flash sale removal request, validates the seller's authorization to update the product, and updates the product's flash sale information in the database accordingly. It may also trigger notifications to customers about the cancellation of the flash sale and update the product's visibility in the catalog if necessary.
+const removeFlashSale = asyncHandler(async(req,res) => {
+  const {productId} = req.params;
+
+  const product  = await productService.removeFlashSale(productId, req.user._id);
+
+  return res
+  .status(200)
+  .json(
+    new ApiResponse(
+      200,
+      product,
+      "Flash sale removed successfully",
+    )
+  )
+})
+
 // ======================================================
 // =============== ADMIN PANNEL HANDLERS ================
 // ======================================================
@@ -505,6 +523,7 @@ export {
   getProductFeedback,
   toggleSellerProductField,
   scheduleFlashSale,
+  removeFlashSale,
   approveProducts,
   rejectProduct,
   adminGetAllProducts,

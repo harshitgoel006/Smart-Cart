@@ -3,6 +3,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { handleMulterError } from "./middlewares/multerError.middleware.js";
 
 const app = express();
 
@@ -48,5 +49,6 @@ app.use("/api/v1/payments", paymentRouter);
 app.use("/api/v1/banners", bannerRoutes);
 
 app.use(errorHandler);
+app.use(handleMulterError);
 
 export { app };

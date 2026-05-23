@@ -97,6 +97,10 @@ const cartSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    lockExpiresAt: {
+      type: Date,
+      default: null,
+    },
     expiresAt: {
       type: Date,
       default: null,

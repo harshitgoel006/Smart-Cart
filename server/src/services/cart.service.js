@@ -3,6 +3,26 @@ import { Cart } from "../models/cart.model.js";
 import { Product } from "../models/product.model.js";
 import { Coupon } from "../models/coupon.model.js";
 import { ApiError } from "../utils/ApiError.js";
+import mongoose from "mongoose";
+
+const MAX_CART_QUANTITY = 10;
+
+const revalidateCoupon = async (cart) => {
+  if (!cart.coupon) return;
+
+  const coupon = await Coupon.findById(cart.coupon);
+
+  if (!coupon) {
+    cart.coupon = null;
+    cart.discountAmount = 0;
+    return;
+  }
+
+  if (cart.subtotal < coupon.minOrderValue) {
+    cart.coupon = null;
+    cart.discountAmount = 0;
+  }
+};
 
 // The cartService object encapsulates all the functionalities related to the shopping cart. It provides methods for customers to manage their cart items, apply coupons, and for admins to analyze cart data and manage coupons. Each method includes necessary validations and interacts with the database models to ensure data integrity and proper business logic execution throughout the cart management process.
 export const cartService = {
@@ -70,6 +90,13 @@ export const cartService = {
       throw new ApiError(400, `Only ${stock} items available`);
     }
 
+    if (quantity > MAX_CART_QUANTITY) {
+      throw new ApiError(
+        400,
+        `Maximum quantity allowed is ${MAX_CART_QUANTITY}`,
+      );
+    }
+
     const now = new Date();
 
     let flashDiscount = 0;
@@ -79,7 +106,7 @@ export const cartService = {
       product.flashSale.start <= now &&
       product.flashSale.end >= now
     ) {
-      flashDiscount = product.flashSale.discount;
+      flashDiscount = product.flashSale.discountPercentage;
       effectivePrice = effectivePrice - (effectivePrice * flashDiscount) / 100;
     }
 
@@ -96,14 +123,28 @@ export const cartService = {
       cart = new Cart({ user: userId, items: [] });
     }
 
-    if (cart.isLocked) {
+    if (
+      cart.isLocked &&
+      cart.lockExpiresAt &&
+      cart.lockExpiresAt > new Date()
+    ) {
       throw new ApiError(400, "Cart is locked for checkout");
+    }
+
+    if (
+      cart.isLocked &&
+      cart.lockExpiresAt &&
+      cart.lockExpiresAt <= new Date()
+    ) {
+      cart.isLocked = false;
+      cart.lockExpiresAt = null;
     }
 
     const existing = cart.items.find(
       (item) =>
         item.product.toString() === productId &&
-        item.selectedVariant?.value === selectedVariant?.value,
+        JSON.stringify(item.selectedVariant) ===
+          JSON.stringify(selectedVariant),
     );
 
     if (existing) {
@@ -129,6 +170,7 @@ export const cartService = {
       });
     }
 
+    await revalidateCoupon(cart);
     cart.calculateTotals();
 
     await cart.save();
@@ -207,14 +249,34 @@ export const cartService = {
       throw new ApiError(400, "Quantity must be at least 1");
     }
 
+    if (quantity > MAX_CART_QUANTITY) {
+      throw new ApiError(
+        400,
+        `Maximum quantity allowed is ${MAX_CART_QUANTITY}`,
+      );
+    }
+
     const cart = await Cart.findOne({ user: userId });
 
     if (!cart) {
       throw new ApiError(404, "Cart not found");
     }
 
-    if (cart.isLocked) {
+    if (
+      cart.isLocked &&
+      cart.lockExpiresAt &&
+      cart.lockExpiresAt > new Date()
+    ) {
       throw new ApiError(400, "Cart is locked for checkout");
+    }
+
+    if (
+      cart.isLocked &&
+      cart.lockExpiresAt &&
+      cart.lockExpiresAt <= new Date()
+    ) {
+      cart.isLocked = false;
+      cart.lockExpiresAt = null;
     }
 
     const item = cart.items.id(itemId);
@@ -271,6 +333,7 @@ export const cartService = {
       lineTotal.toFixed(2),
     );
 
+    await revalidateCoupon(cart);
     cart.calculateTotals();
 
     await cart.save();
@@ -296,8 +359,21 @@ export const cartService = {
       throw new ApiError(404, "Cart not found");
     }
 
-    if (cart.isLocked) {
+    if (
+      cart.isLocked &&
+      cart.lockExpiresAt &&
+      cart.lockExpiresAt > new Date()
+    ) {
       throw new ApiError(400, "Cart is locked for checkout");
+    }
+
+    if (
+      cart.isLocked &&
+      cart.lockExpiresAt &&
+      cart.lockExpiresAt <= new Date()
+    ) {
+      cart.isLocked = false;
+      cart.lockExpiresAt = null;
     }
 
     const item = cart.items.id(itemId);
@@ -313,6 +389,7 @@ export const cartService = {
       cart.coupon = null;
     }
 
+    await revalidateCoupon(cart);
     cart.calculateTotals();
 
     await cart.save();
@@ -341,14 +418,28 @@ export const cartService = {
       };
     }
 
-    if (cart.isLocked) {
+    if (
+      cart.isLocked &&
+      cart.lockExpiresAt &&
+      cart.lockExpiresAt > new Date()
+    ) {
       throw new ApiError(400, "Cart is locked for checkout");
+    }
+
+    if (
+      cart.isLocked &&
+      cart.lockExpiresAt &&
+      cart.lockExpiresAt <= new Date()
+    ) {
+      cart.isLocked = false;
+      cart.lockExpiresAt = null;
     }
 
     cart.items = [];
     cart.coupon = null;
     cart.discountAmount = mongoose.Types.Decimal128.fromString("0.00");
 
+    await revalidateCoupon(cart);
     cart.calculateTotals();
     await cart.save();
 
@@ -374,8 +465,21 @@ export const cartService = {
       throw new ApiError(400, "Cart is empty");
     }
 
-    if (cart.isLocked) {
+    if (
+      cart.isLocked &&
+      cart.lockExpiresAt &&
+      cart.lockExpiresAt > new Date()
+    ) {
       throw new ApiError(400, "Cart is locked for checkout");
+    }
+
+    if (
+      cart.isLocked &&
+      cart.lockExpiresAt &&
+      cart.lockExpiresAt <= new Date()
+    ) {
+      cart.isLocked = false;
+      cart.lockExpiresAt = null;
     }
 
     const coupon = await Coupon.findOne({
@@ -800,6 +904,8 @@ export const cartService = {
     cart.discountAmount = mongoose.Types.Decimal128.fromString("0.00");
 
     cart.isLocked = false;
+
+    cart.lockExpiresAt = null;
 
     cart.expiresAt = null;
 

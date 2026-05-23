@@ -32,6 +32,7 @@ import {
   bulkModerateProducts,
   toggleAdminProductStatus,
   toggleSellerProductField,
+  removeFlashSale,
 } from "../controllers/product.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -161,6 +162,11 @@ router
 router
   .route("/product/:productId/flash-sale")
   .post(verifyJWT, authorizedRole("seller"), scheduleFlashSale);
+
+
+router
+  .route("/product/:productId/delete-flash-sale")
+  .delete(verifyJWT, authorizedRole("seller"), removeFlashSale);
 
 // ======================================================
 // =============== ADMIN PANNEL HANDLERS ================

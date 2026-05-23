@@ -42,7 +42,7 @@ const updateCartItem = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, "Cart item updated successfully", cart));
+    .json(new ApiResponse(200,cart, "Cart item updated successfully"));
 });
 
 // This controller is responsible for removing a specific item from the user's cart. It takes the itemId from the request parameters and the user's ID from the authenticated user information in the request object. After removing the cart item, it returns a success response with the updated cart information.
@@ -72,7 +72,7 @@ const clearCart = asyncHandler(async (req, res) => {
 // This controller is responsible for applying a coupon code to the user's cart. It takes the couponCode from the request body and the user's ID from the authenticated user information in the request object. The controller calls the cart service to apply the coupon to the cart and returns a success response with the updated cart information, including any discounts applied.
 
 const applyCoupon = asyncHandler(async (req, res) => {
-  const cart = await cartService.applyCoupon(req.user, req.body.couponCode);
+  const cart = await cartService.applyCoupon(req.user._id, req.body.couponCode);
 
   return res
     .status(200)

@@ -302,7 +302,9 @@ export const productService = {
       .sort(sortQuery)
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum)
-      .select("name slug finalPrice discountPercentage ratings images stock brand");
+      .select(
+        "name slug finalPrice discountPercentage ratings images stock brand",
+      );
 
     return {
       total,
@@ -849,6 +851,86 @@ export const productService = {
     };
   },
 
+  async validateVariants(variants) {
+    if (!Array.isArray(variants) || variants.length === 0) {
+      throw new ApiError(400, "Variants must be a non-empty array");
+    }
+
+    for (const variant of variants) {
+      if (!variant.label || typeof variant.label !== "string") {
+        throw new ApiError(400, "Each variant must have a label");
+      }
+
+      if (!Array.isArray(variant.options) || variant.options.length === 0) {
+        throw new ApiError(
+          400,
+          `Variant "${variant.label}" must have at least one option`,
+        );
+      }
+
+      const seenValues = new Set();
+      const seenSkus = new Set();
+
+      for (const option of variant.options) {
+        if (!option.value) {
+          throw new ApiError(
+            400,
+            `Option value missing in variant "${variant.label}"`,
+          );
+        }
+
+        if (seenValues.has(option.value)) {
+          throw new ApiError(
+            400,
+            `Duplicate option "${option.value}" in variant "${variant.label}"`,
+          );
+        }
+
+        seenValues.add(option.value);
+
+        if (!option.sku || typeof option.sku !== "string") {
+          throw new ApiError(400, `SKU missing for option "${option.value}"`);
+        }
+
+        if (seenSkus.has(option.sku)) {
+          throw new ApiError(400, `Duplicate SKU "${option.sku}" found`);
+        }
+
+        seenSkus.add(option.sku);
+
+        const stock = Number(option.stock);
+
+        if (isNaN(stock) || stock < 0) {
+          throw new ApiError(400, `Invalid stock for option "${option.value}"`);
+        }
+
+        option.stock = stock;
+
+        if (option.price !== undefined) {
+          const numericPrice = Number(option.price);
+
+          if (isNaN(numericPrice)) {
+            throw new ApiError(
+              400,
+              `Invalid price for option "${option.value}"`,
+            );
+          }
+
+          if (numericPrice < 0) {
+            throw new ApiError(
+              400,
+              `Negative price not allowed for option "${option.value}"`,
+            );
+          }
+
+          option.price = mongoose.Types.Decimal128.fromString(
+            numericPrice.toString(),
+          );
+        }
+      }
+    }
+  },
+
   // This method allows sellers to update an existing product listing. It validates the product ID, checks if the product exists and belongs to the seller, and then applies updates based on a whitelist of allowed fields. The method also handles image updates with rollback safety, resets the approval status to pending, and emits notifications to all active admins about the updated product pending approval. The updated product is returned at the end.
   async updateProduct(productId, sellerId, body, files) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
@@ -877,10 +959,27 @@ export const productService = {
 
     const updates = {};
 
+    if (body.name) {
+      const existingProduct = await Product.findOne({
+        name: body.name.trim(),
+        seller: sellerId,
+        isDeleted: false,
+        _id: { $ne: productId },
+      });
+
+      if (existingProduct) {
+        throw new ApiError(400, "Product with same name already exists");
+      }
+    }
+
     for (const key of allowedFields) {
       if (body[key] !== undefined) {
         updates[key] = body[key];
       }
+    }
+
+    if (updates.variants !== undefined) {
+      await this.validateVariants(updates.variants);
     }
 
     let categoryDoc = null;
@@ -914,9 +1013,25 @@ export const productService = {
       }
     }
 
-    if (updates.price) {
+    if (updates.price !== undefined) {
       updates.price = mongoose.Types.Decimal128.fromString(
         updates.price.toString(),
+      );
+    }
+
+    if (updates.price !== undefined) {
+      const numericPrice = Number(updates.price);
+
+      if (isNaN(numericPrice)) {
+        throw new ApiError(400, "Invalid price format");
+      }
+
+      if (numericPrice < 0) {
+        throw new ApiError(400, "Price cannot be negative");
+      }
+
+      updates.price = mongoose.Types.Decimal128.fromString(
+        numericPrice.toString(),
       );
     }
 
@@ -1098,71 +1213,14 @@ export const productService = {
       throw new ApiError(404, "Product not found");
     }
 
-    // VALIDATION LOGIC
-
-    for (const variant of variants) {
-      if (!variant.label || typeof variant.label !== "string") {
-        throw new ApiError(400, "Each variant must have a label");
-      }
-
-      if (!Array.isArray(variant.options) || variant.options.length === 0) {
-        throw new ApiError(
-          400,
-          `Variant "${variant.label}" must have at least one option`,
-        );
-      }
-
-      const seenValues = new Set();
-
-      for (const option of variant.options) {
-        if (!option.value) {
-          throw new ApiError(
-            400,
-            `Option value missing in variant "${variant.label}"`,
-          );
-        }
-
-        if (seenValues.has(option.value)) {
-          throw new ApiError(
-            400,
-            `Duplicate option "${option.value}" in variant "${variant.label}"`,
-          );
-        }
-
-        seenValues.add(option.value);
-
-        const stock = Number(option.stock);
-
-        if (isNaN(stock) || stock < 0) {
-          throw new ApiError(400, `Invalid stock for option "${option.value}"`);
-        }
-
-        option.stock = stock;
-
-        // Optional: price override validation
-        if (option.price) {
-          option.price = mongoose.Types.Decimal128.fromString(
-            option.price.toString(),
-          );
-        }
-      }
-    }
-
-    // APPLY VARIANTS
+    await this.validateVariants(variants);
 
     product.variants = variants;
-
-    // Base stock meaningless now
     product.stock = 0;
-
-    // RESET APPROVAL FLOW
-
     product.approvalStatus = "pending";
     product.isActive = false;
 
     await product.save();
-
-    // NOTIFY ADMINS
 
     const admins = await User.find({
       role: "admin",
@@ -1589,6 +1647,39 @@ export const productService = {
     };
 
     product.markModified("flashSale");
+
+    await product.save();
+
+    return product;
+  },
+
+
+  // This method allows sellers to remove an active flash sale from a specific product. It validates the product ID, checks if the product exists and belongs to the seller, and then verifies if there is an active flash sale to remove. If an active flash sale is found, it resets the flash sale details to indicate that there is no active flash sale for the product. The updated product information is returned at the end.
+  async removeFlashSale(productId, sellerId) {
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      throw new ApiError(400, "Invalid product ID");
+    }
+
+    const product = await Product.findOne({
+      _id: productId,
+      seller: sellerId,
+      isDeleted: false,
+    });
+
+    if (!product) {
+      throw new ApiError(404, "Product not found");
+    }
+
+    if (!product.flashSale || !product.flashSale.isActive) {
+      throw new ApiError(400, "No active flash sale found");
+    }
+
+    product.flashSale = {
+      start: null,
+      end: null,
+      discountPercentage: 0,
+      isActive: false,
+    };
 
     await product.save();
 

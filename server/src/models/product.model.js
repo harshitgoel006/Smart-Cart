@@ -68,6 +68,7 @@ const productSchema = new mongoose.Schema(
     price: {
       type: mongoose.Schema.Types.Decimal128,
       required: true,
+      min: [0, "Price cannot be negative"],
     },
 
     discountPercentage: {
