@@ -1,0 +1,1195 @@
+[
+  {
+    "name": "Home & Living",
+    "slug": "home-living",
+    "description": "Modern home decor and living essentials",
+    "tagline": "Design Your Dream Space",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 0,
+
+    "parentSlug": null,
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["home", "decor", "living"],
+
+    "order": 6,
+
+    "metaTitle": "Home & Living Collection",
+
+    "metaDescription": "Modern home decor and living essentials",
+
+    "metaKeywords": "home decor, furniture, living"
+  },
+
+  {
+    "name": "Bedroom",
+    "slug": "home-living-bedroom",
+    "description": "Comfortable bedroom essentials collection",
+    "tagline": "Comfort Starts At Home",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "home-living",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["bedsheets", "pillows", "blankets"],
+
+    "order": 1,
+
+    "metaTitle": "Bedroom Essentials",
+
+    "metaDescription": "Premium bedroom essentials collection",
+
+    "metaKeywords": "bedsheets, pillows, blankets"
+  },
+
+  {
+    "name": "Bedsheets",
+    "slug": "home-living-bedroom-bedsheets",
+    "description": "Premium bedsheets collection",
+    "tagline": "Sleep In Pure Comfort",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-bedroom",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["bedsheets", "bedroom", "linen"],
+
+    "order": 1,
+
+    "metaTitle": "Bedsheets Collection",
+
+    "metaDescription": "Premium bedsheets collection",
+
+    "metaKeywords": "bedsheets, bed linen"
+  },
+
+  {
+    "name": "Pillows",
+    "slug": "home-living-bedroom-pillows",
+    "description": "Soft pillows collection",
+    "tagline": "Softness You Deserve",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-bedroom",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["pillows", "comfort", "bedroom"],
+
+    "order": 2,
+
+    "metaTitle": "Pillows Collection",
+
+    "metaDescription": "Soft pillows collection",
+
+    "metaKeywords": "pillows, cushions"
+  },
+
+  {
+    "name": "Blankets",
+    "slug": "home-living-bedroom-blankets",
+    "description": "Warm blankets collection",
+    "tagline": "Warmth For Every Night",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-bedroom",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["blankets", "winter", "comfort"],
+
+    "order": 3,
+
+    "metaTitle": "Blankets Collection",
+
+    "metaDescription": "Warm blankets collection",
+
+    "metaKeywords": "blankets, comforters"
+  },
+  {
+    "name": "Living Room",
+    "slug": "home-living-living-room",
+    "description": "Modern living room essentials collection",
+    "tagline": "Where Comfort Meets Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "home-living",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["cushions", "curtains", "rugs"],
+
+    "order": 2,
+
+    "metaTitle": "Living Room Collection",
+
+    "metaDescription": "Modern living room essentials collection",
+
+    "metaKeywords": "living room, cushions, curtains"
+  },
+
+  {
+    "name": "Cushions",
+    "slug": "home-living-living-room-cushions",
+    "description": "Stylish cushions collection",
+    "tagline": "Comfort In Every Corner",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-living-room",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["cushions", "pillows", "decor"],
+
+    "order": 1,
+
+    "metaTitle": "Cushions Collection",
+
+    "metaDescription": "Stylish cushions collection",
+
+    "metaKeywords": "cushions, decorative pillows"
+  },
+
+  {
+    "name": "Curtains",
+    "slug": "home-living-living-room-curtains",
+    "description": "Elegant curtains collection",
+    "tagline": "Frame Your Space Beautifully",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-living-room",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["curtains", "drapes", "decor"],
+
+    "order": 2,
+
+    "metaTitle": "Curtains Collection",
+
+    "metaDescription": "Elegant curtains collection",
+
+    "metaKeywords": "curtains, drapes"
+  },
+
+  {
+    "name": "Rugs",
+    "slug": "home-living-living-room-rugs",
+    "description": "Premium rugs collection",
+    "tagline": "Luxury Beneath Your Feet",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-living-room",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["rugs", "carpets", "decor"],
+
+    "order": 3,
+
+    "metaTitle": "Rugs Collection",
+
+    "metaDescription": "Premium rugs collection",
+
+    "metaKeywords": "rugs, carpets"
+  },
+
+  {
+    "name": "Home Decor",
+    "slug": "home-living-home-decor",
+    "description": "Luxury home decor collection",
+    "tagline": "Style Every Corner",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "home-living",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["wall-art", "lamps", "vases"],
+
+    "order": 3,
+
+    "metaTitle": "Home Decor Collection",
+
+    "metaDescription": "Luxury home decor collection",
+
+    "metaKeywords": "home decor, wall art, lamps"
+  },
+
+  {
+    "name": "Wall Art",
+    "slug": "home-living-home-decor-wall-art",
+    "description": "Modern wall art collection",
+    "tagline": "Walls That Speak Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-home-decor",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["wall-art", "frames", "decor"],
+
+    "order": 1,
+
+    "metaTitle": "Wall Art Collection",
+
+    "metaDescription": "Modern wall art collection",
+
+    "metaKeywords": "wall art, frames"
+  },
+
+  {
+    "name": "Lamps",
+    "slug": "home-living-home-decor-lamps",
+    "description": "Designer lamps collection",
+    "tagline": "Light Up Your Ambience",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-home-decor",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["lamps", "lighting", "decor"],
+
+    "order": 2,
+
+    "metaTitle": "Lamps Collection",
+
+    "metaDescription": "Designer lamps collection",
+
+    "metaKeywords": "lamps, lighting"
+  },
+
+  {
+    "name": "Vases",
+    "slug": "home-living-home-decor-vases",
+    "description": "Decorative vases collection",
+    "tagline": "Beauty In Every Detail",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-home-decor",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["vases", "decor", "home"],
+
+    "order": 3,
+
+    "metaTitle": "Vases Collection",
+
+    "metaDescription": "Decorative vases collection",
+
+    "metaKeywords": "vases, home decor"
+  },
+  {
+    "name": "Kitchen & Dining",
+    "slug": "home-living-kitchen-dining",
+    "description": "Modern kitchen and dining essentials",
+    "tagline": "Cook Serve Celebrate",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "home-living",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["dinnerware", "cookware", "storage"],
+
+    "order": 4,
+
+    "metaTitle": "Kitchen & Dining Collection",
+
+    "metaDescription": "Modern kitchen and dining essentials",
+
+    "metaKeywords": "kitchen, dining, cookware"
+  },
+
+  {
+    "name": "Dinnerware",
+    "slug": "home-living-kitchen-dining-dinnerware",
+    "description": "Premium dinnerware collection",
+    "tagline": "Serve With Elegance",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-kitchen-dining",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["plates", "bowls", "dinnerware"],
+
+    "order": 1,
+
+    "metaTitle": "Dinnerware Collection",
+
+    "metaDescription": "Premium dinnerware collection",
+
+    "metaKeywords": "dinnerware, plates, bowls"
+  },
+
+  {
+    "name": "Storage Boxes",
+    "slug": "home-living-kitchen-dining-storage-boxes",
+    "description": "Storage and organizer collection",
+    "tagline": "Organize Smarter",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-kitchen-dining",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["storage", "organizers", "kitchen"],
+
+    "order": 2,
+
+    "metaTitle": "Storage Boxes Collection",
+
+    "metaDescription": "Storage and organizer collection",
+
+    "metaKeywords": "storage boxes, organizers"
+  },
+
+  {
+    "name": "Cookware",
+    "slug": "home-living-kitchen-dining-cookware",
+    "description": "Premium cookware collection",
+    "tagline": "Cook Like A Pro",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-kitchen-dining",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["cookware", "kitchen", "utensils"],
+
+    "order": 3,
+
+    "metaTitle": "Cookware Collection",
+
+    "metaDescription": "Premium cookware collection",
+
+    "metaKeywords": "cookware, kitchen utensils"
+  },
+
+  {
+    "name": "Bathroom",
+    "slug": "home-living-bathroom",
+    "description": "Modern bathroom essentials collection",
+    "tagline": "Refresh Your Routine",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "home-living",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["bathroom", "bath-towels", "bath-accessories"],
+
+    "order": 5,
+
+    "metaTitle": "Bathroom Essentials",
+
+    "metaDescription": "Modern bathroom essentials collection",
+
+    "metaKeywords": "bathroom, towels, bath accessories"
+  },
+
+  {
+    "name": "Bath Towels",
+    "slug": "home-living-bathroom-bath-towels",
+    "description": "Soft bath towels collection",
+    "tagline": "Wrap Yourself In Comfort",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-bathroom",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["bath-towels", "bathroom", "comfort"],
+
+    "order": 1,
+
+    "metaTitle": "Bath Towels Collection",
+
+    "metaDescription": "Soft bath towels collection",
+
+    "metaKeywords": "bath towels"
+  },
+
+  {
+    "name": "Bath Accessories",
+    "slug": "home-living-bathroom-bath-accessories",
+    "description": "Bathroom accessories collection",
+    "tagline": "Elevate Your Bathroom",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-bathroom",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["bath-accessories", "bathroom", "decor"],
+
+    "order": 2,
+
+    "metaTitle": "Bath Accessories Collection",
+
+    "metaDescription": "Bathroom accessories collection",
+
+    "metaKeywords": "bath accessories"
+  },
+
+  {
+    "name": "Outdoor",
+    "slug": "home-living-outdoor",
+    "description": "Outdoor decor and essentials collection",
+    "tagline": "Style Beyond Walls",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "home-living",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["garden", "outdoor-lighting", "decor"],
+
+    "order": 6,
+
+    "metaTitle": "Outdoor Collection",
+
+    "metaDescription": "Outdoor decor and essentials collection",
+
+    "metaKeywords": "garden decor, outdoor lighting"
+  },
+
+  {
+    "name": "Garden Decor",
+    "slug": "home-living-outdoor-garden-decor",
+    "description": "Beautiful garden decor collection",
+    "tagline": "Nature Meets Design",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-outdoor",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["garden", "decor", "outdoor"],
+
+    "order": 1,
+
+    "metaTitle": "Garden Decor Collection",
+
+    "metaDescription": "Beautiful garden decor collection",
+
+    "metaKeywords": "garden decor"
+  },
+
+  {
+    "name": "Outdoor Lighting",
+    "slug": "home-living-outdoor-outdoor-lighting",
+    "description": "Outdoor lighting collection",
+    "tagline": "Light Up Every Evening",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "home-living-outdoor",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["outdoor-lighting", "garden", "lights"],
+
+    "order": 2,
+
+    "metaTitle": "Outdoor Lighting Collection",
+
+    "metaDescription": "Outdoor lighting collection",
+
+    "metaKeywords": "outdoor lighting"
+  }
+]

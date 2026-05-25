@@ -1,0 +1,1142 @@
+[
+  {
+    "name": "Sports & Gym",
+    "slug": "sports-gym",
+    "description": "Sports, gym and fitness essentials collection",
+    "tagline": "Train Hard Stay Strong",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 0,
+
+    "parentSlug": null,
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sports", "gym", "fitness"],
+
+    "order": 9,
+
+    "metaTitle": "Sports & Gym Collection",
+
+    "metaDescription": "Sports, gym and fitness essentials collection",
+
+    "metaKeywords": "sports, gym, fitness"
+  },
+
+  {
+    "name": "Gym Wear",
+    "slug": "sports-gym-gym-wear",
+    "description": "Performance gym wear collection",
+    "tagline": "Push Beyond Limits",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "sports-gym",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["gym-wear", "fitness", "training"],
+
+    "order": 1,
+
+    "metaTitle": "Gym Wear Collection",
+
+    "metaDescription": "Performance gym wear collection",
+
+    "metaKeywords": "gym wear, activewear"
+  },
+
+  {
+    "name": "Compression Wear",
+    "slug": "sports-gym-gym-wear-compression-wear",
+    "description": "Compression wear collection",
+    "tagline": "Support Every Movement",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-gym-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["compression", "gym", "fitness"],
+
+    "order": 1,
+
+    "metaTitle": "Compression Wear Collection",
+
+    "metaDescription": "Compression wear collection",
+
+    "metaKeywords": "compression wear"
+  },
+
+  {
+    "name": "Gym Shorts",
+    "slug": "sports-gym-gym-wear-gym-shorts",
+    "description": "Comfortable gym shorts collection",
+    "tagline": "Move With Freedom",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-gym-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["gym-shorts", "fitness", "training"],
+
+    "order": 2,
+
+    "metaTitle": "Gym Shorts Collection",
+
+    "metaDescription": "Comfortable gym shorts collection",
+
+    "metaKeywords": "gym shorts"
+  },
+
+  {
+    "name": "Performance Hoodies",
+    "slug": "sports-gym-gym-wear-performance-hoodies",
+    "description": "Performance hoodies collection",
+    "tagline": "Train In Every Weather",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-gym-wear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["hoodies", "performance", "gym"],
+
+    "order": 3,
+
+    "metaTitle": "Performance Hoodies Collection",
+
+    "metaDescription": "Performance hoodies collection",
+
+    "metaKeywords": "performance hoodies"
+  },
+  {
+    "name": "Footwear",
+    "slug": "sports-gym-footwear",
+    "description": "Sports footwear collection",
+    "tagline": "Run Faster Train Better",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "sports-gym",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sports-shoes", "running", "training"],
+
+    "order": 2,
+
+    "metaTitle": "Sports Footwear Collection",
+
+    "metaDescription": "Sports footwear collection",
+
+    "metaKeywords": "running shoes, training shoes"
+  },
+
+  {
+    "name": "Running Shoes",
+    "slug": "sports-gym-footwear-running-shoes",
+    "description": "Professional running shoes collection",
+    "tagline": "Run Every Mile Stronger",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-footwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["running-shoes", "sports", "fitness"],
+
+    "order": 1,
+
+    "metaTitle": "Running Shoes Collection",
+
+    "metaDescription": "Professional running shoes collection",
+
+    "metaKeywords": "running shoes"
+  },
+
+  {
+    "name": "Training Shoes",
+    "slug": "sports-gym-footwear-training-shoes",
+    "description": "Training shoes collection",
+    "tagline": "Built For Every Workout",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-footwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["training-shoes", "gym", "sports"],
+
+    "order": 2,
+
+    "metaTitle": "Training Shoes Collection",
+
+    "metaDescription": "Training shoes collection",
+
+    "metaKeywords": "training shoes"
+  },
+
+  {
+    "name": "Equipment",
+    "slug": "sports-gym-equipment",
+    "description": "Gym and fitness equipment collection",
+    "tagline": "Power Your Training",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "sports-gym",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["equipment", "gym", "fitness"],
+
+    "order": 3,
+
+    "metaTitle": "Gym Equipment Collection",
+
+    "metaDescription": "Gym and fitness equipment collection",
+
+    "metaKeywords": "gym equipment, fitness accessories"
+  },
+
+  {
+    "name": "Dumbbells",
+    "slug": "sports-gym-equipment-dumbbells",
+    "description": "Professional dumbbells collection",
+    "tagline": "Strength Starts Here",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-equipment",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["dumbbells", "weights", "gym"],
+
+    "order": 1,
+
+    "metaTitle": "Dumbbells Collection",
+
+    "metaDescription": "Professional dumbbells collection",
+
+    "metaKeywords": "dumbbells, weights"
+  },
+
+  {
+    "name": "Resistance Bands",
+    "slug": "sports-gym-equipment-resistance-bands",
+    "description": "Resistance bands collection",
+    "tagline": "Flexible Strength Training",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-equipment",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["resistance-bands", "fitness", "training"],
+
+    "order": 2,
+
+    "metaTitle": "Resistance Bands Collection",
+
+    "metaDescription": "Resistance bands collection",
+
+    "metaKeywords": "resistance bands"
+  },
+
+  {
+    "name": "Yoga Mats",
+    "slug": "sports-gym-equipment-yoga-mats",
+    "description": "Yoga mats collection",
+    "tagline": "Balance Every Session",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-equipment",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["yoga-mats", "fitness", "exercise"],
+
+    "order": 3,
+
+    "metaTitle": "Yoga Mats Collection",
+
+    "metaDescription": "Yoga mats collection",
+
+    "metaKeywords": "yoga mats"
+  },
+  {
+    "name": "Sports Gear",
+    "slug": "sports-gym-sports-gear",
+    "description": "Professional sports gear collection",
+    "tagline": "Gear Up For Victory",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "sports-gym",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sports", "gear", "training"],
+
+    "order": 4,
+
+    "metaTitle": "Sports Gear Collection",
+
+    "metaDescription": "Professional sports gear collection",
+
+    "metaKeywords": "sports gear, training equipment"
+  },
+
+  {
+    "name": "Cricket",
+    "slug": "sports-gym-sports-gear-cricket",
+    "description": "Cricket equipment collection",
+    "tagline": "Play Every Shot Perfectly",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-sports-gear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["cricket", "bat", "sports"],
+
+    "order": 1,
+
+    "metaTitle": "Cricket Gear Collection",
+
+    "metaDescription": "Cricket equipment collection",
+
+    "metaKeywords": "cricket bat, cricket gear"
+  },
+
+  {
+    "name": "Football",
+    "slug": "sports-gym-sports-gear-football",
+    "description": "Football gear collection",
+    "tagline": "Play With Passion",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-sports-gear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["football", "sports", "training"],
+
+    "order": 2,
+
+    "metaTitle": "Football Gear Collection",
+
+    "metaDescription": "Football gear collection",
+
+    "metaKeywords": "football gear"
+  },
+
+  {
+    "name": "Basketball",
+    "slug": "sports-gym-sports-gear-basketball",
+    "description": "Basketball equipment collection",
+    "tagline": "Own The Court",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-sports-gear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["basketball", "sports", "court"],
+
+    "order": 3,
+
+    "metaTitle": "Basketball Gear Collection",
+
+    "metaDescription": "Basketball equipment collection",
+
+    "metaKeywords": "basketball gear"
+  },
+
+  {
+    "name": "Recovery",
+    "slug": "sports-gym-recovery",
+    "description": "Recovery and wellness collection",
+    "tagline": "Recover Stronger Faster",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "sports-gym",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["recovery", "wellness", "fitness"],
+
+    "order": 5,
+
+    "metaTitle": "Recovery Collection",
+
+    "metaDescription": "Recovery and wellness collection",
+
+    "metaKeywords": "recovery equipment"
+  },
+
+  {
+    "name": "Foam Rollers",
+    "slug": "sports-gym-recovery-foam-rollers",
+    "description": "Foam rollers collection",
+    "tagline": "Relieve Every Muscle",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-recovery",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["foam-rollers", "recovery", "fitness"],
+
+    "order": 1,
+
+    "metaTitle": "Foam Rollers Collection",
+
+    "metaDescription": "Foam rollers collection",
+
+    "metaKeywords": "foam rollers"
+  },
+
+  {
+    "name": "Massage Guns",
+    "slug": "sports-gym-recovery-massage-guns",
+    "description": "Massage guns collection",
+    "tagline": "Deep Recovery Everyday",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-recovery",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["massage-guns", "recovery", "muscle"],
+
+    "order": 2,
+
+    "metaTitle": "Massage Guns Collection",
+
+    "metaDescription": "Massage guns collection",
+
+    "metaKeywords": "massage guns"
+  },
+  {
+    "name": "Smart Fitness",
+    "slug": "sports-gym-smart-fitness",
+    "description": "Smart fitness gadgets and wearable collection",
+    "tagline": "Train Smarter Everyday",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "sports-gym",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["smart-fitness", "wearables", "trackers"],
+
+    "order": 6,
+
+    "metaTitle": "Smart Fitness Collection",
+
+    "metaDescription": "Smart fitness gadgets and wearable collection",
+
+    "metaKeywords": "smart fitness, fitness trackers"
+  },
+
+  {
+    "name": "Smart Watches",
+    "slug": "sports-gym-smart-fitness-smart-watches",
+    "description": "Sports smart watches collection",
+    "tagline": "Track Every Achievement",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-smart-fitness",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["smart-watch", "fitness", "wearables"],
+
+    "order": 1,
+
+    "metaTitle": "Sports Smart Watches Collection",
+
+    "metaDescription": "Sports smart watches collection",
+
+    "metaKeywords": "sports smart watches"
+  },
+
+  {
+    "name": "Fitness Trackers",
+    "slug": "sports-gym-smart-fitness-fitness-trackers",
+    "description": "Fitness trackers collection",
+    "tagline": "Measure Every Move",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "sports-gym-smart-fitness",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["fitness-trackers", "wearables", "health"],
+
+    "order": 2,
+
+    "metaTitle": "Fitness Trackers Collection",
+
+    "metaDescription": "Fitness trackers collection",
+
+    "metaKeywords": "fitness trackers"
+  }
+]

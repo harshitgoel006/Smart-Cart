@@ -1,0 +1,987 @@
+[
+  {
+    "name": "Accessories",
+    "slug": "accessories",
+    "description": "Premium fashion accessories collection",
+    "tagline": "Complete Your Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 0,
+
+    "parentSlug": null,
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["accessories", "bags", "fashion"],
+
+    "order": 5,
+
+    "metaTitle": "Fashion Accessories Collection",
+
+    "metaDescription": "Premium fashion accessories collection",
+
+    "metaKeywords": "bags, jewellery, watches"
+  },
+
+  {
+    "name": "Bags",
+    "slug": "accessories-bags",
+    "description": "Stylish bags collection",
+    "tagline": "Carry Style Everywhere",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "accessories",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["bags", "backpacks", "handbags"],
+
+    "order": 1,
+
+    "metaTitle": "Bags Collection",
+
+    "metaDescription": "Premium bags collection",
+
+    "metaKeywords": "bags, backpacks, handbags"
+  },
+
+  {
+    "name": "Backpacks",
+    "slug": "accessories-bags-backpacks",
+    "description": "Stylish backpacks collection",
+    "tagline": "Built For Everyday Hustle",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "accessories-bags",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["backpacks", "travel", "bags"],
+
+    "order": 1,
+
+    "metaTitle": "Backpacks Collection",
+
+    "metaDescription": "Premium backpacks collection",
+
+    "metaKeywords": "backpacks, travel bags"
+  },
+
+  {
+    "name": "Handbags",
+    "slug": "accessories-bags-handbags",
+    "description": "Luxury handbags collection",
+    "tagline": "Elegance In Every Carry",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "accessories-bags",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["handbags", "fashion", "women"],
+
+    "order": 2,
+
+    "metaTitle": "Handbags Collection",
+
+    "metaDescription": "Luxury handbags collection",
+
+    "metaKeywords": "handbags, women bags"
+  },
+
+  {
+    "name": "Travel Bags",
+    "slug": "accessories-bags-travel-bags",
+    "description": "Premium travel bags collection",
+    "tagline": "Travel Smart Travel Stylish",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "accessories-bags",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["travel-bags", "luggage", "bags"],
+
+    "order": 3,
+
+    "metaTitle": "Travel Bags Collection",
+
+    "metaDescription": "Premium travel bags collection",
+
+    "metaKeywords": "travel bags, luggage"
+  },
+  {
+    "name": "Jewellery",
+    "slug": "accessories-jewellery",
+    "description": "Elegant jewellery collection",
+    "tagline": "Shine With Elegance",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "accessories",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["jewellery", "necklaces", "rings"],
+
+    "order": 2,
+
+    "metaTitle": "Jewellery Collection",
+
+    "metaDescription": "Premium jewellery collection",
+
+    "metaKeywords": "jewellery, necklaces, rings"
+  },
+
+  {
+    "name": "Necklaces",
+    "slug": "accessories-jewellery-necklaces",
+    "description": "Premium necklaces collection",
+    "tagline": "Grace Around Every Neck",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "accessories-jewellery",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["necklaces", "fashion-jewellery", "accessories"],
+
+    "order": 1,
+
+    "metaTitle": "Necklaces Collection",
+
+    "metaDescription": "Elegant necklaces collection",
+
+    "metaKeywords": "necklaces, jewellery"
+  },
+
+  {
+    "name": "Earrings",
+    "slug": "accessories-jewellery-earrings",
+    "description": "Stylish earrings collection",
+    "tagline": "Tiny Details Huge Impact",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "accessories-jewellery",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["earrings", "fashion", "jewellery"],
+
+    "order": 2,
+
+    "metaTitle": "Earrings Collection",
+
+    "metaDescription": "Stylish earrings collection",
+
+    "metaKeywords": "earrings, jewellery"
+  },
+
+  {
+    "name": "Rings",
+    "slug": "accessories-jewellery-rings",
+    "description": "Elegant rings collection",
+    "tagline": "Luxury At Your Fingertips",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "accessories-jewellery",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["rings", "luxury", "fashion"],
+
+    "order": 3,
+
+    "metaTitle": "Rings Collection",
+
+    "metaDescription": "Elegant rings collection",
+
+    "metaKeywords": "rings, jewellery"
+  },
+
+  {
+    "name": "Watches",
+    "slug": "accessories-watches",
+    "description": "Premium watches collection",
+    "tagline": "Time Meets Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "accessories",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["watches", "analog", "smartwatch"],
+
+    "order": 3,
+
+    "metaTitle": "Watches Collection",
+
+    "metaDescription": "Premium watches collection",
+
+    "metaKeywords": "watches, smart watches"
+  },
+
+  {
+    "name": "Analog Watches",
+    "slug": "accessories-watches-analog-watches",
+    "description": "Classic analog watches collection",
+    "tagline": "Classic Never Fades",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "accessories-watches",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["analog-watch", "classic", "watch"],
+
+    "order": 1,
+
+    "metaTitle": "Analog Watches Collection",
+
+    "metaDescription": "Classic analog watches collection",
+
+    "metaKeywords": "analog watches"
+  },
+
+  {
+    "name": "Smart Watches",
+    "slug": "accessories-watches-smart-watches",
+    "description": "Modern smart watches collection",
+    "tagline": "Smart Tech Smart Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "accessories-watches",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["smartwatch", "fitness", "wearables"],
+
+    "order": 2,
+
+    "metaTitle": "Smart Watches Collection",
+
+    "metaDescription": "Modern smart watches collection",
+
+    "metaKeywords": "smart watches, wearables"
+  },
+  {
+    "name": "Sunglasses",
+    "slug": "accessories-sunglasses",
+    "description": "Premium sunglasses collection",
+    "tagline": "Shade Your Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "accessories",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sunglasses", "eyewear", "fashion"],
+
+    "order": 4,
+
+    "metaTitle": "Sunglasses Collection",
+
+    "metaDescription": "Premium sunglasses collection",
+
+    "metaKeywords": "sunglasses, eyewear"
+  },
+
+  {
+    "name": "Men Sunglasses",
+    "slug": "accessories-sunglasses-men-sunglasses",
+    "description": "Stylish sunglasses collection for men",
+    "tagline": "Sharp Looks Under The Sun",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "accessories-sunglasses",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["mens-sunglasses", "eyewear", "fashion"],
+
+    "order": 1,
+
+    "metaTitle": "Men Sunglasses Collection",
+
+    "metaDescription": "Stylish sunglasses collection for men",
+
+    "metaKeywords": "mens sunglasses"
+  },
+
+  {
+    "name": "Women Sunglasses",
+    "slug": "accessories-sunglasses-women-sunglasses",
+    "description": "Elegant sunglasses collection for women",
+    "tagline": "Elegance In Every Frame",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "accessories-sunglasses",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["women-sunglasses", "fashion", "eyewear"],
+
+    "order": 2,
+
+    "metaTitle": "Women Sunglasses Collection",
+
+    "metaDescription": "Elegant sunglasses collection for women",
+
+    "metaKeywords": "women sunglasses"
+  },
+
+  {
+    "name": "Fashion Accessories",
+    "slug": "accessories-fashion-accessories",
+    "description": "Trending fashion accessories collection",
+    "tagline": "Small Details Big Fashion",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "accessories",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["belts", "wallets", "caps"],
+
+    "order": 5,
+
+    "metaTitle": "Fashion Accessories Collection",
+
+    "metaDescription": "Trending fashion accessories collection",
+
+    "metaKeywords": "belts, wallets, caps"
+  },
+
+  {
+    "name": "Belts",
+    "slug": "accessories-fashion-accessories-belts",
+    "description": "Premium belts collection",
+    "tagline": "Tie Your Look Together",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "accessories-fashion-accessories",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["belts", "fashion", "accessories"],
+
+    "order": 1,
+
+    "metaTitle": "Belts Collection",
+
+    "metaDescription": "Premium belts collection",
+
+    "metaKeywords": "belts"
+  },
+
+  {
+    "name": "Wallets",
+    "slug": "accessories-fashion-accessories-wallets",
+    "description": "Premium wallets collection",
+    "tagline": "Carry Luxury Daily",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "accessories-fashion-accessories",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["wallets", "leather", "fashion"],
+
+    "order": 2,
+
+    "metaTitle": "Wallets Collection",
+
+    "metaDescription": "Premium wallets collection",
+
+    "metaKeywords": "wallets, leather wallets"
+  },
+
+  {
+    "name": "Caps",
+    "slug": "accessories-fashion-accessories-caps",
+    "description": "Stylish caps collection",
+    "tagline": "Street Style Essential",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "accessories-fashion-accessories",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["caps", "streetwear", "fashion"],
+
+    "order": 3,
+
+    "metaTitle": "Caps Collection",
+
+    "metaDescription": "Stylish caps collection",
+
+    "metaKeywords": "caps, hats"
+  }
+]

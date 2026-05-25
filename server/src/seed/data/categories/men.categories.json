@@ -1,0 +1,1558 @@
+[
+  {
+    "name": "Men",
+    "slug": "men",
+    "description": "Premium men's fashion and lifestyle essentials",
+    "tagline": "Own Your Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 0,
+
+    "parentSlug": null,
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["men", "fashion", "streetwear", "premium"],
+
+    "order": 1,
+
+    "metaTitle": "Men Fashion Collection",
+
+    "metaDescription": "Shop premium men's clothing footwear and accessories",
+
+    "metaKeywords": "men fashion, men clothing, streetwear"
+  },
+
+  {
+    "name": "Topwear",
+    "slug": "men-topwear",
+    "description": "Men's topwear collection",
+    "tagline": "Elevated Everyday Fits",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "men",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["topwear", "hoodies", "shirts", "tshirts"],
+
+    "order": 1,
+
+    "metaTitle": "Men Topwear",
+
+    "metaDescription": "Explore premium men's topwear collection",
+
+    "metaKeywords": "men topwear, hoodies, shirts, tshirts"
+  },
+
+  {
+    "name": "T-Shirts",
+    "slug": "men-topwear-tshirts",
+    "description": "Oversized, printed and casual t-shirts for men",
+    "tagline": "Streetwear Starts Here",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-topwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["oversized", "cotton", "streetwear", "casual"],
+
+    "order": 1,
+
+    "metaTitle": "Men T-Shirts",
+
+    "metaDescription": "Shop oversized and premium t-shirts for men",
+
+    "metaKeywords": "men tshirts, oversized tshirts, streetwear"
+  },
+
+  {
+    "name": "Shirts",
+    "slug": "men-topwear-shirts",
+    "description": "Casual and formal shirts for men",
+    "tagline": "Sharp Fits Daily",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-topwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["shirts", "formal", "casual"],
+
+    "order": 2,
+
+    "metaTitle": "Men Shirts",
+
+    "metaDescription": "Premium casual and formal shirts for men",
+
+    "metaKeywords": "men shirts, formal shirts, casual shirts"
+  },
+
+  {
+    "name": "Hoodies",
+    "slug": "men-topwear-hoodies",
+    "description": "Premium hoodies and sweat essentials",
+    "tagline": "Layer Up Better",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-topwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["hoodies", "winter", "streetwear"],
+
+    "order": 3,
+
+    "metaTitle": "Men Hoodies",
+
+    "metaDescription": "Premium hoodies and sweatshirts for men",
+
+    "metaKeywords": "men hoodies, streetwear hoodies, sweatshirts"
+  },
+  {
+    "name": "Jackets",
+    "slug": "men-topwear-jackets",
+    "description": "Premium jackets for men",
+    "tagline": "Outerwear That Stands Out",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-topwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["jackets", "winter", "streetwear"],
+
+    "order": 4,
+
+    "metaTitle": "Men Jackets",
+
+    "metaDescription": "Explore stylish jackets for men",
+
+    "metaKeywords": "men jackets, winter jackets, bomber jackets"
+  },
+
+  {
+    "name": "Sweatshirts",
+    "slug": "men-topwear-sweatshirts",
+    "description": "Comfortable sweatshirts for men",
+    "tagline": "Comfort Meets Street",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-topwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sweatshirts", "winter", "casual"],
+
+    "order": 5,
+
+    "metaTitle": "Men Sweatshirts",
+
+    "metaDescription": "Shop premium sweatshirts for men",
+
+    "metaKeywords": "men sweatshirts, casual sweatshirts"
+  },
+
+  {
+    "name": "Bottomwear",
+    "slug": "men-bottomwear",
+    "description": "Premium men's bottomwear",
+    "tagline": "Built For Everyday Motion",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "men",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["jeans", "cargos", "trousers"],
+
+    "order": 2,
+
+    "metaTitle": "Men Bottomwear",
+
+    "metaDescription": "Explore men's jeans cargos and trousers",
+
+    "metaKeywords": "men jeans, cargos, trousers"
+  },
+
+  {
+    "name": "Jeans",
+    "slug": "men-bottomwear-jeans",
+    "description": "Slim fit and relaxed jeans for men",
+    "tagline": "Denim Never Fails",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-bottomwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["jeans", "denim", "slimfit"],
+
+    "order": 1,
+
+    "metaTitle": "Men Jeans",
+
+    "metaDescription": "Premium denim jeans for men",
+
+    "metaKeywords": "men jeans, denim jeans"
+  },
+
+  {
+    "name": "Cargos",
+    "slug": "men-bottomwear-cargos",
+    "description": "Streetwear cargo pants for men",
+    "tagline": "Utility With Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-bottomwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["cargos", "streetwear", "utility"],
+
+    "order": 2,
+
+    "metaTitle": "Men Cargos",
+
+    "metaDescription": "Explore premium cargos for men",
+
+    "metaKeywords": "men cargos, cargo pants"
+  },
+
+  {
+    "name": "Trousers",
+    "slug": "men-bottomwear-trousers",
+    "description": "Formal and casual trousers for men",
+    "tagline": "Sharp Everyday Looks",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-bottomwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["trousers", "formal", "casual"],
+
+    "order": 3,
+
+    "metaTitle": "Men Trousers",
+
+    "metaDescription": "Premium trousers for men",
+
+    "metaKeywords": "men trousers, formal trousers"
+  },
+
+  {
+    "name": "Shorts",
+    "slug": "men-bottomwear-shorts",
+    "description": "Casual and gym shorts for men",
+    "tagline": "Built For Comfort",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-bottomwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["shorts", "gym", "summer"],
+
+    "order": 4,
+
+    "metaTitle": "Men Shorts",
+
+    "metaDescription": "Comfortable shorts for men",
+
+    "metaKeywords": "men shorts, gym shorts"
+  },
+  {
+    "name": "Footwear",
+    "slug": "men-footwear",
+    "description": "Premium footwear collection for men",
+    "tagline": "Step Into Confidence",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "men",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["footwear", "sneakers", "formal"],
+
+    "order": 3,
+
+    "metaTitle": "Men Footwear",
+
+    "metaDescription": "Explore premium footwear for men",
+
+    "metaKeywords": "men footwear, sneakers, casual shoes"
+  },
+
+  {
+    "name": "Sneakers",
+    "slug": "men-footwear-sneakers",
+    "description": "Streetwear sneakers for men",
+    "tagline": "Street Ready Sneakers",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-footwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sneakers", "streetwear", "casual"],
+
+    "order": 1,
+
+    "metaTitle": "Men Sneakers",
+
+    "metaDescription": "Premium sneakers collection for men",
+
+    "metaKeywords": "men sneakers, casual sneakers"
+  },
+
+  {
+    "name": "Casual Shoes",
+    "slug": "men-footwear-casual-shoes",
+    "description": "Casual shoes for daily wear",
+    "tagline": "Daily Wear Elevated",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-footwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["casual", "dailywear", "comfort"],
+
+    "order": 2,
+
+    "metaTitle": "Men Casual Shoes",
+
+    "metaDescription": "Comfortable casual shoes for men",
+
+    "metaKeywords": "men casual shoes"
+  },
+
+  {
+    "name": "Formal Shoes",
+    "slug": "men-footwear-formal-shoes",
+    "description": "Premium formal shoes for men",
+    "tagline": "Built For Sharp Looks",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-footwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["formal", "office", "leather"],
+
+    "order": 3,
+
+    "metaTitle": "Men Formal Shoes",
+
+    "metaDescription": "Premium formal shoes collection for men",
+
+    "metaKeywords": "men formal shoes, office shoes"
+  },
+
+  {
+    "name": "Sandals",
+    "slug": "men-footwear-sandals",
+    "description": "Comfortable sandals for men",
+    "tagline": "Easy Everyday Comfort",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-footwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sandals", "comfort", "summer"],
+
+    "order": 4,
+
+    "metaTitle": "Men Sandals",
+
+    "metaDescription": "Comfortable sandals collection for men",
+
+    "metaKeywords": "men sandals"
+  },
+
+  {
+    "name": "Ethnic Wear",
+    "slug": "men-ethnic-wear",
+    "description": "Traditional and festive ethnic wear for men",
+    "tagline": "Tradition Reimagined",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "men",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["ethnic", "kurta", "festive"],
+
+    "order": 4,
+
+    "metaTitle": "Men Ethnic Wear",
+
+    "metaDescription": "Premium ethnic wear collection for men",
+
+    "metaKeywords": "men ethnic wear, kurtas, sherwanis"
+  },
+
+  {
+    "name": "Kurtas",
+    "slug": "men-ethnic-wear-kurtas",
+    "description": "Traditional kurtas for men",
+    "tagline": "Festive Fits Perfected",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-ethnic-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["kurta", "ethnic", "festive"],
+
+    "order": 1,
+
+    "metaTitle": "Men Kurtas",
+
+    "metaDescription": "Traditional kurtas collection for men",
+
+    "metaKeywords": "men kurtas"
+  },
+
+  {
+    "name": "Sherwanis",
+    "slug": "men-ethnic-wear-sherwanis",
+    "description": "Luxury sherwanis for weddings and occasions",
+    "tagline": "Royal Occasion Wear",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-ethnic-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sherwani", "wedding", "luxury"],
+
+    "order": 2,
+
+    "metaTitle": "Men Sherwanis",
+
+    "metaDescription": "Premium sherwanis for men",
+
+    "metaKeywords": "men sherwani, wedding sherwani"
+  },
+  {
+    "name": "Ethnic Sets",
+    "slug": "men-ethnic-wear-ethnic-sets",
+    "description": "Complete ethnic sets for festive occasions",
+    "tagline": "Festive Looks Simplified",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-ethnic-wear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["ethnic-set", "kurta-set", "festive"],
+
+    "order": 3,
+
+    "metaTitle": "Men Ethnic Sets",
+
+    "metaDescription": "Shop complete ethnic sets for men",
+
+    "metaKeywords": "men ethnic sets, kurta pajama sets"
+  },
+
+  {
+    "name": "Formal Wear",
+    "slug": "men-formal-wear",
+    "description": "Formal wear collection for men",
+    "tagline": "Tailored For Success",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "men",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["formal", "office", "premium"],
+
+    "order": 5,
+
+    "metaTitle": "Men Formal Wear",
+
+    "metaDescription": "Premium formal wear collection for men",
+
+    "metaKeywords": "men formal wear, suits, blazers"
+  },
+
+  {
+    "name": "Blazers",
+    "slug": "men-formal-wear-blazers",
+    "description": "Premium blazers for men",
+    "tagline": "Sharp Looks Daily",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-formal-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["blazers", "formal", "office"],
+
+    "order": 1,
+
+    "metaTitle": "Men Blazers",
+
+    "metaDescription": "Explore premium blazers for men",
+
+    "metaKeywords": "men blazers, formal blazers"
+  },
+
+  {
+    "name": "Suits",
+    "slug": "men-formal-wear-suits",
+    "description": "Luxury suits for men",
+    "tagline": "Power Dressing Perfected",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-formal-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["suits", "luxury", "formal"],
+
+    "order": 2,
+
+    "metaTitle": "Men Suits",
+
+    "metaDescription": "Premium suits collection for men",
+
+    "metaKeywords": "men suits, luxury suits"
+  },
+
+  {
+    "name": "Waistcoats",
+    "slug": "men-formal-wear-waistcoats",
+    "description": "Elegant waistcoats for men",
+    "tagline": "Refined Layering Essentials",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-formal-wear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["waistcoats", "formal", "layering"],
+
+    "order": 3,
+
+    "metaTitle": "Men Waistcoats",
+
+    "metaDescription": "Premium waistcoats for men",
+
+    "metaKeywords": "men waistcoats, formal waistcoats"
+  },
+
+  {
+    "name": "Accessories",
+    "slug": "men-accessories",
+    "description": "Fashion accessories for men",
+    "tagline": "Finish The Look",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "men",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["wallets", "belts", "caps", "watches"],
+
+    "order": 6,
+
+    "metaTitle": "Men Accessories",
+
+    "metaDescription": "Premium accessories collection for men",
+
+    "metaKeywords": "men accessories, belts, wallets"
+  },
+
+  {
+    "name": "Wallets",
+    "slug": "men-accessories-wallets",
+    "description": "Leather wallets for men",
+    "tagline": "Carry Style Daily",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-accessories",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["wallets", "leather", "accessories"],
+
+    "order": 1,
+
+    "metaTitle": "Men Wallets",
+
+    "metaDescription": "Premium leather wallets for men",
+
+    "metaKeywords": "men wallets, leather wallets"
+  },
+
+  {
+    "name": "Belts",
+    "slug": "men-accessories-belts",
+    "description": "Premium belts for men",
+    "tagline": "Details Matter",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-accessories",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["belts", "formal", "accessories"],
+
+    "order": 2,
+
+    "metaTitle": "Men Belts",
+
+    "metaDescription": "Explore premium belts for men",
+
+    "metaKeywords": "men belts, leather belts"
+  },
+
+  {
+    "name": "Caps",
+    "slug": "men-accessories-caps",
+    "description": "Streetwear caps for men",
+    "tagline": "Streetwear Finishing Touch",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-accessories",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["caps", "streetwear", "fashion"],
+
+    "order": 3,
+
+    "metaTitle": "Men Caps",
+
+    "metaDescription": "Streetwear caps collection for men",
+
+    "metaKeywords": "men caps, streetwear caps"
+  },
+
+  {
+    "name": "Watches",
+    "slug": "men-accessories-watches",
+    "description": "Luxury and smart watches for men",
+    "tagline": "Timeless Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "men-accessories",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["watches", "luxury", "smartwatch"],
+
+    "order": 4,
+
+    "metaTitle": "Men Watches",
+
+    "metaDescription": "Premium watches collection for men",
+
+    "metaKeywords": "men watches, luxury watches, smart watches"
+  }
+]

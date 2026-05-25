@@ -1,0 +1,987 @@
+[
+  {
+    "name": "Electronics",
+    "slug": "electronics",
+    "description": "Latest electronics and smart gadgets collection",
+    "tagline": "Upgrade Your Digital Life",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 0,
+
+    "parentSlug": null,
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["electronics", "gadgets", "tech"],
+
+    "order": 7,
+
+    "metaTitle": "Electronics Collection",
+
+    "metaDescription": "Latest electronics and gadgets collection",
+
+    "metaKeywords": "electronics, gadgets, tech"
+  },
+
+  {
+    "name": "Smartphones",
+    "slug": "electronics-smartphones",
+    "description": "Latest smartphones collection",
+    "tagline": "Power In Your Pocket",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "electronics",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["smartphones", "mobile", "android"],
+
+    "order": 1,
+
+    "metaTitle": "Smartphones Collection",
+
+    "metaDescription": "Latest smartphones collection",
+
+    "metaKeywords": "smartphones, mobile phones"
+  },
+
+  {
+    "name": "Laptops",
+    "slug": "electronics-laptops",
+    "description": "Powerful laptops collection",
+    "tagline": "Performance Without Limits",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "electronics",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["laptops", "notebooks", "gaming"],
+
+    "order": 2,
+
+    "metaTitle": "Laptops Collection",
+
+    "metaDescription": "Powerful laptops collection",
+
+    "metaKeywords": "laptops, notebooks"
+  },
+
+  {
+    "name": "Audio",
+    "slug": "electronics-audio",
+    "description": "Premium audio devices collection",
+    "tagline": "Feel Every Beat",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "electronics",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["audio", "earbuds", "headphones"],
+
+    "order": 3,
+
+    "metaTitle": "Audio Devices Collection",
+
+    "metaDescription": "Premium audio devices collection",
+
+    "metaKeywords": "audio devices, earbuds, headphones"
+  },
+
+  {
+    "name": "Earbuds",
+    "slug": "electronics-audio-earbuds",
+    "description": "Wireless earbuds collection",
+    "tagline": "Wireless Freedom Daily",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "electronics-audio",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["earbuds", "wireless", "audio"],
+
+    "order": 1,
+
+    "metaTitle": "Earbuds Collection",
+
+    "metaDescription": "Wireless earbuds collection",
+
+    "metaKeywords": "earbuds, wireless earbuds"
+  },
+
+  {
+    "name": "Headphones",
+    "slug": "electronics-audio-headphones",
+    "description": "Premium headphones collection",
+    "tagline": "Immerse In Sound",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "electronics-audio",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["headphones", "music", "audio"],
+
+    "order": 2,
+
+    "metaTitle": "Headphones Collection",
+
+    "metaDescription": "Premium headphones collection",
+
+    "metaKeywords": "headphones"
+  },
+
+  {
+    "name": "Speakers",
+    "slug": "electronics-audio-speakers",
+    "description": "Portable and smart speakers collection",
+    "tagline": "Turn Up The Energy",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "electronics-audio",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["speakers", "bluetooth", "audio"],
+
+    "order": 3,
+
+    "metaTitle": "Speakers Collection",
+
+    "metaDescription": "Portable and smart speakers collection",
+
+    "metaKeywords": "bluetooth speakers"
+  },
+  {
+    "name": "Smart Wearables",
+    "slug": "electronics-smart-wearables",
+    "description": "Modern smart wearable devices collection",
+    "tagline": "Wear The Future",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "electronics",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["wearables", "smartwatch", "fitness"],
+
+    "order": 4,
+
+    "metaTitle": "Smart Wearables Collection",
+
+    "metaDescription": "Modern smart wearable devices collection",
+
+    "metaKeywords": "smart watches, fitness bands"
+  },
+
+  {
+    "name": "Smart Watches",
+    "slug": "electronics-smart-wearables-smart-watches",
+    "description": "Advanced smart watches collection",
+    "tagline": "Smart Living On Your Wrist",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "electronics-smart-wearables",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["smartwatch", "wearables", "fitness"],
+
+    "order": 1,
+
+    "metaTitle": "Smart Watches Collection",
+
+    "metaDescription": "Advanced smart watches collection",
+
+    "metaKeywords": "smart watches"
+  },
+
+  {
+    "name": "Fitness Bands",
+    "slug": "electronics-smart-wearables-fitness-bands",
+    "description": "Fitness tracking bands collection",
+    "tagline": "Track Every Move",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "electronics-smart-wearables",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["fitness-band", "wearables", "tracker"],
+
+    "order": 2,
+
+    "metaTitle": "Fitness Bands Collection",
+
+    "metaDescription": "Fitness tracking bands collection",
+
+    "metaKeywords": "fitness bands"
+  },
+
+  {
+    "name": "Cameras",
+    "slug": "electronics-cameras",
+    "description": "Professional cameras collection",
+    "tagline": "Capture Every Moment",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "electronics",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["cameras", "dslr", "photography"],
+
+    "order": 5,
+
+    "metaTitle": "Cameras Collection",
+
+    "metaDescription": "Professional cameras collection",
+
+    "metaKeywords": "cameras, dslr"
+  },
+
+  {
+    "name": "Smart TVs",
+    "slug": "electronics-smart-tvs",
+    "description": "Ultra HD smart TVs collection",
+    "tagline": "Cinema At Home",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "electronics",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["smart-tv", "television", "electronics"],
+
+    "order": 6,
+
+    "metaTitle": "Smart TVs Collection",
+
+    "metaDescription": "Ultra HD smart TVs collection",
+
+    "metaKeywords": "smart tv, television"
+  },
+
+  {
+    "name": "Tablets",
+    "slug": "electronics-tablets",
+    "description": "Latest tablets collection",
+    "tagline": "Portable Power Everyday",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "electronics",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["tablets", "ipad", "electronics"],
+
+    "order": 7,
+
+    "metaTitle": "Tablets Collection",
+
+    "metaDescription": "Latest tablets collection",
+
+    "metaKeywords": "tablets, ipad"
+  },
+
+  {
+    "name": "Gaming",
+    "slug": "electronics-gaming",
+    "description": "Gaming consoles and accessories collection",
+    "tagline": "Game Without Limits",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "electronics",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["gaming", "console", "accessories"],
+
+    "order": 8,
+
+    "metaTitle": "Gaming Collection",
+
+    "metaDescription": "Gaming consoles and accessories collection",
+
+    "metaKeywords": "gaming consoles, gaming accessories"
+  },
+
+  {
+    "name": "Gaming Consoles",
+    "slug": "electronics-gaming-gaming-consoles",
+    "description": "Gaming consoles collection",
+    "tagline": "Next Level Gaming",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "electronics-gaming",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["gaming-console", "playstation", "xbox"],
+
+    "order": 1,
+
+    "metaTitle": "Gaming Consoles Collection",
+
+    "metaDescription": "Gaming consoles collection",
+
+    "metaKeywords": "gaming consoles"
+  },
+
+  {
+    "name": "Gaming Accessories",
+    "slug": "electronics-gaming-gaming-accessories",
+    "description": "Gaming accessories collection",
+    "tagline": "Built For Gamers",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "electronics-gaming",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["gaming-accessories", "controllers", "gaming"],
+
+    "order": 2,
+
+    "metaTitle": "Gaming Accessories Collection",
+
+    "metaDescription": "Gaming accessories collection",
+
+    "metaKeywords": "gaming accessories"
+  },
+  {
+    "name": "Appliances",
+    "slug": "electronics-appliances",
+    "description": "Smart home and kitchen appliances collection",
+    "tagline": "Smarter Living Starts Here",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "electronics",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["appliances", "kitchen", "home"],
+
+    "order": 9,
+
+    "metaTitle": "Appliances Collection",
+
+    "metaDescription": "Smart home and kitchen appliances collection",
+
+    "metaKeywords": "home appliances, kitchen appliances"
+  },
+
+  {
+    "name": "Kitchen Appliances",
+    "slug": "electronics-appliances-kitchen-appliances",
+    "description": "Modern kitchen appliances collection",
+    "tagline": "Cook Faster Live Better",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "electronics-appliances",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["kitchen-appliances", "microwave", "blender"],
+
+    "order": 1,
+
+    "metaTitle": "Kitchen Appliances Collection",
+
+    "metaDescription": "Modern kitchen appliances collection",
+
+    "metaKeywords": "kitchen appliances"
+  },
+
+  {
+    "name": "Home Appliances",
+    "slug": "electronics-appliances-home-appliances",
+    "description": "Essential home appliances collection",
+    "tagline": "Effortless Everyday Living",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "electronics-appliances",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["home-appliances", "cleaning", "electronics"],
+
+    "order": 2,
+
+    "metaTitle": "Home Appliances Collection",
+
+    "metaDescription": "Essential home appliances collection",
+
+    "metaKeywords": "home appliances"
+  }
+]

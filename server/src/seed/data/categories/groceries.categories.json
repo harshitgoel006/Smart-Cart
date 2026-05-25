@@ -1,0 +1,624 @@
+[
+  {
+    "name": "Groceries",
+    "slug": "groceries",
+    "description": "Daily grocery and household essentials collection",
+    "tagline": "Fresh Essentials Everyday",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 0,
+
+    "parentSlug": null,
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["groceries", "daily-essentials", "fresh"],
+
+    "order": 8,
+
+    "metaTitle": "Groceries Collection",
+
+    "metaDescription": "Daily grocery and household essentials collection",
+
+    "metaKeywords": "groceries, daily essentials"
+  },
+
+  {
+    "name": "Fruits & Vegetables",
+    "slug": "groceries-fruits-vegetables",
+    "description": "Fresh fruits and vegetables collection",
+    "tagline": "Farm Fresh Everyday",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "groceries",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["fruits", "vegetables", "fresh"],
+
+    "order": 1,
+
+    "metaTitle": "Fruits & Vegetables Collection",
+
+    "metaDescription": "Fresh fruits and vegetables collection",
+
+    "metaKeywords": "fresh fruits, vegetables"
+  },
+
+  {
+    "name": "Dairy & Bakery",
+    "slug": "groceries-dairy-bakery",
+    "description": "Fresh dairy and bakery products",
+    "tagline": "Freshly Made Daily",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "groceries",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["dairy", "bakery", "milk"],
+
+    "order": 2,
+
+    "metaTitle": "Dairy & Bakery Collection",
+
+    "metaDescription": "Fresh dairy and bakery products",
+
+    "metaKeywords": "dairy, bakery"
+  },
+
+  {
+    "name": "Staples",
+    "slug": "groceries-staples",
+    "description": "Essential kitchen staples collection",
+    "tagline": "Kitchen Essentials Simplified",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "groceries",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["rice", "flour", "pulses"],
+
+    "order": 3,
+
+    "metaTitle": "Staples Collection",
+
+    "metaDescription": "Essential kitchen staples collection",
+
+    "metaKeywords": "rice, flour, pulses"
+  },
+
+  {
+    "name": "Rice",
+    "slug": "groceries-staples-rice",
+    "description": "Premium rice collection",
+    "tagline": "Every Meal Starts Here",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "groceries-staples",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["rice", "basmati", "groceries"],
+
+    "order": 1,
+
+    "metaTitle": "Rice Collection",
+
+    "metaDescription": "Premium rice collection",
+
+    "metaKeywords": "rice, basmati rice"
+  },
+
+  {
+    "name": "Flour",
+    "slug": "groceries-staples-flour",
+    "description": "Fresh flour collection",
+    "tagline": "Freshness In Every Grain",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "groceries-staples",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["flour", "atta", "groceries"],
+
+    "order": 2,
+
+    "metaTitle": "Flour Collection",
+
+    "metaDescription": "Fresh flour collection",
+
+    "metaKeywords": "flour, atta"
+  },
+
+  {
+    "name": "Pulses",
+    "slug": "groceries-staples-pulses",
+    "description": "Healthy pulses collection",
+    "tagline": "Healthy Living Everyday",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "groceries-staples",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["pulses", "dal", "groceries"],
+
+    "order": 3,
+
+    "metaTitle": "Pulses Collection",
+
+    "metaDescription": "Healthy pulses collection",
+
+    "metaKeywords": "pulses, dal"
+  },
+  {
+    "name": "Snacks & Munchies",
+    "slug": "groceries-snacks-munchies",
+    "description": "Tasty snacks and munchies collection",
+    "tagline": "Snack Time Anytime",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "groceries",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["snacks", "chips", "munchies"],
+
+    "order": 4,
+
+    "metaTitle": "Snacks & Munchies Collection",
+
+    "metaDescription": "Tasty snacks and munchies collection",
+
+    "metaKeywords": "snacks, munchies"
+  },
+
+  {
+    "name": "Beverages",
+    "slug": "groceries-beverages",
+    "description": "Refreshing beverages collection",
+    "tagline": "Sip Refresh Repeat",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "groceries",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["beverages", "juice", "drinks"],
+
+    "order": 5,
+
+    "metaTitle": "Beverages Collection",
+
+    "metaDescription": "Refreshing beverages collection",
+
+    "metaKeywords": "beverages, drinks"
+  },
+
+  {
+    "name": "Home Care",
+    "slug": "groceries-home-care",
+    "description": "Daily home care essentials collection",
+    "tagline": "Clean Home Happy Life",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "groceries",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["cleaning", "home-care", "essentials"],
+
+    "order": 6,
+
+    "metaTitle": "Home Care Collection",
+
+    "metaDescription": "Daily home care essentials collection",
+
+    "metaKeywords": "home care, cleaning"
+  },
+
+  {
+    "name": "Organic Products",
+    "slug": "groceries-organic-products",
+    "description": "Healthy organic grocery collection",
+    "tagline": "Pure Healthy Natural",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "groceries",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["organic", "healthy", "natural"],
+
+    "order": 7,
+
+    "metaTitle": "Organic Products Collection",
+
+    "metaDescription": "Healthy organic grocery collection",
+
+    "metaKeywords": "organic groceries"
+  },
+
+  {
+    "name": "Pet Care",
+    "slug": "groceries-pet-care",
+    "description": "Pet care essentials collection",
+    "tagline": "Care For Your Companions",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "groceries",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["pet-care", "pets", "accessories"],
+
+    "order": 8,
+
+    "metaTitle": "Pet Care Collection",
+
+    "metaDescription": "Pet care essentials collection",
+
+    "metaKeywords": "pet care, pet food"
+  }
+]

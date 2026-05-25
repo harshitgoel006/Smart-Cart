@@ -1,0 +1,1506 @@
+[
+  {
+    "name": "Women",
+    "slug": "women",
+    "description": "Premium women's fashion and lifestyle essentials",
+    "tagline": "Style That Speaks",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 0,
+
+    "parentSlug": null,
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["women", "fashion", "premium", "lifestyle"],
+
+    "order": 2,
+
+    "metaTitle": "Women Fashion Collection",
+
+    "metaDescription": "Shop premium women's clothing footwear and accessories",
+
+    "metaKeywords": "women fashion, women clothing, premium womenswear"
+  },
+
+  {
+    "name": "Western Wear",
+    "slug": "women-western-wear",
+    "description": "Premium western wear collection for women",
+    "tagline": "Modern Looks Daily",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "women",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["western", "dresses", "tops"],
+
+    "order": 1,
+
+    "metaTitle": "Women Western Wear",
+
+    "metaDescription": "Explore premium western wear for women",
+
+    "metaKeywords": "women western wear, dresses, tops"
+  },
+
+  {
+    "name": "Tops",
+    "slug": "women-western-wear-tops",
+    "description": "Stylish tops collection for women",
+    "tagline": "Everyday Chic",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-western-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["tops", "casual", "fashion"],
+
+    "order": 1,
+
+    "metaTitle": "Women Tops",
+
+    "metaDescription": "Explore trendy tops for women",
+
+    "metaKeywords": "women tops, stylish tops"
+  },
+
+  {
+    "name": "Dresses",
+    "slug": "women-western-wear-dresses",
+    "description": "Premium dresses collection for women",
+    "tagline": "Elegance In Motion",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-western-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["dresses", "partywear", "summer"],
+
+    "order": 2,
+
+    "metaTitle": "Women Dresses",
+
+    "metaDescription": "Premium dresses collection for women",
+
+    "metaKeywords": "women dresses, party dresses"
+  },
+
+  {
+    "name": "Co-ord Sets",
+    "slug": "women-western-wear-coord-sets",
+    "description": "Matching co-ord sets for women",
+    "tagline": "Perfectly Paired Looks",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-western-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["coord", "fashion", "premium"],
+
+    "order": 3,
+
+    "metaTitle": "Women Co-ord Sets",
+
+    "metaDescription": "Explore stylish co-ord sets for women",
+
+    "metaKeywords": "women co-ord sets"
+  },
+
+  {
+    "name": "Jumpsuits",
+    "slug": "women-western-wear-jumpsuits",
+    "description": "Premium jumpsuits collection for women",
+    "tagline": "One Piece Statement",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-western-wear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["jumpsuits", "partywear", "fashion"],
+
+    "order": 4,
+
+    "metaTitle": "Women Jumpsuits",
+
+    "metaDescription": "Stylish jumpsuits for women",
+
+    "metaKeywords": "women jumpsuits"
+  },
+
+  {
+    "name": "T-Shirts",
+    "slug": "women-western-wear-tshirts",
+    "description": "Casual and oversized t-shirts for women",
+    "tagline": "Comfort Meets Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-western-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["tshirts", "oversized", "casual"],
+
+    "order": 5,
+
+    "metaTitle": "Women T-Shirts",
+
+    "metaDescription": "Premium t-shirts collection for women",
+
+    "metaKeywords": "women tshirts, oversized tshirts"
+  },
+  {
+    "name": "Ethnic Wear",
+    "slug": "women-ethnic-wear",
+    "description": "Traditional and festive ethnic wear for women",
+    "tagline": "Tradition With Grace",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "women",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["ethnic", "sarees", "lehengas"],
+
+    "order": 2,
+
+    "metaTitle": "Women Ethnic Wear",
+
+    "metaDescription": "Premium ethnic wear collection for women",
+
+    "metaKeywords": "women ethnic wear, sarees, lehengas"
+  },
+
+  {
+    "name": "Sarees",
+    "slug": "women-ethnic-wear-sarees",
+    "description": "Elegant sarees for women",
+    "tagline": "Timeless Elegance",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-ethnic-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sarees", "ethnic", "festive"],
+
+    "order": 1,
+
+    "metaTitle": "Women Sarees",
+
+    "metaDescription": "Premium sarees collection for women",
+
+    "metaKeywords": "women sarees, silk sarees"
+  },
+
+  {
+    "name": "Lehengas",
+    "slug": "women-ethnic-wear-lehengas",
+    "description": "Luxury lehengas for festive occasions",
+    "tagline": "Celebrate In Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-ethnic-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["lehengas", "wedding", "festive"],
+
+    "order": 2,
+
+    "metaTitle": "Women Lehengas",
+
+    "metaDescription": "Premium lehengas collection for women",
+
+    "metaKeywords": "women lehengas, bridal lehengas"
+  },
+
+  {
+    "name": "Kurtis",
+    "slug": "women-ethnic-wear-kurtis",
+    "description": "Stylish kurtis for women",
+    "tagline": "Everyday Ethnic Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-ethnic-wear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["kurtis", "casual", "ethnic"],
+
+    "order": 3,
+
+    "metaTitle": "Women Kurtis",
+
+    "metaDescription": "Explore stylish kurtis for women",
+
+    "metaKeywords": "women kurtis, ethnic kurtis"
+  },
+
+  {
+    "name": "Ethnic Sets",
+    "slug": "women-ethnic-wear-ethnic-sets",
+    "description": "Complete ethnic sets for women",
+    "tagline": "Festive Looks Simplified",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-ethnic-wear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["ethnic-set", "kurta-set", "festive"],
+
+    "order": 4,
+
+    "metaTitle": "Women Ethnic Sets",
+
+    "metaDescription": "Premium ethnic sets for women",
+
+    "metaKeywords": "women ethnic sets"
+  },
+
+  {
+    "name": "Footwear",
+    "slug": "women-footwear",
+    "description": "Premium footwear collection for women",
+    "tagline": "Walk With Confidence",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "women",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["heels", "sneakers", "sandals"],
+
+    "order": 3,
+
+    "metaTitle": "Women Footwear",
+
+    "metaDescription": "Explore premium footwear for women",
+
+    "metaKeywords": "women footwear, heels, sneakers"
+  },
+
+  {
+    "name": "Heels",
+    "slug": "women-footwear-heels",
+    "description": "Elegant heels collection for women",
+    "tagline": "Elevate Every Look",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-footwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["heels", "partywear", "fashion"],
+
+    "order": 1,
+
+    "metaTitle": "Women Heels",
+
+    "metaDescription": "Premium heels collection for women",
+
+    "metaKeywords": "women heels, stilettos"
+  },
+
+  {
+    "name": "Flats",
+    "slug": "women-footwear-flats",
+    "description": "Comfortable flats for women",
+    "tagline": "Comfort With Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-footwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["flats", "comfort", "casual"],
+
+    "order": 2,
+
+    "metaTitle": "Women Flats",
+
+    "metaDescription": "Comfortable flats collection for women",
+
+    "metaKeywords": "women flats"
+  },
+  {
+    "name": "Sneakers",
+    "slug": "women-footwear-sneakers",
+    "description": "Stylish sneakers collection for women",
+    "tagline": "Streetwear Meets Comfort",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-footwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sneakers", "streetwear", "casual"],
+
+    "order": 3,
+
+    "metaTitle": "Women Sneakers",
+
+    "metaDescription": "Premium sneakers collection for women",
+
+    "metaKeywords": "women sneakers, casual sneakers"
+  },
+
+  {
+    "name": "Sandals",
+    "slug": "women-footwear-sandals",
+    "description": "Elegant sandals collection for women",
+    "tagline": "Easy Everyday Fashion",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-footwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sandals", "fashion", "comfort"],
+
+    "order": 4,
+
+    "metaTitle": "Women Sandals",
+
+    "metaDescription": "Stylish sandals collection for women",
+
+    "metaKeywords": "women sandals"
+  },
+
+  {
+    "name": "Gym Wear",
+    "slug": "women-gym-wear",
+    "description": "Performance gym wear collection for women",
+    "tagline": "Built To Move",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "women",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["gymwear", "fitness", "activewear"],
+
+    "order": 4,
+
+    "metaTitle": "Women Gym Wear",
+
+    "metaDescription": "Premium gym wear collection for women",
+
+    "metaKeywords": "women gym wear, activewear"
+  },
+
+  {
+    "name": "Sports Bras",
+    "slug": "women-gym-wear-sports-bras",
+    "description": "High support sports bras for women",
+    "tagline": "Support Every Move",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-gym-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sportsbras", "gym", "fitness"],
+
+    "order": 1,
+
+    "metaTitle": "Women Sports Bras",
+
+    "metaDescription": "Premium sports bras collection for women",
+
+    "metaKeywords": "women sports bras"
+  },
+
+  {
+    "name": "Leggings",
+    "slug": "women-gym-wear-leggings",
+    "description": "Stretchable gym leggings for women",
+    "tagline": "Train In Comfort",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-gym-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["leggings", "gym", "activewear"],
+
+    "order": 2,
+
+    "metaTitle": "Women Leggings",
+
+    "metaDescription": "Premium gym leggings for women",
+
+    "metaKeywords": "women leggings, gym leggings"
+  },
+
+  {
+    "name": "Gym Tops",
+    "slug": "women-gym-wear-gym-tops",
+    "description": "Performance gym tops for women",
+    "tagline": "Sweat In Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-gym-wear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["gymtops", "fitness", "activewear"],
+
+    "order": 3,
+
+    "metaTitle": "Women Gym Tops",
+
+    "metaDescription": "Performance gym tops for women",
+
+    "metaKeywords": "women gym tops"
+  },
+
+  {
+    "name": "Formal Wear",
+    "slug": "women-formal-wear",
+    "description": "Elegant formal wear collection for women",
+    "tagline": "Power Dressing Redefined",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "women",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["formal", "office", "premium"],
+
+    "order": 5,
+
+    "metaTitle": "Women Formal Wear",
+
+    "metaDescription": "Premium formal wear collection for women",
+
+    "metaKeywords": "women formal wear"
+  },
+  {
+    "name": "Blazers",
+    "slug": "women-formal-wear-blazers",
+    "description": "Elegant blazers collection for women",
+    "tagline": "Boss Lady Energy",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-formal-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["blazers", "formal", "office"],
+
+    "order": 1,
+
+    "metaTitle": "Women Blazers",
+
+    "metaDescription": "Premium blazer collection for women",
+
+    "metaKeywords": "women blazers, office wear"
+  },
+
+  {
+    "name": "Trousers",
+    "slug": "women-formal-wear-trousers",
+    "description": "Formal trousers collection for women",
+    "tagline": "Tailored For Confidence",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-formal-wear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["trousers", "office", "formal"],
+
+    "order": 2,
+
+    "metaTitle": "Women Trousers",
+
+    "metaDescription": "Premium formal trousers for women",
+
+    "metaKeywords": "women trousers, office trousers"
+  },
+
+  {
+    "name": "Shirts",
+    "slug": "women-formal-wear-shirts",
+    "description": "Elegant formal shirts for women",
+    "tagline": "Professional Yet Stylish",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-formal-wear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["shirts", "formal", "office"],
+
+    "order": 3,
+
+    "metaTitle": "Women Formal Shirts",
+
+    "metaDescription": "Elegant formal shirts collection for women",
+
+    "metaKeywords": "women formal shirts"
+  },
+
+  {
+    "name": "Accessories",
+    "slug": "women-accessories",
+    "description": "Fashion accessories collection for women",
+    "tagline": "Complete Your Look",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "women",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["handbags", "jewellery", "sunglasses"],
+
+    "order": 6,
+
+    "metaTitle": "Women Accessories",
+
+    "metaDescription": "Premium accessories collection for women",
+
+    "metaKeywords": "women accessories, handbags, jewellery"
+  },
+
+  {
+    "name": "Handbags",
+    "slug": "women-accessories-handbags",
+    "description": "Luxury handbags collection for women",
+    "tagline": "Carry Elegance Everywhere",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-accessories",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["handbags", "bags", "fashion"],
+
+    "order": 1,
+
+    "metaTitle": "Women Handbags",
+
+    "metaDescription": "Luxury handbags collection for women",
+
+    "metaKeywords": "women handbags, luxury bags"
+  },
+
+  {
+    "name": "Jewellery",
+    "slug": "women-accessories-jewellery",
+    "description": "Premium jewellery collection for women",
+    "tagline": "Shine Every Day",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-accessories",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["jewellery", "fashion", "premium"],
+
+    "order": 2,
+
+    "metaTitle": "Women Jewellery",
+
+    "metaDescription": "Premium jewellery collection for women",
+
+    "metaKeywords": "women jewellery, necklaces, earrings"
+  },
+
+  {
+    "name": "Sunglasses",
+    "slug": "women-accessories-sunglasses",
+    "description": "Stylish sunglasses collection for women",
+    "tagline": "See Style Differently",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "women-accessories",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sunglasses", "eyewear", "fashion"],
+
+    "order": 3,
+
+    "metaTitle": "Women Sunglasses",
+
+    "metaDescription": "Stylish sunglasses collection for women",
+
+    "metaKeywords": "women sunglasses, eyewear"
+  }
+]

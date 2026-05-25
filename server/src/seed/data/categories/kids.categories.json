@@ -1,0 +1,1091 @@
+[
+  {
+    "name": "Kids",
+    "slug": "kids",
+    "description": "Trendy fashion and essentials for kids",
+    "tagline": "Made For Little Stars",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 0,
+
+    "parentSlug": null,
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["kids", "children", "fashion"],
+
+    "order": 3,
+
+    "metaTitle": "Kids Fashion Collection",
+
+    "metaDescription": "Explore trendy clothing and essentials for kids",
+
+    "metaKeywords": "kids fashion, kids clothing"
+  },
+
+  {
+    "name": "Topwear",
+    "slug": "kids-topwear",
+    "description": "Stylish topwear collection for kids",
+    "tagline": "Tiny Trends Daily",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "kids",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["kids-topwear", "graphic-tees", "hoodies"],
+
+    "order": 1,
+
+    "metaTitle": "Kids Topwear",
+
+    "metaDescription": "Premium topwear collection for kids",
+
+    "metaKeywords": "kids topwear, kids tshirts"
+  },
+
+  {
+    "name": "Graphic Tees",
+    "slug": "kids-topwear-graphic-tees",
+    "description": "Printed graphic tees for kids",
+    "tagline": "Fun Prints Everyday",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-topwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["graphic-tees", "kids", "printed"],
+
+    "order": 1,
+
+    "metaTitle": "Kids Graphic Tees",
+
+    "metaDescription": "Fun graphic tees collection for kids",
+
+    "metaKeywords": "kids graphic tees"
+  },
+
+  {
+    "name": "Shirts",
+    "slug": "kids-topwear-shirts",
+    "description": "Casual shirts collection for kids",
+    "tagline": "Smart Looks For Kids",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-topwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["shirts", "kids", "casual"],
+
+    "order": 2,
+
+    "metaTitle": "Kids Shirts",
+
+    "metaDescription": "Casual shirts collection for kids",
+
+    "metaKeywords": "kids shirts"
+  },
+
+  {
+    "name": "Hoodies",
+    "slug": "kids-topwear-hoodies",
+    "description": "Warm hoodies collection for kids",
+    "tagline": "Cozy Everyday Fashion",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-topwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["hoodies", "winter", "kids"],
+
+    "order": 3,
+
+    "metaTitle": "Kids Hoodies",
+
+    "metaDescription": "Warm hoodies collection for kids",
+
+    "metaKeywords": "kids hoodies"
+  },
+
+  {
+    "name": "Bottomwear",
+    "slug": "kids-bottomwear",
+    "description": "Comfortable bottomwear collection for kids",
+    "tagline": "Play Freely Everyday",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "kids",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["jeans", "joggers", "shorts"],
+
+    "order": 2,
+
+    "metaTitle": "Kids Bottomwear",
+
+    "metaDescription": "Comfortable bottomwear collection for kids",
+
+    "metaKeywords": "kids jeans, joggers"
+  },
+
+  {
+    "name": "Jeans",
+    "slug": "kids-bottomwear-jeans",
+    "description": "Stylish jeans collection for kids",
+    "tagline": "Denim For Every Adventure",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-bottomwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["kids-jeans", "denim", "fashion"],
+
+    "order": 1,
+
+    "metaTitle": "Kids Jeans",
+
+    "metaDescription": "Stylish jeans collection for kids",
+
+    "metaKeywords": "kids jeans"
+  },
+  {
+    "name": "Joggers",
+    "slug": "kids-bottomwear-joggers",
+    "description": "Comfortable joggers collection for kids",
+    "tagline": "Built For Endless Play",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-bottomwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["joggers", "kids", "casual"],
+
+    "order": 2,
+
+    "metaTitle": "Kids Joggers",
+
+    "metaDescription": "Comfortable joggers collection for kids",
+
+    "metaKeywords": "kids joggers"
+  },
+
+  {
+    "name": "Shorts",
+    "slug": "kids-bottomwear-shorts",
+    "description": "Cool shorts collection for kids",
+    "tagline": "Summer Ready Looks",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-bottomwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["shorts", "kids", "summer"],
+
+    "order": 3,
+
+    "metaTitle": "Kids Shorts",
+
+    "metaDescription": "Stylish shorts collection for kids",
+
+    "metaKeywords": "kids shorts"
+  },
+
+  {
+    "name": "Footwear",
+    "slug": "kids-footwear",
+    "description": "Comfortable footwear collection for kids",
+    "tagline": "Tiny Steps Big Adventures",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "kids",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sneakers", "sandals", "kids-footwear"],
+
+    "order": 3,
+
+    "metaTitle": "Kids Footwear",
+
+    "metaDescription": "Premium footwear collection for kids",
+
+    "metaKeywords": "kids footwear"
+  },
+
+  {
+    "name": "Sneakers",
+    "slug": "kids-footwear-sneakers",
+    "description": "Stylish sneakers for kids",
+    "tagline": "Run Jump Explore",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-footwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sneakers", "kids", "casual"],
+
+    "order": 1,
+
+    "metaTitle": "Kids Sneakers",
+
+    "metaDescription": "Premium sneakers collection for kids",
+
+    "metaKeywords": "kids sneakers"
+  },
+
+  {
+    "name": "Sandals",
+    "slug": "kids-footwear-sandals",
+    "description": "Comfortable sandals for kids",
+    "tagline": "Easy Everyday Comfort",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-footwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sandals", "kids", "comfort"],
+
+    "order": 2,
+
+    "metaTitle": "Kids Sandals",
+
+    "metaDescription": "Comfortable sandals collection for kids",
+
+    "metaKeywords": "kids sandals"
+  },
+
+  {
+    "name": "Ethnic Wear",
+    "slug": "kids-ethnic-wear",
+    "description": "Traditional ethnic wear collection for kids",
+    "tagline": "Festive Looks For Little Ones",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "kids",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["ethnic", "kurta-sets", "festive"],
+
+    "order": 4,
+
+    "metaTitle": "Kids Ethnic Wear",
+
+    "metaDescription": "Premium ethnic wear collection for kids",
+
+    "metaKeywords": "kids ethnic wear"
+  },
+
+  {
+    "name": "Kurta Sets",
+    "slug": "kids-ethnic-wear-kurta-sets",
+    "description": "Traditional kurta sets for kids",
+    "tagline": "Celebrate In Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-ethnic-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["kurta-sets", "kids", "festive"],
+
+    "order": 1,
+
+    "metaTitle": "Kids Kurta Sets",
+
+    "metaDescription": "Traditional kurta sets for kids",
+
+    "metaKeywords": "kids kurta sets"
+  },
+  {
+    "name": "Dresses",
+    "slug": "kids-ethnic-wear-dresses",
+    "description": "Traditional and festive dresses for kids",
+    "tagline": "Little Princess Moments",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-ethnic-wear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["kids-dresses", "ethnic", "festive"],
+
+    "order": 2,
+
+    "metaTitle": "Kids Ethnic Dresses",
+
+    "metaDescription": "Festive dresses collection for kids",
+
+    "metaKeywords": "kids ethnic dresses"
+  },
+
+  {
+    "name": "Infant Wear",
+    "slug": "kids-infant-wear",
+    "description": "Soft and comfortable infant wear collection",
+    "tagline": "Gentle Comfort For Babies",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "kids",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["babywear", "infant", "comfort"],
+
+    "order": 5,
+
+    "metaTitle": "Kids Infant Wear",
+
+    "metaDescription": "Comfortable infant wear collection for babies",
+
+    "metaKeywords": "babywear, infant wear"
+  },
+
+  {
+    "name": "Baby Sets",
+    "slug": "kids-infant-wear-baby-sets",
+    "description": "Cute baby clothing sets",
+    "tagline": "Tiny Outfits Big Smiles",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-infant-wear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["baby-sets", "infant", "kids"],
+
+    "order": 1,
+
+    "metaTitle": "Baby Sets",
+
+    "metaDescription": "Cute baby clothing sets collection",
+
+    "metaKeywords": "baby sets, infant sets"
+  },
+
+  {
+    "name": "Rompers",
+    "slug": "kids-infant-wear-rompers",
+    "description": "Soft rompers collection for babies",
+    "tagline": "Comfort In Every Move",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-infant-wear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["rompers", "babywear", "infant"],
+
+    "order": 2,
+
+    "metaTitle": "Baby Rompers",
+
+    "metaDescription": "Soft rompers collection for babies",
+
+    "metaKeywords": "baby rompers"
+  },
+
+  {
+    "name": "Sleepwear",
+    "slug": "kids-sleepwear",
+    "description": "Comfortable sleepwear collection for kids",
+    "tagline": "Dream In Comfort",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "kids",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sleepwear", "nightwear", "kids"],
+
+    "order": 6,
+
+    "metaTitle": "Kids Sleepwear",
+
+    "metaDescription": "Comfortable sleepwear collection for kids",
+
+    "metaKeywords": "kids sleepwear"
+  },
+
+  {
+    "name": "Night Suits",
+    "slug": "kids-sleepwear-night-suits",
+    "description": "Soft night suits for kids",
+    "tagline": "Sleep Tight Every Night",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-sleepwear",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["night-suits", "sleepwear", "kids"],
+
+    "order": 1,
+
+    "metaTitle": "Kids Night Suits",
+
+    "metaDescription": "Comfortable night suits for kids",
+
+    "metaKeywords": "kids night suits"
+  },
+
+  {
+    "name": "Pajama Sets",
+    "slug": "kids-sleepwear-pajama-sets",
+    "description": "Cute pajama sets for kids",
+    "tagline": "Cozy Nights Ahead",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "kids-sleepwear",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["pajama-sets", "sleepwear", "kids"],
+
+    "order": 2,
+
+    "metaTitle": "Kids Pajama Sets",
+
+    "metaDescription": "Cute pajama sets collection for kids",
+
+    "metaKeywords": "kids pajama sets"
+  }
+]

@@ -1,0 +1,520 @@
+[
+  {
+    "name": "Gifts",
+    "slug": "gifts",
+    "description": "Unique gifts and surprise collections for every occasion",
+    "tagline": "Make Every Moment Special",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 0,
+
+    "parentSlug": null,
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["gifts", "surprise", "celebration"],
+
+    "order": 10,
+
+    "metaTitle": "Gifts Collection",
+
+    "metaDescription": "Unique gifts and surprise collections for every occasion",
+
+    "metaKeywords": "gifts, hampers, surprise gifts"
+  },
+
+  {
+    "name": "Gift Hampers",
+    "slug": "gifts-gift-hampers",
+    "description": "Premium gift hampers collection",
+    "tagline": "Packed With Happiness",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "gifts",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["gift-hampers", "celebration", "premium"],
+
+    "order": 1,
+
+    "metaTitle": "Gift Hampers Collection",
+
+    "metaDescription": "Premium gift hampers collection",
+
+    "metaKeywords": "gift hampers"
+  },
+
+  {
+    "name": "Personalized Gifts",
+    "slug": "gifts-personalized-gifts",
+    "description": "Customized and personalized gifts collection",
+    "tagline": "Made Just For Them",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "gifts",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["personalized", "custom", "gifts"],
+
+    "order": 2,
+
+    "metaTitle": "Personalized Gifts Collection",
+
+    "metaDescription": "Customized and personalized gifts collection",
+
+    "metaKeywords": "personalized gifts"
+  },
+
+  {
+    "name": "Chocolates",
+    "slug": "gifts-chocolates",
+    "description": "Luxury chocolates collection",
+    "tagline": "Sweetness In Every Bite",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "gifts",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["chocolates", "sweet", "gift"],
+
+    "order": 3,
+
+    "metaTitle": "Chocolates Collection",
+
+    "metaDescription": "Luxury chocolates collection",
+
+    "metaKeywords": "gift chocolates"
+  },
+
+  {
+    "name": "Candles",
+    "slug": "gifts-candles",
+    "description": "Scented candles collection",
+    "tagline": "Light Up Beautiful Moments",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "gifts",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["candles", "decor", "fragrance"],
+
+    "order": 4,
+
+    "metaTitle": "Candles Collection",
+
+    "metaDescription": "Scented candles collection",
+
+    "metaKeywords": "scented candles"
+  },
+
+  {
+    "name": "Plants & Decor",
+    "slug": "gifts-plants-decor",
+    "description": "Plants and decor gift collection",
+    "tagline": "Gift Nature And Style",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "gifts",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["plants", "decor", "gift"],
+
+    "order": 5,
+
+    "metaTitle": "Plants & Decor Collection",
+
+    "metaDescription": "Plants and decor gift collection",
+
+    "metaKeywords": "plants, decor gifts"
+  },
+
+  {
+    "name": "Perfume Sets",
+    "slug": "gifts-perfume-sets",
+    "description": "Luxury perfume gift sets collection",
+    "tagline": "Fragrances To Remember",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "gifts",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["perfume", "fragrance", "gift"],
+
+    "order": 6,
+
+    "metaTitle": "Perfume Sets Collection",
+
+    "metaDescription": "Luxury perfume gift sets collection",
+
+    "metaKeywords": "perfume gift sets"
+  },
+  {
+    "name": "Photo Frames",
+    "slug": "gifts-photo-frames",
+    "description": "Stylish photo frames collection",
+    "tagline": "Frame Your Memories Forever",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "gifts",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["photo-frames", "memories", "decor"],
+
+    "order": 7,
+
+    "metaTitle": "Photo Frames Collection",
+
+    "metaDescription": "Stylish photo frames collection",
+
+    "metaKeywords": "photo frames"
+  },
+
+  {
+    "name": "Stationery Gifts",
+    "slug": "gifts-stationery-gifts",
+    "description": "Creative stationery gift collection",
+    "tagline": "Write Create Inspire",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "gifts",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["stationery", "creative", "gifts"],
+
+    "order": 8,
+
+    "metaTitle": "Stationery Gifts Collection",
+
+    "metaDescription": "Creative stationery gift collection",
+
+    "metaKeywords": "stationery gifts"
+  },
+
+  {
+    "name": "Tech Gifts",
+    "slug": "gifts-tech-gifts",
+    "description": "Modern tech gifts collection",
+    "tagline": "Gift Smart Technology",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "gifts",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["tech", "gadgets", "electronics"],
+
+    "order": 9,
+
+    "metaTitle": "Tech Gifts Collection",
+
+    "metaDescription": "Modern tech gifts collection",
+
+    "metaKeywords": "tech gifts, gadgets"
+  }
+]

@@ -1,0 +1,1195 @@
+[
+  {
+    "name": "Beauty & Grooming",
+    "slug": "beauty-grooming",
+    "description": "Premium beauty skincare and grooming essentials",
+    "tagline": "Glow Beyond Limits",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 0,
+
+    "parentSlug": null,
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["beauty", "skincare", "grooming"],
+
+    "order": 4,
+
+    "metaTitle": "Beauty & Grooming Collection",
+
+    "metaDescription": "Shop skincare makeup haircare and grooming products",
+
+    "metaKeywords": "beauty, skincare, grooming"
+  },
+
+  {
+    "name": "Skincare",
+    "slug": "beauty-skincare",
+    "description": "Advanced skincare essentials for glowing skin",
+    "tagline": "Healthy Skin Starts Here",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "beauty-grooming",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["skincare", "facewash", "serum"],
+
+    "order": 1,
+
+    "metaTitle": "Skincare Products",
+
+    "metaDescription": "Premium skincare products collection",
+
+    "metaKeywords": "skincare, face wash, moisturizer"
+  },
+
+  {
+    "name": "Face Wash",
+    "slug": "beauty-skincare-face-wash",
+    "description": "Refreshing face wash collection",
+    "tagline": "Freshness Every Day",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-skincare",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["facewash", "cleanser", "skincare"],
+
+    "order": 1,
+
+    "metaTitle": "Face Wash Collection",
+
+    "metaDescription": "Explore refreshing face wash products",
+
+    "metaKeywords": "face wash, cleanser"
+  },
+
+  {
+    "name": "Moisturizer",
+    "slug": "beauty-skincare-moisturizer",
+    "description": "Hydrating moisturizers for healthy skin",
+    "tagline": "Hydration That Lasts",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-skincare",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["moisturizer", "hydration", "skincare"],
+
+    "order": 2,
+
+    "metaTitle": "Moisturizers Collection",
+
+    "metaDescription": "Premium moisturizers for healthy skin",
+
+    "metaKeywords": "moisturizer, skincare"
+  },
+
+  {
+    "name": "Face Serum",
+    "slug": "beauty-skincare-face-serum",
+    "description": "Advanced face serums for glowing skin",
+    "tagline": "Glow Starts Here",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-skincare",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["serum", "glow", "skincare"],
+
+    "order": 3,
+
+    "metaTitle": "Face Serums Collection",
+
+    "metaDescription": "Premium face serums collection",
+
+    "metaKeywords": "face serum, skincare serum"
+  },
+
+  {
+    "name": "Sunscreen",
+    "slug": "beauty-skincare-sunscreen",
+    "description": "Protective sunscreen products",
+    "tagline": "Protect Your Glow",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-skincare",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["sunscreen", "spf", "skincare"],
+
+    "order": 4,
+
+    "metaTitle": "Sunscreen Collection",
+
+    "metaDescription": "Protective sunscreen collection",
+
+    "metaKeywords": "sunscreen, spf"
+  },
+
+  {
+    "name": "Makeup",
+    "slug": "beauty-makeup",
+    "description": "Premium makeup essentials collection",
+    "tagline": "Beauty In Every Shade",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "beauty-grooming",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["makeup", "lipsticks", "foundation"],
+
+    "order": 2,
+
+    "metaTitle": "Makeup Collection",
+
+    "metaDescription": "Premium makeup essentials collection",
+
+    "metaKeywords": "makeup, lipsticks, foundation"
+  },
+  {
+    "name": "Lipsticks",
+    "slug": "beauty-makeup-lipsticks",
+    "description": "Premium lipstick shades collection",
+    "tagline": "Bold Lips Bold You",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-makeup",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["lipsticks", "beauty", "makeup"],
+
+    "order": 1,
+
+    "metaTitle": "Lipsticks Collection",
+
+    "metaDescription": "Premium lipstick shades collection",
+
+    "metaKeywords": "lipsticks, matte lipstick"
+  },
+
+  {
+    "name": "Foundations",
+    "slug": "beauty-makeup-foundations",
+    "description": "Smooth foundation products for flawless makeup",
+    "tagline": "Your Perfect Base",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-makeup",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["foundation", "makeup", "beauty"],
+
+    "order": 2,
+
+    "metaTitle": "Foundations Collection",
+
+    "metaDescription": "Premium foundations collection",
+
+    "metaKeywords": "foundation makeup"
+  },
+
+  {
+    "name": "Makeup Kits",
+    "slug": "beauty-makeup-makeup-kits",
+    "description": "Complete makeup kits for every occasion",
+    "tagline": "Everything In One Kit",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-makeup",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["makeup-kit", "beauty", "cosmetics"],
+
+    "order": 3,
+
+    "metaTitle": "Makeup Kits Collection",
+
+    "metaDescription": "Complete makeup kits collection",
+
+    "metaKeywords": "makeup kits, beauty kits"
+  },
+
+  {
+    "name": "Haircare",
+    "slug": "beauty-haircare",
+    "description": "Haircare essentials for healthy hair",
+    "tagline": "Strong Healthy Beautiful",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "beauty-grooming",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["haircare", "shampoo", "conditioner"],
+
+    "order": 3,
+
+    "metaTitle": "Haircare Collection",
+
+    "metaDescription": "Premium haircare essentials collection",
+
+    "metaKeywords": "haircare, shampoo, conditioner"
+  },
+
+  {
+    "name": "Shampoo",
+    "slug": "beauty-haircare-shampoo",
+    "description": "Refreshing shampoo collection",
+    "tagline": "Fresh Hair Every Wash",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-haircare",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["shampoo", "haircare", "cleanser"],
+
+    "order": 1,
+
+    "metaTitle": "Shampoo Collection",
+
+    "metaDescription": "Refreshing shampoo collection",
+
+    "metaKeywords": "shampoo, hair cleanser"
+  },
+
+  {
+    "name": "Hair Oils",
+    "slug": "beauty-haircare-hair-oils",
+    "description": "Nourishing hair oils collection",
+    "tagline": "Nourish Every Strand",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-haircare",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["hair-oil", "haircare", "nourishment"],
+
+    "order": 2,
+
+    "metaTitle": "Hair Oils Collection",
+
+    "metaDescription": "Premium nourishing hair oils collection",
+
+    "metaKeywords": "hair oils, nourishing oils"
+  },
+
+  {
+    "name": "Conditioners",
+    "slug": "beauty-haircare-conditioners",
+    "description": "Smooth and nourishing conditioners",
+    "tagline": "Silky Hair Daily",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-haircare",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["conditioner", "haircare", "smooth-hair"],
+
+    "order": 3,
+
+    "metaTitle": "Conditioners Collection",
+
+    "metaDescription": "Premium conditioners collection",
+
+    "metaKeywords": "hair conditioner"
+  },
+  {
+    "name": "Fragrances",
+    "slug": "beauty-fragrances",
+    "description": "Luxury fragrances and perfumes collection",
+    "tagline": "Leave A Lasting Impression",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "beauty-grooming",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["perfumes", "fragrances", "body-mist"],
+
+    "order": 4,
+
+    "metaTitle": "Fragrances Collection",
+
+    "metaDescription": "Luxury perfumes and fragrances collection",
+
+    "metaKeywords": "perfumes, fragrances, body mist"
+  },
+
+  {
+    "name": "Perfumes",
+    "slug": "beauty-fragrances-perfumes",
+    "description": "Luxury perfumes collection",
+    "tagline": "Signature Scent Everyday",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-fragrances",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["perfumes", "luxury", "fragrance"],
+
+    "order": 1,
+
+    "metaTitle": "Perfumes Collection",
+
+    "metaDescription": "Luxury perfumes collection",
+
+    "metaKeywords": "perfumes, luxury perfumes"
+  },
+
+  {
+    "name": "Body Mist",
+    "slug": "beauty-fragrances-body-mist",
+    "description": "Refreshing body mist collection",
+    "tagline": "Freshness All Day",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-fragrances",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["body-mist", "freshness", "fragrance"],
+
+    "order": 2,
+
+    "metaTitle": "Body Mist Collection",
+
+    "metaDescription": "Refreshing body mist collection",
+
+    "metaKeywords": "body mist, fragrance mist"
+  },
+
+  {
+    "name": "Men's Grooming",
+    "slug": "beauty-mens-grooming",
+    "description": "Premium men's grooming essentials",
+    "tagline": "Sharp Looks Everyday",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "beauty-grooming",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["mens-grooming", "trimmers", "beard-care"],
+
+    "order": 5,
+
+    "metaTitle": "Men Grooming Collection",
+
+    "metaDescription": "Premium grooming essentials for men",
+
+    "metaKeywords": "mens grooming, beard care"
+  },
+
+  {
+    "name": "Trimmers",
+    "slug": "beauty-mens-grooming-trimmers",
+    "description": "Advanced grooming trimmers collection",
+    "tagline": "Precision Grooming Simplified",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-mens-grooming",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["trimmers", "grooming", "mens-care"],
+
+    "order": 1,
+
+    "metaTitle": "Trimmers Collection",
+
+    "metaDescription": "Premium trimmers collection",
+
+    "metaKeywords": "trimmers, beard trimmers"
+  },
+
+  {
+    "name": "Beard Care",
+    "slug": "beauty-mens-grooming-beard-care",
+    "description": "Beard oils and beard care essentials",
+    "tagline": "Beard Goals Daily",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-mens-grooming",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["beard-care", "beard-oil", "mens-grooming"],
+
+    "order": 2,
+
+    "metaTitle": "Beard Care Collection",
+
+    "metaDescription": "Premium beard care products collection",
+
+    "metaKeywords": "beard care, beard oil"
+  },
+
+  {
+    "name": "Bath & Body",
+    "slug": "beauty-bath-body",
+    "description": "Bath and body essentials collection",
+    "tagline": "Refresh Recharge Repeat",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 1,
+
+    "parentSlug": "beauty-grooming",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["bath-body", "body-wash", "body-lotion"],
+
+    "order": 6,
+
+    "metaTitle": "Bath & Body Collection",
+
+    "metaDescription": "Premium bath and body essentials collection",
+
+    "metaKeywords": "bath body, body wash"
+  },
+
+  {
+    "name": "Body Wash",
+    "slug": "beauty-bath-body-body-wash",
+    "description": "Refreshing body wash collection",
+    "tagline": "Freshness Starts Here",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-bath-body",
+
+    "productCount": 0,
+
+    "isFeatured": true,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["body-wash", "bath", "freshness"],
+
+    "order": 1,
+
+    "metaTitle": "Body Wash Collection",
+
+    "metaDescription": "Refreshing body wash collection",
+
+    "metaKeywords": "body wash"
+  },
+
+  {
+    "name": "Body Lotion",
+    "slug": "beauty-bath-body-body-lotion",
+    "description": "Hydrating body lotion collection",
+    "tagline": "Soft Skin Everyday",
+
+    "image": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "bannerImage": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "sliderImages": [],
+
+    "icon": {
+      "public_id": "",
+      "url": ""
+    },
+
+    "level": 2,
+
+    "parentSlug": "beauty-bath-body",
+
+    "productCount": 0,
+
+    "isFeatured": false,
+
+    "isActive": true,
+
+    "isDeleted": false,
+
+    "rejectionReason": "",
+
+    "status": "approved",
+
+    "proposedBy": null,
+
+    "tags": ["body-lotion", "hydration", "skincare"],
+
+    "order": 2,
+
+    "metaTitle": "Body Lotion Collection",
+
+    "metaDescription": "Hydrating body lotion collection",
+
+    "metaKeywords": "body lotion, skincare lotion"
+  }
+]
