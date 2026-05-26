@@ -1,28 +1,47 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import CustomerLayout from "../layout/CustomerLayout";
-import Home from "../pages/Home/Home";
-import Category from "../pages/Category/Categories";
-import CategoryPage from "../pages/Category/CategoryPage";
-import ProductListing from "../pages/Products/ProductListing";
+import {
+  Routes,
+  Route,
+} from "react-router-dom";
 
+import CustomerLayout from "@layouts/customer/CustomerLayout";
+
+import Container from "@shared/components/ui/Container";
+
+import Section from "@shared/components/ui/Section";
+
+import Heading from "@shared/components/ui/Heading";
+
+import Button from "@shared/components/ui/Button";
+
+const HomePage = () => {
+  return (
+    <Section>
+      <Container>
+        <Heading
+          title="Smart Cart"
+          subtitle="AI powered ecommerce experience"
+        />
+
+        <Button>
+          Explore Now
+        </Button>
+      </Container>
+    </Section>
+  );
+};
 
 const CustomerRoutes = () => {
   return (
-    
-      <>
-      <Routes>
-        <Route element={<CustomerLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/categories" element={<Category />} />
-          <Route path="/categories/*" element={<CategoryPage />} />
-          <Route path="/products" element={<ProductListing />} />
-
-
-
-        </Route>
-      </Routes>
-      </>
-    
+    <Routes>
+      <Route
+        element={<CustomerLayout />}
+      >
+        <Route
+          path="/"
+          element={<HomePage />}
+        />
+      </Route>
+    </Routes>
   );
 };
 
