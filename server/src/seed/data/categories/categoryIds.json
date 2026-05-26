@@ -1,0 +1,834 @@
+{
+  "men": {
+    "id": "6a1556b567b6458e54c8120c",
+    "name": "Men"
+  },
+  "women": {
+    "id": "6a1556b567b6458e54c81210",
+    "name": "Women"
+  },
+  "kids": {
+    "id": "6a1556b567b6458e54c81215",
+    "name": "Kids"
+  },
+  "beauty-grooming": {
+    "id": "6a1556b567b6458e54c81219",
+    "name": "Beauty & Grooming"
+  },
+  "electronics": {
+    "id": "6a1556b567b6458e54c8121d",
+    "name": "Electronics"
+  },
+  "accessories": {
+    "id": "6a1556b567b6458e54c81221",
+    "name": "Accessories"
+  },
+  "groceries": {
+    "id": "6a1556b667b6458e54c81225",
+    "name": "Groceries"
+  },
+  "home-living": {
+    "id": "6a1556b667b6458e54c81228",
+    "name": "Home & Living"
+  },
+  "sports-gym": {
+    "id": "6a1556b667b6458e54c8122b",
+    "name": "Sports & Gym"
+  },
+  "gifts": {
+    "id": "6a1556b667b6458e54c8122e",
+    "name": "Gifts"
+  },
+  "men-topwear": {
+    "id": "6a1556b667b6458e54c81231",
+    "name": "Topwear"
+  },
+  "men-bottomwear": {
+    "id": "6a1556b667b6458e54c81235",
+    "name": "Bottomwear"
+  },
+  "men-footwear": {
+    "id": "6a1556b667b6458e54c81239",
+    "name": "Footwear"
+  },
+  "men-ethnic-wear": {
+    "id": "6a1556b667b6458e54c8123d",
+    "name": "Ethnic Wear"
+  },
+  "men-formal-wear": {
+    "id": "6a1556b667b6458e54c81241",
+    "name": "Formal Wear"
+  },
+  "men-accessories": {
+    "id": "6a1556b767b6458e54c81245",
+    "name": "Accessories"
+  },
+  "women-western-wear": {
+    "id": "6a1556b767b6458e54c81249",
+    "name": "Western Wear"
+  },
+  "women-ethnic-wear": {
+    "id": "6a1556b767b6458e54c8124d",
+    "name": "Ethnic Wear"
+  },
+  "women-footwear": {
+    "id": "6a1556b767b6458e54c81251",
+    "name": "Footwear"
+  },
+  "women-gym-wear": {
+    "id": "6a1556b767b6458e54c81255",
+    "name": "Gym Wear"
+  },
+  "women-formal-wear": {
+    "id": "6a1556b767b6458e54c81259",
+    "name": "Formal Wear"
+  },
+  "women-accessories": {
+    "id": "6a1556b767b6458e54c8125d",
+    "name": "Accessories"
+  },
+  "kids-topwear": {
+    "id": "6a1556b767b6458e54c81261",
+    "name": "Topwear"
+  },
+  "kids-bottomwear": {
+    "id": "6a1556b867b6458e54c81265",
+    "name": "Bottomwear"
+  },
+  "kids-footwear": {
+    "id": "6a1556b867b6458e54c81269",
+    "name": "Footwear"
+  },
+  "kids-ethnic-wear": {
+    "id": "6a1556b867b6458e54c8126d",
+    "name": "Ethnic Wear"
+  },
+  "kids-infant-wear": {
+    "id": "6a1556b867b6458e54c81271",
+    "name": "Infant Wear"
+  },
+  "kids-sleepwear": {
+    "id": "6a1556b867b6458e54c81275",
+    "name": "Sleepwear"
+  },
+  "beauty-skincare": {
+    "id": "6a1556b867b6458e54c81279",
+    "name": "Skincare"
+  },
+  "beauty-makeup": {
+    "id": "6a1556b867b6458e54c8127d",
+    "name": "Makeup"
+  },
+  "beauty-haircare": {
+    "id": "6a1556b867b6458e54c81281",
+    "name": "Haircare"
+  },
+  "beauty-fragrances": {
+    "id": "6a1556b967b6458e54c81285",
+    "name": "Fragrances"
+  },
+  "beauty-mens-grooming": {
+    "id": "6a1556b967b6458e54c81289",
+    "name": "Men's Grooming"
+  },
+  "beauty-bath-body": {
+    "id": "6a1556b967b6458e54c8128d",
+    "name": "Bath & Body"
+  },
+  "electronics-smartphones": {
+    "id": "6a1556b967b6458e54c81291",
+    "name": "Smartphones"
+  },
+  "electronics-laptops": {
+    "id": "6a1556b967b6458e54c81295",
+    "name": "Laptops"
+  },
+  "electronics-audio": {
+    "id": "6a1556b967b6458e54c81299",
+    "name": "Audio"
+  },
+  "electronics-smart-wearables": {
+    "id": "6a1556b967b6458e54c8129d",
+    "name": "Smart Wearables"
+  },
+  "electronics-cameras": {
+    "id": "6a1556b967b6458e54c812a1",
+    "name": "Cameras"
+  },
+  "electronics-smart-tvs": {
+    "id": "6a1556ba67b6458e54c812a5",
+    "name": "Smart TVs"
+  },
+  "electronics-tablets": {
+    "id": "6a1556ba67b6458e54c812a9",
+    "name": "Tablets"
+  },
+  "electronics-gaming": {
+    "id": "6a1556ba67b6458e54c812ad",
+    "name": "Gaming"
+  },
+  "electronics-appliances": {
+    "id": "6a1556ba67b6458e54c812b1",
+    "name": "Appliances"
+  },
+  "accessories-bags": {
+    "id": "6a1556ba67b6458e54c812b5",
+    "name": "Bags"
+  },
+  "accessories-jewellery": {
+    "id": "6a1556ba67b6458e54c812b9",
+    "name": "Jewellery"
+  },
+  "accessories-watches": {
+    "id": "6a1556ba67b6458e54c812bd",
+    "name": "Watches"
+  },
+  "accessories-sunglasses": {
+    "id": "6a1556ba67b6458e54c812c1",
+    "name": "Sunglasses"
+  },
+  "accessories-fashion-accessories": {
+    "id": "6a1556bb67b6458e54c812c5",
+    "name": "Fashion Accessories"
+  },
+  "groceries-fruits-vegetables": {
+    "id": "6a1556bb67b6458e54c812c9",
+    "name": "Fruits & Vegetables"
+  },
+  "groceries-dairy-bakery": {
+    "id": "6a1556bb67b6458e54c812cd",
+    "name": "Dairy & Bakery"
+  },
+  "groceries-staples": {
+    "id": "6a1556bb67b6458e54c812d1",
+    "name": "Staples"
+  },
+  "groceries-snacks-munchies": {
+    "id": "6a1556bb67b6458e54c812d5",
+    "name": "Snacks & Munchies"
+  },
+  "groceries-beverages": {
+    "id": "6a1556bb67b6458e54c812d9",
+    "name": "Beverages"
+  },
+  "groceries-home-care": {
+    "id": "6a1556bb67b6458e54c812dd",
+    "name": "Home Care"
+  },
+  "groceries-organic-products": {
+    "id": "6a1556bb67b6458e54c812e1",
+    "name": "Organic Products"
+  },
+  "groceries-pet-care": {
+    "id": "6a1556bc67b6458e54c812e5",
+    "name": "Pet Care"
+  },
+  "home-living-bedroom": {
+    "id": "6a1556bc67b6458e54c812e9",
+    "name": "Bedroom"
+  },
+  "home-living-living-room": {
+    "id": "6a1556bc67b6458e54c812ed",
+    "name": "Living Room"
+  },
+  "home-living-home-decor": {
+    "id": "6a1556bc67b6458e54c812f1",
+    "name": "Home Decor"
+  },
+  "home-living-kitchen-dining": {
+    "id": "6a1556bc67b6458e54c812f5",
+    "name": "Kitchen & Dining"
+  },
+  "home-living-bathroom": {
+    "id": "6a1556bc67b6458e54c812f9",
+    "name": "Bathroom"
+  },
+  "home-living-outdoor": {
+    "id": "6a1556bc67b6458e54c812fd",
+    "name": "Outdoor"
+  },
+  "sports-gym-gym-wear": {
+    "id": "6a1556bc67b6458e54c81301",
+    "name": "Gym Wear"
+  },
+  "sports-gym-footwear": {
+    "id": "6a1556bd67b6458e54c81305",
+    "name": "Footwear"
+  },
+  "sports-gym-equipment": {
+    "id": "6a1556bd67b6458e54c81309",
+    "name": "Equipment"
+  },
+  "sports-gym-sports-gear": {
+    "id": "6a1556bd67b6458e54c8130d",
+    "name": "Sports Gear"
+  },
+  "sports-gym-recovery": {
+    "id": "6a1556bd67b6458e54c81311",
+    "name": "Recovery"
+  },
+  "sports-gym-smart-fitness": {
+    "id": "6a1556bd67b6458e54c81315",
+    "name": "Smart Fitness"
+  },
+  "gifts-gift-hampers": {
+    "id": "6a1556bd67b6458e54c81319",
+    "name": "Gift Hampers"
+  },
+  "gifts-personalized-gifts": {
+    "id": "6a1556bd67b6458e54c8131d",
+    "name": "Personalized Gifts"
+  },
+  "gifts-chocolates": {
+    "id": "6a1556bd67b6458e54c81321",
+    "name": "Chocolates"
+  },
+  "gifts-candles": {
+    "id": "6a1556be67b6458e54c81325",
+    "name": "Candles"
+  },
+  "gifts-plants-decor": {
+    "id": "6a1556be67b6458e54c81329",
+    "name": "Plants & Decor"
+  },
+  "gifts-perfume-sets": {
+    "id": "6a1556be67b6458e54c8132d",
+    "name": "Perfume Sets"
+  },
+  "gifts-photo-frames": {
+    "id": "6a1556be67b6458e54c81331",
+    "name": "Photo Frames"
+  },
+  "gifts-stationery-gifts": {
+    "id": "6a1556be67b6458e54c81335",
+    "name": "Stationery Gifts"
+  },
+  "gifts-tech-gifts": {
+    "id": "6a1556be67b6458e54c81339",
+    "name": "Tech Gifts"
+  },
+  "men-topwear-tshirts": {
+    "id": "6a1556be67b6458e54c8133d",
+    "name": "T-Shirts"
+  },
+  "men-topwear-shirts": {
+    "id": "6a1556bf67b6458e54c81342",
+    "name": "Shirts"
+  },
+  "men-topwear-hoodies": {
+    "id": "6a1556bf67b6458e54c81347",
+    "name": "Hoodies"
+  },
+  "men-topwear-jackets": {
+    "id": "6a1556bf67b6458e54c8134c",
+    "name": "Jackets"
+  },
+  "men-topwear-sweatshirts": {
+    "id": "6a1556bf67b6458e54c81351",
+    "name": "Sweatshirts"
+  },
+  "men-bottomwear-jeans": {
+    "id": "6a1556bf67b6458e54c81356",
+    "name": "Jeans"
+  },
+  "men-bottomwear-cargos": {
+    "id": "6a1556bf67b6458e54c8135b",
+    "name": "Cargos"
+  },
+  "men-bottomwear-trousers": {
+    "id": "6a1556c067b6458e54c81360",
+    "name": "Trousers"
+  },
+  "men-bottomwear-shorts": {
+    "id": "6a1556c067b6458e54c81365",
+    "name": "Shorts"
+  },
+  "men-footwear-sneakers": {
+    "id": "6a1556c067b6458e54c8136a",
+    "name": "Sneakers"
+  },
+  "men-footwear-casual-shoes": {
+    "id": "6a1556c067b6458e54c8136f",
+    "name": "Casual Shoes"
+  },
+  "men-footwear-formal-shoes": {
+    "id": "6a1556c067b6458e54c81374",
+    "name": "Formal Shoes"
+  },
+  "men-footwear-sandals": {
+    "id": "6a1556c067b6458e54c81379",
+    "name": "Sandals"
+  },
+  "men-ethnic-wear-kurtas": {
+    "id": "6a1556c167b6458e54c8137e",
+    "name": "Kurtas"
+  },
+  "men-ethnic-wear-sherwanis": {
+    "id": "6a1556c167b6458e54c81383",
+    "name": "Sherwanis"
+  },
+  "men-ethnic-wear-ethnic-sets": {
+    "id": "6a1556c167b6458e54c81388",
+    "name": "Ethnic Sets"
+  },
+  "men-formal-wear-blazers": {
+    "id": "6a1556c167b6458e54c8138d",
+    "name": "Blazers"
+  },
+  "men-formal-wear-suits": {
+    "id": "6a1556c167b6458e54c81392",
+    "name": "Suits"
+  },
+  "men-formal-wear-waistcoats": {
+    "id": "6a1556c167b6458e54c81397",
+    "name": "Waistcoats"
+  },
+  "men-accessories-wallets": {
+    "id": "6a1556c267b6458e54c8139c",
+    "name": "Wallets"
+  },
+  "men-accessories-belts": {
+    "id": "6a1556c267b6458e54c813a1",
+    "name": "Belts"
+  },
+  "men-accessories-caps": {
+    "id": "6a1556c267b6458e54c813a6",
+    "name": "Caps"
+  },
+  "men-accessories-watches": {
+    "id": "6a1556c267b6458e54c813ab",
+    "name": "Watches"
+  },
+  "women-western-wear-tops": {
+    "id": "6a1556c267b6458e54c813b0",
+    "name": "Tops"
+  },
+  "women-western-wear-dresses": {
+    "id": "6a1556c367b6458e54c813b5",
+    "name": "Dresses"
+  },
+  "women-western-wear-coord-sets": {
+    "id": "6a1556c367b6458e54c813ba",
+    "name": "Co-ord Sets"
+  },
+  "women-western-wear-jumpsuits": {
+    "id": "6a1556c367b6458e54c813bf",
+    "name": "Jumpsuits"
+  },
+  "women-western-wear-tshirts": {
+    "id": "6a1556c367b6458e54c813c4",
+    "name": "T-Shirts"
+  },
+  "women-ethnic-wear-sarees": {
+    "id": "6a1556c367b6458e54c813c9",
+    "name": "Sarees"
+  },
+  "women-ethnic-wear-lehengas": {
+    "id": "6a1556c367b6458e54c813ce",
+    "name": "Lehengas"
+  },
+  "women-ethnic-wear-kurtis": {
+    "id": "6a1556c467b6458e54c813d3",
+    "name": "Kurtis"
+  },
+  "women-ethnic-wear-ethnic-sets": {
+    "id": "6a1556c467b6458e54c813d8",
+    "name": "Ethnic Sets"
+  },
+  "women-footwear-heels": {
+    "id": "6a1556c467b6458e54c813dd",
+    "name": "Heels"
+  },
+  "women-footwear-flats": {
+    "id": "6a1556c467b6458e54c813e2",
+    "name": "Flats"
+  },
+  "women-footwear-sneakers": {
+    "id": "6a1556c467b6458e54c813e7",
+    "name": "Sneakers"
+  },
+  "women-footwear-sandals": {
+    "id": "6a1556c467b6458e54c813ec",
+    "name": "Sandals"
+  },
+  "women-gym-wear-sports-bras": {
+    "id": "6a1556c567b6458e54c813f1",
+    "name": "Sports Bras"
+  },
+  "women-gym-wear-leggings": {
+    "id": "6a1556c567b6458e54c813f6",
+    "name": "Leggings"
+  },
+  "women-gym-wear-gym-tops": {
+    "id": "6a1556c567b6458e54c813fb",
+    "name": "Gym Tops"
+  },
+  "women-formal-wear-blazers": {
+    "id": "6a1556c567b6458e54c81400",
+    "name": "Blazers"
+  },
+  "women-formal-wear-trousers": {
+    "id": "6a1556c567b6458e54c81405",
+    "name": "Trousers"
+  },
+  "women-formal-wear-shirts": {
+    "id": "6a1556c567b6458e54c8140a",
+    "name": "Shirts"
+  },
+  "women-accessories-handbags": {
+    "id": "6a1556c667b6458e54c8140f",
+    "name": "Handbags"
+  },
+  "women-accessories-jewellery": {
+    "id": "6a1556c667b6458e54c81414",
+    "name": "Jewellery"
+  },
+  "women-accessories-sunglasses": {
+    "id": "6a1556c667b6458e54c81419",
+    "name": "Sunglasses"
+  },
+  "kids-topwear-graphic-tees": {
+    "id": "6a1556c667b6458e54c8141e",
+    "name": "Graphic Tees"
+  },
+  "kids-topwear-shirts": {
+    "id": "6a1556c667b6458e54c81423",
+    "name": "Shirts"
+  },
+  "kids-topwear-hoodies": {
+    "id": "6a1556c667b6458e54c81428",
+    "name": "Hoodies"
+  },
+  "kids-bottomwear-jeans": {
+    "id": "6a1556c767b6458e54c8142d",
+    "name": "Jeans"
+  },
+  "kids-bottomwear-joggers": {
+    "id": "6a1556c767b6458e54c81432",
+    "name": "Joggers"
+  },
+  "kids-bottomwear-shorts": {
+    "id": "6a1556c767b6458e54c81437",
+    "name": "Shorts"
+  },
+  "kids-footwear-sneakers": {
+    "id": "6a1556c767b6458e54c8143c",
+    "name": "Sneakers"
+  },
+  "kids-footwear-sandals": {
+    "id": "6a1556c767b6458e54c81441",
+    "name": "Sandals"
+  },
+  "kids-ethnic-wear-kurta-sets": {
+    "id": "6a1556c767b6458e54c81446",
+    "name": "Kurta Sets"
+  },
+  "kids-ethnic-wear-dresses": {
+    "id": "6a1556c767b6458e54c8144b",
+    "name": "Dresses"
+  },
+  "kids-infant-wear-baby-sets": {
+    "id": "6a1556c867b6458e54c81450",
+    "name": "Baby Sets"
+  },
+  "kids-infant-wear-rompers": {
+    "id": "6a1556c867b6458e54c81455",
+    "name": "Rompers"
+  },
+  "kids-sleepwear-night-suits": {
+    "id": "6a1556c867b6458e54c8145a",
+    "name": "Night Suits"
+  },
+  "kids-sleepwear-pajama-sets": {
+    "id": "6a1556c867b6458e54c8145f",
+    "name": "Pajama Sets"
+  },
+  "beauty-skincare-face-wash": {
+    "id": "6a1556c867b6458e54c81464",
+    "name": "Face Wash"
+  },
+  "beauty-skincare-moisturizer": {
+    "id": "6a1556c867b6458e54c81469",
+    "name": "Moisturizer"
+  },
+  "beauty-skincare-face-serum": {
+    "id": "6a1556c967b6458e54c8146e",
+    "name": "Face Serum"
+  },
+  "beauty-skincare-sunscreen": {
+    "id": "6a1556c967b6458e54c81473",
+    "name": "Sunscreen"
+  },
+  "beauty-makeup-lipsticks": {
+    "id": "6a1556c967b6458e54c81478",
+    "name": "Lipsticks"
+  },
+  "beauty-makeup-foundations": {
+    "id": "6a1556c967b6458e54c8147d",
+    "name": "Foundations"
+  },
+  "beauty-makeup-makeup-kits": {
+    "id": "6a1556c967b6458e54c81482",
+    "name": "Makeup Kits"
+  },
+  "beauty-haircare-shampoo": {
+    "id": "6a1556c967b6458e54c81487",
+    "name": "Shampoo"
+  },
+  "beauty-haircare-hair-oils": {
+    "id": "6a1556ca67b6458e54c8148c",
+    "name": "Hair Oils"
+  },
+  "beauty-haircare-conditioners": {
+    "id": "6a1556ca67b6458e54c81491",
+    "name": "Conditioners"
+  },
+  "beauty-fragrances-perfumes": {
+    "id": "6a1556ca67b6458e54c81496",
+    "name": "Perfumes"
+  },
+  "beauty-fragrances-body-mist": {
+    "id": "6a1556ca67b6458e54c8149b",
+    "name": "Body Mist"
+  },
+  "beauty-mens-grooming-trimmers": {
+    "id": "6a1556ca67b6458e54c814a0",
+    "name": "Trimmers"
+  },
+  "beauty-mens-grooming-beard-care": {
+    "id": "6a1556ca67b6458e54c814a5",
+    "name": "Beard Care"
+  },
+  "beauty-bath-body-body-wash": {
+    "id": "6a1556cb67b6458e54c814aa",
+    "name": "Body Wash"
+  },
+  "beauty-bath-body-body-lotion": {
+    "id": "6a1556cb67b6458e54c814af",
+    "name": "Body Lotion"
+  },
+  "electronics-audio-earbuds": {
+    "id": "6a1556cb67b6458e54c814b4",
+    "name": "Earbuds"
+  },
+  "electronics-audio-headphones": {
+    "id": "6a1556cb67b6458e54c814b9",
+    "name": "Headphones"
+  },
+  "electronics-audio-speakers": {
+    "id": "6a1556cb67b6458e54c814be",
+    "name": "Speakers"
+  },
+  "electronics-smart-wearables-smart-watches": {
+    "id": "6a1556cb67b6458e54c814c3",
+    "name": "Smart Watches"
+  },
+  "electronics-smart-wearables-fitness-bands": {
+    "id": "6a1556cc67b6458e54c814c8",
+    "name": "Fitness Bands"
+  },
+  "electronics-gaming-gaming-consoles": {
+    "id": "6a1556cc67b6458e54c814cd",
+    "name": "Gaming Consoles"
+  },
+  "electronics-gaming-gaming-accessories": {
+    "id": "6a1556cc67b6458e54c814d2",
+    "name": "Gaming Accessories"
+  },
+  "electronics-appliances-kitchen-appliances": {
+    "id": "6a1556cc67b6458e54c814d7",
+    "name": "Kitchen Appliances"
+  },
+  "electronics-appliances-home-appliances": {
+    "id": "6a1556cc67b6458e54c814dc",
+    "name": "Home Appliances"
+  },
+  "accessories-bags-backpacks": {
+    "id": "6a1556cc67b6458e54c814e1",
+    "name": "Backpacks"
+  },
+  "accessories-bags-handbags": {
+    "id": "6a1556cd67b6458e54c814e6",
+    "name": "Handbags"
+  },
+  "accessories-bags-travel-bags": {
+    "id": "6a1556cd67b6458e54c814eb",
+    "name": "Travel Bags"
+  },
+  "accessories-jewellery-necklaces": {
+    "id": "6a1556cd67b6458e54c814f0",
+    "name": "Necklaces"
+  },
+  "accessories-jewellery-earrings": {
+    "id": "6a1556cd67b6458e54c814f5",
+    "name": "Earrings"
+  },
+  "accessories-jewellery-rings": {
+    "id": "6a1556cd67b6458e54c814fa",
+    "name": "Rings"
+  },
+  "accessories-watches-analog-watches": {
+    "id": "6a1556cd67b6458e54c814ff",
+    "name": "Analog Watches"
+  },
+  "accessories-watches-smart-watches": {
+    "id": "6a1556ce67b6458e54c81504",
+    "name": "Smart Watches"
+  },
+  "accessories-sunglasses-men-sunglasses": {
+    "id": "6a1556ce67b6458e54c81509",
+    "name": "Men Sunglasses"
+  },
+  "accessories-sunglasses-women-sunglasses": {
+    "id": "6a1556ce67b6458e54c8150e",
+    "name": "Women Sunglasses"
+  },
+  "accessories-fashion-accessories-belts": {
+    "id": "6a1556ce67b6458e54c81513",
+    "name": "Belts"
+  },
+  "accessories-fashion-accessories-wallets": {
+    "id": "6a1556ce67b6458e54c81518",
+    "name": "Wallets"
+  },
+  "accessories-fashion-accessories-caps": {
+    "id": "6a1556ce67b6458e54c8151d",
+    "name": "Caps"
+  },
+  "groceries-staples-rice": {
+    "id": "6a1556cf67b6458e54c81522",
+    "name": "Rice"
+  },
+  "groceries-staples-flour": {
+    "id": "6a1556cf67b6458e54c81527",
+    "name": "Flour"
+  },
+  "groceries-staples-pulses": {
+    "id": "6a1556cf67b6458e54c8152c",
+    "name": "Pulses"
+  },
+  "home-living-bedroom-bedsheets": {
+    "id": "6a1556cf67b6458e54c81531",
+    "name": "Bedsheets"
+  },
+  "home-living-bedroom-pillows": {
+    "id": "6a1556cf67b6458e54c81536",
+    "name": "Pillows"
+  },
+  "home-living-bedroom-blankets": {
+    "id": "6a1556cf67b6458e54c8153b",
+    "name": "Blankets"
+  },
+  "home-living-living-room-cushions": {
+    "id": "6a1556d067b6458e54c81540",
+    "name": "Cushions"
+  },
+  "home-living-living-room-curtains": {
+    "id": "6a1556d067b6458e54c81545",
+    "name": "Curtains"
+  },
+  "home-living-living-room-rugs": {
+    "id": "6a1556d067b6458e54c8154a",
+    "name": "Rugs"
+  },
+  "home-living-home-decor-wall-art": {
+    "id": "6a1556d067b6458e54c8154f",
+    "name": "Wall Art"
+  },
+  "home-living-home-decor-lamps": {
+    "id": "6a1556d067b6458e54c81554",
+    "name": "Lamps"
+  },
+  "home-living-home-decor-vases": {
+    "id": "6a1556d067b6458e54c81559",
+    "name": "Vases"
+  },
+  "home-living-kitchen-dining-dinnerware": {
+    "id": "6a1556d167b6458e54c8155e",
+    "name": "Dinnerware"
+  },
+  "home-living-kitchen-dining-storage-boxes": {
+    "id": "6a1556d167b6458e54c81563",
+    "name": "Storage Boxes"
+  },
+  "home-living-kitchen-dining-cookware": {
+    "id": "6a1556d167b6458e54c81568",
+    "name": "Cookware"
+  },
+  "home-living-bathroom-bath-towels": {
+    "id": "6a1556d167b6458e54c8156d",
+    "name": "Bath Towels"
+  },
+  "home-living-bathroom-bath-accessories": {
+    "id": "6a1556d167b6458e54c81572",
+    "name": "Bath Accessories"
+  },
+  "home-living-outdoor-garden-decor": {
+    "id": "6a1556d167b6458e54c81577",
+    "name": "Garden Decor"
+  },
+  "home-living-outdoor-outdoor-lighting": {
+    "id": "6a1556d267b6458e54c8157c",
+    "name": "Outdoor Lighting"
+  },
+  "sports-gym-gym-wear-compression-wear": {
+    "id": "6a1556d267b6458e54c81581",
+    "name": "Compression Wear"
+  },
+  "sports-gym-gym-wear-gym-shorts": {
+    "id": "6a1556d267b6458e54c81586",
+    "name": "Gym Shorts"
+  },
+  "sports-gym-gym-wear-performance-hoodies": {
+    "id": "6a1556d267b6458e54c8158b",
+    "name": "Performance Hoodies"
+  },
+  "sports-gym-footwear-running-shoes": {
+    "id": "6a1556d267b6458e54c81590",
+    "name": "Running Shoes"
+  },
+  "sports-gym-footwear-training-shoes": {
+    "id": "6a1556d267b6458e54c81595",
+    "name": "Training Shoes"
+  },
+  "sports-gym-equipment-dumbbells": {
+    "id": "6a1556d367b6458e54c8159a",
+    "name": "Dumbbells"
+  },
+  "sports-gym-equipment-resistance-bands": {
+    "id": "6a1556d367b6458e54c8159f",
+    "name": "Resistance Bands"
+  },
+  "sports-gym-equipment-yoga-mats": {
+    "id": "6a1556d367b6458e54c815a4",
+    "name": "Yoga Mats"
+  },
+  "sports-gym-sports-gear-cricket": {
+    "id": "6a1556d367b6458e54c815a9",
+    "name": "Cricket"
+  },
+  "sports-gym-sports-gear-football": {
+    "id": "6a1556d367b6458e54c815ae",
+    "name": "Football"
+  },
+  "sports-gym-sports-gear-basketball": {
+    "id": "6a1556d367b6458e54c815b3",
+    "name": "Basketball"
+  },
+  "sports-gym-recovery-foam-rollers": {
+    "id": "6a1556d467b6458e54c815b8",
+    "name": "Foam Rollers"
+  },
+  "sports-gym-recovery-massage-guns": {
+    "id": "6a1556d467b6458e54c815bd",
+    "name": "Massage Guns"
+  },
+  "sports-gym-smart-fitness-smart-watches": {
+    "id": "6a1556d467b6458e54c815c2",
+    "name": "Smart Watches"
+  },
+  "sports-gym-smart-fitness-fitness-trackers": {
+    "id": "6a1556d467b6458e54c815c7",
+    "name": "Fitness Trackers"
+  }
+}
