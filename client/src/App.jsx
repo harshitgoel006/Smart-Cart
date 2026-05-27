@@ -1,7 +1,9 @@
-import AppRouter from "@routes/AppRouter";
-
 function App() {
-  return <AppRouter />;
+  return (
+    <>
+      <h1>Smart Cart</h1>
+    </>
+  );
 }
 
 export default App;
