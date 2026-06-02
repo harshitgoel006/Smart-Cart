@@ -1,19 +1,17 @@
 @import "tailwindcss";
-@import "./variables.css";
-@import "./utilities.css";
 
-*{
+/* Global Reset */
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html{
+html {
   scroll-behavior: smooth;
 }
 
-body{
+body {
+  min-height: 100vh;
   font-family: sans-serif;
-  background-color: #ffffff;
-  color: #111111;
 }

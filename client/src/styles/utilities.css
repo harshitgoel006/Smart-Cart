@@ -1,6 +1,0 @@
-.container-custom{
-  width: 100%;
-  max-width: var(--container-width);
-  margin-inline: auto;
-  padding-inline: 1rem;
-}
