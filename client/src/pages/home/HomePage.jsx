@@ -1,4 +1,5 @@
 import HomeHero from "../../components/sections/home/HomeHero";
+import SmartCartAI from "../../components/sections/home/SmartCartAI";
 import TopCategories from "../../components/sections/home/TopCategories";
 import TrendingProducts from "../../components/sections/home/TrendingProducts";
 
@@ -9,6 +10,7 @@ const HomePage = () => {
       <HomeHero />
       <TopCategories />
       <TrendingProducts/>
+      <SmartCartAI/>
     </div>
   );
 };
