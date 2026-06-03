@@ -37,6 +37,7 @@ const TrendingProducts = () => {
               Trending Products
             </span>
           </div>
+          <div className = "h-1"></div>
 
           {/* Title */}
           <h2
@@ -59,7 +60,7 @@ const TrendingProducts = () => {
               }}
             >
               Loved
-            </em>{" "}
+            </em>{"  "}
             This Week
           </h2>
         </div>
