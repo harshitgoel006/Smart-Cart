@@ -1,3 +1,4 @@
+import CategoryGrid from "../../components/sections/home/CategoryGrid";
 import DealsLiveNow from "../../components/sections/home/DealsLiveNow";
 import HomeHero from "../../components/sections/home/HomeHero";
 import SmartCartAI from "../../components/sections/home/SmartCartAI";
@@ -13,6 +14,7 @@ const HomePage = () => {
       <TrendingProducts/>
       <SmartCartAI/>
       <DealsLiveNow/>
+      <CategoryGrid/>
     </div>
   );
 };
