@@ -27,6 +27,16 @@ const bentoHeight = (index) => (index < 2 ? "300px" : "220px");
 const CategoryGrid = () => {
   return (
     <section className="relative mx-auto max-w-7xl px-6 py-16 overflow-hidden ">
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-32 top-0 h-40 rounded-full"
+        style={{
+          background: "linear-gradient(135deg,#7c3aed,#a855f7,#ec4899)",
+          filter: "blur(80px)",
+          opacity: 0.07,
+        }}
+      />
       {/* ── Header ── */}
 
       <div

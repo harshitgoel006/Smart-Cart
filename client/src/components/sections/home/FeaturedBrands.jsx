@@ -5,6 +5,15 @@ import { brandsData } from "../../../content/home/brandsData";
 const FeaturedBrands = () => {
   return (
     <section className="relative mx-auto max-w-7xl px-6 py-20">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-32 top-0 h-40 rounded-full"
+        style={{
+          background: "linear-gradient(135deg,#7c3aed,#a855f7,#ec4899)",
+          filter: "blur(80px)",
+          opacity: 0.07,
+        }}
+      />
 
       {/* ── Header ── */}
       <div className="relative mb-16 flex flex-col md:flex-row md:justify-between gap-10">
