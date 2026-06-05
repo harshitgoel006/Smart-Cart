@@ -5,6 +5,7 @@ import HomeHero from "../../components/sections/home/HomeHero";
 import SmartCartAI from "../../components/sections/home/SmartCartAI";
 import TopCategories from "../../components/sections/home/TopCategories";
 import TrendingProducts from "../../components/sections/home/TrendingProducts";
+import WhySmartCart from "../../components/sections/home/WhySmartCart";
 
 // HomePage.jsx
 const HomePage = () => {
@@ -17,6 +18,7 @@ const HomePage = () => {
       <DealsLiveNow/>
       <CategoryGrid/>
       <FeaturedBrands/>
+      <WhySmartCart/>
     </div>
   );
 };
