@@ -50,12 +50,12 @@ export const topCategories = [
 
     image: {
       public_id: "",
-      url: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9",
+      url: "https://i.pinimg.com/736x/fb/bb/c4/fbbbc4b27b03cb6d00ad57460d41fb64.jpg",
     },
 
     bannerImage: {
       public_id: "",
-      url: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9",
+      url: "https://i.pinimg.com/736x/fb/bb/c4/fbbbc4b27b03cb6d00ad57460d41fb64.jpg",
     },
 
     sliderImages: [],
@@ -85,12 +85,12 @@ export const topCategories = [
 
     image: {
       public_id: "",
-      url: "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+      url: "https://i.pinimg.com/736x/96/9d/4b/969d4b9e36a5f79085fed88114e77821.jpg",
     },
 
     bannerImage: {
       public_id: "",
-      url: "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
+      url: "https://i.pinimg.com/736x/96/9d/4b/969d4b9e36a5f79085fed88114e77821.jpg",
     },
 
     sliderImages: [],
@@ -120,12 +120,12 @@ export const topCategories = [
 
     image: {
       public_id: "",
-      url: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",
+      url: "https://i.pinimg.com/736x/4f/aa/63/4faa636775399a5396c4d7f3823aa0d1.jpg",
     },
 
     bannerImage: {
       public_id: "",
-      url: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",
+      url: "https://i.pinimg.com/736x/4f/aa/63/4faa636775399a5396c4d7f3823aa0d1.jpg",
     },
 
     sliderImages: [],
@@ -190,12 +190,12 @@ export const topCategories = [
 
     image: {
       public_id: "",
-      url: "https://images.unsplash.com/photo-1516627145497-ae6968895b74",
+      url: "https://i.pinimg.com/736x/d2/d4/d8/d2d4d838bdd4db2456576fdf18ee6154.jpg",
     },
 
     bannerImage: {
       public_id: "",
-      url: "https://images.unsplash.com/photo-1516627145497-ae6968895b74",
+      url: "https://i.pinimg.com/736x/d2/d4/d8/d2d4d838bdd4db2456576fdf18ee6154.jpg",
     },
 
     sliderImages: [],
