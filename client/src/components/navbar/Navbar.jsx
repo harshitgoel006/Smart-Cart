@@ -3,10 +3,12 @@ import { Link, NavLink } from "react-router-dom";
 import { Search, Heart, ShoppingCart, User, ChevronDown } from "lucide-react";
 import { navigationLinks } from "../../constants/navigation";
 import { profileMenu } from "../../constants/profileMenu";
+import CategoryMegaMenu from "./CategoryMegaMenu";
 
 const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [showMegaMenu, setShowMegaMenu] = useState(false);
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -34,21 +36,53 @@ const Navbar = () => {
         </Link>
 
         {/* Navigation - Minimalist */}
-        <nav className="hidden md:flex items-center gap-10">
-          {navigationLinks.map((link) => (
-            <NavLink
-              key={link.label}
-              to={link.path}
-              className={({ isActive }) =>
-                `text-[13px] font-semibold uppercase tracking-widest transition-colors duration-300 ${
-                  isActive ? "text-violet-600" : "text-slate-500 hover:text-slate-900"
-                }`
-              }
-            >
-              {link.label}
-            </NavLink>
-          ))}
-        </nav>
+        {navigationLinks.map((link) => {
+  if (link.label === "Categories") {
+    return (
+      <div
+        key={link.label}
+        className="relative"
+        onMouseEnter={() => setShowMegaMenu(true)}
+        onMouseLeave={() => setShowMegaMenu(false)}
+      >
+        <button
+          className={`flex items-center gap-1 text-[13px] font-semibold uppercase tracking-widest transition-colors duration-300 ${
+            showMegaMenu
+              ? "text-violet-600"
+              : "text-slate-500 hover:text-slate-900"
+          }`}
+        >
+          Categories
+
+          <ChevronDown
+            size={14}
+            className={`transition-transform duration-300 ${
+              showMegaMenu ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+
+        {showMegaMenu && <CategoryMegaMenu />}
+      </div>
+    );
+  }
+
+  return (
+    <NavLink
+      key={link.label}
+      to={link.path}
+      className={({ isActive }) =>
+        `text-[13px] font-semibold uppercase tracking-widest transition-colors duration-300 ${
+          isActive
+            ? "text-violet-600"
+            : "text-slate-500 hover:text-slate-900"
+        }`
+      }
+    >
+      {link.label}
+    </NavLink>
+  );
+})}
 
         {/* Right Section */}
         <div className="flex items-center gap-4">
