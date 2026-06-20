@@ -24,3 +24,13 @@ body {
   padding-top: 18px;
   padding-bottom: 18px;
 }
+
+@keyframes heroZoom {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(1.08);
+  }
+}

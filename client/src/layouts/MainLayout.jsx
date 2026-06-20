@@ -5,17 +5,16 @@ import ScrollToTop from "../components/common/ScrollToTop";
 
 const MainLayout = () => {
   return (
-    <>
+    <div className="flex flex-col gap-10">
       <ScrollToTop />
 
       <Navbar />
-
       <main>
         <Outlet />
       </main>
-
       <Footer />
-    </>
+    </div>
+      
   );
 };
 
