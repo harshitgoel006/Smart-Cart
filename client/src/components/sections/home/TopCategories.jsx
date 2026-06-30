@@ -137,7 +137,7 @@ const TopCategories = () => {
           return (
             <motion.div key={category.id} variants={itemVariants}>
               <Link
-                to={`/category/${category.slug}`}
+                to={`/categories/${category.slug}`}
                 className="group relative block overflow-hidden"
                 style={{
                   aspectRatio: "4/3.5",

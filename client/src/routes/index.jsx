@@ -12,6 +12,7 @@ import OrdersPage from "../pages/orders/OrdersPage";
 import WishlistPage from "../pages/wishlist/WishlistPage";
 import AddressesPage from "../pages/addresses/AddressesPage";
 import SettingsPage from "../pages/settings/SettingsPage";
+import CategoryPage from "../pages/categories/CategoryPage";
 
 import CartPage from "../pages/cart/CartPage";
 
@@ -33,6 +34,11 @@ const router = createBrowserRouter([
       {
         path: "categories",
         element: <CategoriesPage />,
+      },
+
+      {
+        path: "categories/:slug",
+        element: <CategoryPage />,
       },
 
       {
