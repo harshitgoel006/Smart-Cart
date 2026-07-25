@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// This schema defines the structure of the Payment document in MongoDB. It includes fields for order reference, user reference, payment provider, amount, currency, status, idempotency key, provider payment ID, provider order ID, payment method, failure reason, error code, refunds array, and meta information. The schema also includes indexes for efficient querying and a pre-find hook to filter out soft-deleted payments.
 const refundSchema = new mongoose.Schema(
   {
     amount: {
@@ -101,12 +100,10 @@ const paymentSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-// Indexes for efficient querying
 paymentSchema.index({ user: 1, createdAt: -1 });
 paymentSchema.index({ order: 1 });
 paymentSchema.index({ status: 1 });
 
-// This pre-find hook ensures that all queries automatically filter out payments that have been soft-deleted (isDeleted: true). This way, deleted payments won't appear in query results unless explicitly included.
 paymentSchema.pre(/^find/, function (next) {
   this.where({ isDeleted: false });
   next();

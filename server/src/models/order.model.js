@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// This schema defines the structure of the "Order" collection in MongoDB. It includes fields for user reference, an array of order items (with product and seller references, snapshots of product details, pricing, quantity, and fulfillment status), shipping address, payment details, order status, and a history of status changes. The schema also includes a soft delete flag and timestamps for tracking creation and update times. Indexes are created on user and creation date for efficient querying of a user's orders, as well as on seller within order items, order status, and payment status for optimized queries related to those fields.
 const orderItemSchema = new mongoose.Schema(
   {
     product: {
@@ -87,7 +86,6 @@ const orderItemSchema = new mongoose.Schema(
   { _id: true },
 );
 
-// Main order schema that includes user reference, array of order items, shipping address, payment details, order status, and history of status changes. It also has a soft delete flag and timestamps for creation and updates.
 const orderSchema = new mongoose.Schema(
   {
     user: {
@@ -183,7 +181,6 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// Indexes for optimizing queries related to user orders, seller within order items, order status, and payment status.
 orderSchema.index({ user: 1, createdAt: -1 });
 orderSchema.index({ "items.seller": 1 });
 orderSchema.index({ orderStatus: 1 });

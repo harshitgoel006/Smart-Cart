@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
 
-// This schema defines the structure for product options, which are specific variations of a product (e.g., size, color) that have their own SKU, stock, price, and sales data. Each option is associated with a variant (e.g., "Size" or "Color") and includes fields for tracking inventory and pricing.
 const optionSchema = new mongoose.Schema(
   {
     value: {
@@ -34,7 +33,6 @@ const optionSchema = new mongoose.Schema(
   { _id: false },
 );
 
-// This schema defines the structure for product variants, which group together related options (e.g., all size options or all color options). Each variant has a label (e.g., "Size") and an array of options that belong to that variant.
 const variantSchema = new mongoose.Schema(
   {
     label: { type: String, required: true, trim: true },
@@ -43,7 +41,6 @@ const variantSchema = new mongoose.Schema(
   { _id: false },
 );
 
-// This schema defines the structure of the "Product" collection in MongoDB. It includes fields for product details such as name, description, price, stock, images, brand, category, ratings, reviews, seller reference, and various status flags. The schema also includes a pre-save middleware to generate a unique slug based on the product name and to calculate the final price after applying any discount. Additionally, query helpers are defined for filtering active and approved products. Indexes are created for efficient searching and querying based on various fields.
 const productSchema = new mongoose.Schema(
   {
     name: {
@@ -162,7 +159,6 @@ const productSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// This pre-save middleware ensures that whenever a product is saved, a unique slug is generated based on the product name. It also calculates the final price of the product by applying any discount to the original price. This allows for easy URL generation and accurate pricing information to be stored in the database.
 productSchema.pre("save", async function (next) {
   if (this.isModified("name")) {
     const baseSlug = this.name
@@ -204,7 +200,6 @@ productSchema.pre("save", async function (next) {
   next();
 });
 
-// These query helpers allow for filtering products based on their active status and approval status. The active() helper filters products that are not deleted and are marked as active, while the approved() helper filters products that have an approval status of "approved". These helpers can be used in queries to easily retrieve specific subsets of products.
 productSchema.query.active = function () {
   return this.where({
     isDeleted: false,
@@ -212,21 +207,18 @@ productSchema.query.active = function () {
   });
 };
 
-// This query helper filters products that have an approval status of "approved". It can be used in queries to easily retrieve products that have been approved for listing on the platform.
 productSchema.query.approved = function () {
   return this.where({
     approvalStatus: "approved",
   });
 };
 
-// Indexes are created on various fields to optimize search and query performance. A text index is created on the name and description fields to allow for efficient text searching. Additional indexes are created on category, approval status, deletion status, active status, seller reference, flash sale status and timing, final price, ratings, and creation date to further enhance query performance for common filtering and sorting operations.
 productSchema.index({
   name: "text",
   description: "text",
   brand: "text",
 });
 
-// Compound index to optimize queries filtering by category, approval status, deletion status, and active status
 productSchema.index({
   category: 1,
   approvalStatus: 1,
@@ -234,24 +226,20 @@ productSchema.index({
   isActive: 1,
 });
 
-// Index to optimize queries filtering by seller and approval status for active products
 productSchema.index({
   seller: 1,
   approvalStatus: 1,
   isDeleted: 1,
 });
 
-// Index to optimize queries filtering by slug for product detail retrieval
 productSchema.index({ slug: 1 });
 
-// Compound index to optimize queries filtering by flash sale status and timing
 productSchema.index({
   "flashSale.isActive": 1,
   "flashSale.start": 1,
   "flashSale.end": 1,
 });
 
-// Indexes to optimize queries filtering and sorting by final price, ratings, and creation date
 productSchema.index({ finalPrice: 1 });
 productSchema.index({ ratings: -1 });
 productSchema.index({ createdAt: -1 });

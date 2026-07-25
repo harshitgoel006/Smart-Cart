@@ -1,6 +1,3 @@
-// This module defines the email templates for various notification events in the SmartCart application. Each event has a corresponding subject and HTML content that can be dynamically generated based on the provided data. The TemplateResolver class provides a method to resolve the appropriate template for a given event and return the formatted subject and HTML content for sending notifications.
-
-// This object contains email templates for different notification events. Each key represents an event type, and the value is an object with a 'subject' and 'html' function. The 'subject' can be a string or a function that generates a string based on the input data. The 'html' is a function that takes data as input and returns a formatted HTML string for the email body. These templates are used by the NotificationDispatcher to create and send email notifications to users based on specific events in the application.
 const emailTemplates = {
   // ======================
   // CUSTOMER NOTIFICATIONS
@@ -636,6 +633,7 @@ const emailTemplates = {
     <p>Product: ${d.productName}</p>
   `,
   },
+  
   PRODUCT_UPDATED_PENDING: {
     subject: "Product update pending approval",
     html: (d) => `
@@ -643,7 +641,7 @@ const emailTemplates = {
     <p>Product: ${d.productName}</p>
   `,
   },
-  // Fallback
+
   DEFAULT: {
     subject: (d) => d.subject || "SmartCart Notification",
     html: (d) => `
@@ -653,7 +651,6 @@ const emailTemplates = {
   },
 };
 
-// The TemplateResolver class provides a static method 'resolve' that takes an event name and metadata as input. It looks up the corresponding template for the event from the 'emailTemplates' object, generates the email subject and HTML content using the template functions, and also creates a plain text version of the message by stripping HTML tags. The resolved template data is returned in a structured format that can be used by the notification system to send emails or create in-app notifications.
 class TemplateResolver {
   static resolve(event, meta = {}) {
     const tmpl = emailTemplates[event] || emailTemplates.DEFAULT;

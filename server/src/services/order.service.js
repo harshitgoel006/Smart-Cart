@@ -1,5 +1,3 @@
-// This module defines the OrderService class which contains static methods for handling various order-related operations such as placing an order, fetching order history, getting order details, tracking orders, cancelling orders, requesting returns and refunds, generating invoices, applying coupons, and fetching seller-specific orders. The service interacts with the Order, Product, Cart, and Coupon models to perform database operations and also integrates with the NotificationService to emit relevant notifications for different order events.
-
 import mongoose from "mongoose";
 import { Order } from "../models/order.model.js";
 import { Product } from "../models/product.model.js";
@@ -11,9 +9,8 @@ import { Parser } from "json2csv";
 
 const toNumber = (val) => parseFloat(val.toString());
 
-// The OrderService class provides static methods for managing orders in the application. The 'placeOrder' method allows users to create a new order based on their cart or directly from a product, handling stock updates and coupon application. The 'getOrderHistory' method retrieves a paginated list of a user's past orders with optional filtering by status and date range. The 'getOrderDetails' method fetches detailed information about a specific order, including items, shipping address, payment details, and status history. The 'trackOrder' method provides tracking information for an order's shipments. The 'cancelOrder' method allows users to cancel an order if it's still in a cancellable state, while the 'requestReturn' and 'requestRefund' methods handle return and refund requests respectively. The 'generateInvoice' method creates a PDF invoice for an order using Puppeteer, and the 'applyCoupon' method allows users to apply a coupon code to an existing order. Each method includes error handling and emits relevant notifications to users and sellers as needed.
 class OrderService {
-  // This method handles the process of placing a new order. It takes the user's ID, order details from the payload, and the user object as parameters. The method supports creating an order either from the user's cart or directly from a specified product. It validates the input, checks stock availability, calculates pricing, applies coupons if provided, and uses MongoDB transactions to ensure data consistency when creating the order and updating product stock. After successfully placing the order, it emits a notification to the user about the new order.
+
   static async placeOrder(userId, payload, user) {
     const {
       shippingAddress,
@@ -217,7 +214,6 @@ class OrderService {
     return newOrder;
   }
 
-  // This method retrieves the order history for a specific user. It accepts the user's ID and query parameters for pagination, filtering by order status, and date range. The method constructs a filter based on the provided parameters, queries the Order collection to fetch the relevant orders, and returns a paginated response containing the order details along with pagination metadata such as total count and total pages.
   static async getOrderHistory(userId, query) {
     let { page = 1, limit = 10, status, startDate, endDate } = query;
 
@@ -265,7 +261,6 @@ class OrderService {
     };
   }
 
-  // This method retrieves detailed information about a specific order for a user. It takes the user's ID and the order ID as parameters, validates the order ID, and queries the Order collection to find the order that matches both the order ID and user ID. If the order is found, it populates the product and seller details for each item in the order, constructs a detailed response object containing order information such as items, shipping address, payment details, pricing, and status history, and returns it. If the order is not found or if the order ID is invalid, it throws an appropriate error.
   static async getOrderDetails(userId, orderId) {
     if (!orderId || !mongoose.Types.ObjectId.isValid(orderId)) {
       throw new ApiError(400, "Invalid order ID");
@@ -351,7 +346,6 @@ class OrderService {
     };
   }
 
-  // This method provides tracking information for a specific order. It takes the user's ID and the order ID as parameters, validates the order ID, and queries the Order collection to find the order that matches both the order ID and user ID. If the order is found, it constructs a response object that includes the order ID, current order status, creation date, and an array of items with their respective tracking information such as fulfillment status and shipment details. If the order is not found or if the order ID is invalid, it throws an appropriate error.
   static async trackOrder(userId, orderId) {
     if (!orderId || !mongoose.Types.ObjectId.isValid(orderId)) {
       throw new ApiError(400, "Invalid order ID");
@@ -401,7 +395,6 @@ class OrderService {
     };
   }
 
-  // This method allows users to cancel an order if it's still in a cancellable state. It takes the user's ID, the order ID, and the user object as parameters. The method validates the order ID, checks if the order exists and belongs to the user, and verifies that the order status is one of "pending", "processing", or "confirmed". If the order can be cancelled, it updates the order status to "cancelled", updates the stock for each item in the order, and if the payment was already made, it changes the payment status to "refunded". The method uses MongoDB transactions to ensure data consistency during these operations. After successfully cancelling the order, it emits notifications to both the customer and the sellers involved in the order about the cancellation. If any of the checks fail or if there are issues during the cancellation process, it throws an appropriate error.
   static async cancelOrder(userId, orderId, user) {
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
       throw new ApiError(400, "Invalid order ID");
@@ -513,7 +506,6 @@ class OrderService {
     return order;
   }
 
-  // This method allows users to request a return for a specific item in an order. It takes the user's ID, the order ID, and a payload containing the item ID and return reason as parameters. The method validates the input, checks if the order and item exist, verifies that the item has been delivered and is within the return window, and ensures that a return has not already been requested for the item. If all checks pass, it updates the item's return status to "requested", creates an escalation record for the return request, and uses MongoDB transactions to ensure data consistency. After successfully requesting the return, it emits notifications to both the customer and the seller about the return request. If any of the checks fail or if there are issues during the process, it throws an appropriate error.
   static async requestReturn(userId, orderId, payload) {
     const { itemId, reason } = payload;
 
@@ -628,7 +620,6 @@ class OrderService {
     }
   }
 
-  // This method allows users to request a refund for a specific item in an order. It takes the user's ID, the order ID, and a payload containing the item ID and refund reason as parameters. The method validates the input, checks if the order and item exist, verifies that the return for the item has been approved, ensures that a refund has not already been requested for the item, and confirms that the order payment status is "paid". If all checks pass, it updates the item's refund status to "pending", creates an escalation record for the refund request, and uses MongoDB transactions to ensure data consistency. After successfully requesting the refund, it emits notifications to both the customer and the admin about the refund request. If any of the checks fail or if there are issues during the process, it throws an appropriate error.
   static async requestRefund(userId, orderId, payload) {
     const { itemId, reason } = payload;
 
@@ -733,7 +724,6 @@ class OrderService {
     }
   }
 
-  // This method generates a PDF invoice for a specific order. It takes the user's ID and the order ID as parameters, validates the order ID, and queries the Order collection to find the order that matches both the order ID and user ID. If the order is found, it transforms the order data to include necessary details for the invoice, generates an HTML representation of the invoice using a template, and uses Puppeteer to create a PDF from the HTML. The method returns an object containing the PDF buffer and a filename for the invoice. If the order is not found or if the order ID is invalid, it throws an appropriate error.
   static async generateInvoice(userId, orderId) {
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
       throw new ApiError(400, "Invalid order ID");
@@ -785,7 +775,6 @@ class OrderService {
     };
   }
 
-  // This method allows users to apply a coupon code to an existing order. It takes the user's ID and a payload containing the order ID and coupon code as parameters. The method validates the input, checks if the order exists and belongs to the user, verifies that the coupon is valid and active, checks for expiry and usage limits, and ensures that the order meets the minimum value requirement for the coupon. If all checks pass, it calculates the discount based on the coupon's discount type and value, updates the order with the discount and final amount, increments the coupon's usage count, and uses MongoDB transactions to ensure data consistency. After successfully applying the coupon, it emits a notification to the user about the applied coupon. If any of the checks fail or if there are issues during the process, it throws an appropriate error.
   static async applyCoupon(userId, payload) {
     const { orderId, couponCode } = payload;
 
@@ -890,7 +879,6 @@ class OrderService {
     };
   }
 
-  // This method retrieves the orders for a specific seller. It takes the seller's ID and query parameters for pagination and filtering by fulfillment status. The method constructs an aggregation pipeline to fetch orders that contain items sold by the specified seller, applies the necessary filters, and returns a paginated response containing the order details along with pagination metadata such as total count and total pages. If there are any issues during the process, it throws an appropriate error.
   static async getSellerOrders(sellerId, query) {
     let { page = 1, limit = 10, status } = query;
 
@@ -956,7 +944,6 @@ class OrderService {
     };
   }
 
-  // This method retrieves detailed information about a specific order for a seller. It takes the seller's ID and the order ID as parameters, validates the order ID, and queries the Order collection to find the order that contains items sold by the specified seller and matches the order ID. If the order is found, it populates the user and product details for each item in the order, constructs a detailed response object containing order information such as items, customer details, shipping address, and order status, and returns it. If the order is not found or if the order ID is invalid, it throws an appropriate error.
   static async getSellerOrderDetails(sellerId, orderId) {
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
       throw new ApiError(400, "Invalid order ID");
@@ -1028,7 +1015,6 @@ class OrderService {
     };
   }
 
-  // This method allows sellers to update the fulfillment status of a specific item in an order. It takes the seller's ID and a payload containing the order ID, item ID, new status, and optional tracking information as parameters. The method validates the input, checks if the order and item exist and belong to the seller, verifies that the status transition is valid, and updates the item's fulfillment status accordingly. If the new status is "shipped", it also updates the shipment details with the provided tracking information. The method uses MongoDB transactions to ensure data consistency during the update process. After successfully updating the order status, it emits notifications to the customer about the shipment or delivery status change. If any of the checks fail or if there are issues during the process, it throws an appropriate error.
   static async updateOrderStatus(sellerId, payload) {
     const { orderId, itemId, status, tracking } = payload;
 
@@ -1153,7 +1139,6 @@ class OrderService {
     };
   }
 
-  // This method allows sellers to update the tracking information for a specific item in an order. It takes the seller's ID and a payload containing the order ID, item ID, and tracking information as parameters. The method validates the input, checks if the order and item exist and belong to the seller, verifies that the item is not already delivered or cancelled, and updates the shipment details with the provided tracking information. The method uses MongoDB transactions to ensure data consistency during the update process. After successfully updating the tracking information, it emits a notification to the customer about the shipment status change. If any of the checks fail or if there are issues during the process, it throws an appropriate error.
   static async updateTrackingInfo(sellerId, payload) {
     const { orderId, itemId, tracking } = payload;
 
@@ -1228,7 +1213,6 @@ class OrderService {
     };
   }
 
-  // This method allows sellers to add a tracking event for a specific item in an order. It takes the seller's ID and a payload containing the order ID, item ID, event details, location, and remarks as parameters. The method validates the input, checks if the order and item exist and belong to the seller, verifies that the item is not already delivered or cancelled, and adds the tracking event to the item's shipment tracking timeline. If the event indicates that the item is out for delivery or delivered, it also updates the fulfillment status accordingly. The method uses MongoDB transactions to ensure data consistency during the update process. After successfully adding the tracking event, it emits a notification to the customer about the shipment status change. If any of the checks fail or if there are issues during the process, it throws an appropriate error.
   static async addTrackingEvent(sellerId, payload) {
     const { orderId, itemId, event, location, remarks } = payload;
 
@@ -1313,7 +1297,6 @@ class OrderService {
     };
   }
 
-  // This method allows sellers to handle return requests for a specific item in an order. It takes the seller's ID and a payload containing the order ID, item ID, decision (approved or rejected), and an optional reason for rejection as parameters. The method validates the input, checks if the order and item exist and belong to the seller, verifies that there is a pending return request for the item, and updates the item's return status based on the decision. If there is an open escalation for the return request, it also updates the escalation status accordingly. The method uses MongoDB transactions to ensure data consistency during the update process. After successfully handling the return request, it emits notifications to the customer about the return approval or rejection. If any of the checks fail or if there are issues during the process, it throws an appropriate error.
   static async handleReturnRequest(sellerId, payload) {
     const { orderId, itemId, decision, reason } = payload;
 
@@ -1412,7 +1395,6 @@ class OrderService {
     };
   }
 
-  // This method allows sellers to handle refund requests for a specific item in an order. It takes the seller's ID and a payload containing the order ID, item ID, decision (approved or rejected), and an optional reason for rejection as parameters. The method validates the input, checks if the order and item exist and belong to the seller, verifies that there is a pending refund request for the item and that the return has been approved, and updates the item's refund status based on the decision. If there is an open escalation for the refund request, it also updates the escalation status accordingly. The method uses MongoDB transactions to ensure data consistency during the update process. After successfully handling the refund request, it emits notifications to the customer about the refund approval or rejection. If any of the checks fail or if there are issues during the process, it throws an appropriate error.
   static async handleRefundRequest(sellerId, payload) {
     const { orderId, itemId, decision, reason } = payload;
 
@@ -1520,7 +1502,6 @@ class OrderService {
     };
   }
 
-  // This method generates sales analytics for a specific seller based on their orders. It takes the seller's ID and query parameters for filtering by date range as parameters. The method constructs aggregation pipelines to calculate summary metrics such as total revenue, total items sold, and total orders, as well as trends over time and top-selling products. It returns an object containing the summary, trend data, and top products. If there are any issues during the process, it throws an appropriate error.
   static async getSalesAnalytics(sellerId, query) {
     let { startDate, endDate } = query;
 
@@ -1615,7 +1596,6 @@ class OrderService {
     };
   }
 
-  // This method retrieves a paginated list of all orders for admin users, with optional filtering by order status, payment status, date range, and search term. It takes query parameters for pagination and filtering, constructs a filter object based on the provided parameters, and queries the Order collection to fetch the matching orders. The method populates the user details for each order, formats the response to include relevant order information, and returns the paginated list of orders along with pagination metadata such as total count and total pages. If there are any issues during the process, it throws an appropriate error.
   static async getAllOrders(query) {
     let {
       page = 1,
@@ -1683,7 +1663,6 @@ class OrderService {
     };
   }
 
-  // This method retrieves detailed information about a specific order for admin users. It takes the order ID as a parameter, validates the order ID, and queries the Order collection to find the order with the specified ID. If the order is found, it populates the user and product details for each item in the order, constructs a detailed response object containing order information such as items, customer details, shipping address, payment information, and order status, and returns it. If the order is not found or if the order ID is invalid, it throws an appropriate error.
   static async getAdminOrderDetails(orderId) {
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
       throw new ApiError(400, "Invalid order ID");
@@ -1762,7 +1741,6 @@ class OrderService {
     };
   }
 
-  // This method allows admin users to manually update the status of an order or a specific item within an order. It takes the admin's ID and a payload containing the order ID, optional item ID, new status, and reason for the update as parameters. The method validates the input, checks if the order and item (if provided) exist, and updates the fulfillment status accordingly. If the item ID is provided, it updates only that item's status; otherwise, it updates the status of all items in the order. The method also updates the overall order status based on the statuses of individual items. It uses MongoDB transactions to ensure data consistency during the update process. After successfully updating the status, it emits a notification to the customer about the status change. If any of the checks fail or if there are issues during the process, it throws an appropriate error.
   static async manualOrderStatusUpdate(adminId, payload) {
     const { orderId, itemId, status, reason } = payload;
 
@@ -1857,7 +1835,6 @@ class OrderService {
     };
   }
 
-  // This method allows admin users to approve a refund request for a specific item in an order. It takes the admin's ID and a payload containing the order ID and item ID as parameters. The method validates the input, checks if the order and item exist, verifies that the refund request is pending and that the return has been approved, and updates the item's refund status to "processed". If there is an open escalation for the refund request, it also updates the escalation status accordingly. The method uses MongoDB transactions to ensure data consistency during the update process. After successfully approving the refund, it emits a notification to the customer about the refund processing. If any of the checks fail or if there are issues during the process, it throws an appropriate error.
   static async approveRefund(adminId, payload) {
     const { orderId, itemId } = payload;
 
@@ -1971,7 +1948,6 @@ class OrderService {
     }
   }
 
-  // This method allows admin users to approve or reject a return request for a specific item in an order. It takes the admin's ID and a payload containing the order ID, item ID, decision (approved or rejected), and reason for the decision as parameters. The method validates the input, checks if the order and item exist, verifies that there is a pending return request for the item, and updates the item's return status based on the decision. If there is an open escalation for the return request, it also updates the escalation status accordingly. The method uses MongoDB transactions to ensure data consistency during the update process. After successfully handling the return request, it emits a notification to the customer about the return approval or rejection. If any of the checks fail or if there are issues during the process, it throws an appropriate error.
   static async approveReturnAdmin(adminId, payload) {
     const { orderId, itemId, decision, reason } = payload;
 
@@ -2065,7 +2041,6 @@ class OrderService {
     }
   }
 
-  // This method allows admin users to export orders based on specified filters such as date range and order status. It takes query parameters for filtering, constructs a filter object, and queries the Order collection to fetch the matching orders. The method then formats the order data into a CSV format using the json2csv library and returns a buffer containing the CSV data along with a filename for download. If there are any issues during the process, it throws an appropriate error.
   static async exportOrders(query) {
     let { startDate, endDate, status } = query;
 
@@ -2126,7 +2101,6 @@ class OrderService {
     };
   }
 
-  // This method retrieves a paginated list of order status change logs for admin users, with optional filtering by date range, role, and search term. It takes query parameters for pagination and filtering, constructs a filter object based on the provided parameters, and queries the Order collection to fetch the matching orders along with their status history. The method then formats the status history entries into a log format, sorts them by timestamp, and returns the paginated list of logs along with pagination metadata such as total count and total pages. If there are any issues during the process, it throws an appropriate error.
   static async getAuditLogs(query) {
     let { page = 1, limit = 20, startDate, endDate, role, search } = query;
 
@@ -2191,7 +2165,6 @@ class OrderService {
     };
   }
 
-  // This method allows admin and seller users to handle escalations related to orders, such as return or refund disputes. It takes the user's ID, role, and a payload containing the escalation ID, new status, and comment as parameters. The method validates the input, checks if the escalation exists, verifies that the user has the appropriate role to handle the escalation, and updates the escalation status based on allowed transitions. If the escalation is resolved and is related to a return or refund, it also updates the corresponding order item statuses accordingly. The method uses MongoDB transactions to ensure data consistency during the update process. After successfully handling the escalation, it emits a notification to the customer about the escalation update. If any of the checks fail or if there are issues during the process, it throws an appropriate error.
   static async handleEscalation(userId, role, payload) {
     const { escalationId, status, comment } = payload;
 

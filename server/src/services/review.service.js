@@ -1,5 +1,3 @@
-// This service module handles all review-related operations, including creating, updating, deleting reviews, fetching reviews for products and sellers, marking reviews as helpful/not helpful, and reporting reviews. It also integrates with the notification system to send alerts to sellers and customers based on review activities. The service uses Mongoose transactions to ensure data consistency when creating/updating/deleting reviews and recalculating product ratings.
-
 import mongoose from "mongoose";
 import { Review } from "../models/review.model.js";
 import { Product } from "../models/product.model.js";
@@ -7,9 +5,8 @@ import { Order } from "../models/order.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import NotificationService from "../services/notification/notification.service.js";
 
-// The reviewService object encapsulates all review-related operations. It provides methods for creating a new review, updating an existing review, deleting a review, fetching reviews for a specific product, fetching reviews submitted by the logged-in user, marking a review as helpful or not helpful, reporting a review for inappropriate content, and fetching reviews for a seller's products. Each method includes necessary validations, error handling, and interactions with the database to ensure that reviews are managed effectively while maintaining data integrity and providing appropriate notifications to users.
 export const reviewService = {
-  // This method allows a user to create a review for a product they have purchased. It validates the input data, checks if the product and order are eligible for review, and ensures that the user has not already submitted a review for the same order item. If all checks pass, it creates the review, recalculates the product's average rating and total reviews count, and emits notifications to the seller and customer about the new review.
+
   async createReview(userId, productId, body) {
     const {
       rating,
@@ -171,7 +168,6 @@ export const reviewService = {
     }
   },
 
-  // This method allows a user to update their existing review. It checks if the review exists and belongs to the user, and that it is not rejected (as rejected reviews cannot be updated). The user can update the rating, title, comment, images, and aspects of the review. After updating the review, it resets the moderation status to pending and recalculates the product's average rating and total reviews count. Notifications are emitted to inform the seller about the updated review.
   async updateReview(userId, reviewId, body) {
     if (!mongoose.Types.ObjectId.isValid(reviewId))
       throw new ApiError(400, "Invalid review ID");
@@ -298,7 +294,6 @@ export const reviewService = {
     }
   },
 
-  // This method allows a user to delete their review. It checks if the review exists and belongs to the user, and that the user has the appropriate role to delete the review (sellers cannot delete reviews). Instead of permanently deleting the review, it marks it as deleted. After deletion, it recalculates the product's average rating and total reviews count. A notification is emitted to inform the seller that a review was deleted by the customer.
   async deleteReview(userId, reviewId, role = "customer") {
     if (!mongoose.Types.ObjectId.isValid(reviewId))
       throw new ApiError(400, "Invalid review ID");
@@ -383,7 +378,6 @@ export const reviewService = {
     }
   },
 
-  // This method fetches reviews for a specific product based on the provided query parameters such as page, limit, rating filter, and sorting options. It validates the product ID, checks if the product exists and is eligible for reviews, and then retrieves the reviews that match the criteria. The method also calculates a rating breakdown for the product and formats the review data to include helpful/not helpful vote counts before returning the results in a paginated format.
   async getProductReviews(productId, query) {
     if (!mongoose.Types.ObjectId.isValid(productId))
       throw new ApiError(400, "Invalid product ID");
@@ -474,7 +468,6 @@ export const reviewService = {
     };
   },
 
-  // This method fetches reviews submitted by the logged-in user based on the provided query parameters such as page, limit, sorting options, and review status filter. It retrieves the reviews that match the criteria and formats the review data to include helpful/not helpful vote counts before returning the results in a paginated format. This allows users to view and manage their submitted reviews effectively.
   async getMyReviews(userId, query) {
     const { page = 1, limit = 10, sort = "newest", status } = query;
 
@@ -544,7 +537,6 @@ export const reviewService = {
     };
   },
 
-  // This method allows a user to mark a review as helpful or not helpful. It validates the review ID and vote type, checks if the review exists and is eligible for voting, and ensures that users cannot vote on their own reviews. The method then updates the review's votes array accordingly, either adding a new vote or updating an existing one. Mongoose transactions are used to ensure data consistency during the voting process. Finally, it returns the updated review document with the new vote counts.
   async markReviewHelpful(userId, reviewId, type) {
     if (!["helpful", "not_helpful"].includes(type))
       throw new ApiError(400, "Invalid vote type");
@@ -599,7 +591,6 @@ export const reviewService = {
     }
   },
 
-  // This method allows a user to report a review for inappropriate content. It validates the review ID and report reason, checks if the review exists and is eligible for reporting, and ensures that users cannot report their own reviews or report the same review multiple times. The method then adds the report to the review's reports array and checks if the number of reports has exceeded a predefined threshold. If the threshold is exceeded, the review's status is set to pending for moderation, and a system alert notification is emitted to inform administrators about the reported review. Mongoose transactions are used to ensure data consistency during the reporting process. Finally, it returns the updated report count for the review.
   async reportReview(userId, reviewId, reason) {
     if (!mongoose.Types.ObjectId.isValid(reviewId))
       throw new ApiError(400, "Invalid review ID");
@@ -669,7 +660,6 @@ export const reviewService = {
     }
   },
 
-  // This method fetches reviews for a seller's products based on the provided query parameters such as page, limit, rating filter, review status filter, and sorting options. It validates the seller ID, checks if the seller exists, and then retrieves the reviews that match the criteria for the products sold by the seller. The method uses MongoDB aggregation to join the reviews with product data and applies the necessary filters and sorting. Finally, it formats the review data to include helpful/not helpful vote counts and returns the results in a paginated format.
   async getSellerReviews(sellerId, query) {
     const { page = 1, limit = 20, rating, status, sort = "newest" } = query;
 
@@ -777,7 +767,6 @@ export const reviewService = {
     };
   },
 
-  // This method allows a seller to reply to a review left on their product. It validates the review ID and reply message, checks if the review exists and is approved, and ensures that the review belongs to one of the seller's products. If all checks pass, it updates the review document with the seller's response and emits a notification to inform the customer that the seller has replied to their review. Finally, it returns the updated review document with the seller's response included.
   async replyToReview(sellerId, reviewId, message) {
     if (!mongoose.Types.ObjectId.isValid(reviewId))
       throw new ApiError(400, "Invalid review ID");
@@ -823,7 +812,6 @@ export const reviewService = {
     return review;
   },
 
-  // This method provides a summary of reviews for a seller's products, including the average rating, total number of reviews, and a breakdown of ratings by star level. It accepts optional parameters for filtering by product ID. The method uses MongoDB aggregation to join reviews with product data, apply necessary filters, and calculate the required statistics. Finally, it returns an array of review summaries for the seller's products.
   async getSellerReviewSummary(sellerId, productId) {
     const matchStage = {
       status: "approved",
@@ -898,7 +886,6 @@ export const reviewService = {
     return summary;
   },
 
-  // This method allows administrators to list reviews with advanced filtering and sorting options. It accepts various query parameters such as page, limit, review status, rating filter, product ID, seller ID, user ID, reported-only filter, date range, and sorting options. The method uses MongoDB aggregation to join reviews with product and user data, apply the necessary filters based on the query parameters, and calculate helpful/not helpful vote counts and report counts. Finally, it returns the filtered and sorted list of reviews in a paginated format along with the total count of matching reviews.
   async adminListReviews(query) {
     const {
       page = 1,
@@ -1043,7 +1030,6 @@ export const reviewService = {
     };
   },
 
-  // This method allows administrators to view detailed information about a specific review, including the review content, associated product and user details, votes, and reports. It validates the review ID, checks if the review exists, and then populates related data such as product information, user information, order details, seller responses, votes, and reports. The method also calculates helpful/not helpful vote counts and report counts before returning the comprehensive review details.
   async adminGetReviewDetails(reviewId) {
     if (!mongoose.Types.ObjectId.isValid(reviewId))
       throw new ApiError(400, "Invalid review ID");
@@ -1076,7 +1062,6 @@ export const reviewService = {
     };
   },
 
-  // This method allows administrators to moderate a review by approving or rejecting it. It validates the review ID and action, checks if the review exists and is eligible for moderation, and then updates the review's status accordingly. If the review's status changes, it conditionally recalculates the product's average rating and total reviews count. After moderation, it emits notifications to inform the customer about the approval or rejection of their review, and also notifies the seller if the review was approved. Mongoose transactions are used to ensure data consistency during the moderation process.
   async adminModerateReview(adminId, reviewId, action, reason) {
     if (!mongoose.Types.ObjectId.isValid(reviewId)) {
       throw new ApiError(400, "Invalid review ID");
@@ -1239,7 +1224,6 @@ export const reviewService = {
     return review;
   },
 
-  // This method allows administrators to feature or unfeature a review on the product page. It validates the review ID and featured flag, checks if the review exists and is eligible for featuring, and then updates the review's isFeatured field accordingly. The method also tracks which admin performed the action and when. Finally, it returns the updated review document with the new featured status.
   async adminFeatureReview(adminId, reviewId, featured) {
     if (!mongoose.Types.ObjectId.isValid(reviewId)) {
       throw new ApiError(400, "Invalid review ID");
@@ -1277,7 +1261,6 @@ export const reviewService = {
     return review;
   },
 
-  // This method allows administrators to delete a review. It validates the review ID, checks if the review exists and is not already deleted, and then marks the review as deleted by setting the isDeleted flag. If the review was previously approved, it conditionally recalculates the product's average rating and total reviews count. After deletion, it emits a system alert notification to inform administrators about the deleted review. Mongoose transactions are used to ensure data consistency during the deletion process.
   async adminDeleteReview(adminId, reviewId) {
     if (!mongoose.Types.ObjectId.isValid(reviewId)) {
       throw new ApiError(400, "Invalid review ID");
@@ -1346,7 +1329,6 @@ export const reviewService = {
     return { success: true };
   },
 
-  // This method provides analytics and insights on reviews for administrators. It accepts optional query parameters for filtering by date range and returns a comprehensive summary of reviews, including total counts by status, average rating, star breakdown, number of reported reviews, top products by review count and average rating, and monthly review trends. The method uses MongoDB aggregation to calculate the required statistics and returns the results in a structured format for easy consumption by the admin dashboard.
   async adminReviewsAnalytics(query) {
     const { from, to } = query;
 

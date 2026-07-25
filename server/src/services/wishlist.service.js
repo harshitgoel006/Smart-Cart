@@ -1,5 +1,3 @@
-// This module implements the WishlistService, which provides functionalities for managing user wishlists in an e-commerce application. It allows users to add products to their wishlist, remove items, view their wishlist with pagination, move items to the cart, check product availability, get the count of wishlist items, clear the wishlist, update privacy settings, create multiple wishlists, and set a default wishlist. The service interacts with the Wishlist and WishlistItem models, as well as the Product model to ensure that only valid and available products can be added to the wishlist. It also handles various edge cases and errors gracefully using custom ApiError exceptions.
-
 import { Wishlist } from "../models/wishlist.model.js";
 import { WishlistItem } from "../models/wishlist.model.js";
 import { Product } from "../models/product.model.js";
@@ -7,9 +5,8 @@ import { ApiError } from "../utils/ApiError.js";
 import mongoose from "mongoose";
 import { cartService } from "./cart.service.js";
 
-// The WishlistService object encapsulates all the methods related to managing user wishlists. Each method is designed to perform specific operations such as adding products, removing items, viewing the wishlist, moving items to the cart, checking availability, and more. The service ensures that all operations are performed with proper validation and error handling to maintain data integrity and provide a seamless user experience.
 export const WishlistService = {
-  // This method allows a user to add a product to their wishlist. It first validates the product ID and checks if the product exists and is available. If a variant ID is provided, it also checks for the variant's existence and price. The method then either creates a new wishlist for the user if one doesn't exist or adds the product to the existing default wishlist. If the product is already in the wishlist but marked as deleted, it reactivates it with updated details. The method returns a success response upon completion.
+
   async addProduct(userId, productId, variantId, note) {
     if (!mongoose.Types.ObjectId.isValid(productId))
       throw new ApiError(400, "Invalid product ID");
@@ -84,7 +81,6 @@ export const WishlistService = {
     return { success: true };
   },
 
-  // This method removes an item from the user's wishlist. It validates the product ID, checks for the existence of the user's default wishlist, and then looks for the specific item in the wishlist. If the item is found, it marks it as deleted instead of removing it from the database, allowing for potential recovery in the future. The method returns a success response upon completion.
   async removeItem(userId, productId, variantId) {
     if (!mongoose.Types.ObjectId.isValid(productId))
       throw new ApiError(400, "Invalid product ID");
@@ -112,7 +108,6 @@ export const WishlistService = {
     return { success: true };
   },
 
-  // This method retrieves the user's wishlist with pagination. It first checks for the existence of the user's default wishlist and then uses an aggregation pipeline to fetch the wishlist items along with their associated product data. The method enriches the items with additional information such as availability and price changes, and returns the paginated list of items along with metadata about the total count and total pages.
   async viewWishlist(userId, page = 1, limit = 20) {
     const wishlist = await Wishlist.findOne({
       user: userId,
@@ -205,7 +200,6 @@ export const WishlistService = {
     };
   },
 
-  // This method moves an item from the user's wishlist to the cart. It validates the product ID, checks for the existence of the user's default wishlist and the specific item in the wishlist. If the item is found, it marks it as deleted in the wishlist and then adds it to the cart using the cartService. The entire operation is performed within a MongoDB transaction to ensure data consistency. The method returns a success response upon completion.
   async moveToCart(userId, productId, selectedVariant) {
     if (!mongoose.Types.ObjectId.isValid(productId))
       throw new ApiError(400, "Invalid product ID");
@@ -255,7 +249,6 @@ export const WishlistService = {
     }
   },
 
-  // This method checks the availability of products in the user's wishlist. It retrieves the user's default wishlist and performs an aggregation to fetch the wishlist items along with their associated product data. The method then enriches each item with an 'isAvailable' flag based on the product's active status, stock, approval status, and archival status. Finally, it returns the list of items with their availability status.
   async checkAvailability(userId) {
     const wishlist = await Wishlist.findOne({
       user: userId,
@@ -310,7 +303,6 @@ export const WishlistService = {
     return enriched;
   },
 
-  // This method retrieves the count of items in the user's wishlist. It counts the number of wishlist items that belong to the user's default wishlist and are not marked as deleted. The method returns the total count of active wishlist items for the user.
   async getCount(userId) {
     return await WishlistItem.countDocuments({
       user: userId,
@@ -318,7 +310,6 @@ export const WishlistService = {
     });
   },
 
-  // This method clears all items from the user's wishlist. It first retrieves the user's default wishlist and then updates all items in that wishlist to mark them as deleted. This allows for potential recovery of items in the future if needed. The method returns a success response upon completion.
   async clearWishlist(userId) {
     const wishlist = await Wishlist.findOne({
       user: userId,
@@ -341,7 +332,6 @@ export const WishlistService = {
     return { success: true };
   },
 
-  // This method updates the privacy setting of a user's wishlist. It validates the provided privacy value and checks for the existence of the specified wishlist. If the wishlist is found and the new privacy setting is different from the current one, it updates the wishlist's privacy field and saves the changes. The method returns a success response if the update is successful or a message if the privacy setting is already set to the desired value.
   async updatePrivacy(userId, wishlistId, privacy) {
     if (!["public", "private"].includes(privacy))
       throw new ApiError(400, "Invalid privacy setting");
@@ -365,7 +355,6 @@ export const WishlistService = {
     return { success: true };
   },
 
-  // This method creates a new wishlist for the user with the specified name and privacy setting. It validates the input parameters, checks if the user has reached the maximum number of allowed wishlists, and ensures that the wishlist name is unique for the user. If the user does not have a default wishlist, the newly created wishlist is set as the default. The method returns the created wishlist document upon successful creation.
   async createWishlist(userId, name, privacy = "private") {
     if (!name || !name.trim())
       throw new ApiError(400, "Wishlist name is required");
@@ -410,7 +399,6 @@ export const WishlistService = {
     }
   },
 
-  // This method retrieves all wishlists for a user along with the count of items in each wishlist and a preview image of the first product in the wishlist. It first fetches all wishlists for the user and then uses aggregation pipelines to get the item counts and preview images for each wishlist. The method returns an array of wishlists enriched with the item count and preview image data.
   async getAllWishlists(userId) {
     const wishlists = await Wishlist.find({
       user: userId,
@@ -483,7 +471,6 @@ export const WishlistService = {
     }));
   },
 
-  // This method sets a specific wishlist as the default for the user. It validates the provided wishlist ID, checks for the existence of the specified wishlist, and then updates the 'isDefault' field for all of the user's wishlists accordingly. The method uses a MongoDB transaction to ensure that the operation is atomic and consistent. If the specified wishlist is already set as default, it returns a message indicating that no changes were made. Otherwise, it sets the specified wishlist as default and returns a success response.
   async setDefault(userId, wishlistId) {
     if (!mongoose.Types.ObjectId.isValid(wishlistId))
       throw new ApiError(400, "Invalid wishlist ID");

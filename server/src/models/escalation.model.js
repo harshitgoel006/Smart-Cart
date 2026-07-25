@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// This schema defines the structure of the "Escalation" collection in MongoDB. It includes fields for order reference, escalation type, status, priority, user references for who raised and who is assigned to the escalation, remarks, and a soft delete flag. The schema also includes timestamps for tracking creation and update times. Additionally, a pre-find middleware is implemented to filter out documents marked as deleted.
 const escalationSchema = new mongoose.Schema(
   {
     order: {
@@ -51,7 +50,6 @@ const escalationSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// This pre-find middleware ensures that any query to the Escalation collection will automatically exclude documents that have been marked as deleted (isDeleted: true). This allows for soft deletion of escalations without permanently removing them from the database.
 escalationSchema.pre(/^find/, function (next) {
   this.where({ isDeleted: false });
   next();

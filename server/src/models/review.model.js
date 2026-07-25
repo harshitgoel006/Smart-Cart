@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// This schema defines the structure for product reviews. It includes references to the product, user, and order, as well as fields for rating, title, comment, images, aspects, and verification status. The schema also supports moderation features such as status, moderatedBy, moderatedAt, and rejectionReason. Additionally, it includes subdocuments for votes and reports on the review. Indexes are created to optimize queries based on user, order, product, status, and rating.
 const aspectSchema = new mongoose.Schema(
   {
     key: {
@@ -18,7 +17,6 @@ const aspectSchema = new mongoose.Schema(
   { _id: false },
 );
 
-// This schema defines the structure for votes on reviews, allowing users to mark a review as helpful or not helpful. Each vote includes a reference to the user and the type of vote. The schema is defined as a subdocument without its own _id field.
 const voteSchema = new mongoose.Schema(
   {
     user: {
@@ -35,7 +33,6 @@ const voteSchema = new mongoose.Schema(
   { _id: false },
 );
 
-// This schema defines the structure for reports on reviews, allowing users to report a review for various reasons. Each report includes a reference to the user who made the report, the reason for reporting, and the date of the report. Like the voteSchema, it is defined as a subdocument without its own _id field.
 const reportSchema = new mongoose.Schema(
   {
     user: {
@@ -57,7 +54,6 @@ const reportSchema = new mongoose.Schema(
   { _id: false },
 );
 
-// This is the main schema for reviews, which incorporates the aspectSchema, voteSchema, and reportSchema as subdocuments. It captures all relevant information about a review, including references to the product, user, and order, as well as the content of the review and its moderation status. The schema also includes indexes to optimize queries based on user, order, product, status, and rating.
 const reviewSchema = new mongoose.Schema(
   {
     product: {
@@ -165,10 +161,8 @@ const reviewSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// Creating a compound index to ensure that a user can only leave one review per order item, and to optimize queries based on user, order, product, status, and rating.
 reviewSchema.index({ user: 1, order: 1, orderItemId: 1 }, { unique: true });
 
-// Additional indexes to optimize queries based on product, status, rating, and creation date for sorting and filtering reviews efficiently.
 reviewSchema.index({
   product: 1,
   status: 1,

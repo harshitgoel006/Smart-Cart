@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// This schema defines the structure for product questions and answers (QnA). It includes references to the product, seller, and user, as well as fields for the question, answer, status, and helpful count. The schema also includes timestamps for when the QnA was created and updated. Indexes are created on relevant fields to optimize query performance.
 const productQnASchema = new mongoose.Schema(
   {
     product: {
@@ -67,14 +66,12 @@ const productQnASchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// Static method to get only active (non-deleted) QnA entries
 productQnASchema.query.active = function () {
   return this.where({
     isDeleted: false,
   });
 };
 
-// Indexes to optimize queries based on product, seller, user, and status
 productQnASchema.index({ product: 1, status: 1 });
 productQnASchema.index({ seller: 1, status: 1 });
 productQnASchema.index({ user: 1 });

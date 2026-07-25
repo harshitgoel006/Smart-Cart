@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// Defining the schema for coupons in the e-commerce application. This schema includes fields for coupon code, description, discount type and value, usage limits, applicable products and categories, and validity dates. It also includes indexes for efficient querying based on code, active status, expiry date, and users who have used the coupon.
 const couponSchema = new mongoose.Schema(
   {
     code: {
@@ -97,7 +96,6 @@ const couponSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// Creating indexes for efficient querying based on code, active status, expiry date, and users who have used the coupon.
 couponSchema.index({ code: 1, isActive: 1 });
 couponSchema.index({ expiryDate: 1 });
 couponSchema.index({ "usedBy.user": 1 });

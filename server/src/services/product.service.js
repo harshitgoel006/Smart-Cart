@@ -1,5 +1,3 @@
-// This service module handles all product-related operations such as fetching products, submitting reviews, asking questions, and creating/updating products. It interacts with the Product, Order, ProductQnA, and Review models to perform database operations and also integrates with the NotificationService to emit events for actions like new product creation or question submission. The service includes methods for customers to get products and submit reviews/questions, as well as methods for sellers to manage their products.
-
 import { ApiError } from "../utils/ApiError.js";
 import { Product } from "../models/product.model.js";
 import {
@@ -14,9 +12,8 @@ import { Review } from "../models/review.model.js";
 import NotificationService from "../services/notification/notification.service.js";
 import mongoose from "mongoose";
 
-// NOTE: All methods that take productId as input validate it first before proceeding with any database operations to ensure that the ID is in the correct format and to prevent unnecessary database queries. This validation step is crucial for maintaining the integrity of the application and providing meaningful error messages to the client when invalid IDs are supplied.
 export const productService = {
-  // This method allows customers to retrieve a list of products based on various query parameters such as search keywords, category, brand, price range, rating, discount, size, stock availability, and sorting options. It constructs a dynamic filter object based on the provided query parameters and executes a MongoDB query to fetch the matching products. The results are paginated and returned along with metadata about the total number of products and total pages.
+
   async customerGetAllProducts(query) {
     const {
       search,
@@ -130,7 +127,6 @@ export const productService = {
     };
   },
 
-  // This method retrieves detailed information about a specific product by its ID. It first validates the product ID format, then queries the database for a product that matches the ID and is not deleted, active, and approved. If the product is found, it populates the seller's basic information and category details before returning the product data. If the product is not found or if the ID is invalid, it throws an appropriate error.
   async getProductById(productId) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -152,7 +148,6 @@ export const productService = {
     return product;
   },
 
-  // This method retrieves the top-rated products based on their ratings. It queries the database for products that are not deleted, active, and approved, sorts them in descending order of their ratings, and limits the results to a specified number (default is 10). The returned product data includes the name, final price, discount, ratings, images, and stock information.
   async getTopRatedProduct(limit = 10) {
     const products = await Product.find({
       isDeleted: false,
@@ -166,7 +161,6 @@ export const productService = {
     return products;
   },
 
-  // This method retrieves the newest products based on their creation date. It queries the database for products that are not deleted, active, and approved, sorts them in descending order of their creation date, and limits the results to a specified number (default is 10). The returned product data includes the name, final price, discount, ratings, images, and stock information.
   async getNewArrivalProduct(limit = 10) {
     return await Product.find({
       isDeleted: false,
@@ -178,7 +172,6 @@ export const productService = {
       .select("name finalPrice discountPercentage ratings images stock");
   },
 
-  // This method retrieves products that belong to a specific category. It validates the category ID, constructs a filter to find products that match the category and are not deleted, active, and approved, and applies sorting based on query parameters. The results are paginated and returned along with metadata about the total number of products and total pages.
   async getProductsByCategory(categoryId, query) {
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
       throw new ApiError(400, "Invalid category ID");
@@ -225,7 +218,6 @@ export const productService = {
     };
   },
 
-  // This method allows customers to submit a review for a specific product. It validates the product ID, checks if the user has purchased the product, and then either creates a new review or updates an existing one. After saving the review, it recalculates the average rating and total reviews for the product and updates the product document accordingly. The method returns the review and a message indicating whether it was created or updated.
   async searchProduct(queryParams) {
     const {
       query,
@@ -314,7 +306,6 @@ export const productService = {
     };
   },
 
-  // This method retrieves products that are related to a specific product based on shared category, tags, and brand. It validates the product ID, fetches the main product to determine its category, tags, and brand, and then constructs a filter to find other products that share these attributes while excluding the main product itself. The results are sorted by ratings and sales, paginated, and returned along with metadata about the total number of related products and total pages.
   async getRelatedProducts(productId, query) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -378,7 +369,6 @@ export const productService = {
     };
   },
 
-  // This method retrieves the reviews for a specific product based on the product ID and query parameters such as rating filter, pagination, and sorting. It validates the product ID, checks if the product exists and is active, and then constructs a filter to find reviews that match the product and have an approved status. The reviews are sorted by creation date, paginated, and returned along with metadata about the total number of reviews and total pages.
   async getProductReviews(productId, query) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -428,7 +418,6 @@ export const productService = {
     };
   },
 
-  // This method allows customers to submit a review for a specific product. It validates the product ID, checks if the user has purchased the product, and then either creates a new review or updates an existing one. After saving the review, it recalculates the average rating and total reviews for the product and updates the product document accordingly. The method returns the review and a message indicating whether it was created or updated.
   async submitReview(productId, userId, body) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -514,7 +503,6 @@ export const productService = {
     return { review, message };
   },
 
-  // This method retrieves the questions and answers (QnA) for a specific product. It validates the product ID, checks if the product exists and is active, and then constructs a filter to find QnA entries that match the product and have a status of either "pending" or "answered". The QnA entries are sorted by creation date, paginated, and returned along with metadata about the total number of QnA entries and total pages. Each QnA entry includes populated information about the user who asked the question and the seller who answered it.
   async getProductQnA(productId, query) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -561,7 +549,6 @@ export const productService = {
     };
   },
 
-  // This method allows customers to ask a question about a specific product. It validates the product ID, checks if the product exists and is active, and then creates a new QnA entry with the question. After saving the QnA entry, it emits a notification to the seller of the product to inform them about the new question. The method returns the created QnA entry.
   async askProductQuestion(productId, userId, body) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -608,7 +595,6 @@ export const productService = {
     return newQnA;
   },
 
-  // This method allows sellers to respond to a question asked about their product. It validates the product ID and question ID, checks if the QnA entry exists and belongs to the seller, and then updates the QnA entry with the provided answer. After saving the answer, it emits a notification to the customer who asked the question to inform them about the response. The method returns the updated QnA entry.
   async respondToProductQnA(productId, questionId, sellerId, body) {
     const { answer } = body;
 
@@ -652,7 +638,6 @@ export const productService = {
     return qna;
   },
 
-  // This method allows sellers to create a new product listing. It validates the required fields, checks the validity and status of the category, and ensures that at least one image is provided. The images are uploaded to Cloudinary with rollback safety in case of any errors during product creation. After successfully creating the product, it emits a notification to all active admins to inform them about the new product pending approval. The method returns the created product.
   async createProduct(sellerId, body, files) {
     const { name, description, price, stock, brand, category, variants } = body;
 
@@ -800,7 +785,6 @@ export const productService = {
     }
   },
 
-  // This method allows sellers to retrieve a list of their own products based on various query parameters such as approval status, category, pagination, and sorting options. It constructs a dynamic filter object based on the provided query parameters and executes a MongoDB query to fetch the matching products that belong to the seller. The results are paginated and returned along with metadata about the total number of products and total pages.
   async getSellerProducts(sellerId, query) {
     const { status, category, page = 1, limit = 10, sort = "newest" } = query;
 
@@ -931,7 +915,6 @@ export const productService = {
     }
   },
 
-  // This method allows sellers to update an existing product listing. It validates the product ID, checks if the product exists and belongs to the seller, and then applies updates based on a whitelist of allowed fields. The method also handles image updates with rollback safety, resets the approval status to pending, and emits notifications to all active admins about the updated product pending approval. The updated product is returned at the end.
   async updateProduct(productId, sellerId, body, files) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -1090,7 +1073,6 @@ export const productService = {
     return product;
   },
 
-  // This method allows sellers to delete a product listing. It validates the product ID, checks if the product exists and belongs to the seller, and then determines whether to perform a soft delete or archive the product based on existing order dependencies. If the product has existing orders, it is archived instead of deleted. The method also handles image cleanup from Cloudinary and returns a message indicating the result of the deletion operation.
   async deleteProduct(productId, sellerId) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -1140,7 +1122,6 @@ export const productService = {
     };
   },
 
-  // This method allows sellers to manage the stock of a product. It validates the product ID, checks if the product exists and belongs to the seller, and then updates the stock value. The method also includes variant safety checks to prevent updating base stock when variants exist. Additionally, it automatically controls the visibility of the product based on stock availability. If the stock is set to zero, the product is marked as inactive. The updated product is returned at the end.
   async manageProductStock(productId, sellerId, stockValue) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -1193,7 +1174,6 @@ export const productService = {
     return product;
   },
 
-  // This method allows sellers to manage the variants of a product. It validates the product ID, checks if the product exists and belongs to the seller, and then applies updates to the variants based on the provided data. The method includes comprehensive validation for variant labels, options, stock values, and price overrides. After updating the variants, it resets the approval status to pending and emits notifications to all active admins about the updated product pending approval. The updated product is returned at the end.
   async variantManagement(productId, sellerId, variants) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -1245,7 +1225,6 @@ export const productService = {
     return product;
   },
 
-  // This method allows sellers to retrieve the orders that include a specific product. It validates the product ID, checks if the product exists and belongs to the seller, and then constructs a filter to find orders that contain the product in their items. The method also supports filtering by order status and includes pagination. The results are returned along with metadata about the total number of orders and total pages.
   async getProductOrders(productId, sellerId, query) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -1296,7 +1275,6 @@ export const productService = {
     };
   },
 
-  // This method allows sellers to archive a product listing. It validates the product ID, checks if the product exists and belongs to the seller, and then updates the product's status to archived. If the product is already archived, it returns a message indicating that. The method returns the updated product along with information about whether it was already archived or not.
   async archiveProduct(productId, sellerId) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -1330,7 +1308,6 @@ export const productService = {
     };
   },
 
-  // This method allows sellers to restore an archived product listing. It validates the product ID, checks if the product exists and belongs to the seller, and then updates the product's status to active and not archived. If the product is not currently archived, it returns a message indicating that. The method returns the updated product along with information about whether it was not archived or not.
   async restoreArchiveProduct(productId, sellerId) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -1367,7 +1344,6 @@ export const productService = {
     };
   },
 
-  // This method allows sellers to retrieve the feedback (reviews) for a specific product. It validates the product ID, checks if the product exists and belongs to the seller, and then constructs a filter to find reviews that match the product and have an approved status. The reviews are sorted by creation date, paginated, and returned along with metadata about the average rating, total number of reviews, and total pages. Each review includes populated information about the user who submitted it.
   async getProductFeedback(productId, sellerId, query) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -1430,7 +1406,6 @@ export const productService = {
     };
   },
 
-  // This method allows sellers to toggle the featured status of a product. It validates the product ID, checks if the product exists and belongs to the seller, and then updates the featured status based on the provided value. The method includes checks to ensure that only approved and active products can be featured, and it enforces a limit of 5 active featured products per seller. The updated product is returned at the end.
   async toggleProductField({
     productId,
     actorId = null,
@@ -1573,7 +1548,6 @@ export const productService = {
     };
   },
 
-  // This method allows sellers to schedule a flash sale for a specific product. It validates the product ID, checks if the product exists and belongs to the seller, and then validates the provided start and end dates as well as the discount percentage. The method ensures that only approved and active products can have flash sales and that there are no overlapping flash sales for the same product. After setting up the flash sale details, it saves the product and returns the updated product information.
   async scheduleFlashSale(productId, sellerId, body) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -1653,8 +1627,6 @@ export const productService = {
     return product;
   },
 
-
-  // This method allows sellers to remove an active flash sale from a specific product. It validates the product ID, checks if the product exists and belongs to the seller, and then verifies if there is an active flash sale to remove. If an active flash sale is found, it resets the flash sale details to indicate that there is no active flash sale for the product. The updated product information is returned at the end.
   async removeFlashSale(productId, sellerId) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -1686,7 +1658,6 @@ export const productService = {
     return product;
   },
 
-  // This method allows admins to approve a product listing. It validates the product ID, checks if the product exists, and then updates the product's approval status to approved and marks it as active. If the product is already approved, it returns a message indicating that. After approving the product, it emits a notification to the seller to inform them about the approval. The method returns the updated product along with information about whether it was already approved or not.
   async approveProduct(productId) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -1737,7 +1708,6 @@ export const productService = {
     };
   },
 
-  // This method allows admins to reject a product listing. It validates the product ID and the rejection reason, checks if the product exists, and then updates the product's approval status to rejected and marks it as inactive. If the product is already rejected, it returns a message indicating that. After rejecting the product, it emits a notification to the seller to inform them about the rejection along with the provided reason. The method returns the updated product along with information about whether it was already rejected or not.
   async rejectProduct(productId, reason) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -1801,7 +1771,6 @@ export const productService = {
     };
   },
 
-  // This method allows admins to retrieve a list of all products based on various query parameters such as approval status, seller, category, activity status, deletion status, search term, pagination, and sorting options. It constructs a dynamic filter object based on the provided query parameters and executes a MongoDB query to fetch the matching products. The results are paginated and returned along with metadata about the total number of products and total pages. Each product includes populated information about the seller and category.
   async adminGetAllProducts(query) {
     const {
       status,
@@ -1880,7 +1849,6 @@ export const productService = {
     };
   },
 
-  // This method allows admins to moderate the content of a product listing. It validates the product ID, checks if the product exists, and then applies updates to the product based on a whitelist of allowed fields. The method includes validation for category ID, price format, stock value, and discount percentage. After applying the updates, it saves the product and returns the updated product information. The method is designed to allow admins to make necessary adjustments to a product's content without going through the full approval process again, while still ensuring that the updates adhere to the required data formats and constraints.
   async moderateProductContent(productId, body) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -1960,7 +1928,6 @@ export const productService = {
     return product;
   },
 
-  // This method allows admins to toggle the active status of a product listing. It validates the product ID, checks if the product exists, and then updates the active status based on the provided value. The method includes checks to ensure that only approved products can be activated and that archived products cannot be activated. After updating the status, it emits a notification to the seller to inform them about the status change. The updated product is returned at the end.
   async toggleProductStatus(productId, isActive) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");
@@ -2010,7 +1977,6 @@ export const productService = {
     return product;
   },
 
-  // This method allows admins to perform bulk moderation actions (approve or reject) on multiple product listings at once. It validates the input data, checks if the products exist, and then applies the specified action to each product while ensuring that archived products are skipped. The method also emits notifications to the respective sellers for each approved or rejected product. Finally, it returns a summary of the moderation results, including counts of updated and skipped products.
   async bulkModerateProducts(body) {
     const { ids, action, reason } = body;
 

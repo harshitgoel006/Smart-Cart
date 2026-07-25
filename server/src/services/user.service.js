@@ -1,5 +1,3 @@
-// This module implements the user service, which contains all the business logic related to user management such as registration, login, password reset, profile updates, and seller-specific functionalities. It interacts with the User model for database operations and uses utility functions for tasks like sending emails and handling file uploads. The service also integrates with the notification system to emit relevant events when user actions occur.
-
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
 import { uploadSingle, deleteFromCloudinary } from "../utils/cloudinary.js";
@@ -11,9 +9,8 @@ import { Order } from "../models/order.model.js";
 import mongoose from "mongoose";
 import NotificationService from "../services/notification/notification.service.js";
 
-// The userService object encapsulates all the methods related to user management. It includes functionalities for generating access and refresh tokens, sending OTPs for email verification and password reset, registering new users, verifying OTPs, logging in and out users, changing passwords, updating user profiles and addresses, and handling seller-specific profile information. Each method performs necessary validations, interacts with the database through the User model, and emits notifications for relevant events to keep users informed about their account activities.
 export const userService = {
-  // This method generates a new access token and refresh token for a given user ID. It retrieves the user from the database, creates the tokens using methods defined in the User model, hashes the refresh token for secure storage, and saves it in the user's document with an expiry date. The generated tokens are then returned to be used for authentication in subsequent requests.
+
   async generateAccessAndRefreshToken(userId) {
     const user = await User.findById(userId);
 
@@ -35,7 +32,6 @@ export const userService = {
     return { accessToken, refreshToken };
   },
 
-  // This method sends an OTP to the specified email address for the purpose of email verification during user registration. It checks if the email and role are provided, validates the role, ensures that no user already exists with the given email, and prevents OTP spamming by enforcing a cooldown period. If all checks pass, it generates a 6-digit OTP, saves it in the database with an expiry time, and sends it to the user's email address using a predefined email template.
   async sendOtp(email, role) {
     if (!email || !role) {
       throw new ApiError(400, "Email and role are required");
@@ -90,7 +86,6 @@ export const userService = {
     await sendEmail(email, subject, html);
   },
 
-  // This method registers a new user with the provided details such as email, username, fullname, password, role, phone number, and avatar file. It performs various validations to ensure all required fields are present, checks for existing users with the same email or username, handles avatar upload to Cloudinary, verifies that the email has been verified via OTP, creates the user in the database, and emits a notification to all admins about the new user registration. Finally, it returns the created user without sensitive information like password and refresh tokens.
   async registerUser({
     email,
     username,
@@ -173,7 +168,6 @@ export const userService = {
     return createdUser;
   },
 
-  // This method verifies the OTP provided by the user for email verification during registration. It checks if the email and OTP are provided, retrieves the corresponding OTP record from the database, checks for expiry and maximum attempts, verifies the OTP against the stored hash, and if valid, saves a temporary verified email record that can be used for registration. Finally, it deletes the OTP record from the database to prevent reuse.
   async verifyOtp(email, otp) {
     if (!email || !otp) {
       throw new ApiError(400, "Email and OTP required");
@@ -224,7 +218,6 @@ export const userService = {
     await OTP.deleteOne({ _id: record._id });
   },
 
-  // This method handles user login by validating the provided email and password. It checks if the email and password are present, retrieves the user from the database, verifies the password, checks if the account is active and email is verified, cleans up expired refresh tokens, generates new access and refresh tokens, and returns the user information along with the tokens. If any validation fails, it throws appropriate errors to indicate the issue.
   async loginUser(email, password) {
     if (!email || !password) {
       throw new ApiError(400, "Email and password are required");
@@ -281,7 +274,6 @@ export const userService = {
     };
   },
 
-  // This method handles user logout by revoking the provided refresh token. It checks if the refresh token is present, retrieves the user from the database along with their refresh tokens, hashes the provided refresh token, checks if it exists in the user's stored tokens, and if found, removes it from the database to prevent further use. If the token is not found, it simply returns without error, as the token may have already been revoked or invalid.
   async logoutUser(userId, refreshToken) {
     if (!refreshToken) {
       throw new ApiError(400, "Refresh token required");
@@ -311,7 +303,6 @@ export const userService = {
     await user.save({ validateBeforeSave: false });
   },
 
-  // This method allows a user to change their current password by providing the old password and the new password. It validates the input, retrieves the user from the database, checks if the old password is correct, ensures that the new password is different from the old one, updates the user's password, revokes all existing refresh tokens for security, saves the changes to the database, and emits a notification about the password change. If any validation fails or if the user is not found, it throws appropriate errors to indicate the issue.
   async changeCurrentPassword(userId, oldPassword, newPassword) {
     if (!oldPassword || !newPassword) {
       throw new ApiError(400, "Old and new password required");
@@ -357,7 +348,6 @@ export const userService = {
     }
   },
 
-  // This method sends a password reset OTP to the user's email address. It validates the input email, checks if a user with the given email exists, prevents OTP spamming by enforcing a cooldown period, generates a 6-digit OTP, saves it in the database with an expiry time, and sends it to the user's email using a predefined template. If the user does not exist, it simply returns without error to prevent information disclosure about registered emails.
   async sendResetOtp(email) {
     if (!email) {
       throw new ApiError(400, "Email is required");
@@ -407,7 +397,6 @@ export const userService = {
     await sendEmail(email, subject, html);
   },
 
-  // This method verifies the OTP provided by the user for password reset. It checks if the email and OTP are provided, retrieves the corresponding OTP record from the database, checks for expiry and maximum attempts, verifies the OTP against the stored hash, and if valid, allows the password reset process to continue. The OTP record is not deleted immediately to allow for a subsequent password reset request if needed, but it can be deleted after a successful password change to prevent reuse.
   async verifyResetOtp(email, otp) {
     if (!email || !otp) {
       throw new ApiError(400, "Email and OTP required");
@@ -448,7 +437,6 @@ export const userService = {
     return true;
   },
 
-  // This method resets the user's password after verifying the provided OTP. It checks if the email, OTP, and new password are provided, retrieves the corresponding OTP record from the database, checks for expiry and maximum attempts, verifies the OTP against the stored hash, and if valid, updates the user's password in the database. It also revokes all existing refresh tokens for security and emits a notification about the password reset. Finally, it deletes the OTP record to prevent reuse.
   async resetPassword(email, otp, newPassword) {
     if (!email || !otp || !newPassword) {
       throw new ApiError(400, "Email, OTP and new password required");
@@ -523,7 +511,6 @@ export const userService = {
     }
   },
 
-  // This method updates the user's avatar by uploading a new image file to Cloudinary and deleting the old avatar if it exists. It validates the input file, retrieves the user from the database, handles the avatar upload and deletion, updates the user's avatar URL and public ID in the database, and returns the updated user information without sensitive fields like password and refresh tokens.
   async updateUserAvatar(userId, file) {
     if (!file?.path) {
       throw new ApiError(400, "Avatar file required");
@@ -557,7 +544,6 @@ export const userService = {
     return await User.findById(userId).select("-password -refreshTokens");
   },
 
-  // This method updates the user's address information. It validates the required address fields, retrieves the user from the database, limits the maximum number of addresses to 5, allows setting one address as default while unsetting others, updates or adds the address based on the label, saves the changes to the database, and returns the updated list of addresses.
   async updateAddress(userId, data) {
     const { label, street, city, state, country, pincode, isDefault } = data;
 
@@ -615,7 +601,6 @@ export const userService = {
     return user.addresses;
   },
 
-  // This method updates the user's account details such as fullname, username, phone number, and email. It validates that at least one field is provided for update, retrieves the user from the database, checks for username uniqueness if it's being updated, handles email change by enforcing uniqueness and sending a verification OTP, updates the provided fields, saves the changes to the database, emits a notification about the profile update, and returns the updated user information without sensitive fields like password and refresh tokens.
   async updateAccountDetails(userId, data) {
     let { fullname, username, phone, email } = data;
 
@@ -700,7 +685,6 @@ export const userService = {
     return user;
   },
 
-  // This method retrieves the seller profile information for a given user ID. It checks if the user exists and has the role of "seller", and if so, it returns an object containing the basic user information (fullname, email, username, phone, avatar) and the nested sellerProfile details. If the user is not found or does not have the seller role, it throws appropriate errors to indicate the issue.
   async getSellerProfile(userId) {
     const seller = await User.findById(userId).select(
       "-password -refreshTokens",
@@ -726,7 +710,6 @@ export const userService = {
     };
   },
 
-  // This method updates the seller profile information for a given user ID. It checks if the user exists and has the role of "seller", then it updates both the basic user fields (fullname, username, phone, email) and the nested sellerProfile fields (shopName, shopAddress, gstNumber, businessType, accountHolderName, bankAccountNumber, ifscCode, upiId). It also handles email change by enforcing uniqueness and sending a verification OTP, and manages banner image upload by deleting the old banner from Cloudinary if it exists. Finally, it checks for profile completeness based on required fields and saves the changes to the database before returning the updated profile information.
   async updateSellerProfile(userId, data, file) {
     const seller = await User.findById(userId).select("+sellerProfile");
 
@@ -855,7 +838,6 @@ export const userService = {
     };
   },
 
-  // This method retrieves a breakdown of sales data for a seller, grouped by product. It checks if the seller ID is provided and valid, ensures that the user is a seller, and then performs an aggregation on the Order collection to calculate total units sold and total revenue for each product sold by the seller. The results are enriched with product details using a lookup, sorted by revenue in descending order, and returned as an array of objects containing product ID, product name, total units sold, and total revenue.
   async getProductWiseBreakdown(sellerId) {
     if (!sellerId) {
       throw new ApiError(400, "Seller ID required");
@@ -914,7 +896,6 @@ export const userService = {
     return data;
   },
 
-  // This method retrieves the top-selling products for a seller based on the total units sold. It checks if the seller ID is provided and valid, ensures that the user is a seller, and then performs an aggregation on the Order collection to calculate total units sold for each product sold by the seller. The results are enriched with product details using a lookup, sorted by total units sold in descending order, limited to the top 5 products, and returned as an array of objects containing product ID, product name, and total units sold.
   async getTopSellingItems(sellerId) {
     if (!sellerId) {
       throw new ApiError(400, "Seller ID required");
@@ -971,7 +952,6 @@ export const userService = {
     return topProducts;
   },
 
-  // This method retrieves a breakdown of daily sales data for a seller, including total revenue and total orders for each day. It checks if the seller ID is provided and valid, ensures that the user is a seller, and then performs an aggregation on the Order collection to calculate daily revenue and order count for orders that include items sold by the seller. The results are grouped by date, sorted in ascending order, and returned as an array of objects containing the date, total revenue, and total orders for each day.
   async getDailySalesData(sellerId) {
     if (!sellerId) {
       throw new ApiError(400, "Seller ID required");
@@ -1035,7 +1015,6 @@ export const userService = {
     return dailyData;
   },
 
-  // This method approves a seller's account by setting the appropriate flags in their profile. It checks if the seller ID is provided and valid, ensures that the user is a seller, checks if the seller profile is complete, and if not already approved, it updates the seller's profile to mark them as approved and not suspended. It then saves the changes to the database and emits a notification about the approval. Finally, it returns an object indicating whether the seller was already approved and the updated seller information.
   async approveSeller(id) {
     const seller = await User.findById(id);
 
@@ -1076,7 +1055,6 @@ export const userService = {
     return { alreadyApproved: false, seller };
   },
 
-  // This method suspends a seller's account by setting the appropriate flags in their profile. It checks if the seller ID is provided and valid, ensures that the user is a seller, checks if the seller profile is approved, and if not already suspended, it updates the seller's profile to mark them as suspended. It then saves the changes to the database and emits a notification about the suspension. Finally, it returns an object indicating whether the seller was already suspended and the updated seller information.
   async suspendSeller(id) {
     const seller = await User.findById(id);
 
@@ -1116,7 +1094,6 @@ export const userService = {
     return { alreadySuspended: false, seller };
   },
 
-  // This method unsuspends a seller's account by updating the appropriate flags in their profile. It checks if the seller ID is provided and valid, ensures that the user is a seller, checks if the seller profile is approved, and if currently suspended, it updates the seller's profile to mark them as not suspended. It then saves the changes to the database and emits a notification about the unsuspension. Finally, it returns an object indicating whether the seller was not suspended and the updated seller information.
   async unsuspendSeller(id) {
     const seller = await User.findById(id);
 
@@ -1152,7 +1129,6 @@ export const userService = {
     return { notSuspended: false, seller };
   },
 
-  // This method retrieves a paginated list of all users in the system. It accepts page and limit parameters for pagination, calculates the number of documents to skip, and queries the User collection to retrieve the users while excluding sensitive fields like password and refresh tokens. The results are sorted by creation date in descending order. It also counts the total number of users to calculate the total pages and returns an object containing the total count, current page, total pages, and the list of users.
   async getAllUsers({ page = 1, limit = 10 }) {
     page = Number(page);
     limit = Number(limit);
@@ -1175,7 +1151,6 @@ export const userService = {
     };
   },
 
-  // This method retrieves a paginated list of all customers in the system. It accepts page and limit parameters for pagination, calculates the number of documents to skip, and queries the User collection to retrieve users with the role of "customer" while excluding sensitive fields like password and refresh tokens. The results are sorted by creation date in descending order. It also counts the total number of customers to calculate the total pages and returns an object containing the total count, current page, total pages, and the list of customers.
   async getAllCustomers({ page = 1, limit = 10 }) {
     const skip = (page - 1) * limit;
 
@@ -1195,7 +1170,6 @@ export const userService = {
     };
   },
 
-  // This method retrieves a paginated list of all sellers in the system. It accepts page and limit parameters for pagination, calculates the number of documents to skip, and queries the User collection to retrieve users with the role of "seller" while excluding sensitive fields like password and refresh tokens. The results are sorted by creation date in descending order. It also counts the total number of sellers to calculate the total pages and returns an object containing the total count, current page, total pages, and the list of sellers.
   async getAllSellers({ page = 1, limit = 10 }) {
     const skip = (page - 1) * limit;
 
@@ -1215,7 +1189,6 @@ export const userService = {
     };
   },
 
-  // This method deactivates a user's account by setting the isActive flag to false and revoking all existing refresh tokens. It checks if the user ID is valid, retrieves the user from the database, checks if the account is already deactivated, updates the user's status and refresh tokens, saves the changes to the database, emits a notification about the account deactivation, and returns an object indicating whether the account was already deactivated and the updated user information.
   async deactivateUserAccount(id) {
     const user = await User.findById(id).select("+refreshTokens");
 
@@ -1251,7 +1224,6 @@ export const userService = {
     return { alreadyDeactivated: false, user };
   },
 
-  // This method reactivates a user's account by setting the isActive flag to true. It checks if the user ID is valid, retrieves the user from the database, checks if the account is already active, updates the user's status, saves the changes to the database, emits a notification about the account reactivation, and returns an object indicating whether the account was already active and the updated user information.
   async reactivateUserAccount(id) {
     const user = await User.findById(id);
 
