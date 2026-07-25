@@ -1,14 +1,4 @@
-import * as brevo from "@getbrevo/brevo";
 import { ApiError } from "./ApiError.js";
-
-console.log("📧 Brevo mail.js loaded");
-
-const apiInstance = new brevo.TransactionalEmailsApi();
-
-apiInstance.setApiKey(
-  brevo.TransactionalEmailsApiApiKeys.apiKey,
-  process.env.BREVO_API_KEY
-);
 
 const sendEmail = async (to, subject, html) => {
   if (!to) {
@@ -16,31 +6,44 @@ const sendEmail = async (to, subject, html) => {
   }
 
   try {
-    const email = new brevo.SendSmtpEmail();
-
-    email.sender = {
-      name: "SmartCart",
-      email: "smartcart025@gmail.com",
-    };
-
-    email.to = [
-      {
-        email: to,
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "content-type": "application/json",
+        "api-key": process.env.BREVO_API_KEY,
       },
-    ];
+      body: JSON.stringify({
+        sender: {
+          name: "SmartCart",
+          email: "smartcart025@gmail.com",
+        },
+        to: [{ email: to }],
+        subject,
+        htmlContent: html,
+      }),
+    });
 
-    email.subject = subject;
-    email.htmlContent = html;
+    const data = await response.json();
 
-    await apiInstance.sendTransacEmail(email);
+    console.log("Brevo Response:", data);
 
-    console.log(`✅ Email sent to ${to}`);
+    if (!response.ok) {
+      throw new ApiError(
+        response.status,
+        data.message || JSON.stringify(data)
+      );
+    }
+
+    console.log("✅ Email Sent:", data.messageId);
+
+    return data;
   } catch (err) {
     console.error("❌ Brevo Error:", err);
 
     throw new ApiError(
       500,
-      err?.response?.text || err?.message || "Email sending failed"
+      err.message || "Email sending failed"
     );
   }
 };
