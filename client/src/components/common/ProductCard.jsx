@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const ProductCard = ({ product }) => {
   return (
     <Link
-      to={`/product/${product.slug}`}
+      to={`/products/${product.slug}`}
       className="group relative block overflow-hidden bg-white"
       style={{
         borderRadius: "24px",
@@ -90,7 +90,7 @@ const ProductCard = ({ product }) => {
 
         {/* Product image */}
         <img
-          src={product.coverImage.url}
+          src={product.coverImage?.url || product.image}
           alt={product.name}
           className="h-full w-full object-cover transition-transform duration-[1800ms] ease-out group-hover:scale-110"
           style={{ display: "block" }}
@@ -147,7 +147,7 @@ const ProductCard = ({ product }) => {
             {product.ratings}
           </span>
           <span style={{ fontSize: "11px", color: "#94a3b8" }}>
-            • {product.reviews?.toLocaleString()} Reviews
+            • {(product.reviewCount ?? product.reviews?.length ?? 0).toLocaleString()} Reviews
           </span>
         </div>
 
@@ -161,7 +161,7 @@ const ProductCard = ({ product }) => {
               letterSpacing: "-0.02em",
             }}
           >
-            ₹{product.finalPrice.toLocaleString()}
+            ₹{(product.finalPrice ?? 0).toLocaleString()}
           </div>
           <div
             className="flex items-center gap-1.5"
@@ -174,7 +174,7 @@ const ProductCard = ({ product }) => {
                 textDecoration: "line-through",
               }}
             >
-              ₹{product.price.toLocaleString()}
+             ₹{(product.originalPrice ?? product.price ?? 0).toLocaleString()}
             </span>
             <span
               style={{
