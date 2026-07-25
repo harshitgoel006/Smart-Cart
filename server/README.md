@@ -1,15 +1,28 @@
-# 🛒 Smart Cart Backend
+# 🛒 Smart Cart Backend API
 
-A production-inspired E-Commerce Backend built using **Node.js, Express.js, MongoDB, and JWT Authentication**.  
-This project implements a complete backend architecture for an online marketplace with secure authentication, seller management, order processing, notifications, analytics, and role-based access control.
+A production-inspired **E-Commerce Backend API** built with **Node.js, Express.js, MongoDB, and JWT Authentication**.
 
-> ⚠️ This project is developed for learning and placement purposes. The payment module currently uses a dummy/simulated flow instead of a live payment gateway.
+The project follows a scalable layered architecture and provides secure authentication, role-based authorization, product management, order processing, reviews, notifications, media uploads, analytics, and seller/admin management.
+
+> ⚠️ This project is developed for learning and placement purposes. The payment module currently uses a dummy/simulated payment flow instead of a live payment gateway.
+
+---
+
+# 🌐 Live API
+
+### Base URL
+
+https://smart-cart-v6yn.onrender.com
+
+### Health Check
+
+GET https://smart-cart-v6yn.onrender.com/health
 
 ---
 
 # 🚀 Features
 
-## Authentication
+## 🔐 Authentication
 
 - User Registration
 - Email OTP Verification
@@ -18,96 +31,161 @@ This project implements a complete backend architecture for an online marketplac
 - Refresh Token Authentication
 - Logout
 - Forgot Password
-- Password Reset via OTP
+- Password Reset using OTP
 - Change Password
+- Avatar Upload
 
 ---
 
-## Customer
+## 👤 Customer Features
 
 - Manage Profile
-- Upload Avatar
 - Manage Addresses
 - Browse Products
-- Search Products
-- Add to Cart
-- Wishlist
-- Place Orders
-- Order History
+- Product Search
+- Category Filtering
 - Product Reviews
+- Product Q&A
+- Cart Management
+- Wishlist Management
+- Place Orders
+- Order Tracking
+- Order History
+- Cancel Orders
+- Return Requests
+- Refund Requests
+- Download Invoice
+- Notifications
 
 ---
 
-## Seller
+## 🛍 Seller Features
 
 - Seller Profile
 - Store Banner Upload
-- Product Management
-- Order Management
+- Product CRUD
+- Product Variants
+- Product Stock Management
+- Product Archive & Restore
+- Flash Sale Management
+- Product Q&A Response
+- Product Feedback
+- Product Orders
 - Product-wise Sales Analytics
 - Daily Sales Analytics
 - Top Selling Products
 
 ---
 
-## Admin
+## 🛡 Admin Features
 
-- Approve Sellers
-- Suspend Sellers
-- Reactivate Sellers
-- Deactivate Users
-- View Customers
-- View Sellers
-- Manage Users
-
----
-
-## Notifications
-
-- New User Registration
-- Password Changed
-- Password Reset
+- User Management
+- Customer Management
+- Seller Management
 - Seller Approval
 - Seller Suspension
-- Profile Updates
+- Product Moderation
+- Category Moderation
+- Banner Management
+- Review Moderation
+- Order Management
+- Refund Approval
+- Return Approval
+- Audit Logs
+- Analytics
 
 ---
 
-## Media Upload
+## 🛒 Cart & Wishlist
+
+- Add to Cart
+- Update Cart
+- Remove Cart Items
+- Clear Cart
+- Apply Coupons
+- Multiple Wishlists
+- Wishlist Privacy
+- Move Wishlist Item to Cart
+- Wishlist Availability Check
+
+---
+
+## ⭐ Reviews
+
+- Create Review
+- Update Review
+- Delete Review
+- Product Reviews
+- Seller Replies
+- Helpful Reviews
+- Report Review
+- Review Analytics
+- Featured Reviews
+
+---
+
+## 📦 Orders
+
+- Place Order
+- Track Order
+- Order History
+- Order Details
+- Download Invoice
+- Apply Coupon
+- Return Request
+- Refund Request
+- Seller Order Management
+- Admin Order Management
+
+---
+
+## 📤 Media Upload
 
 - Avatar Upload
+- Product Images
 - Store Banner Upload
 - Cloudinary Integration
 
 ---
 
+## 🔔 Notification System
+
+- Registration Notifications
+- Password Change Notifications
+- Seller Notifications
+- Order Notifications
+- Read Notifications
+- Mark All Notifications as Read
+
+---
+
 # 🛠 Tech Stack
 
-### Backend
+## Backend
 
 - Node.js
 - Express.js
 
-### Database
+## Database
 
 - MongoDB
 - Mongoose
 
-### Authentication
+## Authentication
 
 - JWT
 - Refresh Tokens
 - bcrypt
 
-### Cloud Storage
+## File Storage
 
 - Cloudinary
 
-### Email Service
+## Email Service
 
-- Nodemailer
+- Brevo Transactional Email API
 
-### Others
+## Others
 
 - Multer
 - Cookie Parser
@@ -115,62 +193,115 @@ This project implements a complete backend architecture for an online marketplac
 
 ---
 
-# 📂 Folder Structure
+# 📂 Project Structure
 
-```text
+```
 src
 │
-├── controllers
-├── services
-├── routes
-├── models
-├── middlewares
-├── utils
 ├── config
-└── app.js
+├── controllers
+├── db
+├── middlewares
+├── models
+├── routes
+├── seed
+├── services
+├── utils
+│
+├── app.js
+├── constant.js
+└── index.js
 ```
 
 ---
 
 # 🔐 Authentication Flow
 
-```text
+```
 Register
-      │
-      ▼
+     │
+     ▼
 Send OTP
-      │
-      ▼
+     │
+     ▼
 Verify OTP
-      │
-      ▼
+     │
+     ▼
 Create Account
-      │
-      ▼
+     │
+     ▼
 Login
-      │
-      ▼
-Access Token + Refresh Token
+     │
+     ▼
+Access Token
+     │
+     ▼
+Protected APIs
 ```
 
 ---
 
 # 👥 Roles
 
-- Customer
-- Seller
-- Admin
+| Role | Access |
+|------|--------|
+| Customer | Shopping, Cart, Wishlist, Orders |
+| Seller | Product & Store Management |
+| Admin | Platform Management |
 
 ---
 
 # 📊 Analytics
 
-Seller Dashboard includes
+### Seller Dashboard
 
-- Product-wise Revenue
 - Product-wise Sales
+- Product-wise Revenue
 - Daily Sales
 - Top Selling Products
+
+### Admin Dashboard
+
+- Order Management
+- User Management
+- Category Management
+- Review Moderation
+- Seller Management
+
+---
+
+# 📬 API Modules
+
+| Module | Description |
+|---------|-------------|
+| Authentication | Register, Login, OTP, Password Reset |
+| Users | Profile & Address Management |
+| Products | CRUD, Search, Reviews, Q&A |
+| Categories | CRUD & Moderation |
+| Cart | Cart & Coupons |
+| Wishlist | Wishlist Management |
+| Orders | Order Lifecycle |
+| Reviews | Product Reviews |
+| Notifications | Notification APIs |
+| Payments | Dummy Payment Flow |
+| Upload | Media Upload |
+| Banner | Banner Management |
+
+---
+
+# 📡 API Prefix
+
+```
+/api/v1
+```
+
+Example
+
+```
+GET /api/v1/products
+POST /api/v1/users/login
+POST /api/v1/orders/orders
+```
 
 ---
 
@@ -179,7 +310,7 @@ Seller Dashboard includes
 Create a `.env` file.
 
 ```env
-PORT=8000
+PORT=
 
 MONGODB_URI=
 
@@ -193,8 +324,7 @@ CLOUDINARY_CLOUD_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_API_SECRET=
 
-EMAIL_USER=
-EMAIL_PASS=
+BREVO_API_KEY=
 
 CORS_ORIGIN=
 ```
@@ -206,7 +336,13 @@ CORS_ORIGIN=
 Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/smart-cart-backend.git
+git clone https://github.com/harshitgoel006/Smart-Cart.git
+```
+
+Go to project directory
+
+```bash
+cd Smart-Cart
 ```
 
 Install dependencies
@@ -215,7 +351,7 @@ Install dependencies
 npm install
 ```
 
-Create `.env`
+Create a `.env` file
 
 Start development server
 
@@ -225,34 +361,43 @@ npm run dev
 
 ---
 
-# 📬 API Modules
+# 🚀 Deployment
 
-- Authentication
-- User
-- Product
-- Category
-- Cart
-- Wishlist
-- Orders
-- Reviews
-- Notifications
-- Payments
-- Banner
+Backend is deployed on **Render**
 
----
-
-# 🧪 Testing
-
-The APIs were tested using **Postman**.
-
----
-
-# 📌 Architecture
-
-The backend follows a layered architecture.
+Live URL
 
 ```
-Routes
+https://smart-cart-v6yn.onrender.com
+```
+
+Database
+
+- MongoDB Atlas
+
+Storage
+
+- Cloudinary
+
+Email Service
+
+- Brevo
+
+---
+
+# 🧪 API Testing
+
+All APIs have been tested using **Postman**.
+
+---
+
+# 🏗 Architecture
+
+```
+Client
+    │
+    ▼
+Express Routes
     │
     ▼
 Controllers
@@ -262,34 +407,57 @@ Services
     │
     ▼
 Models
+    │
+    ▼
+MongoDB
 ```
 
-Business logic is handled inside the Service layer while Controllers remain lightweight.
+Business logic is handled inside the **Service Layer**, while Controllers remain lightweight and focused on request/response handling.
+
+---
+
+# 🔒 Security
+
+- JWT Authentication
+- Refresh Token Authentication
+- Password Hashing (bcrypt)
+- Email OTP Verification
+- Protected Routes
+- Role-Based Authorization
+- Centralized Error Handling
+- Input Validation
+- Secure Cookies
 
 ---
 
 # 🚧 Future Improvements
 
-- Live Payment Gateway Integration (Razorpay / Stripe)
+- Razorpay / Stripe Integration
 - Redis Caching
 - Docker Support
 - CI/CD Pipeline
-- Elasticsearch
 - API Rate Limiting
+- Elasticsearch
 - WebSockets
+- Swagger / OpenAPI Documentation
+- Unit & Integration Testing
 
 ---
 
 # 👨‍💻 Author
 
-**Your Name**
+**Harshit Goel**
 
-B.Tech Computer Science
+B.Tech Computer Science (Cloud Computing & Blockchain)
 
 DIT University
+
+GitHub
+
+https://github.com/harshitgoel006
 
 ---
 
 # 📄 License
 
-This project is developed for educational and placement purposes.
+This project is developed for educational, learning, and placement purposes.
