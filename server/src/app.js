@@ -31,17 +31,17 @@ app.use(cookieParser());
 
 const API_PREFIX = "/api/v1";
 
-app.use("${API_PREFIX}/uploads", uploadRouter);
-app.use("${API_PREFIX}/users", userRouter);
-app.use("${API_PREFIX}/products", productRouter);
-app.use("${API_PREFIX}/categories", categoryRouter);
-app.use("${API_PREFIX}/carts", cartRouter);
-app.use("${API_PREFIX}/wishlists", wishlistRouter);
-app.use("${API_PREFIX}/orders", orderRouter);
-app.use("${API_PREFIX}/notifications", notificationRouter);
-app.use("${API_PREFIX}/reviews", reviewRouter);
-app.use("${API_PREFIX}/payments", paymentRouter);
-app.use("${API_PREFIX}/banners", bannerRoutes);
+app.use(`${API_PREFIX}/uploads`, uploadRouter);
+app.use(`${API_PREFIX}/users`, userRouter);
+app.use(`${API_PREFIX}/products`, productRouter);
+app.use(`${API_PREFIX}/categories`, categoryRouter);
+app.use(`${API_PREFIX}/carts`, cartRouter);
+app.use(`${API_PREFIX}/wishlists`, wishlistRouter);
+app.use(`${API_PREFIX}/orders`, orderRouter);
+app.use(`${API_PREFIX}/notifications`, notificationRouter);
+app.use(`${API_PREFIX}/reviews`, reviewRouter);
+app.use(`${API_PREFIX}/payments`, paymentRouter);
+app.use(`${API_PREFIX}/banners`, bannerRoutes);
 
 app.use(handleMulterError);
 app.use(errorHandler);
