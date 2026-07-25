@@ -1,103 +1,295 @@
-src/
-├── app.js                 # Express app setup & middleware registration
-├── index.js               # Server entry point
-├── constant.js            # Global constants & enums
+# 🛒 Smart Cart Backend
+
+A production-inspired E-Commerce Backend built using **Node.js, Express.js, MongoDB, and JWT Authentication**.  
+This project implements a complete backend architecture for an online marketplace with secure authentication, seller management, order processing, notifications, analytics, and role-based access control.
+
+> ⚠️ This project is developed for learning and placement purposes. The payment module currently uses a dummy/simulated flow instead of a live payment gateway.
+
+---
+
+# 🚀 Features
+
+## Authentication
+
+- User Registration
+- Email OTP Verification
+- Secure Login
+- JWT Authentication
+- Refresh Token Authentication
+- Logout
+- Forgot Password
+- Password Reset via OTP
+- Change Password
+
+---
+
+## Customer
+
+- Manage Profile
+- Upload Avatar
+- Manage Addresses
+- Browse Products
+- Search Products
+- Add to Cart
+- Wishlist
+- Place Orders
+- Order History
+- Product Reviews
+
+---
+
+## Seller
+
+- Seller Profile
+- Store Banner Upload
+- Product Management
+- Order Management
+- Product-wise Sales Analytics
+- Daily Sales Analytics
+- Top Selling Products
+
+---
+
+## Admin
+
+- Approve Sellers
+- Suspend Sellers
+- Reactivate Sellers
+- Deactivate Users
+- View Customers
+- View Sellers
+- Manage Users
+
+---
+
+## Notifications
+
+- New User Registration
+- Password Changed
+- Password Reset
+- Seller Approval
+- Seller Suspension
+- Profile Updates
+
+---
+
+## Media Upload
+
+- Avatar Upload
+- Store Banner Upload
+- Cloudinary Integration
+
+---
+
+# 🛠 Tech Stack
+
+### Backend
+
+- Node.js
+- Express.js
+
+### Database
+
+- MongoDB
+- Mongoose
+
+### Authentication
+
+- JWT
+- Refresh Tokens
+- bcrypt
+
+### Cloud Storage
+
+- Cloudinary
+
+### Email Service
+
+- Nodemailer
+
+### Others
+
+- Multer
+- Cookie Parser
+- CORS
+
+---
+
+# 📂 Folder Structure
+
+```text
+src
 │
-├── config/                # Environment & third-party service configs
-│
-├── db/
-│   └── index.js           # Database connection & setup
-│
-├── jobs/                  # Background jobs (emails, notifications)
-│   ├── email.job.js
-│   └── notification.job.js
-│
-├── middlewares/           # Auth, RBAC, file upload middlewares
-│   ├── auth.middleware.js
-│   ├── authorizeRole.middleware.js
-│   └── multer.middleware.js
-│
-├── controllers/           # Handle HTTP requests & responses (thin layer)
-│   ├── cart.controller.js
-│   ├── category.controller.js
-│   ├── notification.controller.js
-│   ├── order.controller.js
-│   ├── payment.controller.js
-│   ├── product.controller.js
-│   ├── review.controller.js
-│   ├── upload.controller.js
-│   ├── user.controller.js
-│   └── wishlist.controller.js
-│
-├── services/              # Business logic layer
-│   ├── cart.service.js
-│   ├── category.service.js
-│   ├── notification.service.js
-│   ├── order.service.js
-│   ├── payment.service.js
-│   ├── product.service.js
-│   ├── review.service.js
-│   ├── upload.service.js
-│   ├── user.service.js
-│   └── wishlist.service.js
-│
-├── repositories/          # Data access layer (DB interactions)
-│   ├── cart.repository.js
-│   ├── category.repository.js
-│   ├── notification.repository.js
-│   ├── order.repository.js
-│   ├── payment.repository.js
-│   ├── product.repository.js
-│   ├── review.repository.js
-│   ├── upload.repository.js
-│   ├── user.repository.js
-│   └── wishlist.repository.js
-│
-├── models/                # Database schemas / ORM models
-│   ├── cart.model.js
-│   ├── category.model.js
-│   ├── coupon.model.js
-│   ├── escalation.model.js
-│   ├── notification.model.js
-│   ├── order.model.js
-│   ├── otp.model.js
-│   ├── payment.model.js
-│   ├── product.model.js
-│   ├── productQnA.model.js
-│   ├── review.model.js
-│   ├── user.model.js
-│   └── wishlist.model.js
-│
-├── routes/                # API route definitions
-│   ├── cart.routes.js
-│   ├── category.routes.js
-│   ├── notification.routes.js
-│   ├── order.routes.js
-│   ├── payment.routes.js
-│   ├── product.routes.js
-│   ├── review.routes.js
-│   ├── upload.routes.js
-│   ├── user.routes.js
-│   └── wishlist.routes.js
-│
-├── validators/            # Request validation schemas
-│   ├── cart.validator.js
-│   ├── category.validator.js
-│   ├── notification.validator.js
-│   ├── order.validator.js
-│   ├── payment.validator.js
-│   ├── product.validator.js
-│   ├── review.validator.js
-│   ├── upload.validator.js
-│   ├── user.validator.js
-│   └── wishlist.validator.js
-│
-└── utils/                 # Shared utilities & helpers
-    ├── ApiError.js        # Custom error class
-    ├── ApiResponse.js     # Standardized API responses
-    ├── asyncHandler.js   # Async error wrapper
-    ├── cloudinary.js     # Cloudinary integration
-    ├── notificationEmailTemplates.js
-    ├── qrCodeGenerators.js
-    ├── sendEmail.js
-    └── sendNotification.js
+├── controllers
+├── services
+├── routes
+├── models
+├── middlewares
+├── utils
+├── config
+└── app.js
+```
+
+---
+
+# 🔐 Authentication Flow
+
+```text
+Register
+      │
+      ▼
+Send OTP
+      │
+      ▼
+Verify OTP
+      │
+      ▼
+Create Account
+      │
+      ▼
+Login
+      │
+      ▼
+Access Token + Refresh Token
+```
+
+---
+
+# 👥 Roles
+
+- Customer
+- Seller
+- Admin
+
+---
+
+# 📊 Analytics
+
+Seller Dashboard includes
+
+- Product-wise Revenue
+- Product-wise Sales
+- Daily Sales
+- Top Selling Products
+
+---
+
+# 🔑 Environment Variables
+
+Create a `.env` file.
+
+```env
+PORT=8000
+
+MONGODB_URI=
+
+ACCESS_TOKEN_SECRET=
+ACCESS_TOKEN_EXPIRY=
+
+REFRESH_TOKEN_SECRET=
+REFRESH_TOKEN_EXPIRY=
+
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+
+EMAIL_USER=
+EMAIL_PASS=
+
+CORS_ORIGIN=
+```
+
+---
+
+# ⚙️ Installation
+
+Clone the repository
+
+```bash
+git clone https://github.com/yourusername/smart-cart-backend.git
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Create `.env`
+
+Start development server
+
+```bash
+npm run dev
+```
+
+---
+
+# 📬 API Modules
+
+- Authentication
+- User
+- Product
+- Category
+- Cart
+- Wishlist
+- Orders
+- Reviews
+- Notifications
+- Payments
+- Banner
+
+---
+
+# 🧪 Testing
+
+The APIs were tested using **Postman**.
+
+---
+
+# 📌 Architecture
+
+The backend follows a layered architecture.
+
+```
+Routes
+    │
+    ▼
+Controllers
+    │
+    ▼
+Services
+    │
+    ▼
+Models
+```
+
+Business logic is handled inside the Service layer while Controllers remain lightweight.
+
+---
+
+# 🚧 Future Improvements
+
+- Live Payment Gateway Integration (Razorpay / Stripe)
+- Redis Caching
+- Docker Support
+- CI/CD Pipeline
+- Elasticsearch
+- API Rate Limiting
+- WebSockets
+
+---
+
+# 👨‍💻 Author
+
+**Your Name**
+
+B.Tech Computer Science
+
+DIT University
+
+---
+
+# 📄 License
+
+This project is developed for educational and placement purposes.
