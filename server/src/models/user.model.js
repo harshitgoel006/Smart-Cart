@@ -123,9 +123,6 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-userSchema.index({ email: 1 });
-userSchema.index({ username: 1 });
-userSchema.index({ role: 1 });
 userSchema.index({ isDeleted: 1, isActive: 1 });
 
 userSchema.pre("save", async function (next) {

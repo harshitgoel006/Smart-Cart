@@ -124,7 +124,6 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       enum: ["pending", "approved", "rejected"],
       default: "pending",
-      index: true,
     },
 
     moderatedBy: {

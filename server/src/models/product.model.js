@@ -232,7 +232,6 @@ productSchema.index({
   isDeleted: 1,
 });
 
-productSchema.index({ slug: 1 });
 
 productSchema.index({
   "flashSale.isActive": 1,

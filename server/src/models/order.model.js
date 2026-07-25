@@ -182,8 +182,5 @@ const orderSchema = new mongoose.Schema(
 );
 
 orderSchema.index({ user: 1, createdAt: -1 });
-orderSchema.index({ "items.seller": 1 });
-orderSchema.index({ orderStatus: 1 });
-orderSchema.index({ paymentStatus: 1 });
 
 export const Order = mongoose.model("Order", orderSchema);

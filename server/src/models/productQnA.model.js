@@ -74,6 +74,5 @@ productQnASchema.query.active = function () {
 
 productQnASchema.index({ product: 1, status: 1 });
 productQnASchema.index({ seller: 1, status: 1 });
-productQnASchema.index({ user: 1 });
 
 export const ProductQnA = mongoose.model("ProductQnA", productQnASchema);

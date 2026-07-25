@@ -31,7 +31,6 @@ const paymentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
 
     provider: {
@@ -101,8 +100,6 @@ const paymentSchema = new mongoose.Schema(
   { timestamps: true },
 );
 paymentSchema.index({ user: 1, createdAt: -1 });
-paymentSchema.index({ order: 1 });
-paymentSchema.index({ status: 1 });
 
 paymentSchema.pre(/^find/, function (next) {
   this.where({ isDeleted: false });
