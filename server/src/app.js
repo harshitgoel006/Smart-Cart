@@ -1,25 +1,8 @@
-// This module sets up the Express application for the server, configuring middleware for CORS, JSON parsing, URL encoding, static file serving, and cookie parsing. It also imports and declares various routes for handling different aspects of the application such as uploads, users, products, categories, carts, wishlists, orders, notifications, reviews, and payments. The configured Express app is then exported for use in other parts of the server application.
-
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { handleMulterError } from "./middlewares/multerError.middleware.js";
-
-const app = express();
-
-// Configuring middleware for CORS, JSON parsing, URL encoding, static file serving, and cookie parsing. The CORS configuration allows requests from the specified origin and includes credentials (like cookies) in cross-origin requests. The JSON and URL-encoded parsers are set with a limit of 16kb to prevent excessively large payloads. Static files are served from the 'public' directory, and cookie parsing is enabled to handle cookies in incoming requests.
-app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true,
-  }),
-);
-app.use(express.json({ limit: "16kb" }));
-app.use(express.urlencoded({ extended: true, limit: "16kb" }));
-app.use(express.static("public"));
-app.use(cookieParser());
-
-// Importing route handlers for different parts of the application, such as uploads, users, products, categories, carts, wishlists, orders, notifications, reviews, and payments. These route handlers will define the specific endpoints and logic for handling requests related to each of these resources.
+import { errorHandler } from "./middlewares/error.middleware.js";
 
 import uploadRouter from "./routes/upload.routes.js";
 import userRouter from "./routes/user.routes.js";
@@ -33,22 +16,47 @@ import reviewRouter from "./routes/review.routes.js";
 import paymentRouter from "./routes/payment.routes.js";
 import bannerRoutes from "./routes/banner.routes.js";
 
-import { errorHandler } from "./middlewares/error.middleware.js";
+const app = express();
 
-// Mounting the imported routers on specific paths. Each router will handle requests that match its base path, allowing for organized and modular handling of different resources in the application. For example, requests to "/api/v1/users" will be handled by the userRouter, while requests to "/api/v1/products" will be handled by the productRouter, and so on for each resource type.
-app.use("/api/v1/uploads", uploadRouter);
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/products", productRouter);
-app.use("/api/v1/categories", categoryRouter);
-app.use("/api/v1/carts", cartRouter);
-app.use("/api/v1/wishlists", wishlistRouter);
-app.use("/api/v1/orders", orderRouter);
-app.use("/api/v1/notifications", notificationRouter);
-app.use("/api/v1/reviews", reviewRouter);
-app.use("/api/v1/payments", paymentRouter);
-app.use("/api/v1/banners", bannerRoutes);
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
+  }),
+);
+app.use(express.json({ limit: "16kb" }));
+app.use(express.urlencoded({ extended: true, limit: "16kb" }));
+app.use(express.static("public"));
+app.use(cookieParser());
 
-app.use(errorHandler);
+const API_PREFIX = "/api/v1";
+
+app.use("${API_PREFIX}/uploads", uploadRouter);
+app.use("${API_PREFIX}/users", userRouter);
+app.use("${API_PREFIX}/products", productRouter);
+app.use("${API_PREFIX}/categories", categoryRouter);
+app.use("${API_PREFIX}/carts", cartRouter);
+app.use("${API_PREFIX}/wishlists", wishlistRouter);
+app.use("${API_PREFIX}/orders", orderRouter);
+app.use("${API_PREFIX}/notifications", notificationRouter);
+app.use("${API_PREFIX}/reviews", reviewRouter);
+app.use("${API_PREFIX}/payments", paymentRouter);
+app.use("${API_PREFIX}/banners", bannerRoutes);
+
 app.use(handleMulterError);
+app.use(errorHandler);
+
+app.get("/", (_, res) => {
+    res.json({
+        success: true,
+        message: "Smart Cart Backend API is running."
+    });
+});
+
+app.get("/health", (_, res) => {
+    res.status(200).json({
+        success: true
+    });
+});
 
 export { app };

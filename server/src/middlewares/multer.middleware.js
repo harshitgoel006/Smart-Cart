@@ -30,6 +30,8 @@ const allowedMimeTypes = [
   "image/webp",
 ];
 
+Object.freeze(allowedMimeTypes);
+
 const fileFilter = (req, file, cb) => {
   if (!allowedMimeTypes.includes(file.mimetype)) {
     return cb(

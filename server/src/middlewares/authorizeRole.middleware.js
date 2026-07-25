@@ -1,6 +1,5 @@
 import { ApiError } from "../utils/ApiError.js";
 
-// This middleware factory function generates a middleware that checks if the authenticated user has the required role(s) to access a particular route. It supports both strict role checking and hierarchical role checking based on a predefined role priority. If the user does not meet the required role criteria, it throws an appropriate ApiError.
 
 const ROLE_PRIORITY = Object.freeze({
   customer: 1,
@@ -12,7 +11,6 @@ const ROLE_PRIORITY = Object.freeze({
 
 export const authorizedRole = (options = {}) => {
 
-  // 🔥 SUPPORT STRING DIRECTLY (MAIN FIX)
   if (typeof options === "string") {
     options = { allow: [options] };
   }
@@ -46,9 +44,6 @@ export const authorizedRole = (options = {}) => {
       throw new ApiError(403, "Invalid role");
     }
 
-    // 🔥 EXTRA DEBUG (optional)
-    // console.log("Allowed:", allowedRoles);
-    // console.log("User:", userRole);
 
     if (allowHierarchy) {
       const userPriority = ROLE_PRIORITY[userRole] || 0;
