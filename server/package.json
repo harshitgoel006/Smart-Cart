@@ -12,6 +12,7 @@
   "type": "module",
   "description": "Production-inspired E-Commerce Backend built with Node.js, Express.js, and MongoDB",
   "dependencies": {
+    "@getbrevo/brevo": "^6.0.2",
     "@sendgrid/mail": "^8.1.6",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.8.0",
@@ -23,7 +24,6 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.16.1",
     "multer": "^2.0.1",
-    "nodemailer": "^7.0.5",
     "pdfkit": "^0.17.2",
     "qrcode": "^1.5.4",
     "slugify": "^1.6.6"

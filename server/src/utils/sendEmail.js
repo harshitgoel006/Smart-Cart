@@ -1,44 +1,14 @@
-import nodemailer from "nodemailer";
+import Brevo from "@getbrevo/brevo";
 import { ApiError } from "./ApiError.js";
 
-console.log("📧 mail.js loaded");
+console.log("📧 Brevo mail.js loaded");
 
-console.log("SMTP Config:", {
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  user: process.env.SMTP_USER,
-  passExists: !!process.env.SMTP_PASS,
-  passPrefix: process.env.SMTP_PASS?.substring(0, 8),
-});
+const apiInstance = new Brevo.TransactionalEmailsApi();
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-  connectionTimeout: 30000,
-  greetingTimeout: 30000,
-  socketTimeout: 30000,
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
-
-console.log("📨 Transporter created");
-
-(async () => {
-  try {
-    console.log("🔍 Verifying SMTP...");
-    await transporter.verify();
-    console.log("✅ SMTP Server Ready");
-  } catch (err) {
-    console.error("❌ SMTP Verify Error:");
-    console.error(err);
-  }
-})();
+apiInstance.setApiKey(
+  Brevo.TransactionalEmailsApiApiKeys.apiKey,
+  process.env.BREVO_API_KEY
+);
 
 const sendEmail = async (to, subject, html) => {
   if (!to) {
@@ -46,21 +16,30 @@ const sendEmail = async (to, subject, html) => {
   }
 
   try {
-    const info = await transporter.sendMail({
-      from: `"SmartCart" <${process.env.SMTP_USER}>`,
-      to,
+    const email = {
+      sender: {
+        name: "SmartCart",
+        email: "smartcart025@gmail.com",
+      },
+      to: [
+        {
+          email: to,
+        },
+      ],
       subject,
-      html,
-    });
+      htmlContent: html,
+    };
 
-    console.log("✅ Email sent:", info.messageId);
+    await apiInstance.sendTransacEmail(email);
 
-    return info;
-  } catch (err) {
-    console.error("❌ sendMail Error:");
-    console.error(err);
+    console.log(`✅ Email sent to ${to}`);
+  } catch (error) {
+    console.error("❌ Brevo Error:", error);
 
-    throw new ApiError(500, `Email sending failed: ${err.message}`);
+    throw new ApiError(
+      500,
+      error?.response?.text || error?.message || "Email sending failed"
+    );
   }
 };
 
