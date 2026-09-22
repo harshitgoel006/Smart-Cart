@@ -167,11 +167,14 @@ const createProduct = asyncHandler(async (req, res) => {
 
 const getSellerProduct = asyncHandler(async (req, res) => {
   const sellerId = req.user._id;
-  const products = await productService.getSellerProducts(sellerId, req.query);
+  const product = await productService.getSellerProduct(
+    req.params.productId,
+    sellerId,
+  );
 
   return res
     .status(200)
-    .json(new ApiResponse(200, products, "Products fetched successfully"));
+    .json(new ApiResponse(200, product, "Product fetched successfully"));
 });
 
 const updateProduct = asyncHandler(async (req, res) => {

@@ -48,7 +48,7 @@ const removeCartItem = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, "Cart item removed successfully", cart));
+    .json(new ApiResponse(200, cart, "Cart item removed successfully"));
 });
 
 const clearCart = asyncHandler(async (req, res) => {
@@ -57,7 +57,7 @@ const clearCart = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(200, "Cart cleared successfully", cart));
+    .json(new ApiResponse(200, cart, "Cart cleared successfully"));
 });
 
 const applyCoupon = asyncHandler(async (req, res) => {
@@ -65,7 +65,7 @@ const applyCoupon = asyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiResponse(cart, "Coupon applied successfully"));
+    .json(new ApiResponse(200, cart, "Coupon applied successfully"));
 });
 
 // ======================================================
@@ -93,7 +93,7 @@ const createCoupon = asyncHandler(async (req, res) => {
 });
 
 const updateCoupon = asyncHandler(async (req, res) => {
-  const coupon = await cartService.updateCoupon(req.params.id, req.body);
+  const coupon = await cartService.updateCoupon(req.params.couponId, req.body);
 
   return res
     .status(200)

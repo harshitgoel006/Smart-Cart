@@ -99,6 +99,10 @@ export const userService = {
       throw new ApiError(400, "All fields are required");
     }
 
+    if (!["customer", "seller"].includes(role)) {
+      throw new ApiError(403, "Invalid role selection");
+    }
+
     const userExists = await User.findOne({
       $or: [{ username }, { email }],
     });

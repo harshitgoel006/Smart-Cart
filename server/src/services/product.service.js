@@ -835,6 +835,24 @@ export const productService = {
     };
   },
 
+  async getSellerProduct(productId, sellerId) {
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      throw new ApiError(400, "Invalid product ID");
+    }
+
+    const product = await Product.findOne({
+      _id: productId,
+      seller: sellerId,
+      isDeleted: false,
+    });
+
+    if (!product) {
+      throw new ApiError(404, "Product not found");
+    }
+
+    return product;
+  },
+
   async validateVariants(variants) {
     if (!Array.isArray(variants) || variants.length === 0) {
       throw new ApiError(400, "Variants must be a non-empty array");
