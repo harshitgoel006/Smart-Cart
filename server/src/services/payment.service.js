@@ -38,7 +38,7 @@ class PaymentService {
       order: order._id,
       user: userId,
       provider: "dummy",
-      amountInPaise: Math.round(order.finalAmount * 100),
+      amountInPaise: Math.round(Number(order.finalAmount.toString()) * 100),
       currency: "INR",
       status: "created",
       method: "dummy",

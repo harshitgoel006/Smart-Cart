@@ -41,7 +41,7 @@ class OrderService {
           throw new ApiError(400, "Product not found in cart");
         }
 
-        const unitPrice = toNumber(item.priceSnapshot);
+        const unitPrice = toNumber(item.unitPriceSnapshot);
         const qty = item.quantity;
 
         return {
@@ -101,13 +101,13 @@ class OrderService {
     if (couponCode) {
       const coupon = await Coupon.findOne({
         code: couponCode.toUpperCase(),
-        active: true,
+        isActive: true,
         expiryDate: { $gt: new Date() },
       });
 
       if (!coupon) throw new ApiError(400, "Invalid coupon");
 
-      if (coupon.discountType === "percentage") {
+      if (coupon.discountType === "percent") {
         discount = (subtotal * coupon.discountValue) / 100;
       } else {
         discount = coupon.discountValue;

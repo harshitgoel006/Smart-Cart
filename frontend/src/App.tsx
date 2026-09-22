@@ -12,6 +12,10 @@ import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { AccountPage } from "./pages/AccountPage";
 import { SimpleAccountPage } from "./pages/SimpleAccountPage";
+import { CheckoutPage } from "./pages/CheckoutPage";
+import { OrderDetailPage, OrdersPage } from "./pages/OrdersPage";
+import { NotificationsPage } from "./pages/NotificationsPage";
+import { ForgotPasswordPage } from "./pages/ForgotPasswordPage";
 
 function App() {
   return (
@@ -27,20 +31,15 @@ function App() {
             <Route path="/products/:id" element={<ProductDetailPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
             <Route path="/account" element={<AccountPage />} />
-            <Route
-              path="/checkout"
-              element={
-                <SimpleAccountPage
-                  title="Checkout is next"
-                  text="Your bag is ready. Payment and address selection will be connected in the checkout phase."
-                  link="/cart"
-                  linkText="Back to bag"
-                />
-              }
-            />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/orders/:id" element={<OrderDetailPage />} />
+            <Route path="/orders/:id/tracking" element={<OrderDetailPage />} />
+            <Route path="/notifications" element={<NotificationsPage />} />
             <Route
               path="*"
               element={

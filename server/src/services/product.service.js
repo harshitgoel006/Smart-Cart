@@ -440,15 +440,19 @@ export const productService = {
       throw new ApiError(404, "Product not found");
     }
 
-    const hasPurchased = await Order.exists({
+    const deliveredOrder = await Order.findOne({
       user: userId,
-      "items.product": productId,
-      status: "delivered",
-    });
+      orderStatus: "delivered",
+      items: { $elemMatch: { product: productId, fulfillmentStatus: "delivered" } },
+    }).sort({ createdAt: -1 });
 
-    if (!hasPurchased) {
+    if (!deliveredOrder) {
       throw new ApiError(403, "Only verified buyers can review this product");
     }
+
+    const deliveredItem = deliveredOrder.items.find(
+      (item) => item.product.toString() === productId && item.fulfillmentStatus === "delivered",
+    );
 
     let review = await Review.findOne({
       product: productId,
@@ -468,9 +472,12 @@ export const productService = {
       review = await Review.create({
         product: productId,
         user: userId,
+        order: deliveredOrder._id,
+        orderItemId: deliveredItem._id.toString(),
         rating,
         title,
         comment,
+        isVerifiedPurchase: true,
         status: "pending",
       });
       message = "Review submitted successfully";

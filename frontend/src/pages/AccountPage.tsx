@@ -1,43 +1,19 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../features/auth/AuthProvider";
-import { SimpleAccountPage } from "./SimpleAccountPage";
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../features/auth/AuthProvider'
+import { sendJson } from '../shared/api'
+import type { Address } from '../shared/types'
+import { SimpleAccountPage } from './SimpleAccountPage'
+
+const blankAddress: Address = { label: '', street: '', city: '', state: '', pincode: '', country: 'India', isDefault: false }
+
 export function AccountPage() {
-  const { user, logout, loading } = useAuth();
-  const [message, setMessage] = useState("");
-  if (loading)
-    return (
-      <main className="section empty-page">
-        <h1>Loading account...</h1>
-      </main>
-    );
-  if (!user)
-    return (
-      <SimpleAccountPage
-        title="Your account"
-        text="Sign in to manage your profile, addresses and orders."
-        link="/login"
-        linkText="Sign in"
-      />
-    );
-  const handleLogout = async () => {
-    await logout();
-    setMessage("You have been signed out.");
-  };
-  return (
-    <main className="account-page section">
-      <span className="eyebrow">Your SmartCart</span>
-      <h1>Hello, {user.fullname || user.username || "there"}.</h1>
-      <p>{user.email}</p>
-      <div className="account-actions">
-        <Link className="primary-button" to="/cart">
-          View bag <span>↗</span>
-        </Link>
-        <button className="ghost-dark-button" onClick={handleLogout}>
-          Sign out
-        </button>
-      </div>
-      {message && <div className="inline-message">{message}</div>}
-    </main>
-  );
+  const { user, logout, loading, refreshUser } = useAuth(); const [message, setMessage] = useState(''); const [error, setError] = useState(''); const [busy, setBusy] = useState(false); const [profile, setProfile] = useState({ fullname: user?.fullname || '', username: user?.username || '', phone: '', email: user?.email || '' }); const [address, setAddress] = useState<Address>(blankAddress); const [password, setPassword] = useState({ oldPassword: '', newPassword: '' })
+  if (loading) return <main className="section empty-page"><h1>Loading account...</h1></main>
+  if (!user) return <SimpleAccountPage title="Your account" text="Sign in to manage your profile, addresses and orders." link="/login" linkText="Sign in" />
+  const updateProfile = async (event: React.FormEvent) => { event.preventDefault(); setBusy(true); setError(''); setMessage(''); try { await sendJson('/users/update-account', 'PATCH', profile); await refreshUser(); setMessage('Profile updated successfully.') } catch (reason) { setError((reason as Error).message) } finally { setBusy(false) } }
+  const saveAddress = async (event: React.FormEvent) => { event.preventDefault(); setBusy(true); setError(''); setMessage(''); try { await sendJson('/users/update-address', 'PATCH', address); await refreshUser(); setAddress(blankAddress); setMessage('Address saved successfully.') } catch (reason) { setError((reason as Error).message) } finally { setBusy(false) } }
+  const changePassword = async (event: React.FormEvent) => { event.preventDefault(); setBusy(true); setError(''); setMessage(''); try { await sendJson('/users/change-password', 'POST', password); setPassword({ oldPassword: '', newPassword: '' }); setMessage('Password changed successfully.') } catch (reason) { setError((reason as Error).message) } finally { setBusy(false) } }
+  const updateProfileField = (key: keyof typeof profile, value: string) => setProfile((current) => ({ ...current, [key]: value })); const updateAddressField = (key: keyof Address, value: string | boolean) => setAddress((current) => ({ ...current, [key]: value }))
+  return <main className="account-page section"><span className="eyebrow">Your SmartCart</span><h1>Hello, {user.fullname || user.username || 'there'}.</h1><p>{user.email}</p>{message && <div className="inline-message">{message}</div>}{error && <div className="form-error">{error}</div>}<div className="account-actions"><Link className="primary-button" to="/cart">View bag <span>↗</span></Link><Link className="ghost-dark-button" to="/orders">Order history</Link><Link className="ghost-dark-button" to="/notifications">Notifications</Link><button className="ghost-dark-button" onClick={logout}>Sign out</button></div><div className="account-panels"><section className="account-panel"><span className="eyebrow">Profile</span><h2>Personal details</h2><form className="account-form" onSubmit={updateProfile}><label>Full name<input value={profile.fullname} onChange={(event) => updateProfileField('fullname', event.target.value)} /></label><label>Username<input value={profile.username} onChange={(event) => updateProfileField('username', event.target.value)} /></label><label>Phone<input value={profile.phone} onChange={(event) => updateProfileField('phone', event.target.value)} /></label><label>Email<input type="email" value={profile.email} onChange={(event) => updateProfileField('email', event.target.value)} /></label><button className="primary-button" disabled={busy}>Save profile</button></form></section><section className="account-panel"><span className="eyebrow">Security</span><h2>Change password</h2><form className="account-form" onSubmit={changePassword}><label>Current password<input type="password" required value={password.oldPassword} onChange={(event) => setPassword({ ...password, oldPassword: event.target.value })} /></label><label>New password<input type="password" minLength={6} required value={password.newPassword} onChange={(event) => setPassword({ ...password, newPassword: event.target.value })} /></label><button className="primary-button" disabled={busy}>Update password</button></form></section></div><section className="account-panel address-panel"><div className="section-heading"><div><span className="eyebrow">Delivery book</span><h2>Addresses</h2></div></div>{user.addresses?.map((item) => <div className="saved-address" key={`${item.label}-${item.pincode}`}><strong>{item.label}</strong><span>{item.street}, {item.city}, {item.state} - {item.pincode}</span></div>)}<form className="account-form address-form" onSubmit={saveAddress}><label>Label<input required value={address.label} onChange={(event) => updateAddressField('label', event.target.value)} placeholder="Home or work" /></label><label>Street address<input required value={address.street} onChange={(event) => updateAddressField('street', event.target.value)} /></label><div className="form-row"><label>City<input required value={address.city} onChange={(event) => updateAddressField('city', event.target.value)} /></label><label>State<input required value={address.state} onChange={(event) => updateAddressField('state', event.target.value)} /></label></div><label>PIN code<input required value={address.pincode} onChange={(event) => updateAddressField('pincode', event.target.value)} /></label><label className="check-label"><input type="checkbox" checked={!!address.isDefault} onChange={(event) => updateAddressField('isDefault', event.target.checked)} /> Make this the default address</label><button className="primary-button" disabled={busy}>Save address</button></form></section></main>
 }
