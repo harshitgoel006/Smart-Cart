@@ -6,6 +6,7 @@ import { Coupon } from "../models/coupon.model.js";
 import NotificationService from "../services/notification/notification.service.js";
 import { ApiError } from "../utils/ApiError.js";
 import { Parser } from "json2csv";
+import PDFDocument from "pdfkit";
 
 const toNumber = (val) => parseFloat(val.toString());
 
@@ -732,7 +733,7 @@ class OrderService {
     const order = await Order.findOne({
       _id: orderId,
       user: userId,
-    }).populate("items.product", "name");
+    }).populate("items.product", "name").populate("user", "fullname email");
 
     if (!order) {
       throw new ApiError(404, "Order not found");
@@ -746,7 +747,8 @@ class OrderService {
           name: item.productSnapshot?.name || item.product?.name,
         },
         quantity: item.quantity,
-        price: toNumber(item.price || item.unitPrice),
+        price: toNumber(item.lineTotal || item.unitPrice) / item.quantity,
+        lineTotal: toNumber(item.lineTotal || item.unitPrice * item.quantity),
       })),
 
       subtotal: toNumber(order.subtotal || order.totalAmount),
@@ -755,19 +757,34 @@ class OrderService {
       shippingCost: toNumber(order.deliveryCharge || 0),
     };
 
-    const html = invoiceEmailTemplate(transformedOrder);
-
-    const browser = await puppeteer.launch({ headless: "new" });
-    const page = await browser.newPage();
-
-    await page.setContent(html, { waitUntil: "networkidle0" });
-
-    const pdfBuffer = await page.pdf({
-      format: "A4",
-      printBackground: true,
+    const pdfBuffer = await new Promise((resolve, reject) => {
+      const chunks = [];
+      const doc = new PDFDocument({ margin: 48 });
+      doc.on("data", (chunk) => chunks.push(chunk));
+      doc.on("end", () => resolve(Buffer.concat(chunks)));
+      doc.on("error", reject);
+      doc.fontSize(24).fillColor("#123c32").text("smartcart");
+      doc.fontSize(10).fillColor("#7d9c36").text("Thoughtful everyday shopping");
+      doc.moveDown().fontSize(10).fillColor("#555");
+      doc.text(`Order ID: ${order._id}`);
+      doc.text(`Order date: ${new Date(order.createdAt).toLocaleDateString("en-IN")}`);
+      doc.text(`Status: ${order.orderStatus || "Pending"}`);
+      if (order.user?.fullname || order.user?.email) {
+        doc.moveDown(0.5).fillColor("#123c32").text("Billed to");
+        doc.fillColor("#555").text(order.user.fullname || "SmartCart customer");
+        if (order.user.email) doc.text(order.user.email);
+      }
+      doc.moveDown().fillColor("#123c32").fontSize(13).text("Items");
+      doc.moveDown(0.5).fillColor("#333").fontSize(10);
+      transformedOrder.items.forEach((item, index) => {
+        doc.text(`${index + 1}. ${item.product?.name || "Product"}  x${item.quantity}  ₹${item.lineTotal.toFixed(2)}`);
+      });
+      doc.moveDown().text(`Subtotal: ₹${transformedOrder.subtotal.toFixed(2)}`);
+      doc.text(`Shipping: ₹${transformedOrder.shippingCost.toFixed(2)}`);
+      doc.text(`Discount: -₹${transformedOrder.discountAmount.toFixed(2)}`);
+      doc.fontSize(14).fillColor("#123c32").text(`Total: ₹${transformedOrder.finalAmount.toFixed(2)}`);
+      doc.end();
     });
-
-    await browser.close();
 
     return {
       buffer: pdfBuffer,

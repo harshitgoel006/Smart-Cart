@@ -1,6 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import * as OrderService from "../services/order.service.js";
+import OrderService from "../services/order.service.js";
 
 // ======================================================
 // =============== CUSTOMER PANEL HANDLERS ==============
