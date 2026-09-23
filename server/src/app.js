@@ -15,6 +15,7 @@ import notificationRouter from "./routes/notification.routes.js";
 import reviewRouter from "./routes/review.routes.js";
 import paymentRouter from "./routes/payment.routes.js";
 import bannerRoutes from "./routes/banner.routes.js";
+import aiRouter from "./routes/ai.routes.js";
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use(`${API_PREFIX}/notifications`, notificationRouter);
 app.use(`${API_PREFIX}/reviews`, reviewRouter);
 app.use(`${API_PREFIX}/payments`, paymentRouter);
 app.use(`${API_PREFIX}/banners`, bannerRoutes);
+app.use(`${API_PREFIX}/ai`, aiRouter);
 
 app.use(handleMulterError);
 app.use(errorHandler);

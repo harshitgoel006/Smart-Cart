@@ -13,3 +13,20 @@ export type OrderDetail = OrderSummary & { shippingAddress?: Address; subtotal?:
 export type Review = { _id: string; rating: number; title?: string; comment?: string; isVerifiedPurchase?: boolean; createdAt?: string; user?: { fullname?: string; username?: string; avatar?: string }; sellerResponse?: { message?: string } }
 export type ProductQuestion = { _id: string; question: string; answer?: string; status: string; createdAt?: string; user?: { fullname?: string; username?: string }; answeredBy?: { fullname?: string; username?: string } }
 export type Notification = { _id: string; title: string; message: string; category: string; event: string; priority?: string; isRead: boolean; createdAt: string; relatedEntity?: { entityType?: string; entityId?: string } }
+export type AiProductSuggestion = {
+  id: string
+  name: string
+  slug?: string
+  brand?: string
+  price?: string
+  originalPrice?: string
+  discountPercentage?: number
+  rating?: number
+  image?: string | null
+  stock?: number
+}
+export type AiAssistantResponse = {
+  reply: string
+  products: AiProductSuggestion[]
+  source: 'provider' | 'fallback'
+}
