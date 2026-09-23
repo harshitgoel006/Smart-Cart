@@ -12,6 +12,7 @@
 - `utils/` owns pure formatters and helpers.
 - `styles/` owns global tokens, resets, animations, and page styling.
 - `assets/` owns local static assets. Remote catalog media comes from the backend.
+- `components/ai/` owns the SmartCart assistant surface; its request logic remains in `services/ai.api.ts`.
 
 ## Data flow
 
@@ -35,13 +36,35 @@ The Home Page will be built from independent sections in this order:
 
 1. AnnouncementBar
 2. Header
-3. HeroSection
-4. CategoryShowcase
-5. EditorialBanner
-6. NewArrivalsSection
-7. CuratedProductsSection
-8. TrustStrip
-9. Footer
+3. HeroSlider
+4. CategoryCompartment
+5. TrendingProducts
+6. OfferSection
+7. BrandShowcase
+8. FullCategoryDirectory
+9. Testimonials
+10. TrustBadges
+11. Footer
+
+The global `AiShoppingAssistant` is mounted by `AppShell`, so it is available
+on every customer page without coupling the Home Page to assistant state.
+
+## AI data flow
+
+```text
+AiShoppingAssistant or page feature
+        ↓
+services/ai.api.ts
+        ↓
+backend /api/v1/ai/*
+        ↓
+product/order/review data + Gemini provider
+        ↓
+typed response with deterministic fallback
+```
+
+AI provider credentials stay on the backend. Product recommendations and
+search results always come from approved, active, in-stock catalog records.
 
 Each section receives data and callbacks through props. Sections do not own global authentication, cart, or wishlist state.
 

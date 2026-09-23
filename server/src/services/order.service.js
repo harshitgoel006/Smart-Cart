@@ -7,6 +7,7 @@ import NotificationService from "../services/notification/notification.service.j
 import { ApiError } from "../utils/ApiError.js";
 import { Parser } from "json2csv";
 import PDFDocument from "pdfkit";
+import { generateQRCode } from "../utils/qrCodeGenerators.js";
 
 const toNumber = (val) => parseFloat(val.toString());
 
@@ -129,6 +130,7 @@ class OrderService {
         [
           {
             user: userId,
+            qrCode: await generateQRCode(),
             items: orderItems,
             shippingAddress,
             paymentMethod,

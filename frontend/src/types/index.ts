@@ -30,3 +30,25 @@ export type AiAssistantResponse = {
   products: AiProductSuggestion[]
   source: 'provider' | 'fallback'
 }
+export type AiSearchResponse = {
+  query: string
+  filters: { maxPrice: number | null; terms: string[] }
+  products: AiProductSuggestion[]
+}
+export type AiComparisonResponse = {
+  products: AiProductSuggestion[]
+  summary: string
+}
+export type AiReviewSummary = {
+  reviewCount: number
+  averageRating: number
+  summary: string
+}
+export type AiOrderStatus = {
+  orderId: string
+  orderStatus: string
+  paymentStatus: string
+  createdAt: string
+  items: string[]
+  timeline: Array<{ status: string; updatedAt?: string; comment?: string }>
+}

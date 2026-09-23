@@ -95,6 +95,13 @@ const orderSchema = new mongoose.Schema(
       index: true,
     },
 
+    qrCode: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+    },
+
     items: [orderItemSchema],
 
     shippingAddress: {
