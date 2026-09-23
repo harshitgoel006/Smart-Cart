@@ -27,6 +27,7 @@ const notificationSchema = new mongoose.Schema(
         "product",
         "escalation",
         "account",
+        "security",
         "system",
         "cart",
         "category",

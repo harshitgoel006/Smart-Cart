@@ -196,6 +196,8 @@
 .notification-card small { color:var(--muted); font-size:10px; }
 .account-panels { display:grid; grid-template-columns:1fr 1fr; gap:18px; max-width:900px; margin-top:45px; }
 .account-panel { padding:25px; background:#edf0e6; }
+.avatar-upload { display:grid; gap:6px; max-width:280px; margin:16px 0; color:var(--muted); font-size:11px; }
+.avatar-upload input { font-size:11px; }
 .account-panel h2 { margin:10px 0 22px; color:var(--ink); font-family:'Playfair Display',serif; font-size:30px; font-weight:500; }
 .account-form { display:grid; gap:12px; }
 .account-form label { display:grid; gap:6px; color:var(--ink); font-size:11px; font-weight:700; }
