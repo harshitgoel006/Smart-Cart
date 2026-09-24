@@ -143,6 +143,21 @@ const askProductQuestion = asyncHandler(async (req, res) => {
     );
 });
 
+const getTrendingProducts = asyncHandler(async (req, res) => {
+  const limit = parseInt(req.query.limit, 10) || 8;
+  const trendingProducts = await productService.getTrendingProducts(limit);
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        trendingProducts,
+        "Trending products fetched successfully",
+      ),
+    );
+});
+
 // ======================================================
 // =============== SELLER PANNEL HANDLERS ===============
 // ======================================================
@@ -471,6 +486,7 @@ export {
   getProductById,
   getTopRatedProduct,
   getNewArrivalProduct,
+  getTrendingProducts,
   getProductsByCategory,
   searchProduct,
   getRelatedProducts,

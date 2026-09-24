@@ -156,7 +156,8 @@ export const productService = {
     })
       .sort({ ratings: -1 })
       .limit(Number(limit))
-      .select("name finalPrice discountPercentage ratings images stock");
+      .select("name slug finalPrice price discountPercentage ratings reviews images coverImage stock brand category")
+      .populate("category", "name slug");
 
     return products;
   },
@@ -169,7 +170,25 @@ export const productService = {
     })
       .sort({ createdAt: -1 })
       .limit(Number(limit))
-      .select("name finalPrice discountPercentage ratings images stock");
+      .select("name slug finalPrice price discountPercentage ratings reviews images coverImage stock brand category")
+      .populate("category", "name slug");
+  },
+
+  async getTrendingProducts(limit = 8) {
+    const safeLimit = Math.min(Math.max(Number(limit) || 8, 1), 20);
+
+    return Product.find({
+      isDeleted: false,
+      isActive: true,
+      approvalStatus: "approved",
+    })
+      .sort({ sold: -1, ratings: -1, createdAt: -1 })
+      .limit(safeLimit)
+      .select(
+        "name slug finalPrice price discountPercentage ratings reviews images coverImage stock brand sold category",
+      )
+      .populate("category", "name slug")
+      .lean();
   },
 
   async getProductsByCategory(categoryId, query) {

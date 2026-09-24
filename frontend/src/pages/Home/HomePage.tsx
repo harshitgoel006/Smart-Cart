@@ -9,6 +9,7 @@ import type { Banner, Category, Product } from '../../types'
 export function HomePage() {
   const [banners, setBanners] = useState<Banner[]>([])
   const [categories, setCategories] = useState<Category[]>([])
+  const [trending, setTrending] = useState<Product[]>([])
   const [newArrivals, setNewArrivals] = useState<Product[]>([])
   const [topRated, setTopRated] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
@@ -18,12 +19,14 @@ export function HomePage() {
     Promise.all([
       getJson<Banner[]>('/banners'),
       getJson<Category[]>('/categories'),
+      getJson<Product[]>('/products/trending?limit=8'),
       getJson<Product[]>('/products/new-arrivals?limit=8'),
       getJson<Product[]>('/products/top-rated?limit=8'),
     ])
-      .then(([loadedBanners, loadedCategories, arrivals, rated]) => {
+      .then(([loadedBanners, loadedCategories, trendingProducts, arrivals, rated]) => {
         setBanners(Array.isArray(loadedBanners) ? loadedBanners : [])
         setCategories(Array.isArray(loadedCategories) ? loadedCategories : [])
+        setTrending(Array.isArray(trendingProducts) ? trendingProducts : [])
         setNewArrivals(Array.isArray(arrivals) ? arrivals : [])
         setTopRated(Array.isArray(rated) ? rated : [])
       })
@@ -64,8 +67,22 @@ export function HomePage() {
 
       <CategoryShowcase categories={visibleCategories} />
 
+      <div id="trending-products">
+        <ProductSection
+          eyebrow="Trending now"
+          title="What’s moving fast."
+          subtitle="Popular picks shoppers are reaching for today."
+          products={trending}
+          loading={loading}
+          linkTo="/products?sort=bestSelling"
+          linkText="Shop trending"
+          variant="featured"
+        />
+      </div>
+
       <div id="new-arrivals">
         <ProductSection
+          eyebrow="Freshly picked"
           title="New arrivals"
           subtitle="Fresh pieces for the season ahead."
           products={newArrivals}
@@ -101,6 +118,7 @@ export function HomePage() {
 
       <div id="top-rated">
         <ProductSection
+          eyebrow="Top rated"
           title="Loved by the community"
           subtitle="The pieces shoppers keep coming back for."
           products={topRated}

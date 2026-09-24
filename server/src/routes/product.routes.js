@@ -5,6 +5,7 @@ import {
   getProductById,
   getProductsByCategory,
   getTopRatedProduct,
+  getTrendingProducts,
   searchProduct,
   getRelatedProducts,
   getProductReview,
@@ -49,6 +50,8 @@ router.route("/product/:productId").get(getProductById);
 router.route("/top-rated").get(getTopRatedProduct);
 
 router.route("/new-arrivals").get(getNewArrivalProduct);
+
+router.route("/trending").get(getTrendingProducts);
 
 router.route("/category/:categoryId").get(getProductsByCategory);
 
