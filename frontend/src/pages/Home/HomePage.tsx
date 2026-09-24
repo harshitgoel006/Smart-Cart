@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CategoryShowcase } from '../../components/home/CategoryShowcase/CategoryShowcase'
+import { AiRecommendations } from '../../components/home/AiRecommendations/AiRecommendations'
 import { HeroSection } from '../../components/home/HeroSection/HeroSection'
 import { ProductSection } from '../../components/product/ProductCarousel/ProductCarousel'
 import { getJson } from '../../services/apiClient'
@@ -80,6 +81,8 @@ export function HomePage() {
         />
       </div>
 
+      <AiRecommendations fallbackProducts={trending} />
+
       <div id="new-arrivals">
         <ProductSection
           eyebrow="Freshly picked"
@@ -87,6 +90,9 @@ export function HomePage() {
           subtitle="Fresh pieces for the season ahead."
           products={newArrivals}
           loading={loading}
+          linkTo="/products?sort=newest"
+          linkText="View new arrivals"
+          variant="featured"
         />
       </div>
 
