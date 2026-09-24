@@ -1,39 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  RotateCcw,
-  ShieldCheck,
-  Sparkles,
-  Store,
-} from 'lucide-react'
 import { CategoryShowcase } from '../../components/home/CategoryShowcase/CategoryShowcase'
 import { HeroSection } from '../../components/home/HeroSection/HeroSection'
 import { ProductSection } from '../../components/product/ProductCarousel/ProductCarousel'
 import { getJson } from '../../services/apiClient'
 import type { Banner, Category, Product } from '../../types'
-
-const valueProps = [
-  {
-    label: 'Thoughtfully picked',
-    description: 'Products worth keeping',
-    icon: Sparkles,
-  },
-  {
-    label: 'Secure checkout',
-    description: 'Simple and protected',
-    icon: ShieldCheck,
-  },
-  {
-    label: 'Easy returns',
-    description: 'Shop with confidence',
-    icon: RotateCcw,
-  },
-  {
-    label: 'Seller stories',
-    description: 'Discover something new',
-    icon: Store,
-  },
-]
 
 export function HomePage() {
   const [banners, setBanners] = useState<Banner[]>([])
@@ -46,7 +17,7 @@ export function HomePage() {
   useEffect(() => {
     Promise.all([
       getJson<Banner[]>('/banners'),
-      getJson<Category[]>('/categories/featured'),
+      getJson<Category[]>('/categories'),
       getJson<Product[]>('/products/new-arrivals?limit=8'),
       getJson<Product[]>('/products/top-rated?limit=8'),
     ])
@@ -61,27 +32,13 @@ export function HomePage() {
   }, [])
 
   const visibleCategories = useMemo(
-    () => categories.filter((category) => category.slug),
+    () => categories.filter((category) => category.slug && !category.parent).slice(0, 8),
     [categories],
   )
 
   return (
     <main>
       <HeroSection banners={banners} />
-
-      <section className="value-strip section" aria-label="SmartCart benefits">
-        {valueProps.map(({ label, description, icon: Icon }) => (
-          <div key={label}>
-            <span className="value-icon" aria-hidden="true">
-              <Icon size={18} />
-            </span>
-            <div>
-              <strong>{label}</strong>
-              <small>{description}</small>
-            </div>
-          </div>
-        ))}
-      </section>
 
       {apiError && (
         <div className="api-notice">
