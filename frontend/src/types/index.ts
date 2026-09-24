@@ -4,6 +4,7 @@ export type Category = {
   _id: string
   name: string
   slug: string
+  productCount?: number
   image?: ImageRef
   description?: string
   parent?: string | null

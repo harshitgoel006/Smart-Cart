@@ -6,6 +6,7 @@
     "dev": "nodemon -r dotenv/config src/index.js",
     "start": "node src/index.js",
     "seed:products": "node src/seed/scripts/seedProducts.js",
+    "import:abo-products": "node src/seed/scripts/importAboProducts.js",
     "seed:coupon": "node src/seed/scripts/seedCoupons.js"
   },
   "keywords": [],

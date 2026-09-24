@@ -48,7 +48,7 @@ const fallbackSlides: HeroSlide[] = [
     description: 'Warm textures, thoughtful details, and everyday comforts for the way you live.',
     image: cloudinaryHeroImages.homeLiving,
     cta: 'Shop home & living',
-    href: '/categories/home-living',
+    href: '/categories/home-and-living',
   },
 ]
 

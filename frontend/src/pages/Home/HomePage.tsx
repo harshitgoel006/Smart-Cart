@@ -31,10 +31,26 @@ export function HomePage() {
       .finally(() => setLoading(false))
   }, [])
 
-  const visibleCategories = useMemo(
-    () => categories.filter((category) => category.slug && !category.parent).slice(0, 8),
-    [categories],
-  )
+  const visibleCategories = useMemo(() => {
+    const priority = new Map([
+      ['men', 1],
+      ['women', 2],
+      ['electronics', 3],
+      ['home-and-living', 4],
+      ['beauty-and-grooming', 5],
+      ['groceries', 6],
+      ['sports-and-gym', 7],
+      ['gifts', 8],
+    ])
+
+    return categories
+      .filter((category) => category.slug && !category.parent && (category.productCount == null || category.productCount > 0))
+      .sort((left, right) => {
+        const countDifference = (right.productCount || 0) - (left.productCount || 0)
+        return countDifference || (priority.get(left.slug) || 99) - (priority.get(right.slug) || 99)
+      })
+      .slice(0, 8)
+  }, [categories])
 
   return (
     <main>
