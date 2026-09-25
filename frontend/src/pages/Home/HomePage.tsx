@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { CategoryShowcase } from '../../components/home/CategoryShowcase/CategoryShowcase'
 import { AiRecommendations } from '../../components/home/AiRecommendations/AiRecommendations'
+import { BrandsShowcase } from '../../components/home/BrandsShowcase/BrandsShowcase'
 import { EditorialFeature } from '../../components/home/EditorialFeature/EditorialFeature'
 import { HeroSection } from '../../components/home/HeroSection/HeroSection'
 import { OfferStrip } from '../../components/home/OfferStrip/OfferStrip'
+import { Testimonials } from '../../components/home/Testimonials/Testimonials'
 import { ProductSection } from '../../components/product/ProductCarousel/ProductCarousel'
 import { getJson } from '../../services/apiClient'
 import type { Banner, Category, Product } from '../../types'
@@ -113,6 +115,10 @@ export function HomePage() {
           variant="featured"
         />
       </div>
+
+      <BrandsShowcase />
+
+      <Testimonials />
     </main>
   )
 }

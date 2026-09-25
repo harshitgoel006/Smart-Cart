@@ -3595,6 +3595,410 @@
   }
 }
 
+.trust-badges {
+  position: relative;
+  gap: 14px;
+  margin-top: 74px;
+  padding: 24px 26px;
+  border: 1px solid rgba(112, 64, 31, .14);
+  border-radius: 18px 18px 0 0;
+  background: linear-gradient(105deg, #f5e6d7 0%, #fffaf4 54%, #f0dfcf 100%);
+}
+.trust-badges > div {
+  min-width: 0;
+  padding-left: 14px;
+  border-left: 1px solid rgba(112, 64, 31, .14);
+}
+.trust-badges > div:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+.trust-badges .value-icon {
+  flex: 0 0 auto;
+  color: var(--deep);
+  border-color: rgba(168, 93, 50, .25);
+  background: rgba(255, 250, 244, .65);
+}
+.trust-badges strong {
+  color: var(--ink);
+  font-size: 11px;
+}
+.trust-badges small {
+  color: var(--muted);
+  font-size: 9px;
+}
+@media (max-width: 760px) {
+  .trust-badges {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    margin-top: 56px;
+  }
+  .trust-badges > div:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+.brands-showcase {
+  position: relative;
+  margin-top: 12px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f8eee3 0%, #fcfaf7 56%, #f0dfcf 100%);
+}
+.brands-showcase::before {
+  position: absolute;
+  top: -130px;
+  right: 5%;
+  width: 280px;
+  height: 280px;
+  border: 1px solid rgba(168, 93, 50, .11);
+  border-radius: 50%;
+  content: '';
+}
+.brands-showcase__header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 30px;
+}
+.brands-showcase__header h2 {
+  max-width: 680px;
+  margin-top: 14px;
+  color: var(--ink);
+  font-family: "Playfair Display", serif;
+  font-size: clamp(38px, 4.7vw, 64px);
+  font-weight: 500;
+  letter-spacing: -.06em;
+  line-height: .98;
+}
+.brands-showcase__header p {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.brands-showcase .section-link {
+  flex: 0 0 auto;
+  align-self: end;
+  color: var(--deep);
+}
+.brands-showcase__rail {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.brand-tile {
+  display: flex;
+  min-height: 112px;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 19px;
+  border: 1px solid rgba(112, 64, 31, .14);
+  border-radius: 14px;
+  color: var(--ink);
+  background: rgba(255, 250, 244, .58);
+  text-decoration: none;
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease, background 220ms ease;
+}
+.brand-tile:hover {
+  transform: translateY(-5px);
+  border-color: rgba(168, 93, 50, .38);
+  background: rgba(255, 250, 244, .9);
+  box-shadow: 0 14px 24px rgba(72, 42, 22, .1);
+}
+.brand-tile strong {
+  font-family: "Playfair Display", serif;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -.04em;
+}
+.brand-tile span {
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+@media (max-width: 760px) {
+  .brands-showcase__header {
+    align-items: start;
+    flex-direction: column;
+  }
+  .brands-showcase .section-link {
+    align-self: start;
+  }
+  .brands-showcase__rail {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 460px) {
+  .brands-showcase__rail {
+    grid-template-columns: 1fr;
+  }
+}
+
+.testimonials {
+  display: grid;
+  grid-template-columns: minmax(250px, .75fr) 1.65fr;
+  gap: 44px;
+  align-items: start;
+}
+.testimonials__intro {
+  position: sticky;
+  top: 110px;
+}
+.testimonials__intro h2 {
+  max-width: 360px;
+  margin-top: 14px;
+  color: var(--ink);
+  font-family: "Playfair Display", serif;
+  font-size: clamp(38px, 4.2vw, 58px);
+  font-weight: 500;
+  letter-spacing: -.06em;
+  line-height: .99;
+}
+.testimonials__intro p {
+  max-width: 300px;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.65;
+}
+.testimonials__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 13px;
+}
+.testimonial-card {
+  min-height: 274px;
+  padding: 22px;
+  border: 1px solid rgba(112, 64, 31, .14);
+  border-radius: 16px;
+  background: linear-gradient(150deg, #fffaf4 0%, #f5e6d8 100%);
+  box-shadow: 0 12px 24px rgba(72, 42, 22, .05);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+.testimonial-card:nth-child(2) {
+  transform: translateY(24px);
+}
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 30px rgba(72, 42, 22, .11);
+}
+.testimonial-card:nth-child(2):hover {
+  transform: translateY(19px);
+}
+.testimonial-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.testimonial-card__quote {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--deep);
+  background: #ead2bb;
+}
+.testimonial-card__stars {
+  display: inline-flex;
+  gap: 2px;
+  color: #a85d32;
+}
+.testimonial-card blockquote {
+  margin: 38px 0 30px;
+  color: var(--ink);
+  font-family: "Playfair Display", serif;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -.025em;
+  line-height: 1.25;
+}
+.testimonial-card footer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(112, 64, 31, .14);
+}
+.testimonial-card footer strong {
+  color: var(--ink);
+  font-size: 12px;
+}
+.testimonial-card footer span {
+  color: var(--muted);
+  font-size: 10px;
+}
+@media (max-width: 900px) {
+  .testimonials {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .testimonials__intro {
+    position: static;
+  }
+  .testimonials__intro h2 {
+    max-width: 600px;
+  }
+}
+@media (max-width: 620px) {
+  .testimonials__grid {
+    grid-template-columns: 1fr;
+  }
+  .testimonial-card:nth-child(2),
+  .testimonial-card:nth-child(2):hover {
+    transform: none;
+  }
+}
+
+.site-footer {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 64px max(5vw, 28px) 28px;
+  border-top: 1px solid rgba(112, 64, 31, .15);
+  color: var(--muted);
+  background: #2f211b;
+}
+.site-footer__main {
+  display: grid;
+  grid-template-columns: 1.4fr .7fr .7fr 1.35fr;
+  gap: 46px;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+}
+.site-footer .footer-brand {
+  display: inline-flex;
+  color: #fffaf4;
+}
+.site-footer .brand-mark {
+  color: #fffaf4;
+  border-color: rgba(255, 250, 244, .3);
+}
+.site-footer__brand p {
+  max-width: 230px;
+  margin: 18px 0 20px;
+  color: rgba(255, 250, 244, .62);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.site-footer__email {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #eac6a3;
+  font-size: 11px;
+  text-decoration: none;
+}
+.site-footer__column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+.site-footer__column a {
+  color: rgba(255, 250, 244, .7);
+  font-size: 12px;
+  text-decoration: none;
+  transition: color 180ms ease, transform 180ms ease;
+}
+.site-footer__column a:hover {
+  color: #fffaf4;
+  transform: translateX(3px);
+}
+.site-footer__label {
+  margin-bottom: 7px;
+  color: #eac6a3;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+}
+.site-footer__newsletter {
+  padding: 20px;
+  border: 1px solid rgba(255, 250, 244, .14);
+  border-radius: 14px;
+  background: rgba(255, 250, 244, .06);
+}
+.site-footer__newsletter h2 {
+  max-width: 220px;
+  margin: 8px 0 20px;
+  color: #fffaf4;
+  font-family: "Playfair Display", serif;
+  font-size: 25px;
+  font-weight: 500;
+  letter-spacing: -.04em;
+  line-height: 1.05;
+}
+.site-footer__join {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #fffaf4;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.site-footer__join:hover {
+  color: #eac6a3;
+}
+.site-footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  width: min(1180px, 100%);
+  margin: 52px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 250, 244, .14);
+}
+.site-footer__bottom small,
+.site-footer__meta {
+  color: rgba(255, 250, 244, .48);
+  font-size: 10px;
+}
+.site-footer__meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.site-footer__meta a {
+  display: grid;
+  color: #eac6a3;
+  place-items: center;
+}
+@media (max-width: 800px) {
+  .site-footer__main {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px 24px;
+  }
+  .site-footer__newsletter {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 520px) {
+  .site-footer {
+    padding: 48px 22px 24px;
+  }
+  .site-footer__main {
+    grid-template-columns: 1fr 1fr;
+  }
+  .site-footer__brand,
+  .site-footer__newsletter {
+    grid-column: 1 / -1;
+  }
+  .site-footer__bottom {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-top: 36px;
+  }
+}
+
 /* Warm, compact offer rail between the hero and the shopping sections. */
 .offer-strip {
   position: relative;
