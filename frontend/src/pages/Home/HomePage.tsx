@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { CategoryShowcase } from '../../components/home/CategoryShowcase/CategoryShowcase'
 import { AiRecommendations } from '../../components/home/AiRecommendations/AiRecommendations'
+import { EditorialFeature } from '../../components/home/EditorialFeature/EditorialFeature'
 import { HeroSection } from '../../components/home/HeroSection/HeroSection'
+import { OfferStrip } from '../../components/home/OfferStrip/OfferStrip'
 import { ProductSection } from '../../components/product/ProductCarousel/ProductCarousel'
 import { getJson } from '../../services/apiClient'
 import type { Banner, Category, Product } from '../../types'
@@ -60,6 +61,8 @@ export function HomePage() {
     <main>
       <HeroSection banners={banners} />
 
+      <OfferStrip />
+
       {apiError && (
         <div className="api-notice">
           Catalog connection is taking a moment. Refresh once the backend is awake.
@@ -96,31 +99,7 @@ export function HomePage() {
         />
       </div>
 
-      <section className="editorial section" id="offers">
-        <div className="editorial__copy">
-          <span className="eyebrow">The smart edit</span>
-          <h2>
-            Small upgrades.
-            <br />
-            <em>Big difference.</em>
-          </h2>
-          <p>
-            From everyday rituals to weekend plans, discover pieces designed to
-            bring a little more ease and character to your day.
-          </p>
-          <Link className="primary-button" to="/products?discountPercentage=20">
-            Shop the story
-          </Link>
-        </div>
-        <div className="editorial__image">
-          <img
-            src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=1200&q=85"
-            alt="Curated beauty and lifestyle products"
-            loading="lazy"
-          />
-          <span>01 / 03</span>
-        </div>
-      </section>
+      <EditorialFeature />
 
       <div id="top-rated">
         <ProductSection
@@ -129,6 +108,9 @@ export function HomePage() {
           subtitle="The pieces shoppers keep coming back for."
           products={topRated}
           loading={loading}
+          linkTo="/products?sort=ratingHighToLow"
+          linkText="View top rated"
+          variant="featured"
         />
       </div>
     </main>
