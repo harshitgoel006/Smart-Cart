@@ -1,4 +1,4 @@
-import { ArrowUpRight, Camera, Mail } from 'lucide-react'
+import { ArrowUpRight, Camera, Mail, ShoppingBag } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export function Footer() {
@@ -6,13 +6,16 @@ export function Footer() {
     <footer className="site-footer">
       <div className="site-footer__main">
         <div className="site-footer__brand">
-          <Link className="brand footer-brand" to="/">
-            <span className="brand-mark">S</span>
-            <span>smart<span>cart</span></span>
+          <Link className="brand-badge-wrapper footer-brand" to="/">
+            <span className="brand-logo-box"><ShoppingBag size={20} className="brand-logo-icon" /></span>
+            <span className="brand-copy">
+              <strong>Smart<span>Cart</span></strong>
+              <small>Shop Smarter. Live Better.</small>
+            </span>
           </Link>
           <p>Curated everyday shopping, made a little smarter.</p>
-          <a className="site-footer__email" href="mailto:hello@smartcart.local">
-            <Mail size={14} /> hello@smartcart.local
+          <a className="site-footer__email" href="mailto:smartcart025@gmail.com">
+            <Mail size={14} /> smartcart025@gmail.com
           </a>
         </div>
 
@@ -29,13 +32,13 @@ export function Footer() {
           <Link to="/categories">Categories</Link>
           <Link to="/wishlist">Wishlist</Link>
           <Link to="/cart">Your bag</Link>
-          <a href="mailto:hello@smartcart.local">Contact us</a>
+          <a href="mailto:smartcart025@gmail.com">Contact us</a>
         </div>
 
         <div className="site-footer__newsletter">
           <span className="site-footer__label">Stay in the know</span>
           <h2>Good finds, straight to your inbox.</h2>
-          <a className="site-footer__join" href="mailto:hello@smartcart.local?subject=Join%20the%20SmartCart%20edit">
+          <a className="site-footer__join" href="mailto:smartcart025@gmail.com?subject=Join%20the%20SmartCart%20edit">
             Join the edit <ArrowUpRight size={16} />
           </a>
         </div>

@@ -158,7 +158,7 @@ export function Header() {
           <span>•</span>
           <Link to="/orders">Track Order</Link>
           <span>•</span>
-          <a href="mailto:hello@smartcart.local">Help &amp; Support</a>
+          <a href="mailto:smartcart025@gmail.com">Help &amp; Support</a>
         </nav>
       </div>
 

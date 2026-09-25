@@ -77,7 +77,7 @@ export function HomePage() {
         <ProductSection
           eyebrow="Trending now"
           title="What’s moving fast."
-          subtitle="Popular picks shoppers are reaching for today."
+          subtitle="Popular picks, standout essentials, and everyday favourites shoppers are reaching for today."
           products={trending}
           loading={loading}
           linkTo="/products?sort=bestSelling"
@@ -92,7 +92,7 @@ export function HomePage() {
         <ProductSection
           eyebrow="Freshly picked"
           title="New arrivals"
-          subtitle="Fresh pieces for the season ahead."
+          subtitle="Just in: thoughtful essentials and fresh favourites for the days ahead."
           products={newArrivals}
           loading={loading}
           linkTo="/products?sort=newest"
@@ -101,13 +101,15 @@ export function HomePage() {
         />
       </div>
 
-      <EditorialFeature />
+      <div className="editorial-transition">
+        <EditorialFeature />
+      </div>
 
       <div id="top-rated">
         <ProductSection
           eyebrow="Top rated"
           title="Loved by the community"
-          subtitle="The pieces shoppers keep coming back for."
+          subtitle="Discover tried-and-loved essentials, rated highly by shoppers who know what works."
           products={topRated}
           loading={loading}
           linkTo="/products?sort=ratingHighToLow"

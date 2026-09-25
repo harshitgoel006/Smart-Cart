@@ -2,14 +2,14 @@ import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const brands = [
-  { name: 'Nike', note: 'Move freely' },
-  { name: 'Sony', note: 'Made for sound' },
-  { name: 'Lakmé', note: 'Beauty, everyday' },
-  { name: 'IKEA', note: 'The home edit' },
-  { name: 'boAt', note: 'In your element' },
-  { name: 'Titan', note: 'Timeless details' },
-  { name: 'Adidas', note: 'Impossible is nothing' },
-  { name: 'Mamaearth', note: 'Goodness inside' },
+  { name: 'Nike', logo: 'https://cdn.simpleicons.org/nike/2d2118', note: 'Move freely' },
+  { name: 'Sony', logo: 'https://cdn.simpleicons.org/sony/2d2118', note: 'Made for sound' },
+  { name: 'Lakmé', logo: 'https://cdn.simpleicons.org/lakme/2d2118', note: 'Beauty, everyday' },
+  { name: 'IKEA', logo: 'https://cdn.simpleicons.org/ikea/2d2118', note: 'The home edit' },
+  { name: 'boAt', logo: 'https://cdn.simpleicons.org/boat/2d2118', note: 'In your element' },
+  { name: 'Titan', logo: 'https://cdn.simpleicons.org/titan/2d2118', note: 'Timeless details' },
+  { name: 'Adidas', logo: 'https://cdn.simpleicons.org/adidas/2d2118', note: 'Impossible is nothing' },
+  { name: 'Mamaearth', logo: 'https://cdn.simpleicons.org/mamaearth/2d2118', note: 'Goodness inside' },
 ]
 
 export function BrandsShowcase() {
@@ -28,8 +28,21 @@ export function BrandsShowcase() {
 
       <div className="brands-showcase__rail">
         {brands.map((brand) => (
-          <Link className="brand-tile" to={`/products?brand=${encodeURIComponent(brand.name)}`} key={brand.name}>
-            <strong>{brand.name}</strong>
+          <Link className="brand-tile" to={`/products?brand=${encodeURIComponent(brand.name)}`} key={brand.name} aria-label={`Shop ${brand.name}`}>
+            <span className="brand-tile__logo-wrap">
+              <img
+                className="brand-tile__logo"
+                src={brand.logo}
+                alt={`${brand.name} logo`}
+                loading="lazy"
+                onError={(event) => {
+                  event.currentTarget.style.display = 'none'
+                  const fallback = event.currentTarget.nextElementSibling
+                  if (fallback instanceof HTMLElement) fallback.style.display = 'block'
+                }}
+              />
+              <strong className="brand-tile__fallback">{brand.name}</strong>
+            </span>
             <span>{brand.note}</span>
           </Link>
         ))}

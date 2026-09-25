@@ -86,7 +86,7 @@ export function AiRecommendations({ fallbackProducts }: AiRecommendationsProps) 
         <div className="category-showcase__heading">
           <span className="eyebrow"><Sparkles size={13} strokeWidth={2} /> Smart picks</span>
           <h2>Picked for you.</h2>
-          <p>{user ? 'Recommendations shaped by your shopping journey.' : 'A smarter edit of products worth discovering.'}</p>
+          <p>{user ? 'Recommendations shaped by your shopping journey, preferences, and the things you keep coming back to.' : 'A smarter edit of products worth discovering, chosen around the way you shop.'}</p>
         </div>
         <Link className="section-link" to="/products">
           Explore all <ArrowRight size={16} strokeWidth={1.8} />
