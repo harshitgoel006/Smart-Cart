@@ -12,6 +12,23 @@ import { Review } from "../models/review.model.js";
 import NotificationService from "../services/notification/notification.service.js";
 import mongoose from "mongoose";
 
+const getCategoryScopeIds = async (categoryId) => {
+  const scopeIds = [categoryId];
+  let parentIds = [categoryId];
+
+  while (parentIds.length) {
+    const children = await Category.find({
+      parent: { $in: parentIds },
+      isActive: true,
+      status: "approved",
+    }).select("_id").lean();
+    parentIds = children.map((category) => category._id);
+    scopeIds.push(...parentIds);
+  }
+
+  return scopeIds;
+};
+
 export const productService = {
 
   async customerGetAllProducts(query) {
@@ -51,7 +68,7 @@ export const productService = {
       if (!mongoose.Types.ObjectId.isValid(category)) {
         throw new ApiError(400, "Invalid category ID");
       }
-      filter.category = category;
+      filter.category = { $in: await getCategoryScopeIds(category) };
     }
 
     // BRAND

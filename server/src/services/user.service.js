@@ -548,6 +548,32 @@ export const userService = {
     return await User.findById(userId).select("-password -refreshTokens");
   },
 
+  async verifyEmailChange(userId, email, otp) {
+    if (!email || !otp) throw new ApiError(400, "Email and OTP are required");
+
+    email = email.toLowerCase().trim();
+    const user = await User.findById(userId).select("+isEmailVerified");
+    if (!user) throw new ApiError(404, "User not found");
+    if (user.email !== email) throw new ApiError(400, "Email change request is no longer active");
+
+    const record = await OTP.findOne({ email, purpose: "email_verification" })
+      .select("+otpHash")
+      .sort({ createdAt: -1 });
+    if (!record || record.expiresAt < Date.now()) throw new ApiError(400, "OTP expired or not found");
+
+    const valid = await record.verifyOTP(otp);
+    if (!valid) {
+      record.attempts += 1;
+      await record.save();
+      throw new ApiError(400, "Invalid OTP");
+    }
+
+    user.isEmailVerified = true;
+    await user.save({ validateBeforeSave: false });
+    await OTP.deleteOne({ _id: record._id });
+    return user;
+  },
+
   async updateAddress(userId, data) {
     const { label, street, city, state, country, pincode, isDefault } = data;
 

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { ArrowUpRight, MessageCircle, Plus, Send, Trash2, X } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { aiApi } from '../../services/ai.api'
 import type { AiAssistantResponse, AiProductSuggestion } from '../../types'
 
@@ -54,9 +54,10 @@ const loadChats = (): SavedChat[] => {
 
 export function AIShoppingPage() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const [chats, setChats] = useState<SavedChat[]>(loadChats)
   const [activeId, setActiveId] = useState('')
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState(searchParams.get('prompt') || '')
   const [loading, setLoading] = useState(false)
   const [featuredProducts, setFeaturedProducts] = useState<AiProductSuggestion[]>([])
   const [error, setError] = useState('')

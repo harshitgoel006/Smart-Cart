@@ -31,6 +31,7 @@ const notificationSchema = new mongoose.Schema(
         "system",
         "cart",
         "category",
+        "support",
       ],
       required: true,
       index: true,
@@ -56,7 +57,7 @@ const notificationSchema = new mongoose.Schema(
     relatedEntity: {
       entityType: {
         type: String,
-        enum: ["Order", "Product", "Escalation", "User", "Cart","Category"],
+        enum: ["Order", "Product", "Escalation", "User", "Cart", "Category", "Review"],
         default: null,
       },
       entityId: {

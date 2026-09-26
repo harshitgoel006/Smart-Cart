@@ -105,6 +105,12 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Password changed successfully"));
 });
 
+const verifyEmailChange = asyncHandler(async (req, res) => {
+  const { email, otp } = req.body;
+  const user = await userService.verifyEmailChange(req.user._id, email, otp);
+  return res.status(200).json(new ApiResponse(200, user, "Email verified successfully"));
+});
+
 const sendResetOtp = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
@@ -396,6 +402,7 @@ export {
   loginUser,
   logoutUser,
   changeCurrentPassword,
+  verifyEmailChange,
   sendResetOtp,
   verifyResetOtp,
   resetPassword,

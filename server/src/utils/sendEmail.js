@@ -1,4 +1,11 @@
 import { ApiError } from "./ApiError.js";
+import nodemailer from "nodemailer";
+
+const maskEmail = (email = "") => {
+  const [name, domain] = email.split("@");
+  if (!domain) return "[invalid-email]";
+  return `${name.slice(0, 2)}***@${domain}`;
+};
 
 const sendEmail = async (to, subject, html) => {
   if (!to) {
@@ -6,6 +13,42 @@ const sendEmail = async (to, subject, html) => {
   }
 
   try {
+    if (!process.env.BREVO_API_KEY && process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+      const port = Number(process.env.SMTP_PORT || 587);
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port,
+        secure: process.env.SMTP_SECURE === "true" || port === 465,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
+
+      const result = await transporter.sendMail({
+        from: `SmartCart <${process.env.SMTP_FROM_EMAIL || "smartcart025@gmail.com"}>`,
+        to,
+        subject,
+        html,
+      });
+
+      console.log("Email accepted by SMTP provider:", {
+        to: maskEmail(to),
+        subject,
+        messageId: result.messageId,
+        accepted: result.accepted,
+        rejected: result.rejected,
+      });
+      return result;
+    }
+
+    if (!process.env.BREVO_API_KEY) {
+      throw new ApiError(500, "Email provider is not configured");
+    }
+
+    const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_FROM_EMAIL || "smartcart025@gmail.com";
+    const senderName = process.env.BREVO_SENDER_NAME || "SmartCart";
+
     const response = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
@@ -15,8 +58,8 @@ const sendEmail = async (to, subject, html) => {
       },
       body: JSON.stringify({
         sender: {
-          name: "SmartCart",
-          email: "smartcart025@gmail.com",
+          name: senderName,
+          email: senderEmail,
         },
         to: [{ email: to }],
         subject,

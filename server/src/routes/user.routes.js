@@ -6,6 +6,7 @@ import {
   loginUser,
   logoutUser,
   changeCurrentPassword,
+  verifyEmailChange,
   sendResetOtp,
   verifyResetOtp,
   resetPassword,
@@ -63,6 +64,8 @@ router.route("/reset-password").post(resetPassword);
 router.route("/logout").post(verifyJWT, logoutUser);
 
 router.route("/change-password").post(verifyJWT, changeCurrentPassword);
+
+router.route("/verify-email-change").post(verifyJWT, verifyEmailChange);
 
 router.route("/refresh-token").post(refreshAccessToken);
 

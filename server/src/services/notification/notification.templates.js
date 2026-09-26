@@ -642,6 +642,51 @@ const emailTemplates = {
   `,
   },
 
+  NEW_PRODUCT_QUESTION: {
+    subject: "A shopper asked about your product",
+    html: (d) => `<h2>New product question</h2><p>Question ID: ${d.questionId || "-"}</p><p>Open your seller dashboard to reply.</p>`,
+  },
+
+  QNA_ANSWERED: {
+    subject: "Your product question was answered",
+    html: (d) => `<h2>Your question was answered</h2><p>Question ID: ${d.questionId || "-"}</p><p>Visit the product page to read the answer.</p>`,
+  },
+
+  ORDER_STATUS_UPDATED: {
+    subject: (d) => `Your order status changed to ${d.status || "updated"}`,
+    html: (d) => `<h2>Order status updated</h2><p>Order ID: <strong>${d.orderId || "-"}</strong></p><p>New status: ${d.status || "-"}</p>${d.reason ? `<p>Reason: ${d.reason}</p>` : ""}`,
+  },
+
+  RETURN_REQUESTED: {
+    subject: "Your return request was submitted",
+    html: (d) => `<h2>Return request received</h2><p>Order ID: <strong>${d.orderId || "-"}</strong></p><p>Your request is now under review.</p>`,
+  },
+
+  RETURN_REQUESTED_SELLER: {
+    subject: "A return was requested for your item",
+    html: (d) => `<h2>Return request received</h2><p>Order ID: <strong>${d.orderId || "-"}</strong></p><p>Product: ${d.productName || "-"}</p>`,
+  },
+
+  REFUND_REQUESTED: {
+    subject: "Your refund request was submitted",
+    html: (d) => `<h2>Refund request received</h2><p>Order ID: <strong>${d.orderId || "-"}</strong></p><p>Your request is now under review.</p>`,
+  },
+
+  REFUND_REQUESTED_ADMIN: {
+    subject: "A refund request needs review",
+    html: (d) => `<h2>Refund request received</h2><p>Order ID: <strong>${d.orderId || "-"}</strong></p><p>Product: ${d.productName || "-"}</p>`,
+  },
+
+  REFUND_PROCESSED: {
+    subject: "Your refund has been processed",
+    html: (d) => `<h2>Refund processed</h2><p>Order ID: <strong>${d.orderId || "-"}</strong></p><p>Amount: ₹${d.amount || 0}</p>`,
+  },
+
+  RETURN_UPDATED_ADMIN: {
+    subject: "A return decision was recorded",
+    html: (d) => `<h2>Return updated</h2><p>Order ID: <strong>${d.orderId || "-"}</strong></p><p>Decision: ${d.decision || "-"}</p>${d.reason ? `<p>Reason: ${d.reason}</p>` : ""}`,
+  },
+
   DEFAULT: {
     subject: (d) => d.subject || "SmartCart Notification",
     html: (d) => `
