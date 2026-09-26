@@ -2702,6 +2702,7 @@
   align-items: center;
   gap: 34px;
   min-height: 62px;
+  min-width: 0;
 }
 .brand {
   gap: 9px;
@@ -2741,6 +2742,7 @@
   margin-left: 48px;
   margin-right: auto;
   font-size: 12px;
+  min-width: 0;
 }
 .desktop-nav a {
   position: relative;
@@ -2805,6 +2807,7 @@
 }
 .header-actions {
   gap: 18px;
+  min-width: 0;
 }
 .header-search {
   width: min(385px, 26vw);
@@ -2813,6 +2816,8 @@
   border-radius: 6px;
   padding: 0 0 0 13px;
   background: #f6f1eb;
+  flex: 1 1 260px;
+  min-width: 220px;
 }
 .header-search input {
   width: 100%;
@@ -2858,10 +2863,11 @@
 }
 .account-menu {
   position: relative;
+  flex: 0 0 auto;
 }
 .account-menu__trigger {
   border: 0;
-  padding: 0;
+  padding: 0 8px 0 0;
   background: transparent;
   cursor: pointer;
 }
@@ -2877,6 +2883,8 @@
   border: 1px solid var(--line);
   background: var(--cream);
   box-shadow: 0 16px 35px rgba(43, 33, 28, 0.12);
+  max-width: min(240px, calc(100vw - 24px));
+  overflow-wrap: anywhere;
 }
 .account-menu__dropdown a {
   padding: 9px 10px;
@@ -4020,6 +4028,9 @@
 }
 .account-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .account-hero__copy { flex: 1; }
+.account-hero__copy > .eyebrow { color: var(--accent); }
+.account-hero__copy > p { font-size: 0; }
+.account-hero__copy > p::after { content: "Customer account"; color: var(--muted); font-size: 14px; }
 .account-hero__copy h1 { margin: 10px 0 7px; font-size: clamp(34px, 4vw, 52px); }
 .account-hero__copy p { margin: 0; }
 .account-hero__copy p span { margin: 0 6px; color: var(--accent); }
@@ -4039,6 +4050,25 @@
 .account-section__heading h2 { margin: 6px 0 0; font-size: 26px; }
 .account-section__icon { display: grid; width: 36px; height: 36px; place-items: center; border-radius: 11px; color: var(--deep); background: #ead2bb; }
 .account-section__hint { margin: -7px 0 20px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.account-section:first-child .account-form__row:nth-child(2) label:last-child input { color: var(--muted); background: #f3e8dc; cursor: not-allowed; pointer-events: none; user-select: none; }
+.account-section:first-child .account-form__row:nth-child(2) label:first-child input { color: var(--muted); background: #f3e8dc; cursor: not-allowed; pointer-events: none; user-select: none; }
+.saved-address-actions { display: grid; gap: 8px; margin-top: 18px; }
+.saved-address-actions__heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+.saved-address-actions__heading h3 { margin: 5px 0 0; font-size: 18px; }
+.saved-address-actions__heading .eyebrow { color: var(--accent); }
+.saved-address-actions__heading > span { color: var(--muted); font-size: 11px; }
+.saved-address-actions__row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 2px; color: var(--deep); font-size: 12px; font-weight: 700; border-bottom: 1px solid rgba(112, 64, 31, .09); }
+.saved-address-actions__row > div, .saved-address-actions__edit > div { display: flex; align-items: center; gap: 8px; }
+.address-action-button { display: inline-flex; align-items: center; gap: 5px; border: 0; color: var(--deep); background: transparent; font-size: 11px; cursor: pointer; }
+.address-action-button--danger { color: #9a493b; }
+.saved-address-actions__edit { display: grid; gap: 10px; margin-top: 8px; padding: 16px; border: 1px solid var(--line); border-radius: 11px; background: #fffaf4; }
+.saved-address-actions__edit input:not([type="checkbox"]) { min-width: 0; flex: 1; padding: 10px 11px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: #fffdf9; font: inherit; font-size: 12px; }
+.account-addresses .check-label,
+.saved-address-actions__edit .check-label { display: flex !important; align-items: center; gap: 10px; width: fit-content; margin: 2px 0; padding: 9px 12px; border: 1px solid rgba(112, 64, 31, .14); border-radius: 10px; color: var(--deep); background: #f7eee4; font-size: 11px; font-weight: 700 !important; cursor: pointer; }
+.account-addresses .check-label input,
+.saved-address-actions__edit .check-label input { appearance: none; width: 18px; height: 18px; margin: 0; border: 1px solid rgba(112, 64, 31, .3); border-radius: 5px; background: #fffdf9; cursor: pointer; }
+.account-addresses .check-label input:checked,
+.saved-address-actions__edit .check-label input:checked { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 4px #fffdf9; }
 .account-form__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .account-form__row:has(label:nth-child(3)) { grid-template-columns: 1fr 1fr .75fr; }
 .account-section .primary-button { margin-top: 4px; }

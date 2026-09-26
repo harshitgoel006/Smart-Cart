@@ -78,7 +78,13 @@ export function Header() {
       getJson<{ count: number }>("/wishlists/count"),
     ])
       .then(([cart, wishlist]) => {
-        setCartCount(cart.totalItems || 0);
+        // Derive the badge from the returned line items so a stale cached
+        // totalItems value can never show a phantom item in the navbar.
+        const itemCount = (cart.items || []).reduce(
+          (total, item) => total + Math.max(0, Number(item.quantity) || 0),
+          0,
+        );
+        setCartCount(itemCount);
         setWishlistCount(wishlist.count || 0);
       })
       .catch(() => {
@@ -277,7 +283,7 @@ export function Header() {
               <ShoppingBag size={20} />
             </span>
             <span className="header-action__label">Cart</span>
-            <b>{cartCount}</b>
+            {cartCount > 0 && <b>{cartCount}</b>}
           </Link>
 
           <div className="account-menu" ref={accountRef}>

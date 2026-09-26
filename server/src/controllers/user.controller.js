@@ -191,6 +191,17 @@ const updateAddress = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, updatedAddress, "Address updated successfully"));
 });
 
+const deleteAddress = asyncHandler(async (req, res) => {
+  const addresses = await userService.deleteAddress(
+    req.user?._id,
+    req.body?.label,
+  );
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, addresses, "Address deleted successfully"));
+});
+
 
 
 // ======================================================
@@ -411,6 +422,7 @@ export {
   updateAccountDetails,
   updateUserAvatar,
   updateAddress,
+  deleteAddress,
   getSellerProfile,
   updateSellerProfile,
   getProductWiseBreakdown,

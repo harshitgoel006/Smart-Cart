@@ -631,6 +631,29 @@ export const userService = {
     return user.addresses;
   },
 
+  async deleteAddress(userId, label) {
+    if (!label || !String(label).trim()) {
+      throw new ApiError(400, "Address label is required");
+    }
+
+    const user = await User.findById(userId);
+    if (!user) throw new ApiError(404, "User not found");
+
+    const addressIndex = user.addresses.findIndex(
+      (address) => address.label === String(label).trim(),
+    );
+    if (addressIndex === -1) throw new ApiError(404, "Address not found");
+
+    const wasDefault = user.addresses[addressIndex].isDefault;
+    user.addresses.splice(addressIndex, 1);
+    if (wasDefault && user.addresses.length) {
+      user.addresses[0].isDefault = true;
+    }
+
+    await user.save();
+    return user.addresses;
+  },
+
   async updateAccountDetails(userId, data) {
     let { fullname, username, phone, email } = data;
 
@@ -642,6 +665,13 @@ export const userService = {
 
     if (!user) {
       throw new ApiError(404, "User not found");
+    }
+
+    if (email && email.trim().toLowerCase() !== user.email.toLowerCase()) {
+      throw new ApiError(400, "Email cannot be changed from account settings");
+    }
+    if (phone && phone !== user.phone) {
+      throw new ApiError(400, "Phone number cannot be changed from account settings");
     }
 
     // 🔹 Username uniqueness

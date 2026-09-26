@@ -79,7 +79,7 @@ async function parseResponse<T>(
   const body = await response.json().catch(() => ({}))
 
   if (!response.ok || body.success === false) {
-    throw new Error(getSafeErrorMessage(response.status, body.message, fallbackMessage))
+    throw new Error(getSafeErrorMessage(response.status, body.message, body.errors, fallbackMessage))
   }
 
   return (body.data ?? body) as T
@@ -88,22 +88,31 @@ async function parseResponse<T>(
 function getSafeErrorMessage(
   status: number,
   rawMessage: unknown,
+  rawErrors: unknown,
   fallbackMessage: string,
 ): string {
   const message = typeof rawMessage === 'string' ? rawMessage : ''
+  const fieldErrors = rawErrors && typeof rawErrors === 'object'
+    ? Object.entries(rawErrors as Record<string, unknown>)
+        .filter(([, value]) => typeof value === 'string' && value.trim())
+        .map(([field, value]) => `${field}: ${value}`)
+        .join(' · ')
+    : ''
   const containsInternalDetails = /E11000|duplicate key|Mongo|Mongoose|collection:|index:|CastError|ValidationError|stack/i.test(message)
 
   if (containsInternalDetails) {
     return 'Something went wrong while completing your request. Please try again.'
   }
 
+  if (message) return fieldErrors ? `${message}: ${fieldErrors}` : message
+  if (fieldErrors) return fieldErrors
   if (status === 401) return 'Please sign in to continue.'
   if (status === 403) return 'You do not have permission to perform this action.'
   if (status === 404) return 'The requested item could not be found.'
   if (status === 409) return 'This action could not be completed right now. Please try again.'
   if (status >= 500) return 'SmartCart is having trouble right now. Please try again shortly.'
 
-  return message || fallbackMessage
+  return fallbackMessage
 }
 
 export async function getJson<T>(path: string): Promise<T> {
@@ -139,7 +148,7 @@ export async function getBlob(path: string): Promise<Blob> {
 
   if (!response.ok) {
     const body = await response.json().catch(() => ({}))
-    throw new Error(getSafeErrorMessage(response.status, body.message, 'Download failed'))
+    throw new Error(getSafeErrorMessage(response.status, body.message, body.errors, 'Download failed'))
   }
 
   return response.blob()

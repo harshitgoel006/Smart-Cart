@@ -15,6 +15,7 @@ import {
   updateAccountDetails,
   updateUserAvatar,
   updateAddress,
+  deleteAddress,
   getSellerProfile,
   getDailySalesData,
   getProductWiseBreakdown,
@@ -74,6 +75,7 @@ router
   .patch(verifyJWT, upload.single("avatar"), updateUserAvatar);
 
 router.route("/update-address").patch(verifyJWT, updateAddress);
+router.route("/delete-address").delete(verifyJWT, deleteAddress);
 
 // ======================================================
 // =============== CUSTOMER ACCOUNT HANDLERS ============

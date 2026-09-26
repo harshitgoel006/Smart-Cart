@@ -73,8 +73,8 @@ const sendEmail = async (to, subject, html) => {
 
     if (!response.ok) {
       throw new ApiError(
-        response.status,
-        data.message || JSON.stringify(data)
+        502,
+        `Email provider rejected the request: ${data.message || JSON.stringify(data)}`
       );
     }
 
@@ -83,6 +83,10 @@ const sendEmail = async (to, subject, html) => {
     return data;
   } catch (err) {
     console.error("❌ Brevo Error:", err);
+
+    if (err instanceof ApiError) {
+      throw err;
+    }
 
     throw new ApiError(
       500,
