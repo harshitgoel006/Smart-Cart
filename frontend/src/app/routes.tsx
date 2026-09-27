@@ -8,7 +8,7 @@ import { HomePage } from '../pages/Home/HomePage'
 import { LoginPage } from '../pages/Auth/LoginPage'
 import { NotificationsPage } from '../features/notifications/NotificationsPage'
 import { OrderDetailPage, OrdersPage } from '../pages/Orders/OrdersPage'
-import { ProductDetailPage } from '../pages/ProductDetail/ProductDetailPage'
+import { ProductDetailRoute } from '../pages/ProductDetail/ProductDetailRoute'
 import { RegisterPage } from '../pages/Auth/RegisterPage'
 import { SimpleAccountPage } from '../components/ui/EmptyState/SimpleAccountPage'
 import { WishlistPage } from '../pages/Wishlist/WishlistPage'
@@ -21,7 +21,7 @@ export function AppRoutes() {
       <Route path="/products" element={<CatalogPage />} />
       <Route path="/search" element={<CatalogPage />} />
       <Route path="/categories/:slug" element={<CatalogPage />} />
-      <Route path="/products/:id" element={<ProductDetailPage />} />
+      <Route path="/products/:id" element={<ProductDetailRoute />} />
       <Route path="/cart" element={<CartPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />

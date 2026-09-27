@@ -73,7 +73,7 @@ export function Header() {
       return;
     }
 
-    Promise.all([
+    const refreshCounts = () => Promise.all([
       getJson<Cart>("/carts"),
       getJson<{ count: number }>("/wishlists/count"),
     ])
@@ -91,6 +91,13 @@ export function Header() {
         setCartCount(0);
         setWishlistCount(0);
       });
+
+    window.addEventListener("smartcart:cart-updated", refreshCounts);
+    window.addEventListener("smartcart:wishlist-updated", refreshCounts);
+    return () => {
+      window.removeEventListener("smartcart:cart-updated", refreshCounts);
+      window.removeEventListener("smartcart:wishlist-updated", refreshCounts);
+    };
   }, [user]);
 
   useEffect(() => {

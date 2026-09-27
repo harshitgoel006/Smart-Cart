@@ -81,7 +81,21 @@ export const WishlistService = {
     return { success: true };
   },
 
-  async removeItem(userId, productId, variantId) {
+  async removeItem(userId, productId, variantId, itemId) {
+    if (itemId && mongoose.Types.ObjectId.isValid(itemId)) {
+      const item = await WishlistItem.findOne({
+        _id: itemId,
+        user: userId,
+        isDeleted: false,
+      });
+
+      if (!item) throw new ApiError(404, "Product not found in wishlist");
+
+      item.isDeleted = true;
+      await item.save();
+      return { success: true };
+    }
+
     if (!mongoose.Types.ObjectId.isValid(productId))
       throw new ApiError(400, "Invalid product ID");
 
@@ -91,7 +105,7 @@ export const WishlistService = {
       isDeleted: false,
     });
 
-    if (!wishlist) throw new ApiError(404, "Wishlist not found");
+    if (!wishlist) return { success: true };
 
     const item = await WishlistItem.findOne({
       wishlist: wishlist._id,
@@ -115,7 +129,15 @@ export const WishlistService = {
       isDeleted: false,
     });
 
-    if (!wishlist) throw new ApiError(404, "Wishlist not found");
+    if (!wishlist) {
+      return {
+        wishlistId: null,
+        items: [],
+        total: 0,
+        page,
+        totalPages: 0,
+      };
+    }
 
     const skip = (page - 1) * limit;
 
@@ -142,7 +164,7 @@ export const WishlistService = {
           "productData.isDeleted": false,
           "productData.isActive": true,
           "productData.approvalStatus": "approved",
-          "productData.isActive": false,
+          "productData.isArchived": false,
         },
       },
 
@@ -156,8 +178,14 @@ export const WishlistService = {
             _id: "$productData._id",
             name: "$productData.name",
             slug: "$productData.slug",
-            image: { $arrayElemAt: ["$productData.images.url", 0] },
+            brand: "$productData.brand",
+            images: "$productData.images",
+            coverImage: "$productData.coverImage",
             price: "$productData.price",
+            finalPrice: "$productData.finalPrice",
+            discountPercentage: "$productData.discountPercentage",
+            ratings: "$productData.ratings",
+            reviews: "$productData.reviews",
             stock: "$productData.stock",
             isActive: "$productData.isActive",
           },
@@ -256,7 +284,7 @@ export const WishlistService = {
       isDeleted: false,
     });
 
-    if (!wishlist) throw new ApiError(404, "Wishlist not found");
+    if (!wishlist) return [];
 
     const items = await WishlistItem.aggregate([
       {
@@ -304,7 +332,15 @@ export const WishlistService = {
   },
 
   async getCount(userId) {
+    const wishlists = await Wishlist.find({
+      user: userId,
+      isDeleted: false,
+    }).select("_id").lean();
+
+    if (!wishlists.length) return 0;
+
     return await WishlistItem.countDocuments({
+      wishlist: { $in: wishlists.map((wishlist) => wishlist._id) },
       user: userId,
       isDeleted: false,
     });
@@ -317,7 +353,7 @@ export const WishlistService = {
       isDeleted: false,
     }).select("_id");
 
-    if (!wishlist) throw new ApiError(404, "Wishlist not found");
+    if (!wishlist) return { success: true };
 
     await WishlistItem.updateMany(
       {

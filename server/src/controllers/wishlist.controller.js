@@ -23,11 +23,13 @@ const addProductToWishlist = asyncHandler(async (req, res) => {
 
 const removeProductFromWishlist = asyncHandler(async (req, res) => {
   const { productId, variantId } = req.body;
+  const { itemId } = req.params;
 
   const result = await WishlistService.removeItem(
     req.user._id,
     productId,
     variantId,
+    itemId,
   );
 
   return res

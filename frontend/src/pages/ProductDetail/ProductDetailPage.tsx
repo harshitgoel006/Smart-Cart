@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import type { Product, ProductQuestion, Review } from '../../types'
 import { getJson, sendJson } from '../../services/apiClient'
 import { formatPrice, getNumber, productImage } from '../../utils/formatters'
@@ -8,6 +8,7 @@ import { useAuth } from '../../app/providers/AuthProvider'
 
 export function ProductDetailPage() {
   const productId = useParams().id || ''
+  const navigate = useNavigate()
   const { user } = useAuth()
   const [product, setProduct] = useState<Product | null>(null)
   const [related, setRelated] = useState<Product[]>([])
@@ -43,7 +44,7 @@ export function ProductDetailPage() {
 
   const images = product.images?.map((image) => image.url).filter(Boolean) as string[] || [productImage(product)]
   const price = getNumber(product.finalPrice || product.price)
-  const addToCart = async () => { try { await sendJson('/carts/add', 'POST', { productId: product._id, quantity: 1 }); setMessage('Added to your bag') } catch (error) { setMessage((error as Error).message) } }
+  const addToCart = async () => { try { await sendJson('/carts/add', 'POST', { productId: product._id, quantity: 1 }); window.dispatchEvent(new CustomEvent('smartcart:cart-updated')); navigate('/cart') } catch (error) { setMessage((error as Error).message) } }
   const askQuestion = async (event: React.FormEvent) => { event.preventDefault(); if (!question.trim()) return; setSending(true); setMessage(''); try { await sendJson(`/products/product/${product._id}/qna`, 'POST', { question }); setQuestions((current) => [{ _id: `pending-${Date.now()}`, question, status: 'pending', createdAt: new Date().toISOString(), user: { fullname: user?.fullname || 'You' } }, ...current]); setQuestion(''); setMessage('Your question has been sent to the seller.') } catch (error) { setMessage((error as Error).message) } finally { setSending(false) } }
   const submitReview = async (event: React.FormEvent) => { event.preventDefault(); setReviewSending(true); setMessage(''); try { await sendJson(`/products/product/${product._id}/reviews`, 'POST', { rating: reviewRating, title: reviewTitle, comment: reviewComment }); setReviewTitle(''); setReviewComment(''); setMessage('Review submitted for approval.') } catch (error) { setMessage((error as Error).message) } finally { setReviewSending(false) } }
 

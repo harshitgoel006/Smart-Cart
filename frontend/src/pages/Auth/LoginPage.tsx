@@ -19,7 +19,7 @@ export function LoginPage() {
     event.preventDefault()
     setSubmitting(true)
     setError('')
-    try { await login(email, password); navigate('/account') }
+    try { await login(email, password); navigate('/', { replace: true }) }
     catch (reason) { setError((reason as Error).message) }
     finally { setSubmitting(false) }
   }

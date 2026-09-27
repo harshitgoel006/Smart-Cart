@@ -30,6 +30,7 @@ export function ProductCard({ product }: { product: Product }) {
     try {
       await sendJson('/wishlists/items', 'POST', { productId: product._id })
       setSaved(true)
+      window.dispatchEvent(new CustomEvent('smartcart:wishlist-updated'))
       setMessage('Saved to wishlist')
     } catch (error) {
       setMessage((error as Error).message)
@@ -50,6 +51,7 @@ export function ProductCard({ product }: { product: Product }) {
 
     try {
       await sendJson('/carts/add', 'POST', { productId: product._id, quantity: 1 })
+      window.dispatchEvent(new CustomEvent('smartcart:cart-updated'))
       setAdded(true)
       setMessage('Added to your bag')
     } catch (error) {
