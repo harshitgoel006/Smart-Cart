@@ -73,9 +73,9 @@ export function CategoriesPage() {
           <Link className="primary-button" to="/products">Browse all products <ArrowUpRight size={16} /></Link>
         </div>
         <div className="categories-hero__visual">
-          <span>Shop thoughtfully</span>
-          <strong>{parents.length || 8}</strong>
-          <small>categories to explore</small>
+          <img src={CATEGORY_IMAGES['home-living']} alt="Warmly curated SmartCart essentials" />
+          <span className="categories-hero__visual-shade" />
+          <div className="categories-hero__visual-copy"><span>Thoughtfully curated</span><strong>Everyday<br />essentials</strong><small>Made to fit your way of living</small></div>
         </div>
       </section>
 

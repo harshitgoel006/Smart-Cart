@@ -4005,6 +4005,22 @@
 .notifications-empty { min-height: 300px; margin-top: 22px; border: 1px dashed var(--line); border-radius: 16px; padding: 44px 20px; }
 .notifications-empty svg { color: var(--accent); }
 
+/* Header search suggestions */
+.header-search-wrap { position: relative; z-index: 30; }
+.header-search__suggestions { position: absolute; top: calc(100% + 10px); right: 0; left: 0; display: grid; gap: 3px; min-width: 300px; padding: 10px; border: 1px solid rgba(112, 64, 31, .18); border-radius: 14px; background: #fffaf4; box-shadow: 0 18px 38px rgba(72, 42, 22, .16); }
+.header-search__suggestions-title { padding: 4px 8px 8px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.header-search__suggestions a { display: flex; align-items: center; gap: 9px; padding: 10px 9px; border-radius: 9px; color: var(--deep); font-size: 12px; text-decoration: none; transition: background .18s ease, padding .18s ease; }
+.header-search__suggestions a svg:last-child { margin-left: auto; color: var(--muted); }
+.header-search__suggestions a:hover { padding-left: 12px; background: #f7eee4; }
+
+.offer-strip__link {
+  border-bottom: 0;
+}
+
+@media (max-width: 700px) {
+  .header-search__suggestions { right: -54px; left: -54px; }
+}
+
 @media (max-width: 700px) {
   .notifications-hero { align-items: start; flex-direction: column; }
   .notification-card { grid-template-columns: 38px minmax(0, 1fr); }
@@ -6160,6 +6176,198 @@
   }
   .offer-strip__link {
     justify-self: start;
+  }
+}
+
+/* Final offer-strip link override */
+.offer-strip .offer-strip__link {
+  border-bottom: 0 !important;
+  text-decoration: none;
+}
+
+/* Checkout theme refresh */
+.checkout-page {
+  padding-top: 54px;
+}
+
+.checkout-page .eyebrow {
+  color: var(--accent);
+}
+
+.checkout-layout {
+  gap: 28px;
+}
+
+.checkout-card,
+.checkout-summary {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fffaf4;
+  box-shadow: 0 14px 32px rgba(72, 42, 22, .05);
+}
+
+.checkout-card {
+  padding: 34px;
+}
+
+.checkout-summary {
+  padding: 30px;
+  background: linear-gradient(160deg, #fffaf4 0%, #f5e8db 100%);
+}
+
+.checkout-card__heading .link-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  border: 1px solid rgba(112, 64, 31, .28);
+  border-radius: 999px;
+  padding: 9px 14px;
+  color: var(--deep);
+  background: transparent;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.checkout-card__heading .link-button:hover {
+  border-color: var(--deep);
+  background: #f7eee4;
+}
+
+.address-option,
+.payment-options button {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fffdf9;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease, transform .2s ease;
+}
+
+.address-option:hover,
+.payment-options button:hover {
+  border-color: rgba(112, 64, 31, .4);
+  background: #fdf5ed;
+  transform: translateY(-1px);
+}
+
+.address-option.selected,
+.payment-options button.selected {
+  border-color: var(--deep);
+  box-shadow: inset 3px 0 var(--deep), 0 8px 18px rgba(112, 64, 31, .07);
+  background: #f7eee4;
+}
+
+.address-option > span {
+  color: var(--deep);
+}
+
+.address-form input,
+.coupon-field input {
+  border-radius: 9px;
+  background: #fffdf9;
+}
+
+.address-form input:focus,
+.coupon-field input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(168, 93, 50, .1);
+}
+
+.payment-options button {
+  min-height: 92px;
+}
+
+.checkout-summary h2 {
+  color: var(--deep);
+  font-size: 48px;
+}
+
+.checkout-summary p {
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+
+.checkout-summary .coupon-field {
+  margin: 22px 0;
+}
+
+.checkout-summary .primary-button {
+  min-height: 52px;
+}
+
+.checkout-summary .back-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--deep);
+  text-decoration: none;
+}
+
+@media (max-width: 700px) {
+  .checkout-card,
+  .checkout-summary {
+    padding: 22px;
+  }
+}
+
+/* Category hero visual and theme-safe typography */
+.categories-page .eyebrow {
+  color: var(--accent);
+}
+
+.categories-hero__visual {
+  position: relative;
+  min-height: 270px;
+  overflow: hidden;
+  border: 1px solid rgba(112, 64, 31, .2);
+  border-radius: 18px;
+  color: #fffaf4;
+  background: #70401f;
+}
+
+.categories-hero__visual > img,
+.categories-hero__visual-shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.categories-hero__visual > img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.categories-hero__visual-shade {
+  background: linear-gradient(180deg, rgba(45, 27, 17, .08), rgba(45, 27, 17, .78));
+}
+
+.categories-hero__visual-copy {
+  position: absolute;
+  right: 28px;
+  bottom: 25px;
+  left: 28px;
+  display: grid;
+  gap: 7px;
+}
+
+.categories-hero__visual-copy span,
+.categories-hero__visual-copy small {
+  color: rgba(255, 250, 244, .82);
+  font-size: 11px;
+}
+
+.categories-hero__visual-copy strong {
+  color: #fffaf4;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(31px, 4vw, 53px);
+  font-weight: 500;
+  letter-spacing: -.05em;
+  line-height: .92;
+}
+
+@media (max-width: 850px) {
+  .categories-hero__visual {
+    min-height: 220px;
   }
 }
 

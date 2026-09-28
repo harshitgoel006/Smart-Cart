@@ -19,7 +19,8 @@ type SavedChat = {
   messages: ChatMessage[]
 }
 
-const STORAGE_KEY = 'smartcart.ai.chats'
+// v2 clears results created by the earlier loose OR-based recommendation search.
+const STORAGE_KEY = 'smartcart.ai.chats.v2'
 const MAX_CHATS = 10
 const CHAT_RETENTION_MS = 30 * 24 * 60 * 60 * 1000
 const suggestedPrompts = [

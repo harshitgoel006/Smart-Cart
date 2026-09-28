@@ -31,7 +31,7 @@ const copyBySlug: Record<string, { title: string; tagline: string }> = {
 }
 
 type FilterState = { minPrice: string; maxPrice: string; rating: string; discount: string; brand: string; tags: string; inStock: boolean }
-type CategoryNode = { _id: string; name: string; slug: string; children?: CategoryNode[] }
+type CategoryNode = { _id: string; name: string; slug: string; parent?: string | null; children?: CategoryNode[] }
 const emptyFilters: FilterState = { minPrice: '', maxPrice: '', rating: '', discount: '', brand: '', tags: '', inStock: false }
 
 function CatalogSelect({ value, options, onChange, ariaLabel, fullWidth = false }: { value: string; options: ReadonlyArray<readonly [string, string]>; onChange: (value: string) => void; ariaLabel: string; fullWidth?: boolean }) {
@@ -65,10 +65,17 @@ export function CatalogPage() {
   const [result, setResult] = useState<ProductList>({ products: [], total: 0, page: 1, totalPages: 0 })
   const [categoryName, setCategoryName] = useState('')
   const [subcategories, setSubcategories] = useState<CategoryNode[]>([])
+  const [rootCategories, setRootCategories] = useState<CategoryNode[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [filters, setFilters] = useState<FilterState>(emptyFilters)
+
+  useEffect(() => {
+    getJson<CategoryNode[]>('/categories')
+      .then((categories) => setRootCategories(categories.filter((category) => !category.parent)))
+      .catch(() => setRootCategories([]))
+  }, [])
 
   useEffect(() => {
     setFilters({
@@ -87,15 +94,15 @@ export function CatalogPage() {
       try {
         const nextParams = new URLSearchParams(params)
         let categoryId = ''
-        if (slug) {
-          const category = await getJson<CategoryNode>(`/categories/slug/${slug}`)
+        if (params.get('category')) {
+          const category = await getJson<CategoryNode>(`/categories/${params.get('category')}`)
           categoryId = category._id
           if (!cancelled) {
             setCategoryName(category.name)
             setSubcategories(category.children || [])
           }
-        } else if (params.get('category')) {
-          const category = await getJson<CategoryNode>(`/categories/${params.get('category')}`)
+        } else if (slug) {
+          const category = await getJson<CategoryNode>(`/categories/slug/${slug}`)
           categoryId = category._id
           if (!cancelled) {
             setCategoryName(category.name)
@@ -174,13 +181,13 @@ export function CatalogPage() {
         <button type="button" className="catalog-ai-link" onClick={() => navigate(`/ai-shopping${query ? `?prompt=${encodeURIComponent(query)}` : ''}`)}><Sparkles size={16} /> Ask AI to narrow it down</button>
       </div>
 
-      <nav className="catalog-category-nav" aria-label={slug ? 'Explore subcategories' : 'Shop by category'}>
-        <span>{slug ? `Shop ${categoryName}` : 'Explore categories'}</span>
+      <nav className="catalog-category-nav" aria-label={slug || params.get('category') ? 'Explore subcategories' : 'Shop by category'}>
+        <span>{slug || params.get('category') ? `Shop ${categoryName}` : 'Explore categories'}</span>
         <div className="catalog-category-chips">
-          {slug ? subcategories.map((subcategory) => (
-            <button type="button" className="catalog-category-chip" onClick={() => navigate(`/categories/${subcategory.slug}`)} key={subcategory._id}>{subcategory.name}</button>
-          )) : categoryChips.map(([categorySlug, label]) => (
-            <button type="button" className={slug === categorySlug ? 'is-active' : ''} onClick={() => navigate(`/categories/${categorySlug}`)} key={categorySlug}>{label}</button>
+          {slug || params.get('category') ? subcategories.map((subcategory) => (
+            <button type="button" className={params.get('category') === subcategory._id ? 'is-active' : ''} onClick={() => updateParam('category', subcategory._id)} key={subcategory._id}>{subcategory.name}</button>
+          )) : (rootCategories.length ? rootCategories : categoryChips.map(([categorySlug, label]) => ({ _id: categorySlug, slug: categorySlug, name: label }))).map((category) => (
+            <button type="button" className={params.get('category') === category._id ? 'is-active' : ''} onClick={() => category._id !== category.slug ? updateParam('category', category._id) : navigate(`/products/${category.slug}`)} key={category._id}>{category.name}</button>
           ))}
           {slug && !subcategories.length && <span className="catalog-category-empty">All products in this category</span>}
         </div>

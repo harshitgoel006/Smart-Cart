@@ -47,6 +47,20 @@ const getSearchTerms = (message) => {
     .slice(0, 6);
 };
 
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const searchPattern = (term) => {
+  const aliases = {
+    men: "\\b(?:men|mens|man|male)\\b",
+    women: "\\b(?:women|womens|woman|female)\\b",
+    shoes: "\\b(?:shoe|footwear|sneaker|loafer|sandal|slipper)\\w*\\b",
+    shoe: "\\b(?:shoe|footwear|sneaker|loafer|sandal|slipper)\\w*\\b",
+    electronics: "\\b(?:electronic|laptop|phone|mobile|audio|headphone|speaker)\\w*\\b",
+  };
+
+  return aliases[term] || `\\b${escapeRegex(term)}\\w*\\b`;
+};
+
 const findRelevantProducts = async (message) => {
   const budget = extractBudget(message);
   const terms = getSearchTerms(message);
@@ -62,13 +76,15 @@ const findRelevantProducts = async (message) => {
   }
 
   if (terms.length) {
-    const pattern = terms.join("|");
-    filter.$or = [
-      { name: { $regex: pattern, $options: "i" } },
-      { brand: { $regex: pattern, $options: "i" } },
-      { description: { $regex: pattern, $options: "i" } },
-      { tags: { $in: terms } },
-    ];
+    // Every meaningful term must be present in the product text. The old OR
+    // query allowed an unrelated product to pass when only one word matched.
+    filter.$and = terms.map((term) => ({
+      $or: [
+        { name: { $regex: searchPattern(term), $options: "i" } },
+        { brand: { $regex: searchPattern(term), $options: "i" } },
+        { description: { $regex: searchPattern(term), $options: "i" } },
+      ],
+    }));
   }
 
   return Product.find(filter)

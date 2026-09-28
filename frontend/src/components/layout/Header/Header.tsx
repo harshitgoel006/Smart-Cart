@@ -32,20 +32,30 @@ const fallbackCategoryLinks = [
   { label: "Accessories", slug: "accessories" },
 ];
 
+const defaultSearchSuggestions = [
+  { label: "New arrivals", query: "new arrivals", href: "/products?sort=newest" },
+  { label: "Top rated picks", query: "top rated", href: "/products?sort=ratingHighToLow" },
+  { label: "Deals under ₹999", query: "deals", href: "/products?discountPercentage=20" },
+  { label: "Everyday electronics", query: "electronics", href: "/search?q=electronics" },
+  { label: "Home essentials", query: "home essentials", href: "/search?q=home%20essentials" },
+];
+
 export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user, loading: authLoading, logout } = useAuth();
   const [search, setSearch] = useState("");
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [categoryLinks, setCategoryLinks] = useState(fallbackCategoryLinks);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const accountRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -61,36 +71,52 @@ export function Header() {
       ) {
         setAccountOpen(false);
       }
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setSearchOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
+    // AuthProvider restores the session asynchronously on a full page load.
+    // Do not clear badges while that hydration is still in progress.
+    if (authLoading) return;
+
     if (!user) {
       setCartCount(0);
       setWishlistCount(0);
       return;
     }
 
-    const refreshCounts = () => Promise.all([
-      getJson<Cart>("/carts"),
-      getJson<{ count: number }>("/wishlists/count"),
-    ])
-      .then(([cart, wishlist]) => {
-        // Derive the badge from the returned line items so a stale cached
-        // totalItems value can never show a phantom item in the navbar.
-        const itemCount = (cart.items || []).reduce(
-          (total, item) => total + Math.max(0, Number(item.quantity) || 0),
-          0,
-        );
+    const refreshCounts = async () => {
+      // Keep these requests independent. A temporary failure in wishlist
+      // must not hide a valid cart badge (and vice versa).
+      const [cartResult, wishlistResult] = await Promise.allSettled([
+        getJson<Cart>("/carts"),
+        getJson<{ count: number }>("/wishlists/count"),
+      ]);
+
+      if (cartResult.status === "fulfilled") {
+        // Derive the badge from line items so a stale cached totalItems value
+        // can never show a phantom item in the navbar.
+        const cart = cartResult.value;
+        const itemCount = Array.isArray(cart.items)
+          ? cart.items.reduce(
+              (total, item) => total + Math.max(0, Number(item.quantity) || 0),
+              0,
+            )
+          : Math.max(0, Number(cart.totalItems) || 0);
         setCartCount(itemCount);
-        setWishlistCount(wishlist.count || 0);
-      })
-      .catch(() => {
-        setCartCount(0);
-        setWishlistCount(0);
-      });
+      }
+
+      if (wishlistResult.status === "fulfilled") {
+        setWishlistCount(Math.max(0, Number(wishlistResult.value.count) || 0));
+      }
+    };
+
+    void refreshCounts();
 
     window.addEventListener("smartcart:cart-updated", refreshCounts);
     window.addEventListener("smartcart:wishlist-updated", refreshCounts);
@@ -98,7 +124,7 @@ export function Header() {
       window.removeEventListener("smartcart:cart-updated", refreshCounts);
       window.removeEventListener("smartcart:wishlist-updated", refreshCounts);
     };
-  }, [user]);
+  }, [authLoading, user]);
 
   useEffect(() => {
     getJson<Array<{ name: string; slug: string; parent?: string | null }>>(
@@ -133,6 +159,7 @@ export function Header() {
     setMenuOpen(false);
     setCategoriesOpen(false);
     setAccountOpen(false);
+    setSearchOpen(false);
   };
 
   const handleLogout = async () => {
@@ -264,18 +291,22 @@ export function Header() {
         </nav>
 
         <div className="header-actions">
+          <div className="header-search-wrap" ref={searchRef}>
           <form className="header-search" onSubmit={submitSearch}>
             <Search size={16} className="search-icon-prefix" />
             <input
               aria-label="Search products"
               placeholder="Search for products, brands and more..."
               value={search}
-              onChange={(event) => setSearch(event.target.value)}
+              onFocus={() => setSearchOpen(true)}
+              onChange={(event) => { setSearch(event.target.value); setSearchOpen(true) }}
             />
             <button type="submit" aria-label="Search">
               <Search size={15} />
             </button>
           </form>
+          {searchOpen && <div className="header-search__suggestions"><span className="header-search__suggestions-title">{search.trim() ? 'Try searching for' : 'Popular searches'}</span>{defaultSearchSuggestions.filter((item) => !search.trim() || item.label.toLowerCase().includes(search.toLowerCase()) || item.query.includes(search.toLowerCase())).map((item) => <Link key={item.label} to={item.href} onClick={() => setSearchOpen(false)}><Search size={14} /><span>{item.label}</span><ArrowRight size={14} /></Link>)}</div>}
+          </div>
 
           <Link className="header-action" to="/wishlist" aria-label="Wishlist">
             <span className="header-action__icon">
