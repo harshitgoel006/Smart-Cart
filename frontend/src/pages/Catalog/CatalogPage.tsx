@@ -94,6 +94,13 @@ export function CatalogPage() {
             setCategoryName(category.name)
             setSubcategories(category.children || [])
           }
+        } else if (params.get('category')) {
+          const category = await getJson<CategoryNode>(`/categories/${params.get('category')}`)
+          categoryId = category._id
+          if (!cancelled) {
+            setCategoryName(category.name)
+            setSubcategories(category.children || [])
+          }
         } else if (!cancelled) {
           setCategoryName('')
           setSubcategories([])

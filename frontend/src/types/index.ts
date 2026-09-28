@@ -7,6 +7,9 @@ export type Category = {
   productCount?: number
   image?: ImageRef
   description?: string
+  tagline?: string
+  bannerImage?: ImageRef
+  isFeatured?: boolean
   parent?: string | null
   children?: Category[]
 }

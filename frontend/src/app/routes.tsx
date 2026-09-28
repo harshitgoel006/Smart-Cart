@@ -13,6 +13,7 @@ import { RegisterPage } from '../pages/Auth/RegisterPage'
 import { SimpleAccountPage } from '../components/ui/EmptyState/SimpleAccountPage'
 import { WishlistPage } from '../pages/Wishlist/WishlistPage'
 import { AIShoppingPage } from '../pages/AIShopping/AIShoppingPage'
+import { CategoriesPage } from '../pages/Categories/CategoriesPage'
 
 export function AppRoutes() {
   return (
@@ -20,7 +21,8 @@ export function AppRoutes() {
       <Route path="/" element={<HomePage />} />
       <Route path="/products" element={<CatalogPage />} />
       <Route path="/search" element={<CatalogPage />} />
-      <Route path="/categories/:slug" element={<CatalogPage />} />
+      <Route path="/categories" element={<CategoriesPage />} />
+      <Route path="/categories/:slug" element={<CategoriesPage />} />
       <Route path="/products/:id" element={<ProductDetailRoute />} />
       <Route path="/cart" element={<CartPage />} />
       <Route path="/login" element={<LoginPage />} />

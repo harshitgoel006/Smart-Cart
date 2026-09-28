@@ -1,11 +1,43 @@
 import { ApiError } from "../utils/ApiError.js";
 import { Category } from "../models/category.model.js";
+import { Product } from "../models/product.model.js";
 import { Order } from "../models/order.model.js";
 import mongoose from "mongoose";
 import { User } from "../models/user.model.js";
 import NotificationService from "./notification/notification.service.js";
 
 export const categoryService = {
+
+  async attachProductCounts(tree) {
+    const flatten = (nodes) => nodes.flatMap((node) => [node, ...flatten(node.children || [])]);
+    const categories = flatten(tree);
+    const categoryIds = categories.map((category) => category._id);
+    const counts = await Product.aggregate([
+      {
+        $match: {
+          category: { $in: categoryIds },
+          isDeleted: false,
+          isActive: true,
+          approvalStatus: "approved",
+          isArchived: false,
+        },
+      },
+      { $group: { _id: "$category", count: { $sum: 1 } } },
+    ]);
+    const directCounts = new Map(counts.map((item) => [String(item._id), item.count]));
+
+    const annotate = (nodes) => nodes.map((node) => {
+      const children = annotate(node.children || []);
+      const childCount = children.reduce((sum, child) => sum + Number(child.productCount || 0), 0);
+      return {
+        ...node,
+        children,
+        productCount: Number(directCounts.get(String(node._id)) || 0) + childCount,
+      };
+    });
+
+    return annotate(tree);
+  },
 
   buildTree(categories, parent = null) {
     return categories
@@ -37,7 +69,7 @@ export const categoryService = {
       throw new ApiError(404, "No categories found");
     }
 
-    return this.buildTree(categories);
+    return this.attachProductCounts(this.buildTree(categories));
   },
 
   async getCategoryById(categoryId) {
@@ -56,9 +88,13 @@ export const categoryService = {
       status: "approved",
     }).lean();
 
+    const tree = await this.attachProductCounts(this.buildTree(all));
+    const refreshed = tree.flatMap((item) => [item, ...(item.children || [])]).find((item) => String(item._id) === String(category._id));
+
     return {
       ...category,
-      children: this.buildTree(all, category._id),
+      productCount: refreshed?.productCount || 0,
+      children: refreshed?.children || [],
     };
   },
 
@@ -78,9 +114,13 @@ export const categoryService = {
       status: "approved",
     }).lean();
 
+    const tree = await this.attachProductCounts(this.buildTree(all));
+    const refreshed = tree.flatMap((item) => [item, ...(item.children || [])]).find((item) => String(item._id) === String(category._id));
+
     return {
       ...category,
-      children: this.buildTree(all, category._id),
+      productCount: refreshed?.productCount || 0,
+      children: refreshed?.children || [],
     };
   },
 
