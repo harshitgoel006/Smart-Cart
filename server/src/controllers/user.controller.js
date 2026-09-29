@@ -333,6 +333,11 @@ const getAllUsers = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, result, "Users fetched successfully"));
 });
 
+const getAdminUserDetails = asyncHandler(async (req, res) => {
+  const user = await userService.getAdminUserDetails(req.params.id);
+  return res.status(200).json(new ApiResponse(200, user, "User details fetched successfully"));
+});
+
 const getAllCustomers = asyncHandler(async (req, res) => {
   const { page, limit } = req.query;
 
@@ -415,6 +420,7 @@ export {
   suspendSeller,
   unsuspendSeller,
   getAllUsers,
+  getAdminUserDetails,
   getAllCustomers,
   getAllSellers,
   deactivateUserAccount,

@@ -638,19 +638,26 @@ export const cartService = {
     }
 
     const normalizedCode = code.toUpperCase().trim();
+    const normalizedDiscountType = String(discountType).toLowerCase();
+    const normalizedDiscountValue = Number(discountValue);
 
     const allowedTypes = ["flat", "percent"];
 
-    if (!allowedTypes.includes(discountType)) {
+    if (!allowedTypes.includes(normalizedDiscountType)) {
       throw new ApiError(400, "Invalid discount type");
     }
 
-    if (discountValue <= 0) {
+    if (!Number.isFinite(normalizedDiscountValue) || normalizedDiscountValue <= 0) {
       throw new ApiError(400, "Discount value must be positive");
     }
 
-    if (discountType === "percent" && discountValue > 100) {
+    if (normalizedDiscountType === "percent" && normalizedDiscountValue > 100) {
       throw new ApiError(400, "Percent cannot exceed 100");
+    }
+
+    const normalizedExpiryDate = expiryDate ? new Date(expiryDate) : undefined;
+    if (expiryDate && Number.isNaN(normalizedExpiryDate.getTime())) {
+      throw new ApiError(400, "Please provide a valid expiry date");
     }
 
     if (minOrderValue < 0) {
@@ -665,7 +672,7 @@ export const cartService = {
       throw new ApiError(400, "Invalid per-user usage limit");
     }
 
-    if (expiryDate && new Date(expiryDate) < new Date()) {
+    if (normalizedExpiryDate && normalizedExpiryDate < new Date()) {
       throw new ApiError(400, "Expiry date must be in future");
     }
 
@@ -679,9 +686,9 @@ export const cartService = {
 
     const coupon = await Coupon.create({
       code: normalizedCode,
-      discountType,
-      discountValue,
-      expiryDate,
+      discountType: normalizedDiscountType,
+      discountValue: normalizedDiscountValue,
+      ...(normalizedExpiryDate ? { expiryDate: normalizedExpiryDate } : {}),
       minOrderValue,
       maxDiscount,
       usageLimit,
@@ -855,6 +862,22 @@ export const cartService = {
       totalPages: Math.ceil(total / limit),
       coupons: formatted,
     };
+  },
+
+  async listAvailableCoupons() {
+    const now = new Date();
+    const coupons = await Coupon.find({
+      isActive: true,
+      startDate: { $lte: now },
+      $or: [{ expiryDate: null }, { expiryDate: { $gt: now } }],
+      $expr: { $lt: ['$usageCount', '$totalUsageLimit'] },
+    })
+      .select('code description discountType discountValue maxDiscount minOrderValue expiryDate')
+      .sort({ createdAt: -1 })
+      .limit(12)
+      .lean();
+
+    return coupons;
   },
 
   async resetUserCart(userId) {

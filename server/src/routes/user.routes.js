@@ -25,6 +25,7 @@ import {
   suspendSeller,
   unsuspendSeller,
   getAllUsers,
+  getAdminUserDetails,
   getAllSellers,
   getAllCustomers,
   reactivateUserAccount,
@@ -133,6 +134,10 @@ router
 router
   .route("/admin/users")
   .get(verifyJWT, authorizedRole("admin"), getAllUsers);
+
+router
+  .route("/admin/users/:id")
+  .get(verifyJWT, authorizedRole("admin"), getAdminUserDetails);
 
 router
   .route("/admin/sellers")

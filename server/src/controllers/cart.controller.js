@@ -68,6 +68,14 @@ const applyCoupon = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, cart, "Coupon applied successfully"));
 });
 
+const listAvailableCoupons = asyncHandler(async (_req, res) => {
+  const coupons = await cartService.listAvailableCoupons();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { coupons }, "Available coupons fetched successfully"));
+});
+
 // ======================================================
 // ================= ADMIN PANNEL HANDLERS ==============
 // ======================================================
@@ -124,6 +132,7 @@ export {
   removeCartItem,
   clearCart,
   applyCoupon,
+  listAvailableCoupons,
   getCartAnalytics,
   createCoupon,
   updateCoupon,

@@ -445,6 +445,11 @@ const adminGetAllProducts = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, products, "All products fetched successfully"));
 });
 
+const adminGetProductDetails = asyncHandler(async (req, res) => {
+  const product = await productService.adminGetProductDetails(req.params.productId);
+  return res.status(200).json(new ApiResponse(200, product, "Product details fetched successfully"));
+});
+
 const moderateProductContent = asyncHandler(async (req, res) => {
   const { productId } = req.params;
   const product = await productService.moderateProductContent(
@@ -511,6 +516,7 @@ export {
   approveProducts,
   rejectProduct,
   adminGetAllProducts,
+  adminGetProductDetails,
   moderateProductContent,
   toggleAdminProductStatus,
   bulkModerateProducts,

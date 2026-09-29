@@ -1,4 +1,4 @@
-import { ApiError } from "./ApiError.js";
+﻿import { ApiError } from "./ApiError.js";
 import nodemailer from "nodemailer";
 
 const maskEmail = (email = "") => {
@@ -78,11 +78,11 @@ const sendEmail = async (to, subject, html) => {
       );
     }
 
-    console.log("✅ Email Sent:", data.messageId);
+    console.log("âœ… Email Sent:", data.messageId);
 
     return data;
   } catch (err) {
-    console.error("❌ Brevo Error:", err);
+    console.warn("Email delivery unavailable:", err?.message || "email provider unavailable");
 
     if (err instanceof ApiError) {
       throw err;
@@ -99,3 +99,4 @@ export const sendEmailWithHTML = async ({ to, subject, html }) =>
   sendEmail(to, subject, html);
 
 export default sendEmail;
+

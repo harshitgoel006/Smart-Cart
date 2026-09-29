@@ -27,6 +27,7 @@ import {
   approveProducts,
   rejectProduct,
   adminGetAllProducts,
+  adminGetProductDetails,
   moderateProductContent,
   bulkModerateProducts,
   toggleAdminProductStatus,
@@ -151,6 +152,10 @@ router
 router
   .route("/products")
   .get(verifyJWT, authorizedRole("admin"), adminGetAllProducts);
+
+router
+  .route("/admin/products/:productId")
+  .get(verifyJWT, authorizedRole("admin"), adminGetProductDetails);
 
 router
   .route("/products/:productId/approve")

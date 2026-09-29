@@ -1910,6 +1910,21 @@ export const productService = {
     };
   },
 
+  async adminGetProductDetails(productId) {
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+      throw new ApiError(400, "Invalid product ID");
+    }
+
+    const product = await Product.findById(productId)
+      .populate("seller", "fullname username email phone sellerProfile")
+      .populate("category", "name slug parent")
+      .populate("subCategory", "name slug")
+      .lean();
+
+    if (!product) throw new ApiError(404, "Product not found");
+    return product;
+  },
+
   async moderateProductContent(productId, body) {
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       throw new ApiError(400, "Invalid product ID");

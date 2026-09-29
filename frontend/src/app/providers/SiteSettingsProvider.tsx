@@ -12,14 +12,17 @@ export type SiteSettings = {
   maintenanceMode?: boolean
 }
 
-const SiteSettingsContext = createContext<SiteSettings>({})
+type SiteSettingsContextValue = SiteSettings & { refresh: () => Promise<void> }
+const SiteSettingsContext = createContext<SiteSettingsContextValue>({ refresh: async () => undefined })
 export const useSiteSettings = () => useContext(SiteSettingsContext)
 
 export function SiteSettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<SiteSettings>({})
-  useEffect(() => {
-    getJson<SiteSettings>('/site-settings').then(setSettings).catch(() => undefined)
-  }, [])
+  const refresh = async () => {
+    const nextSettings = await getJson<SiteSettings>('/site-settings')
+    setSettings(nextSettings)
+  }
+  useEffect(() => { void refresh().catch(() => undefined) }, [])
   useEffect(() => {
     const theme = settings.theme
     if (theme) {
@@ -34,5 +37,5 @@ export function SiteSettingsProvider({ children }: { children: ReactNode }) {
       link.rel = 'icon'; link.href = settings.brand.faviconUrl; document.head.appendChild(link)
     }
   }, [settings])
-  return <SiteSettingsContext.Provider value={settings}>{children}</SiteSettingsContext.Provider>
+  return <SiteSettingsContext.Provider value={{ ...settings, refresh }}>{children}</SiteSettingsContext.Provider>
 }

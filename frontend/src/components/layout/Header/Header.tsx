@@ -43,6 +43,7 @@ const defaultSearchSuggestions = [
 ];
 
 function AdminHeader({ displayName, onLogout }: { displayName: string; onLogout: () => void }) {
+  const location = useLocation();
   return <header className="site-header admin-site-header">
     <div className="main-navbar">
       <Link className="brand-badge-wrapper" to="/admin">
@@ -50,10 +51,10 @@ function AdminHeader({ displayName, onLogout }: { displayName: string; onLogout:
         <div className="brand-copy"><strong>Smart<span>Cart</span></strong><small>Admin workspace</small></div>
       </Link>
       <nav className="admin-header-nav" aria-label="Admin navigation">
-        <Link className="active" to="/admin"><ShieldCheck size={16} /> Control room</Link>
+        <Link className={location.pathname === "/admin" ? "active" : ""} to="/admin"><ShieldCheck size={16} /> Control room</Link>
         <Link to="/"><ArrowRight size={15} /> View storefront</Link>
       </nav>
-      <div className="admin-header-account"><UserIcon size={18} /><span>{displayName}</span><button type="button" onClick={onLogout}><LogOut size={15} /> Sign out</button></div>
+      <div className="admin-header-account"><Link className={`admin-profile-link ${location.pathname === "/admin/profile" ? "is-active" : ""}`} to="/admin/profile"><UserIcon size={18} /><span>{displayName}</span></Link><button type="button" onClick={onLogout}><LogOut size={15} /> Sign out</button></div>
     </div>
   </header>
 }
@@ -197,16 +198,16 @@ export function Header() {
     return location.pathname.startsWith(path);
   };
 
-  return user?.role === "admin" ? <AdminHeader displayName={user.fullname || user.email} onLogout={() => void handleLogout()} /> : (
+  return user?.role === "admin" && location.pathname.startsWith("/admin") ? <AdminHeader displayName={user.fullname || user.email} onLogout={() => void handleLogout()} /> : (
     <header className="site-header">
       {siteSettings.announcement?.enabled !== false && <div className="announcement">
         <Sparkles size={13} className="announcement-sparkle" />
-        <span>Free shipping on orders above ₹999</span>
+        <span>{siteSettings.announcement?.text || "Free shipping on orders above ₹999"}</span>
         <b>•</b>
         <span>Easy 7 days return</span>
         <b>•</b>
         <span>
-          Extra 10% off on your first order with code <strong>SMART10</strong>
+          Extra 10% off on your first order with code <strong>{siteSettings.announcement?.code || "SMART10"}</strong>
         </span>
       </div>}
 
@@ -365,6 +366,9 @@ export function Header() {
                 <Link to={user ? "/account" : "/login"} onClick={closeMenus}>
                   <UserIcon size={14} /> {user ? "My Account" : "Sign in"}
                 </Link>
+                {user?.role === "admin" && <Link to="/admin" onClick={closeMenus}>
+                  <ShieldCheck size={14} /> Admin dashboard
+                </Link>}
                 <Link to="/orders" onClick={closeMenus}>
                   <Package size={14} /> My Orders
                 </Link>

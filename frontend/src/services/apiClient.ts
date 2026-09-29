@@ -100,6 +100,7 @@ function getSafeErrorMessage(
     : ''
   const containsInternalDetails = /E11000|duplicate key|Mongo|Mongoose|collection:|index:|CastError|ValidationError|stack/i.test(message)
 
+  if (status >= 500) return 'SmartCart is having trouble right now. Please try again shortly.'
   if (containsInternalDetails) {
     return 'Something went wrong while completing your request. Please try again.'
   }
@@ -110,8 +111,6 @@ function getSafeErrorMessage(
   if (status === 403) return 'You do not have permission to perform this action.'
   if (status === 404) return 'The requested item could not be found.'
   if (status === 409) return 'This action could not be completed right now. Please try again.'
-  if (status >= 500) return 'SmartCart is having trouble right now. Please try again shortly.'
-
   return fallbackMessage
 }
 
@@ -139,7 +138,8 @@ export async function sendForm<T>(
   formData: FormData,
   method = 'POST',
 ): Promise<T> {
-  const response = await request(path, { method, body: formData })
+  const normalizedPath = path === '/upload/single' ? '/uploads/single' : path
+  const response = await request(normalizedPath, { method, body: formData })
   return parseResponse<T>(response, 'Request could not be completed')
 }
 

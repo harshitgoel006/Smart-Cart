@@ -1211,6 +1211,23 @@ export const userService = {
     };
   },
 
+  async getAdminUserDetails(id) {
+    if (!mongoose.Types.ObjectId.isValid(id)) throw new ApiError(400, "Invalid user ID");
+    const user = await User.findById(id).select("-password -refreshTokens").lean();
+    if (!user) throw new ApiError(404, "User not found");
+    const [orders, products, orderStats, lastOrder] = await Promise.all([
+      Order.countDocuments({ user: id }),
+      user.role === "seller" ? mongoose.model("Product").countDocuments({ seller: id }) : Promise.resolve(0),
+      Order.aggregate([
+        { $match: { user: new mongoose.Types.ObjectId(id) } },
+        { $group: { _id: null, totalSpent: { $sum: { $toDouble: "$finalAmount" } }, cancelled: { $sum: { $cond: [{ $eq: ["$orderStatus", "cancelled"] }, 1, 0] } }, delivered: { $sum: { $cond: [{ $eq: ["$orderStatus", "delivered"] }, 1, 0] } } } },
+      ]),
+      Order.findOne({ user: id }).sort({ createdAt: -1 }).select("orderStatus paymentStatus finalAmount createdAt").lean(),
+    ]);
+    const addressList = (user.addresses || []).map((address) => ({ ...address, addressLine: address.addressLine || address.street }));
+    return { ...user, addresses: addressList, orderCount: orders, productCount: products, totalSpent: orderStats[0]?.totalSpent || 0, cancelledOrders: orderStats[0]?.cancelled || 0, deliveredOrders: orderStats[0]?.delivered || 0, lastOrder };
+  },
+
   async getAllCustomers({ page = 1, limit = 10 }) {
     const skip = (page - 1) * limit;
 

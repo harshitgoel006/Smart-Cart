@@ -15,6 +15,7 @@ import { WishlistPage } from '../pages/Wishlist/WishlistPage'
 import { AIShoppingPage } from '../pages/AIShopping/AIShoppingPage'
 import { CategoriesPage } from '../pages/Categories/CategoriesPage'
 import { AdminPage } from '../pages/Admin/AdminPage'
+import { AdminProfilePage } from '../pages/Admin/AdminProfilePage'
 
 export function AppRoutes() {
   return (
@@ -38,6 +39,7 @@ export function AppRoutes() {
       <Route path="/notifications" element={<NotificationsPage />} />
       <Route path="/ai-shopping" element={<AIShoppingPage />} />
       <Route path="/admin" element={<AdminPage />} />
+      <Route path="/admin/profile" element={<AdminProfilePage />} />
       <Route
         path="*"
         element={

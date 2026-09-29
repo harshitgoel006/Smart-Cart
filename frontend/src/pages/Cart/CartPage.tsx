@@ -7,6 +7,15 @@ import type { AiProductSuggestion, Cart } from '../../types'
 import { formatPrice, productImage } from '../../utils/formatters'
 import { SimpleAccountPage } from '../../components/ui/EmptyState/SimpleAccountPage'
 
+type AvailableCoupon = {
+  code: string
+  description?: string
+  discountType: 'percent' | 'flat'
+  discountValue: number
+  minOrderValue?: number
+  expiryDate?: string
+}
+
 function notifyCartUpdated() {
   window.dispatchEvent(new CustomEvent('smartcart:cart-updated'))
 }
@@ -50,6 +59,7 @@ export function CartPage() {
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState('')
   const [suggestions, setSuggestions] = useState<AiProductSuggestion[]>([])
+  const [availableCoupons, setAvailableCoupons] = useState<AvailableCoupon[]>([])
 
   const refresh = async () => {
     try {
@@ -76,6 +86,13 @@ export function CartPage() {
   useEffect(() => {
     if (user) void refresh()
     else setLoading(false)
+  }, [user])
+
+  useEffect(() => {
+    if (!user) return
+    void getJson<{ coupons: AvailableCoupon[] }>('/carts/coupon/available')
+      .then((result) => setAvailableCoupons(result.coupons || []))
+      .catch(() => setAvailableCoupons([]))
   }, [user])
 
   const updateQuantity = async (itemId: string, quantity: number) => {
@@ -188,7 +205,7 @@ export function CartPage() {
                 <input aria-label="Coupon code" placeholder="Coupon code" value={coupon} onChange={(event) => setCoupon(event.target.value)} />
                 <button className="ghost-dark-button" disabled={Boolean(busy)}>{busy === 'coupon' ? '...' : 'Apply'}</button>
               </form>
-              <Link className="primary-button" to="/checkout">Continue to checkout <span>↗</span></Link>
+              {availableCoupons.length ? <div className="cart-available-coupons"><span className="eyebrow">Available offers</span>{availableCoupons.slice(0, 3).map((offer) => <button type="button" key={offer.code} onClick={() => setCoupon(offer.code)}><span><strong>{offer.code}</strong><small>{offer.description || `${offer.discountType === 'percent' ? `${offer.discountValue}% off` : `₹${offer.discountValue} off`}${offer.minOrderValue ? ` on orders above ₹${offer.minOrderValue}` : ''}`}</small></span><b>Use</b></button>)}</div> : null}\n              <Link className="primary-button" to="/checkout">Continue to checkout <span>↗</span></Link>
               <small className="cart-summary__hint">Secure checkout · Easy 7-day returns</small>
             </aside>
           </div>

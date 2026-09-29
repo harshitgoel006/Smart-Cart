@@ -994,7 +994,7 @@ class OrderService {
       _id: orderId,
       "items.seller": sellerId,
     })
-      .populate("user", "fullname email")
+      .populate("user", "fullname email phone")
       .populate("items.product", "name images");
 
     if (!order) {
@@ -1044,11 +1044,14 @@ class OrderService {
       customer: {
         name: order.user?.fullname,
         email: order.user?.email,
+        phone: order.user?.phone,
       },
 
       shippingAddress: order.shippingAddress,
 
       orderStatus: order.orderStatus,
+
+      statusHistory: order.statusHistory,
 
       items,
 
@@ -1710,7 +1713,7 @@ class OrderService {
     }
 
     const order = await Order.findById(orderId)
-      .populate("user", "fullname email")
+      .populate("user", "fullname email phone")
       .populate("items.product", "name images")
       .populate("items.seller", "shopName fullname email");
 
@@ -1755,6 +1758,7 @@ class OrderService {
       customer: {
         name: order.user?.fullname,
         email: order.user?.email,
+        phone: order.user?.phone,
       },
 
       shippingAddress: order.shippingAddress,
@@ -1774,6 +1778,8 @@ class OrderService {
       },
 
       orderStatus: order.orderStatus,
+
+      statusHistory: order.statusHistory,
 
       items,
 

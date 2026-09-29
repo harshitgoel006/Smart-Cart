@@ -6,6 +6,7 @@ import {
   removeCartItem,
   clearCart,
   applyCoupon,
+  listAvailableCoupons,
   getCartAnalytics,
   createCoupon,
   updateCoupon,
@@ -44,6 +45,10 @@ router.route("/clear").delete(verifyJWT, authorizedRole("customer"), clearCart);
 router
   .route("/apply-coupon")
   .post(verifyJWT, authorizedRole("customer"), applyCoupon);
+
+router
+  .route("/coupon/available")
+  .get(verifyJWT, authorizedRole("customer"), listAvailableCoupons);
 
 // ======================================================
 // =============== ADMIN PANEL HANDLERS =================

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Footer } from '../components/layout/Footer/Footer'
 import { Header } from '../components/layout/Header/Header'
 import { AiShoppingAssistant } from '../components/ai/AiShoppingAssistant/AiShoppingAssistant'
@@ -9,13 +10,16 @@ type AppShellProps = {
 }
 
 export function AppShell({ children }: AppShellProps) {
+  const { pathname } = useLocation()
+  const isAdminArea = pathname.startsWith('/admin')
+
   return (
     <div className="app-shell">
       <Header />
       {children}
-      <TrustStrip />
-      <Footer />
-      <AiShoppingAssistant />
+      {!isAdminArea && <TrustStrip />}
+      {!isAdminArea && <Footer />}
+      {!isAdminArea && <AiShoppingAssistant />}
     </div>
   )
 }

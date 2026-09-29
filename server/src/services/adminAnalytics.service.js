@@ -15,7 +15,15 @@ export const adminAnalyticsService = {
       User.countDocuments({ role: "customer", isDeleted: false }),
       User.countDocuments({ role: "seller", isDeleted: false }),
     ]);
-    return { periodDays: safeDays, revenue: Number(totals[0]?.revenue || 0), orders: totals[0]?.orders || 0, customers, sellers, daily, topProducts };
+    return {
+      periodDays: safeDays,
+      revenue: Number(totals[0]?.revenue || 0),
+      orders: totals[0]?.orders || 0,
+      customers,
+      sellers,
+      daily: daily.map((item) => ({ _id: item._id, revenue: Number(item.revenue || 0), orders: Number(item.orders || 0) })),
+      topProducts: topProducts.map((item) => ({ _id: item._id, units: Number(item.units || 0), revenue: Number(item.revenue || 0) })),
+    };
   },
 
   async sellerPerformance({ days = 30, commissionRate = 10 } = {}) {
