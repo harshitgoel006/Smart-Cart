@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "nodemon -r dotenv/config src/index.js",
     "start": "node src/index.js",
+    "test:smoke": "node scripts/smoke-test.mjs",
+    "admin:bootstrap": "node scripts/bootstrap-admin.mjs",
     "seed:products": "node src/seed/scripts/seedProducts.js",
     "import:abo-products": "node src/seed/scripts/importAboProducts.js",
     "seed:coupon": "node src/seed/scripts/seedCoupons.js"

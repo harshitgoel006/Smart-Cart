@@ -8,6 +8,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { Parser } from "json2csv";
 import PDFDocument from "pdfkit";
 import { generateQRCode } from "../utils/qrCodeGenerators.js";
+import { createSmartCartInvoice } from "../utils/invoicePdf.js";
 
 const toNumber = (val) => parseFloat(val.toString());
 
@@ -239,7 +240,7 @@ class OrderService {
 
     const [orders, total] = await Promise.all([
       Order.find(filter)
-        .select("_id orderStatus finalAmount createdAt")
+        .select("_id orderStatus finalAmount createdAt items")
         .sort({ createdAt: -1, _id: -1 }) // stable sort
         .skip(skip)
         .limit(limit),
@@ -252,6 +253,15 @@ class OrderService {
       orderStatus: order.orderStatus,
       finalAmount: parseFloat(order.finalAmount.toString()),
       createdAt: order.createdAt,
+      items: (order.items || []).map((item) => ({
+        _id: item._id,
+        quantity: item.quantity,
+        product: {
+          name: item.productSnapshot?.name || "Product",
+          image: item.productSnapshot?.image,
+          slug: item.productSnapshot?.slug,
+        },
+      })),
     }));
 
     return {
@@ -757,6 +767,18 @@ class OrderService {
       finalAmount: toNumber(order.finalAmount),
       discountAmount: toNumber(order.discount || 0),
       shippingCost: toNumber(order.deliveryCharge || 0),
+    };
+
+    const invoiceNumber = `SC-INV-${new Date(order.createdAt).toISOString().slice(0, 10).replace(/-/g, "")}-${String(order._id).slice(-8).toUpperCase()}`;
+    const brandedPdf = await createSmartCartInvoice(order, {
+      ...transformedOrder,
+      number: invoiceNumber,
+      date: new Date(order.createdAt).toLocaleString("en-IN"),
+    });
+
+    return {
+      buffer: brandedPdf,
+      filename: `invoice-${order._id}.pdf`,
     };
 
     const pdfBuffer = await new Promise((resolve, reject) => {
@@ -1661,7 +1683,7 @@ class OrderService {
     const total = await Order.countDocuments(filter);
 
     const formatted = orders.map((o) => ({
-      orderId: o > _id,
+      orderId: o._id,
       customer: {
         name: o.user?.fullname,
         email: o.user?.email,

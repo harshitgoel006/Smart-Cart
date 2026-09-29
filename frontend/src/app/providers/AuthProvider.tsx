@@ -6,7 +6,7 @@ import type { AuthUser } from '../../types'
 type AuthContextValue = {
   user: AuthUser | null
   loading: boolean
-  login: (email: string, password: string) => Promise<void>
+  login: (email: string, password: string) => Promise<AuthUser>
   logout: () => Promise<void>
   refreshUser: () => Promise<void>
 }
@@ -52,6 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     sessionStorage.setItem('smartcart.accessToken', data.accessToken)
     setUser(data.user)
+    return data.user
   }
 
   const logout = async () => {

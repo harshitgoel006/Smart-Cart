@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../app/providers/AuthProvider";
 import { getJson } from "../../../services/apiClient";
 import type { Cart } from "../../../types";
+import { useSiteSettings } from "../../../app/providers/SiteSettingsProvider";
 import {
   ShoppingBag,
   Heart,
@@ -17,6 +18,7 @@ import {
   Bell,
   LogOut,
   ArrowRight,
+  ShieldCheck,
 } from "lucide-react";
 
 const fallbackCategoryLinks = [
@@ -40,10 +42,27 @@ const defaultSearchSuggestions = [
   { label: "Home essentials", query: "home essentials", href: "/search?q=home%20essentials" },
 ];
 
+function AdminHeader({ displayName, onLogout }: { displayName: string; onLogout: () => void }) {
+  return <header className="site-header admin-site-header">
+    <div className="main-navbar">
+      <Link className="brand-badge-wrapper" to="/admin">
+        <div className="brand-logo-box"><ShoppingBag size={20} className="brand-logo-icon" /></div>
+        <div className="brand-copy"><strong>Smart<span>Cart</span></strong><small>Admin workspace</small></div>
+      </Link>
+      <nav className="admin-header-nav" aria-label="Admin navigation">
+        <Link className="active" to="/admin"><ShieldCheck size={16} /> Control room</Link>
+        <Link to="/"><ArrowRight size={15} /> View storefront</Link>
+      </nav>
+      <div className="admin-header-account"><UserIcon size={18} /><span>{displayName}</span><button type="button" onClick={onLogout}><LogOut size={15} /> Sign out</button></div>
+    </div>
+  </header>
+}
+
 export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, loading: authLoading, logout } = useAuth();
+  const siteSettings = useSiteSettings();
   const [search, setSearch] = useState("");
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
@@ -178,9 +197,9 @@ export function Header() {
     return location.pathname.startsWith(path);
   };
 
-  return (
+  return user?.role === "admin" ? <AdminHeader displayName={user.fullname || user.email} onLogout={() => void handleLogout()} /> : (
     <header className="site-header">
-      <div className="announcement">
+      {siteSettings.announcement?.enabled !== false && <div className="announcement">
         <Sparkles size={13} className="announcement-sparkle" />
         <span>Free shipping on orders above ₹999</span>
         <b>•</b>
@@ -189,7 +208,7 @@ export function Header() {
         <span>
           Extra 10% off on your first order with code <strong>SMART10</strong>
         </span>
-      </div>
+      </div>}
 
       <div className="utility-bar">
         <div />
@@ -204,9 +223,9 @@ export function Header() {
 
       <div className="main-navbar">
         <Link className="brand-badge-wrapper" to="/" onClick={closeMenus}>
-          <div className="brand-logo-box">
-            <ShoppingBag size={20} className="brand-logo-icon" />
-          </div>
+            <div className="brand-logo-box">
+              {siteSettings.brand?.logoUrl ? <img src={siteSettings.brand.logoUrl} alt="SmartCart" /> : <ShoppingBag size={20} className="brand-logo-icon" />}
+            </div>
           <div className="brand-copy">
             <strong>
               Smart<span>Cart</span>

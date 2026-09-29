@@ -1,7 +1,10 @@
 import { ArrowUpRight, Camera, Mail, ShoppingBag } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useSiteSettings } from '../../../app/providers/SiteSettingsProvider'
 
 export function Footer() {
+  const settings = useSiteSettings()
+  const supportEmail = settings.brand?.email || 'smartcart025@gmail.com'
   return (
     <footer className="site-footer">
       <div className="site-footer__main">
@@ -14,8 +17,8 @@ export function Footer() {
             </span>
           </Link>
           <p>Curated everyday shopping, made a little smarter.</p>
-          <a className="site-footer__email" href="mailto:smartcart025@gmail.com">
-            <Mail size={14} /> smartcart025@gmail.com
+          <a className="site-footer__email" href={`mailto:${supportEmail}`}>
+            <Mail size={14} /> {supportEmail}
           </a>
         </div>
 
@@ -32,13 +35,13 @@ export function Footer() {
           <Link to="/categories">Categories</Link>
           <Link to="/wishlist">Wishlist</Link>
           <Link to="/cart">Your bag</Link>
-          <a href="mailto:smartcart025@gmail.com">Contact us</a>
+          <a href={`mailto:${supportEmail}`}>Contact us</a>
         </div>
 
         <div className="site-footer__newsletter">
           <span className="site-footer__label">Stay in the know</span>
           <h2>Good finds, straight to your inbox.</h2>
-          <a className="site-footer__join" href="mailto:smartcart025@gmail.com?subject=Join%20the%20SmartCart%20edit">
+          <a className="site-footer__join" href={`mailto:${supportEmail}?subject=Join%20the%20SmartCart%20edit`}>
             Join the edit <ArrowUpRight size={16} />
           </a>
         </div>

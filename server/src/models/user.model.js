@@ -93,6 +93,11 @@ const userSchema = new mongoose.Schema(
       index: true,
     },
 
+    permissions: {
+      type: [String],
+      default: ["manage_catalog", "manage_orders", "manage_customers", "manage_content"],
+    },
+
     refreshTokens: [
       {
         tokenHash: {

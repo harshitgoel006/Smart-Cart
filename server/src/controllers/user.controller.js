@@ -2,6 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { userService } from "../services/user.service.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { authCookieOptions } from "../config/runtime.js";
 
 // ======================================================
 // =============== AUTHENTHICATION HANDLERS ============
@@ -53,16 +54,10 @@ const loginUser = asyncHandler(async (req, res) => {
     password,
   );
 
-  const options = {
-    httpOnly: true,
-    secure: true,
-    sameSite: "Strict",
-  };
-
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, authCookieOptions)
+    .cookie("refreshToken", refreshToken, authCookieOptions)
     .json(
       new ApiResponse(
         200,
@@ -78,16 +73,10 @@ const logoutUser = asyncHandler(async (req, res) => {
 
   await userService.logoutUser(req.user._id, incomingRefreshToken);
 
-  const options = {
-    httpOnly: true,
-    secure: true,
-    sameSite: "Strict",
-  };
-
   return res
     .status(200)
-    .clearCookie("accessToken", options)
-    .clearCookie("refreshToken", options)
+    .clearCookie("accessToken", authCookieOptions)
+    .clearCookie("refreshToken", authCookieOptions)
     .json(new ApiResponse(200, {}, "User logout Successfully"));
 });
 
@@ -148,16 +137,10 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   const { user, accessToken, refreshToken } =
     await userService.refreshAccessToken(incomingRefreshToken);
 
-  const options = {
-    httpOnly: true,
-    secure: true,
-    sameSite: "Strict",
-  };
-
   return res
     .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refreshToken", refreshToken, options)
+    .cookie("accessToken", accessToken, authCookieOptions)
+    .cookie("refreshToken", refreshToken, authCookieOptions)
     .json(
       new ApiResponse(
         200,

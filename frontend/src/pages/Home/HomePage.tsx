@@ -9,6 +9,7 @@ import { Testimonials } from '../../components/home/Testimonials/Testimonials'
 import { ProductSection } from '../../components/product/ProductCarousel/ProductCarousel'
 import { getJson } from '../../services/apiClient'
 import type { Banner, Category, Product } from '../../types'
+import { useSiteSettings } from '../../app/providers/SiteSettingsProvider'
 
 export function HomePage() {
   const [banners, setBanners] = useState<Banner[]>([])
@@ -18,6 +19,8 @@ export function HomePage() {
   const [topRated, setTopRated] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [apiError, setApiError] = useState('')
+  const siteSettings = useSiteSettings()
+  const sectionEnabled = (key: string) => siteSettings.homepage?.sections?.find((section) => section.key === key)?.enabled !== false
 
   useEffect(() => {
     Promise.all([
@@ -63,7 +66,7 @@ export function HomePage() {
     <main>
       <HeroSection banners={banners} />
 
-      <OfferStrip />
+      {sectionEnabled('offers') && <OfferStrip />}
 
       {apiError && (
         <div className="api-notice">
@@ -71,9 +74,9 @@ export function HomePage() {
         </div>
       )}
 
-      <CategoryShowcase categories={visibleCategories} />
+      {sectionEnabled('categories') && <CategoryShowcase categories={visibleCategories} />}
 
-      <div id="trending-products">
+      {sectionEnabled('trending') && <div id="trending-products">
         <ProductSection
           eyebrow="Trending now"
           title="What’s moving fast."
@@ -84,11 +87,11 @@ export function HomePage() {
           linkText="Shop trending"
           variant="featured"
         />
-      </div>
+      </div>}
 
-      <AiRecommendations fallbackProducts={trending} />
+      {sectionEnabled('ai-recommendations') && siteSettings.features?.aiRecommendations !== false && <AiRecommendations fallbackProducts={trending} />}
 
-      <div id="new-arrivals">
+      {sectionEnabled('new-arrivals') && <div id="new-arrivals">
         <ProductSection
           eyebrow="Freshly picked"
           title="New arrivals"
@@ -99,13 +102,13 @@ export function HomePage() {
           linkText="View new arrivals"
           variant="featured"
         />
-      </div>
+      </div>}
 
-      <div className="editorial-transition">
+      {sectionEnabled('editorial') && <div className="editorial-transition">
         <EditorialFeature />
-      </div>
+      </div>}
 
-      <div id="top-rated">
+      {sectionEnabled('top-rated') && <div id="top-rated">
         <ProductSection
           eyebrow="Top rated"
           title="Loved by the community"
@@ -116,11 +119,11 @@ export function HomePage() {
           linkText="View top rated"
           variant="featured"
         />
-      </div>
+      </div>}
 
-      <BrandsShowcase />
+      {sectionEnabled('brands') && <BrandsShowcase />}
 
-      <Testimonials />
+      {sectionEnabled('testimonials') && <Testimonials />}
     </main>
   )
 }

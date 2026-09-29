@@ -74,7 +74,7 @@ const applyCoupon = asyncHandler(async (req, res) => {
 
 
 const getCartAnalytics = asyncHandler(async (req, res) => {
-  const { startDate, endDate } = req.body;
+  const { startDate, endDate } = req.query;
   const analytics = await cartService.getCartAnalytics(startDate, endDate);
 
   return res

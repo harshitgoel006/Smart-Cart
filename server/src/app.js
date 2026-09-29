@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { handleMulterError } from "./middlewares/multerError.middleware.js";
 import { errorHandler } from "./middlewares/error.middleware.js";
+import { corsOptions } from "./config/runtime.js";
 
 import uploadRouter from "./routes/upload.routes.js";
 import userRouter from "./routes/user.routes.js";
@@ -16,14 +17,14 @@ import reviewRouter from "./routes/review.routes.js";
 import paymentRouter from "./routes/payment.routes.js";
 import bannerRoutes from "./routes/banner.routes.js";
 import aiRouter from "./routes/ai.routes.js";
+import siteSettingsRouter from "./routes/siteSettings.routes.js";
+import adminAnalyticsRouter from "./routes/adminAnalytics.routes.js";
+import adminControlsRouter from "./routes/adminControls.routes.js";
 
 const app = express();
 
 app.use(
-  cors({
-    origin: process.env.CORS_ORIGIN,
-    credentials: true,
-  }),
+  cors(corsOptions),
 );
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
@@ -44,6 +45,9 @@ app.use(`${API_PREFIX}/reviews`, reviewRouter);
 app.use(`${API_PREFIX}/payments`, paymentRouter);
 app.use(`${API_PREFIX}/banners`, bannerRoutes);
 app.use(`${API_PREFIX}/ai`, aiRouter);
+app.use(`${API_PREFIX}/site-settings`, siteSettingsRouter);
+app.use(`${API_PREFIX}/admin-analytics`, adminAnalyticsRouter);
+app.use(`${API_PREFIX}/admin-controls`, adminControlsRouter);
 
 app.use(handleMulterError);
 app.use(errorHandler);

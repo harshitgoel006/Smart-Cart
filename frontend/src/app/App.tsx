@@ -5,6 +5,7 @@ import '../styles/globals.css'
 import { AppRoutes } from './routes'
 import { AppShell } from './AppShell'
 import { AuthProvider } from './providers/AuthProvider'
+import { SiteSettingsProvider } from './providers/SiteSettingsProvider'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -27,9 +28,11 @@ function App() {
     <BrowserRouter>
       <ScrollToTop />
       <AuthProvider>
-        <AppShell>
-          <AppRoutes />
-        </AppShell>
+        <SiteSettingsProvider>
+          <AppShell>
+            <AppRoutes />
+          </AppShell>
+        </SiteSettingsProvider>
       </AuthProvider>
     </BrowserRouter>
   )

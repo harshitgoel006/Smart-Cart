@@ -14,6 +14,7 @@ import { SimpleAccountPage } from '../components/ui/EmptyState/SimpleAccountPage
 import { WishlistPage } from '../pages/Wishlist/WishlistPage'
 import { AIShoppingPage } from '../pages/AIShopping/AIShoppingPage'
 import { CategoriesPage } from '../pages/Categories/CategoriesPage'
+import { AdminPage } from '../pages/Admin/AdminPage'
 
 export function AppRoutes() {
   return (
@@ -36,6 +37,7 @@ export function AppRoutes() {
       <Route path="/orders/:id/tracking" element={<OrderDetailPage />} />
       <Route path="/notifications" element={<NotificationsPage />} />
       <Route path="/ai-shopping" element={<AIShoppingPage />} />
+      <Route path="/admin" element={<AdminPage />} />
       <Route
         path="*"
         element={
