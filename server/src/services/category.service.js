@@ -6,6 +6,16 @@ import mongoose from "mongoose";
 import { User } from "../models/user.model.js";
 import NotificationService from "./notification/notification.service.js";
 
+async function resolveCategoryId(value) {
+  const raw = String(value || "").trim().replace(/^#/, "");
+  if (mongoose.Types.ObjectId.isValid(raw)) return raw;
+  if (!/^[a-f\d]{8}$/i.test(raw)) return value;
+
+  const candidates = await Category.find({}).select("_id").lean();
+  const match = candidates.find((category) => String(category._id).toLowerCase().endsWith(raw.toLowerCase()));
+  return match?._id || value;
+}
+
 export const categoryService = {
 
   async attachProductCounts(tree) {
@@ -421,6 +431,7 @@ export const categoryService = {
     const skip = (page - 1) * limit;
 
     const categories = await Category.find({})
+      .populate("parent", "name slug")
       .populate("proposedBy", "fullname email")
       .sort({ createdAt: -1 })
       .skip(skip)
@@ -438,6 +449,7 @@ export const categoryService = {
   },
 
   async viewCategoryDetails(categoryId) {
+    categoryId = await resolveCategoryId(categoryId);
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
       throw new ApiError(400, "Invalid category ID");
     }
@@ -622,6 +634,7 @@ export const categoryService = {
   },
 
   async deleteCategory(categoryId) {
+    categoryId = await resolveCategoryId(categoryId);
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
       throw new ApiError(400, "Invalid category ID");
     }
@@ -647,6 +660,7 @@ export const categoryService = {
   },
 
   async updateCategory(categoryId, data) {
+    categoryId = await resolveCategoryId(categoryId);
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
       throw new ApiError(400, "Invalid category ID");
     }
@@ -671,8 +685,11 @@ export const categoryService = {
       category.name = normalizedName;
     }
 
-    if (data.image?.url && data.image?.public_id) {
-      category.image = data.image;
+    if (data.image?.url) {
+      category.image = {
+        url: data.image.url,
+        public_id: data.image.public_id || category.image?.public_id,
+      };
     }
 
     if (data.parent) {
@@ -697,6 +714,7 @@ export const categoryService = {
   },
 
   async restoreDeletedCategory(categoryId) {
+    categoryId = await resolveCategoryId(categoryId);
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
       throw new ApiError(400, "Invalid category ID");
     }

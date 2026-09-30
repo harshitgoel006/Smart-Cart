@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { ArrowRight, RefreshCw, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../../app/providers/AuthProvider'
+import { useSiteSettings } from '../../../app/providers/SiteSettingsProvider'
 import { aiApi } from '../../../services/ai.api'
 import type { AiProductSuggestion, Product } from '../../../types'
 import { ProductCard } from '../../product/ProductCard/ProductCard'
@@ -34,11 +35,14 @@ function toProduct(suggestion: AiProductSuggestion): Product {
 
 export function AiRecommendations({ fallbackProducts }: AiRecommendationsProps) {
   const { user } = useAuth()
+  const settings = useSiteSettings()
   const [suggestions, setSuggestions] = useState<AiProductSuggestion[]>([])
   const [activeFilter, setActiveFilter] = useState<RecommendationFilter>('for-you')
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [message, setMessage] = useState('')
+
+  if (settings.features?.aiRecommendations === false) return null
 
   const loadRecommendations = async (isRefresh = false) => {
     setMessage('')

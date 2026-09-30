@@ -44,7 +44,7 @@ export function CategoryShowcase({ categories }: { categories: Category[] }) {
         {visibleCategories.map((category) => {
           // Once uploaded, the Cloudinary image stored in the category wins.
           // The theme mapping remains a safe fallback for older records.
-          const image = category.image?.url || CATEGORY_IMAGES[category.slug]
+          const image = category.image?.url || category.bannerImage?.url || CATEGORY_IMAGES[category.slug]
 
           return (
             <Link className="category-tile" to={`/categories/${category.slug}`} key={category._id}>

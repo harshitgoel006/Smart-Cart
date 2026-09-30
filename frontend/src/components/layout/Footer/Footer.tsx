@@ -10,7 +10,7 @@ export function Footer() {
       <div className="site-footer__main">
         <div className="site-footer__brand">
           <Link className="brand-badge-wrapper footer-brand" to="/">
-            <span className="brand-logo-box"><ShoppingBag size={20} className="brand-logo-icon" /></span>
+            <span className="brand-logo-box">{settings.brand?.logoUrl ? <img src={settings.brand.logoUrl} alt="SmartCart" /> : <ShoppingBag size={20} className="brand-logo-icon" />}</span>
             <span className="brand-copy">
               <strong>Smart<span>Cart</span></strong>
               <small>Shop Smarter. Live Better.</small>
@@ -33,7 +33,7 @@ export function Footer() {
         <div className="site-footer__column">
           <span className="site-footer__label">SmartCart</span>
           <Link to="/categories">Categories</Link>
-          <Link to="/wishlist">Wishlist</Link>
+          {settings.features?.wishlist !== false && <Link to="/wishlist">Wishlist</Link>}
           <Link to="/cart">Your bag</Link>
           <a href={`mailto:${supportEmail}`}>Contact us</a>
         </div>

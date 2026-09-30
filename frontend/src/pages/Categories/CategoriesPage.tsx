@@ -26,7 +26,7 @@ function categoryImage(category: Category) {
     groceries: CATEGORY_IMAGES.groceries,
   }
 
-  return category.image?.url || CATEGORY_IMAGES[category.slug] || fallbackBySlug[category.slug] || CATEGORY_IMAGES.electronics
+  return category.image?.url || category.bannerImage?.url || CATEGORY_IMAGES[category.slug] || fallbackBySlug[category.slug] || CATEGORY_IMAGES.electronics
 }
 
 export function CategoriesPage() {

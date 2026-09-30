@@ -5,9 +5,11 @@ import type { Product } from '../../../types'
 import { formatPrice, getNumber, productImage } from '../../../utils/formatters'
 import { useAuth } from '../../../app/providers/AuthProvider'
 import { sendJson } from '../../../services/apiClient'
+import { useSiteSettings } from '../../../app/providers/SiteSettingsProvider'
 
 export function ProductCard({ product }: { product: Product }) {
   const { user } = useAuth()
+  const settings = useSiteSettings()
   const [saved, setSaved] = useState(false)
   const [added, setAdded] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -71,14 +73,14 @@ export function ProductCard({ product }: { product: Product }) {
         <Link className="product-card__quick-view" to={`/products/${product._id}`}>
           View details <ArrowUpRight size={14} strokeWidth={2} />
         </Link>
-        <button
+        {settings.features?.wishlist !== false && <button
           type="button"
           aria-label={saved ? 'Saved to wishlist' : 'Save product'}
           className={`product-card__wish ${saved ? 'is-saved' : ''}`}
           onClick={save}
         >
           <Heart size={17} strokeWidth={1.8} fill={saved ? 'currentColor' : 'none'} />
-        </button>
+        </button>}
         {(product.discountPercentage || 0) > 0 && (
           <span className="product-card__badge">-{product.discountPercentage}%</span>
         )}

@@ -5,9 +5,11 @@ import { getJson, sendJson } from '../../services/apiClient'
 import type { Address, AuthUser, Cart, OrderDetail } from '../../types'
 import { formatPrice } from '../../utils/formatters'
 import { SimpleAccountPage } from '../../components/ui/EmptyState/SimpleAccountPage'
+import { useSiteSettings } from '../../app/providers/SiteSettingsProvider'
 
 export function CheckoutPage() {
-  const { user } = useAuth(); const navigate = useNavigate(); const [addresses, setAddresses] = useState<Address[]>([]); const [selected, setSelected] = useState(0); const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>('COD'); const [couponCode, setCouponCode] = useState(''); const [cart, setCart] = useState<Cart | null>(null); const [newAddress, setNewAddress] = useState<Address>({ label: 'Home', street: '', city: '', state: '', pincode: '', country: 'India', isDefault: false }); const [addingAddress, setAddingAddress] = useState(false); const [message, setMessage] = useState(''); const [busy, setBusy] = useState(false)
+  const { user } = useAuth(); const settings = useSiteSettings(); const navigate = useNavigate(); const [addresses, setAddresses] = useState<Address[]>([]); const [selected, setSelected] = useState(0); const [paymentMethod, setPaymentMethod] = useState<'COD' | 'ONLINE'>('COD'); const [couponCode, setCouponCode] = useState(''); const [cart, setCart] = useState<Cart | null>(null); const [newAddress, setNewAddress] = useState<Address>({ label: 'Home', street: '', city: '', state: '', pincode: '', country: 'India', isDefault: false }); const [addingAddress, setAddingAddress] = useState(false); const [message, setMessage] = useState(''); const [busy, setBusy] = useState(false)
+  void settings
   useEffect(() => { if (!user) return; Promise.all([getJson<AuthUser>('/users/get-user'), getJson<Cart>('/carts')]).then(([currentUser, currentCart]) => { const saved = currentUser.addresses || []; setAddresses(saved); const defaultIndex = saved.findIndex((address) => address.isDefault); setSelected(defaultIndex >= 0 ? defaultIndex : 0); setCart(currentCart) }).catch((error: Error) => setMessage(error.message)) }, [user])
   if (!user) return <SimpleAccountPage title="Sign in before checkout." text="Your bag and address details are protected." link="/login" linkText="Sign in" />
   const updateAddress = (key: keyof Address, value: string | boolean) => setNewAddress((current) => ({ ...current, [key]: value }))

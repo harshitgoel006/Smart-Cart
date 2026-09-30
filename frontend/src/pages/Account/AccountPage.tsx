@@ -7,11 +7,13 @@ import { sendForm, sendJson } from '../../services/apiClient'
 import type { Address } from '../../types'
 import { SimpleAccountPage } from '../../components/ui/EmptyState/SimpleAccountPage'
 import { SavedAddressActions } from './SavedAddressActions'
+import { useSiteSettings } from '../../app/providers/SiteSettingsProvider'
 
 const blankAddress: Address = { label: '', street: '', city: '', state: '', pincode: '', country: 'India', isDefault: false }
 
 export function AccountPage() {
   const { user, logout, loading, refreshUser } = useAuth()
+  const settings = useSiteSettings()
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -49,7 +51,7 @@ export function AccountPage() {
     </section>
     {message && <div className="inline-message account-notice"><Check size={16} />{message}</div>}
     {error && <div className="form-error account-notice">{error}</div>}
-    <nav className="account-quick-links" aria-label="Account shortcuts"><Link to="/orders"><Package size={17} /> Orders</Link><Link to="/wishlist"><UserRound size={17} /> Wishlist</Link><Link to="/cart"><ShoppingBag size={17} /> Your bag</Link><Link to="/notifications"><Bell size={17} /> Notifications</Link><button onClick={logout}><LogOut size={17} /> Sign out</button></nav>
+    <nav className="account-quick-links" aria-label="Account shortcuts"><Link to="/orders"><Package size={17} /> Orders</Link>{settings.features?.wishlist !== false && <Link to="/wishlist"><UserRound size={17} /> Wishlist</Link>}<Link to="/cart"><ShoppingBag size={17} /> Your bag</Link><Link to="/notifications"><Bell size={17} /> Notifications</Link><button onClick={logout}><LogOut size={17} /> Sign out</button></nav>
     <div className="account-content-grid">
       <section className="account-section"><div className="account-section__heading"><span className="account-section__icon"><UserRound size={17} /></span><div><span className="eyebrow">Profile</span><h2>Personal details</h2></div></div><form className="account-form" onSubmit={updateProfile}><div className="account-form__row"><label>Full name<input value={profile.fullname} onChange={(event) => updateProfileField('fullname', event.target.value)} /></label><label>Username<input value={profile.username} onChange={(event) => updateProfileField('username', event.target.value)} /></label></div><div className="account-form__row"><label>Phone<input value={profile.phone} onChange={(event) => updateProfileField('phone', event.target.value)} /></label><label>Email<input type="email" value={profile.email} onChange={(event) => updateProfileField('email', event.target.value)} /></label></div><button className="primary-button" disabled={busy}>Save details <span>↗</span></button></form>{emailVerificationPending && <form className="email-verify-form" onSubmit={verifyEmail}><p>We sent a 6-digit code to <strong>{profile.email}</strong>.</p><div><input inputMode="numeric" maxLength={6} required value={emailOtp} onChange={(event) => setEmailOtp(event.target.value)} placeholder="Verification code" /><button className="ghost-dark-button" disabled={busy}>Verify email</button></div></form>}</section>
       <section className="account-section"><div className="account-section__heading"><span className="account-section__icon"><ShieldCheck size={17} /></span><div><span className="eyebrow">Security</span><h2>Password</h2></div></div><p className="account-section__hint">Keep your account protected with a strong, private password.</p><form className="account-form" onSubmit={changePassword}><label>Current password<input type="password" required value={password.oldPassword} onChange={(event) => setPassword({ ...password, oldPassword: event.target.value })} /></label><label>New password<input type="password" minLength={6} required value={password.newPassword} onChange={(event) => setPassword({ ...password, newPassword: event.target.value })} /></label><button className="primary-button" disabled={busy}>Update password <span>↗</span></button></form></section>

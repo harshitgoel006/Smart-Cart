@@ -6,6 +6,7 @@ import { aiApi } from '../../services/ai.api'
 import type { AiProductSuggestion, Cart } from '../../types'
 import { formatPrice, productImage } from '../../utils/formatters'
 import { SimpleAccountPage } from '../../components/ui/EmptyState/SimpleAccountPage'
+import { useSiteSettings } from '../../app/providers/SiteSettingsProvider'
 
 type AvailableCoupon = {
   code: string
@@ -53,6 +54,7 @@ function CartAiSuggestions({ suggestions }: { suggestions: AiProductSuggestion[]
 
 export function CartPage() {
   const { user } = useAuth()
+  const settings = useSiteSettings()
   const [cart, setCart] = useState<Cart | null>(null)
   const [coupon, setCoupon] = useState('')
   const [message, setMessage] = useState('')
@@ -196,7 +198,7 @@ export function CartPage() {
               ))}
             </div>
 
-            <aside className="cart-summary">
+            <aside className={`cart-summary ${settings.features?.coupons === false ? 'cart-summary--coupons-hidden' : ''}`}>
               <span className="eyebrow">Order summary</span>
               <h2>{formatPrice(cart.finalAmount)}</h2>
               <p><span>Subtotal</span><b>{formatPrice(cart.subtotal)}</b></p>

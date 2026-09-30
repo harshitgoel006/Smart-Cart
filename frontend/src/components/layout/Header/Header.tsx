@@ -42,12 +42,12 @@ const defaultSearchSuggestions = [
   { label: "Home essentials", query: "home essentials", href: "/search?q=home%20essentials" },
 ];
 
-function AdminHeader({ displayName, onLogout }: { displayName: string; onLogout: () => void }) {
+function AdminHeader({ displayName, logoUrl, onLogout }: { displayName: string; logoUrl?: string; onLogout: () => void }) {
   const location = useLocation();
   return <header className="site-header admin-site-header">
     <div className="main-navbar">
       <Link className="brand-badge-wrapper" to="/admin">
-        <div className="brand-logo-box"><ShoppingBag size={20} className="brand-logo-icon" /></div>
+        <div className="brand-logo-box">{logoUrl ? <img src={logoUrl} alt="SmartCart" /> : <ShoppingBag size={20} className="brand-logo-icon" />}</div>
         <div className="brand-copy"><strong>Smart<span>Cart</span></strong><small>Admin workspace</small></div>
       </Link>
       <nav className="admin-header-nav" aria-label="Admin navigation">
@@ -198,7 +198,7 @@ export function Header() {
     return location.pathname.startsWith(path);
   };
 
-  return user?.role === "admin" && location.pathname.startsWith("/admin") ? <AdminHeader displayName={user.fullname || user.email} onLogout={() => void handleLogout()} /> : (
+  return user?.role === "admin" && location.pathname.startsWith("/admin") ? <AdminHeader displayName={user.fullname || user.email} logoUrl={siteSettings.brand?.logoUrl} onLogout={() => void handleLogout()} /> : (
     <header className="site-header">
       {siteSettings.announcement?.enabled !== false && <div className="announcement">
         <Sparkles size={13} className="announcement-sparkle" />
@@ -328,13 +328,13 @@ export function Header() {
           {searchOpen && <div className="header-search__suggestions"><span className="header-search__suggestions-title">{search.trim() ? 'Try searching for' : 'Popular searches'}</span>{defaultSearchSuggestions.filter((item) => !search.trim() || item.label.toLowerCase().includes(search.toLowerCase()) || item.query.includes(search.toLowerCase())).map((item) => <Link key={item.label} to={item.href} onClick={() => setSearchOpen(false)}><Search size={14} /><span>{item.label}</span><ArrowRight size={14} /></Link>)}</div>}
           </div>
 
-          <Link className="header-action" to="/wishlist" aria-label="Wishlist">
+          {siteSettings.features?.wishlist !== false && <Link className="header-action" to="/wishlist" aria-label="Wishlist">
             <span className="header-action__icon">
               <Heart size={20} />
             </span>
             <span className="header-action__label">Wishlist</span>
             {wishlistCount > 0 && <b>{wishlistCount}</b>}
-          </Link>
+          </Link>}
 
           <Link className="header-action" to="/cart" aria-label="Cart">
             <span className="header-action__icon">
@@ -372,9 +372,9 @@ export function Header() {
                 <Link to="/orders" onClick={closeMenus}>
                   <Package size={14} /> My Orders
                 </Link>
-                <Link to="/wishlist" onClick={closeMenus}>
+                {siteSettings.features?.wishlist !== false && <Link to="/wishlist" onClick={closeMenus}>
                   <Heart size={14} /> Wishlist
-                </Link>
+                </Link>}
                 <Link to="/notifications" onClick={closeMenus}>
                   <Bell size={14} /> Notifications
                 </Link>
