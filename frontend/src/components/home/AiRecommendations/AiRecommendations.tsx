@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowRight, RefreshCw, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../../app/providers/AuthProvider'
@@ -42,9 +42,7 @@ export function AiRecommendations({ fallbackProducts }: AiRecommendationsProps) 
   const [refreshing, setRefreshing] = useState(false)
   const [message, setMessage] = useState('')
 
-  if (settings.features?.aiRecommendations === false) return null
-
-  const loadRecommendations = async (isRefresh = false) => {
+  const loadRecommendations = useCallback(async (isRefresh = false) => {
     setMessage('')
     if (isRefresh) setRefreshing(true)
     else setLoading(true)
@@ -61,11 +59,11 @@ export function AiRecommendations({ fallbackProducts }: AiRecommendationsProps) 
       setLoading(false)
       setRefreshing(false)
     }
-  }
+  }, [user])
 
   useEffect(() => {
     void loadRecommendations()
-  }, [user])
+  }, [loadRecommendations])
 
   const visibleProducts = useMemo(() => {
     const aiProducts = suggestions.map(toProduct)
@@ -83,6 +81,8 @@ export function AiRecommendations({ fallbackProducts }: AiRecommendationsProps) 
 
     return baseProducts.slice(0, 4)
   }, [activeFilter, fallbackProducts, suggestions])
+
+  if (settings.features?.aiRecommendations === false) return null
 
   return (
     <section className="section product-section product-section--featured ai-recommendation-section" id="ai-recommendations">
