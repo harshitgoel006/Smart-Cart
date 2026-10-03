@@ -13,6 +13,7 @@ import {
   getProductQnA,
   askProductQuestion,
   createProduct,
+  getSellerProducts,
   getSellerProduct,
   updateProduct,
   deleteProduct,
@@ -82,6 +83,10 @@ router.route("/create").post(
   upload.array("images", 5), // max 5 files
   createProduct,
 );
+
+router
+  .route("/seller/products")
+  .get(verifyJWT, authorizedRole("seller"), getSellerProducts);
 
 router
   .route("/seller/product/:productId")

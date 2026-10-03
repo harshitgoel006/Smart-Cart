@@ -192,6 +192,13 @@ const getSellerProduct = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, product, "Product fetched successfully"));
 });
 
+const getSellerProducts = asyncHandler(async (req, res) => {
+  const products = await productService.getSellerProducts(req.user._id, req.query);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, products, "Seller products fetched successfully"));
+});
+
 const updateProduct = asyncHandler(async (req, res) => {
   const productId = req.params.productId;
   const sellerId = req.user._id;
@@ -500,6 +507,7 @@ export {
   getProductQnA,
   askProductQuestion,
   createProduct,
+  getSellerProducts,
   getSellerProduct,
   updateProduct,
   deleteProduct,

@@ -294,26 +294,33 @@ export const categoryService = {
     return category;
   },
 
-  async getCategoryPerformance(sellerId) {
+  async getCategoryPerformance(sellerId, categoryId = null) {
+    const sellerObjectId = new mongoose.Types.ObjectId(sellerId);
+    const categoryFilter = categoryId && mongoose.Types.ObjectId.isValid(categoryId)
+      ? new mongoose.Types.ObjectId(categoryId)
+      : null;
     const data = await Order.aggregate([
       {
         $unwind: "$items",
       },
       {
         $match: {
-          "items.seller": new mongoose.Types.ObjectId(sellerId),
-          status: "delivered",
+          "items.seller": sellerObjectId,
+          "items.fulfillmentStatus": "delivered",
         },
       },
+      { $lookup: { from: "products", localField: "items.product", foreignField: "_id", as: "product" } },
+      { $unwind: "$product" },
+      ...(categoryFilter ? [{ $match: { "product.category": categoryFilter } }] : []),
       {
         $group: {
-          _id: "$items.category",
+          _id: "$product.category",
           totalSales: {
             $sum: "$items.quantity",
           },
           totalRevenue: {
             $sum: {
-              $multiply: ["$items.price", "$items.quantity"],
+              $multiply: [{ $toDouble: "$items.lineTotal" }, 1],
             },
           },
         },
@@ -765,7 +772,7 @@ export const categoryService = {
     ]);
   },
 
-  async bulkUpdateCategoriesStatus(categoryIds, status) {
+  async bulkUpdateCategoriesStatus(categoryIds, status, reason) {
     const allowed = ["pending", "approved", "rejected"];
     if (!allowed.includes(status)) {
       throw new ApiError(400, "Invalid status");
@@ -776,9 +783,11 @@ export const categoryService = {
     if (!validIds.length) {
       throw new ApiError(400, "No valid category IDs provided");
     }
+    const update = { status, isActive: status === "approved" };
+    if (status === "rejected") update.rejectionReason = reason || "No reason provided";
     const result = await Category.updateMany(
       { _id: { $in: validIds } },
-      { $set: { status, isActive: status === "approved" } },
+      { $set: update },
     );
     return result.modifiedCount;
   },

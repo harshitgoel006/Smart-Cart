@@ -9,7 +9,8 @@
     "admin:bootstrap": "node scripts/bootstrap-admin.mjs",
     "seed:products": "node src/seed/scripts/seedProducts.js",
     "import:abo-products": "node src/seed/scripts/importAboProducts.js",
-    "seed:coupon": "node src/seed/scripts/seedCoupons.js"
+    "seed:coupon": "node src/seed/scripts/seedCoupons.js",
+    "seed:seller-demo": "node src/seed/scripts/seedSellerDemo.js"
   },
   "keywords": [],
   "author": "Harshit Goel",

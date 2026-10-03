@@ -13,13 +13,21 @@ export function LoginPage() {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
-  if (user) return <SimpleAccountPage title="You are already signed in." text="Your SmartCart session is active." link={user.role === 'admin' ? '/admin' : '/account'} linkText={user.role === 'admin' ? 'Open admin workspace' : 'View account'} />
+  if (user) {
+    const destination = user.role === 'admin' ? '/admin' : user.role === 'seller' ? '/seller' : '/account'
+    const destinationLabel = user.role === 'admin' ? 'Open admin workspace' : user.role === 'seller' ? 'Open seller workspace' : 'View account'
+    return <SimpleAccountPage title="You are already signed in." text="Your SmartCart session is active." link={destination} linkText={destinationLabel} />
+  }
 
   const submit = async (event: FormEvent) => {
     event.preventDefault()
     setSubmitting(true)
     setError('')
-    try { const loggedInUser = await login(email, password); navigate(loggedInUser.role === 'admin' ? '/admin' : '/', { replace: true }) }
+    try {
+      const loggedInUser = await login(email, password)
+      const destination = loggedInUser.role === 'admin' ? '/admin' : loggedInUser.role === 'seller' ? '/seller' : '/'
+      navigate(destination, { replace: true })
+    }
     catch (reason) { setError((reason as Error).message) }
     finally { setSubmitting(false) }
   }

@@ -110,9 +110,10 @@ const proposeNewCategory = asyncHandler(async (req, res) => {
 
 const getCategoryPerformance = asyncHandler(async (req, res) => {
   const sellerId = req.user._id;
+  const { categoryId } = req.params;
 
   const performanceData =
-    await categoryService.getCategoryPerformance(sellerId);
+    await categoryService.getCategoryPerformance(sellerId, categoryId);
 
   if (!performanceData.length) {
     throw new ApiError(404, "No performance data found for your categories");
@@ -284,11 +285,12 @@ const getCategoriesStatistics = asyncHandler(async (req, res) => {
 });
 
 const bulkUpdateCategoriesStatus = asyncHandler(async (req, res) => {
-  const { categoryIds, status } = req.body;
+  const { categoryIds, status, reason } = req.body;
 
   const result = await categoryService.bulkUpdateCategoriesStatus(
     categoryIds,
     status,
+    reason,
   );
 
   return res

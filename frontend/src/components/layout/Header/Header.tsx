@@ -199,7 +199,7 @@ export function Header() {
   };
 
   return user?.role === "admin" && location.pathname.startsWith("/admin") ? <AdminHeader displayName={user.fullname || user.email} logoUrl={siteSettings.brand?.logoUrl} onLogout={() => void handleLogout()} /> : (
-    <header className="site-header">
+    <header className={`site-header ${user?.role === 'seller' ? 'seller-site-header' : ''}`}>
       {siteSettings.announcement?.enabled !== false && <div className="announcement">
         <Sparkles size={13} className="announcement-sparkle" />
         <span>{siteSettings.announcement?.text || "Free shipping on orders above ₹999"}</span>
@@ -368,6 +368,12 @@ export function Header() {
                 </Link>
                 {user?.role === "admin" && <Link to="/admin" onClick={closeMenus}>
                   <ShieldCheck size={14} /> Admin dashboard
+                </Link>}
+                {user?.role === "seller" && <Link to="/seller" onClick={closeMenus}>
+                  <Package size={14} /> Seller workspace
+                </Link>}
+                {user?.role === "seller" && <Link to="/seller/tools" onClick={closeMenus}>
+                  <Package size={14} /> Seller controls
                 </Link>}
                 <Link to="/orders" onClick={closeMenus}>
                   <Package size={14} /> My Orders
