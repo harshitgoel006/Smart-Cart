@@ -1,5 +1,6 @@
 ﻿import { ApiError } from "./ApiError.js";
 import nodemailer from "nodemailer";
+import { wrapSmartCartEmail } from "./smartCartEmail.js";
 
 const maskEmail = (email = "") => {
   const [name, domain] = email.split("@");
@@ -13,6 +14,7 @@ const sendEmail = async (to, subject, html) => {
   }
 
   try {
+    const brandedHtml = wrapSmartCartEmail(html, subject);
     if (!process.env.BREVO_API_KEY && process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
       const port = Number(process.env.SMTP_PORT || 587);
       const transporter = nodemailer.createTransport({
@@ -29,7 +31,7 @@ const sendEmail = async (to, subject, html) => {
         from: `SmartCart <${process.env.SMTP_FROM_EMAIL || "smartcart025@gmail.com"}>`,
         to,
         subject,
-        html,
+        html: brandedHtml,
       });
 
       console.log("Email accepted by SMTP provider:", {
@@ -63,7 +65,7 @@ const sendEmail = async (to, subject, html) => {
         },
         to: [{ email: to }],
         subject,
-        htmlContent: html,
+        htmlContent: brandedHtml,
       }),
     });
 
