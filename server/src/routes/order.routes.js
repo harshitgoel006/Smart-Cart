@@ -8,6 +8,7 @@ import {
   requestReturnController,
   requestRefundController,
   downloadInvoiceController,
+  downloadSellerInvoiceController,
   applyCouponController,
   getSellerOrdersController,
   getSellerOrderDetailsController,
@@ -83,6 +84,10 @@ router
 router
   .route("/seller/orders/:orderId")
   .get(verifyJWT, authorizedRole("seller"), getSellerOrderDetailsController);
+
+router
+  .route("/seller/orders/:orderId/invoice")
+  .get(verifyJWT, authorizedRole("seller"), downloadSellerInvoiceController);
 
 router
   .route("/seller/orders/update-status")

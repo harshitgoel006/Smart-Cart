@@ -18,6 +18,7 @@ import {
   updateProduct,
   deleteProduct,
   manageProductStock,
+  bulkUpdateSellerStock,
   variantManagement,
   getProductOrders,
   respondToProductQnA,
@@ -108,6 +109,10 @@ router
 router
   .route("/product/:productId/stock")
   .patch(verifyJWT, authorizedRole("seller"), manageProductStock);
+
+router
+  .route("/seller/products/bulk-stock")
+  .patch(verifyJWT, authorizedRole("seller"), bulkUpdateSellerStock);
 
 router
   .route("/product/:productId/variants")

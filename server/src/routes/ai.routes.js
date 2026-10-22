@@ -7,6 +7,7 @@ import {
   getRecommendations,
   getPersonalizedRecommendations,
   getReviewSummary,
+  generateSellerContent,
   searchWithAssistant,
 } from "../controllers/ai.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -32,5 +33,6 @@ router.get(
   authorizedRole("customer"),
   getOrderStatus,
 );
+router.post("/seller/content", verifyJWT, authorizedRole("seller"), generateSellerContent);
 
 export default router;

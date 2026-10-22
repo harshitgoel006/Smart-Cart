@@ -72,3 +72,8 @@ export const getOrderStatus = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, result, "AI order status context fetched"));
 });
+
+export const generateSellerContent = asyncHandler(async (req, res) => {
+  const result = await aiService.generateSellerContent(req.body || {});
+  return res.status(200).json(new ApiResponse(200, result, "Seller AI content generated"));
+});

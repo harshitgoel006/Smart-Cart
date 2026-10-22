@@ -102,6 +102,13 @@ const downloadInvoiceController = asyncHandler(async (req, res) => {
   return res.send(buffer);
 });
 
+const downloadSellerInvoiceController = asyncHandler(async (req, res) => {
+  const { buffer, filename } = await OrderService.generateSellerInvoice(req.user._id, req.params.orderId);
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+  return res.send(buffer);
+});
+
 const applyCouponController = asyncHandler(async (req, res) => {
   const userId = req.user._id;
 
@@ -288,6 +295,7 @@ export {
   requestReturnController,
   requestRefundController,
   downloadInvoiceController,
+  downloadSellerInvoiceController,
   applyCouponController,
   getSellerOrdersController,
   getSellerOrderDetailsController,

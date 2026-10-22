@@ -241,6 +241,11 @@ const manageProductStock = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, product, "Stock updated successfully"));
 });
 
+const bulkUpdateSellerStock = asyncHandler(async (req, res) => {
+  const result = await productService.bulkUpdateSellerStock(req.user._id, req.body?.updates);
+  return res.status(200).json(new ApiResponse(200, result, "Seller stock updated"));
+});
+
 const variantManagement = asyncHandler(async (req, res) => {
   const productId = req.params.productId;
   const { variants } = req.body;
@@ -512,6 +517,7 @@ export {
   updateProduct,
   deleteProduct,
   manageProductStock,
+  bulkUpdateSellerStock,
   variantManagement,
   getProductOrders,
   respondToProductQnA,

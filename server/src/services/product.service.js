@@ -30,6 +30,24 @@ const getCategoryScopeIds = async (categoryId) => {
 };
 
 export const productService = {
+  async bulkUpdateSellerStock(sellerId, updates = []) {
+    if (!Array.isArray(updates) || !updates.length) throw new ApiError(400, "At least one stock update is required");
+    const results = { updated: [], skipped: [] };
+    for (const entry of updates.slice(0, 100)) {
+      const stock = Number(entry.stock);
+      if (!mongoose.Types.ObjectId.isValid(entry.productId) || !Number.isInteger(stock) || stock < 0) {
+        results.skipped.push({ productId: entry.productId, reason: "Invalid product ID or stock" });
+        continue;
+      }
+      const product = await Product.findOne({ _id: entry.productId, seller: sellerId, isDeleted: false });
+      if (!product) { results.skipped.push({ productId: entry.productId, reason: "Product not found" }); continue; }
+      product.stock = stock;
+      if (stock > 0 && product.isActive === false) product.isActive = true;
+      await product.save({ validateBeforeSave: false });
+      results.updated.push({ productId: product._id, stock });
+    }
+    return results;
+  },
 
   async customerGetAllProducts(query) {
     const {

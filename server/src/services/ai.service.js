@@ -306,6 +306,26 @@ const fallbackReviewSummary = (reviews) => {
 };
 
 export const aiService = {
+  async generateSellerContent({ type, name, brand, category, description, price }) {
+    const safeType = ["listing", "seo", "pricing", "reply"].includes(type) ? type : "listing";
+    const context = JSON.stringify({ name, brand, category, description, price });
+    const instructions = {
+      listing: "Create ecommerce listing copy for SmartCart. Return valid JSON with keys title, description, bullets, tags. Keep claims grounded in the supplied product details. Do not invent specifications.",
+      seo: "Create SEO metadata for a SmartCart product. Return valid JSON with keys seoTitle, metaDescription, keywords. Keep it concise and grounded in the supplied details.",
+      pricing: "Give practical pricing guidance for a SmartCart seller. Return valid JSON with keys recommendation, reasoning, risks. Do not claim live market data; clearly label it as a heuristic.",
+      reply: "Write a warm, concise seller reply to a customer review or question. Return valid JSON with key reply. Do not promise refunds or guarantees.",
+    };
+    const generated = await generateTextReply(instructions[safeType], context).catch(() => null);
+    if (generated) return { type: safeType, content: generated, source: "provider" };
+    if (safeType === "seo") return { type: safeType, source: "fallback", content: JSON.stringify({ seoTitle: `${name || "SmartCart product"}${brand ? ` by ${brand}` : ""} | SmartCart`, metaDescription: String(description || "Shop quality everyday essentials on SmartCart.").slice(0, 155), keywords: [name, brand, category].filter(Boolean).join(", ") }) };
+    if (safeType === "pricing") {
+      const numericPrice = Number(price);
+      return { type: safeType, source: "fallback", content: JSON.stringify({ recommendation: Number.isFinite(numericPrice) ? `Start near ₹${Math.round(numericPrice).toLocaleString("en-IN")} and test a 5–10% launch offer.` : "Add a price to receive a heuristic recommendation.", reasoning: "This is a simple launch heuristic, not live market intelligence.", risks: "Validate competitor pricing, margins, shipping, and returns before publishing." }) };
+    }
+    if (safeType === "reply") return { type: safeType, source: "fallback", content: JSON.stringify({ reply: "Thank you for sharing your experience. We appreciate your feedback and will use it to keep improving the SmartCart experience." }) };
+    return { type: safeType, source: "fallback", content: JSON.stringify({ title: name || "Everyday essential", description: description || "A thoughtfully selected product for everyday use.", bullets: [brand ? `From ${brand}` : "SmartCart selected", category ? `Category: ${category}` : "Made for everyday needs"], tags: [name, brand, category].filter(Boolean) }) };
+  },
+
   async assist(message) {
     const normalizedMessage = String(message || "").trim();
 

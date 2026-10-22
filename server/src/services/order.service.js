@@ -737,6 +737,18 @@ class OrderService {
     }
   }
 
+  static async generateSellerInvoice(sellerId, orderId) {
+    if (!mongoose.Types.ObjectId.isValid(orderId)) throw new ApiError(400, "Invalid order ID");
+    const order = await Order.findOne({ _id: orderId, "items.seller": sellerId }).populate("items.product", "name").populate("user", "fullname email");
+    if (!order) throw new ApiError(404, "Seller order not found");
+    const sellerItems = order.items.filter((item) => String(item.seller) === String(sellerId));
+    const items = sellerItems.map((item) => ({ product: { name: item.productSnapshot?.name || item.product?.name }, quantity: item.quantity, price: toNumber(item.lineTotal || item.unitPrice) / item.quantity, lineTotal: toNumber(item.lineTotal || item.unitPrice * item.quantity) }));
+    const subtotal = items.reduce((sum, item) => sum + item.lineTotal, 0);
+    const invoiceNumber = `SC-SELLER-INV-${new Date(order.createdAt).toISOString().slice(0, 10).replace(/-/g, "")}-${String(order._id).slice(-8).toUpperCase()}`;
+    const buffer = await createSmartCartInvoice(order, { ...order.toObject(), items, subtotal, finalAmount: subtotal, discountAmount: 0, shippingCost: 0, number: invoiceNumber, date: new Date(order.createdAt).toLocaleString("en-IN") });
+    return { buffer, filename: `seller-invoice-${order._id}.pdf` };
+  }
+
   static async generateInvoice(userId, orderId) {
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
       throw new ApiError(400, "Invalid order ID");
