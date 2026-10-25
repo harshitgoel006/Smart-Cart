@@ -966,8 +966,8 @@ class OrderService {
           itemId: "$items._id",
           product: "$items.product",
           quantity: "$items.quantity",
-          price: "$items.price",
-          total: "$items.total",
+          price: "$items.unitPrice",
+          total: "$items.lineTotal",
           fulfillmentStatus: "$items.fulfillmentStatus",
 
           shipment: "$items.shipment",
@@ -1585,9 +1585,11 @@ class OrderService {
       {
         $group: {
           _id: null,
-          totalRevenue: { $sum: { $toDouble: "$items.total" } },
+          totalRevenue: { $sum: { $toDouble: "$items.lineTotal" } },
           totalItemsSold: { $sum: "$items.quantity" },
           totalOrders: { $addToSet: "$_id" },
+          cancelledItems: { $sum: { $cond: [{ $eq: ["$items.fulfillmentStatus", "cancelled"] }, "$items.quantity", 0] } },
+          returnedItems: { $sum: { $cond: [{ $in: ["$items.returnStatus", ["requested", "approved", "returned"]] }, "$items.quantity", 0] } },
         },
       },
 
@@ -1596,6 +1598,9 @@ class OrderService {
           totalRevenue: 1,
           totalItemsSold: 1,
           totalOrders: { $size: "$totalOrders" },
+          cancelledItems: 1,
+          returnedItems: 1,
+          profitEstimate: { $multiply: ["$totalRevenue", 0.9] },
         },
       },
     ];
@@ -1617,7 +1622,7 @@ class OrderService {
             month: { $month: "$createdAt" },
             year: { $year: "$createdAt" },
           },
-          revenue: { $sum: { $toDouble: "$items.total" } },
+          revenue: { $sum: { $toDouble: "$items.lineTotal" } },
         },
       },
       { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } },
@@ -1635,7 +1640,7 @@ class OrderService {
         $group: {
           _id: "$items.product",
           totalSold: { $sum: "$items.quantity" },
-          revenue: { $sum: { $toDouble: "$items.total" } },
+          revenue: { $sum: { $toDouble: "$items.lineTotal" } },
         },
       },
       { $sort: { totalSold: -1 } },
@@ -1659,7 +1664,7 @@ class OrderService {
       { $match: { "items.seller": sellerObjectId } },
       { $unwind: "$items" },
       { $match: { "items.seller": sellerObjectId, "items.fulfillmentStatus": "delivered" } },
-      { $group: { _id: "$paymentStatus", gross: { $sum: { $convert: { input: "$items.total", to: "double", onError: 0, onNull: 0 } } }, orders: { $addToSet: "$_id" } } },
+      { $group: { _id: "$paymentStatus", gross: { $sum: { $convert: { input: "$items.lineTotal", to: "double", onError: 0, onNull: 0 } } }, orders: { $addToSet: "$_id" } } },
     ]);
     const gross = rows.reduce((total, row) => total + Number(row.gross || 0), 0);
     const paidGross = rows.filter((row) => row._id === "paid").reduce((total, row) => total + Number(row.gross || 0), 0);

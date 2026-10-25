@@ -924,7 +924,7 @@ export const userService = {
           _id: "$items.product",
           totalUnitsSold: { $sum: "$items.quantity" },
           totalRevenue: {
-            $sum: { $multiply: ["$items.quantity", "$items.price"] },
+            $sum: "$items.lineTotal",
           },
         },
       },

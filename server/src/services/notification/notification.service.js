@@ -95,6 +95,18 @@ class NotificationService {
       counts: { lowStock: lowStock.length, pendingProducts: pendingProducts.length, pendingOrders: pendingOrders.length },
     };
   }
+
+  static async syncSellerAlerts(sellerId) {
+    const alerts = await this.getSellerAlerts(sellerId);
+    const createIfMissing = async (event, category, title, message, entityType, entityId, meta) => {
+      const exists = await Notification.exists({ recipient: sellerId, event, "meta.entityId": String(entityId), isRead: false });
+      if (exists) return;
+      await Notification.create({ recipient: sellerId, recipientRole: "seller", category, event, title, message, relatedEntity: { entityType, entityId }, priority: "high", meta: { ...meta, entityId: String(entityId) } });
+    };
+    await Promise.all(alerts.lowStock.map((product) => createIfMissing("SELLER_LOW_STOCK", "product", "Stock needs attention", `${product.name} has only ${product.stock} unit(s) left.`, "Product", product._id, { productId: product._id, stock: product.stock })));
+    await Promise.all(alerts.pendingOrders.map((order) => createIfMissing("SELLER_ORDER_PENDING", "order", "Order needs fulfilment", `Order #${String(order.orderId).slice(-8).toUpperCase()} is ${order.status}.`, "Order", order.orderId, { orderId: order.orderId, itemId: order.itemId })));
+    return alerts;
+  }
 }
 
 export default NotificationService;

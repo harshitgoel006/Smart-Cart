@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Bell, TriangleAlert, Clock3 } from 'lucide-react';
-import { getJson } from '../../services/apiClient';
+import { getJson, sendJson } from '../../services/apiClient';
 
 export function SellerAlertsPanel() {
   const [alerts, setAlerts] = useState(null);
-  useEffect(() => { getJson('/notifications/seller/alerts').then(setAlerts).catch(() => setAlerts(null)); }, []);
+  useEffect(() => { sendJson('/notifications/seller/alerts/sync', 'POST').catch(() => null).finally(() => { getJson('/notifications/seller/alerts').then(setAlerts).catch(() => setAlerts(null)); }); }, []);
   if (!alerts) return null;
   const cards = [
     { label: 'Low stock', count: alerts.counts.lowStock, icon: TriangleAlert, text: alerts.lowStock.slice(0, 3).map((item) => `${item.name} (${item.stock})`).join(' · ') },

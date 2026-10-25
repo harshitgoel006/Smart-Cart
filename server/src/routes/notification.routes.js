@@ -4,6 +4,7 @@ import {
   markNotificationRead,
   markAllNotificationsRead,
   getSellerAlerts,
+  syncSellerAlerts,
 } from "../controllers/notification.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { authorizedRole } from "../middlewares/authorizeRole.middleware.js";
@@ -16,6 +17,7 @@ const router = Router();
 
 router.route("/my-notifications").get(verifyJWT, getMyNotifications);
 router.route("/seller/alerts").get(verifyJWT, authorizedRole("seller"), getSellerAlerts);
+router.route("/seller/alerts/sync").post(verifyJWT, authorizedRole("seller"), syncSellerAlerts);
 
 router
   .route("/mark-notification-read/:id")
