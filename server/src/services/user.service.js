@@ -1012,7 +1012,7 @@ export const userService = {
     return topProducts;
   },
 
-  async getDailySalesData(sellerId) {
+  async getDailySalesData(sellerId, query = {}) {
     if (!sellerId) {
       throw new ApiError(400, "Seller ID required");
     }
@@ -1025,9 +1025,12 @@ export const userService = {
 
     const objectId = new mongoose.Types.ObjectId(sellerId);
 
+    const dateMatch = {};
+    if (query.startDate) dateMatch.$gte = new Date(query.startDate);
+    if (query.endDate) { const end = new Date(query.endDate); end.setHours(23, 59, 59, 999); dateMatch.$lte = end; }
     const dailyData = await Order.aggregate([
       // 🔹 Only delivered orders
-      { $match: { orderStatus: "delivered" } },
+      { $match: { orderStatus: "delivered", ...(Object.keys(dateMatch).length ? { createdAt: dateMatch } : {}) } },
 
       { $unwind: "$items" },
 
@@ -1045,9 +1048,8 @@ export const userService = {
             },
             orderId: "$_id",
           },
-          revenue: {
-            $sum: { $multiply: ["$items.quantity", "$items.price"] },
-          },
+          revenue: { $sum: "$items.lineTotal" },
+          units: { $sum: "$items.quantity" },
         },
       },
 
@@ -1057,6 +1059,7 @@ export const userService = {
           _id: "$_id.date",
           totalRevenue: { $sum: "$revenue" },
           totalOrders: { $sum: 1 },
+          totalUnits: { $sum: "$units" },
         },
       },
 
@@ -1068,6 +1071,7 @@ export const userService = {
           date: "$_id",
           totalRevenue: 1,
           totalOrders: 1,
+          totalUnits: 1,
         },
       },
     ]);

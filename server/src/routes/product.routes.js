@@ -16,6 +16,7 @@ import {
   getSellerProducts,
   getSellerProduct,
   updateProduct,
+  manageSellerMedia,
   deleteProduct,
   manageProductStock,
   bulkUpdateSellerStock,
@@ -101,6 +102,9 @@ router
     upload.array("images", 5),
     updateProduct,
   );
+
+router.route("/seller/product/:productId/media")
+  .patch(verifyJWT, authorizedRole("seller"), manageSellerMedia);
 
 router
   .route("/seller/product/:productId")

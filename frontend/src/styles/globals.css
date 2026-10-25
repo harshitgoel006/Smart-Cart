@@ -7354,16 +7354,31 @@
 .seller-review-editor p { margin: 0; color: #5f4636; }
 .seller-inline-form { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
 .seller-inline-form input { min-width: 0; flex: 1; border: 1px solid #decfbe; border-radius: 999px; padding: 10px 12px; background: #fffaf5; color: #2d211b; font: inherit; }
+.seller-coupon-products { display: grid; gap: 8px; padding: 12px; border: 1px solid rgba(123, 66, 31, .13); border-radius: 12px; background: #fffaf5; }
+.seller-coupon-products label { display: flex; align-items: center; gap: 8px; color: #5f4636; font-size: 13px; font-weight: 500; }
 .seller-helper { color: #806f63; }
 @media (max-width: 760px) { .seller-tool-row { align-items: start; flex-direction: column; } .seller-tool-actions, .seller-inline-form { justify-content: flex-start; width: 100%; } .seller-inline-form { align-items: stretch; flex-direction: column; } .seller-inline-form input { width: 100%; box-sizing: border-box; } }
 @media (max-width: 760px) { .seller-hero { align-items: start; flex-direction: column; } .seller-stats, .seller-grid, .seller-category-grid { grid-template-columns: 1fr; } .seller-product-row, .seller-order-row, .seller-review-row { grid-template-columns: 1fr; } .seller-product-row img { width: 72px; height: 72px; } .seller-form-grid { grid-template-columns: 1fr; } }
 .seller-insights-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin: 18px 0 24px; }
 .seller-quick-nav { display: flex; justify-content: flex-end; gap: 8px; padding: 10px max(24px, calc((100% - 1320px) / 2)); border-bottom: 1px solid rgba(123, 66, 31, .12); background: #f4e7d8; }
+.seller-insights-entry { display: flex; justify-content: flex-end; padding: 12px max(24px, calc((100% - 1320px) / 2)); background: #f4e7d8; border-bottom: 1px solid rgba(123, 66, 31, .12); }
+.seller-insights-entry a { display: inline-flex; align-items: center; gap: 7px; border: 1px solid rgba(123, 66, 31, .2); border-radius: 999px; padding: 9px 14px; color: #70401f; font-size: 12px; font-weight: 800; text-decoration: none; }
+.seller-insights-entry a:hover { color: #fffaf4; background: #7b421f; }
+.seller-hero-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.seller-file-action { cursor: pointer; }
+.seller-file-action input { display: none; }
 .seller-quick-nav a { border: 1px solid rgba(123, 66, 31, .18); border-radius: 999px; padding: 8px 13px; color: #70401f; font-size: 12px; font-weight: 700; text-decoration: none; }
 .seller-quick-nav a:hover, .seller-quick-nav a.is-active { color: #fffaf4; background: #7b421f; }
 .seller-insights-card, .seller-ai-card { min-width: 0; }
 .seller-ai-card { grid-column: 1 / -1; }
 .seller-insights-note { color: #806f63; font-size: 12px; }
+.seller-payout-summary { display: grid; gap: 4px; margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(123, 66, 31, .12); }
+.seller-payout-summary span, .seller-payout-summary small { color: #806f63; }
+.seller-payout-summary strong { color: #7b421f; font-size: 22px; }
+.seller-date-filter { display: flex; align-items: end; gap: 14px; margin-bottom: 18px; }
+.seller-date-filter label { display: grid; gap: 6px; color: #70401f; font-size: 12px; font-weight: 700; }
+.seller-date-filter input { border: 1px solid #decfbe; border-radius: 10px; padding: 10px 12px; background: #fffaf5; color: #2d211b; font: inherit; }
+@media (max-width: 650px) { .seller-date-filter { align-items: stretch; flex-direction: column; } }
 .seller-chart { display: flex; align-items: end; gap: 8px; min-height: 170px; padding: 20px 6px 0; }
 .seller-chart__bar { display: grid; flex: 1; align-items: end; gap: 8px; min-width: 14px; height: 150px; text-align: center; }
 .seller-chart__bar span { display: block; min-height: 8px; border-radius: 7px 7px 3px 3px; background: linear-gradient(180deg, #b96a38, #7b421f); }
@@ -7375,3 +7390,22 @@
 .seller-ai-result pre { max-height: 240px; overflow: auto; margin: 0; white-space: pre-wrap; color: #2d211b; font: 13px/1.55 ui-monospace, SFMono-Regular, Consolas, monospace; }
 .seller-ai-result small { display: flex; align-items: center; gap: 5px; color: #806f63; }
 @media (max-width: 760px) { .seller-insights-grid { grid-template-columns: 1fr; } .seller-ai-card { grid-column: auto; } .seller-ai-controls { grid-template-columns: 1fr; } }
+.seller-alerts-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:18px 0 26px; }
+.seller-alert-card { display:flex; align-items:flex-start; gap:14px; padding:18px; border:1px solid var(--line); border-radius:18px; background:var(--surface); color:var(--muted); }
+.seller-alert-card svg { color:var(--accent); flex:none; }
+.seller-alert-card.has-alert { border-color:rgba(166,91,39,.38); box-shadow:0 10px 24px rgba(92,52,25,.07); }
+.seller-alert-card div { min-width:0; display:grid; gap:4px; }
+.seller-alert-card span { font-size:12px; text-transform:uppercase; letter-spacing:.12em; }
+.seller-alert-card strong { font-size:24px; color:var(--ink); }
+.seller-alert-card small { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.seller-media-grid { display:grid; grid-template-columns:repeat(5,minmax(90px,1fr)); gap:12px; margin:4px 0 16px; }
+.seller-media-item { overflow:hidden; border:1px solid var(--line); border-radius:14px; background:var(--surface); }
+.seller-media-item img { display:block; width:100%; aspect-ratio:1; object-fit:cover; }
+.seller-media-item > div { display:flex; justify-content:flex-end; gap:4px; padding:6px; }
+.seller-media-item .icon-action { width:28px; height:28px; padding:0; }
+.seller-csv-panel .seller-card__heading { align-items:center; }
+.seller-csv-preview { display:grid; gap:8px; margin:14px 0; }
+.seller-csv-preview > div { display:grid; grid-template-columns:70px 1fr auto; align-items:center; gap:12px; padding:11px 14px; border:1px solid var(--line); border-radius:12px; }
+.seller-csv-preview strong { color:var(--accent); font-size:12px; }
+.seller-csv-preview small { color:var(--muted); }
+@media (max-width:800px) { .seller-alerts-grid { grid-template-columns:1fr; } .seller-media-grid { grid-template-columns:repeat(3,1fr); } .seller-csv-preview > div { grid-template-columns:1fr; gap:4px; } }

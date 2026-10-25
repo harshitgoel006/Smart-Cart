@@ -217,6 +217,11 @@ const updateProduct = asyncHandler(async (req, res) => {
     );
 });
 
+const manageSellerMedia = asyncHandler(async (req, res) => {
+  const product = await productService.manageSellerMedia(req.params.productId, req.user._id, req.body.imageIds);
+  return res.status(200).json(new ApiResponse(200, product, "Product media updated & sent for approval"));
+});
+
 const deleteProduct = asyncHandler(async (req, res) => {
   const result = await productService.deleteProduct(
     req.params.productId,
@@ -515,6 +520,7 @@ export {
   getSellerProducts,
   getSellerProduct,
   updateProduct,
+  manageSellerMedia,
   deleteProduct,
   manageProductStock,
   bulkUpdateSellerStock,

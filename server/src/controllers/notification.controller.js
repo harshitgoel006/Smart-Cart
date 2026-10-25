@@ -47,8 +47,14 @@ const markAllNotificationsRead = asyncHandler(async (req, res) => {
     );
 });
 
+const getSellerAlerts = asyncHandler(async (req, res) => {
+  const alerts = await NotificationService.getSellerAlerts(req.user._id);
+  return res.status(200).json(new ApiResponse(200, alerts, "Seller alerts fetched"));
+});
+
 export { 
   getMyNotifications, 
   markNotificationRead, 
-  markAllNotificationsRead 
+  markAllNotificationsRead,
+  getSellerAlerts,
 };

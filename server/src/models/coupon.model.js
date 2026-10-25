@@ -2,6 +2,18 @@ import mongoose from "mongoose";
 
 const couponSchema = new mongoose.Schema(
   {
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+      index: true,
+    },
+    createdByRole: {
+      type: String,
+      enum: ["admin", "seller", null],
+      default: null,
+    },
+
     code: {
       type: String,
       required: true,

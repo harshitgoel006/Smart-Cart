@@ -11,6 +11,9 @@ import {
   createCoupon,
   updateCoupon,
   listCoupons,
+  createSellerCoupon,
+  listSellerCoupons,
+  toggleSellerCoupon,
   resetUserCart,
 } from "../controllers/cart.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -71,6 +74,15 @@ router
 router
   .route("/coupon/list")
   .get(verifyJWT, authorizedRole("admin"), listCoupons);
+
+router
+  .route("/seller/coupons")
+  .post(verifyJWT, authorizedRole("seller"), createSellerCoupon)
+  .get(verifyJWT, authorizedRole("seller"), listSellerCoupons);
+
+router
+  .route("/seller/coupons/:couponId")
+  .patch(verifyJWT, authorizedRole("seller"), toggleSellerCoupon);
 
 
 router

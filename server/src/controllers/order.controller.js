@@ -208,6 +208,11 @@ const getSalesAnalyticsController = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, data, "Sales analytics fetched successfully"));
 });
 
+const getSellerSettlementController = asyncHandler(async (req, res) => {
+  const data = await OrderService.getSellerSettlementSummary(req.user._id, req.query.commissionRate);
+  return res.status(200).json(new ApiResponse(200, data, "Seller settlement summary fetched successfully"));
+});
+
 // ======================================================
 // =============== ADMIN PANEL HANDLERS =================
 // ======================================================
@@ -305,6 +310,7 @@ export {
   handleCustomerReturnRequestController,
   handleRefundRequestController,
   getSalesAnalyticsController,
+  getSellerSettlementController,
   getAllOrdersController,
   getOrderAdminDetailsController,
   manualOrderStatusUpdateController,

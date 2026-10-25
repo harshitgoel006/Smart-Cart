@@ -699,6 +699,40 @@ export const cartService = {
     return coupon;
   },
 
+  async createSellerCoupon(sellerId, data) {
+    const productIds = Array.isArray(data.applicableProducts) ? data.applicableProducts : [];
+    if (!productIds.length) throw new ApiError(400, "Select at least one product for a seller coupon");
+    const owned = await Product.countDocuments({ _id: { $in: productIds }, seller: sellerId, isDeleted: false });
+    if (owned !== productIds.length) throw new ApiError(403, "You can only create coupons for your products");
+    const coupon = await this.createCoupon(data);
+    coupon.createdBy = sellerId;
+    coupon.createdByRole = "seller";
+    coupon.applicableProducts = productIds;
+    await coupon.save();
+    return coupon;
+  },
+
+  async listSellerCoupons(sellerId, query = {}) {
+    const page = Math.max(1, Number(query.page) || 1);
+    const limit = Math.min(50, Math.max(1, Number(query.limit) || 20));
+    const filter = { createdBy: sellerId, createdByRole: "seller" };
+    if (query.status === "active") filter.isActive = true;
+    if (query.status === "inactive") filter.isActive = false;
+    const [coupons, total] = await Promise.all([
+      Coupon.find(filter).populate("applicableProducts", "name price").sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit).lean(),
+      Coupon.countDocuments(filter),
+    ]);
+    return { coupons, total, page, totalPages: Math.max(1, Math.ceil(total / limit)) };
+  },
+
+  async toggleSellerCoupon(sellerId, couponId, isActive) {
+    const coupon = await Coupon.findOne({ _id: couponId, createdBy: sellerId, createdByRole: "seller" });
+    if (!coupon) throw new ApiError(404, "Seller coupon not found");
+    coupon.isActive = Boolean(isActive);
+    await coupon.save();
+    return coupon;
+  },
+
   async updateCoupon(couponId, data) {
     if (!mongoose.Types.ObjectId.isValid(couponId)) {
       throw new ApiError(400, "Invalid coupon ID");

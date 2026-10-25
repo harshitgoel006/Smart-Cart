@@ -1652,6 +1652,23 @@ class OrderService {
     };
   }
 
+  static async getSellerSettlementSummary(sellerId, commissionRate = 10) {
+    const rate = Math.min(50, Math.max(0, Number(commissionRate) || 10));
+    const sellerObjectId = new mongoose.Types.ObjectId(sellerId);
+    const rows = await Order.aggregate([
+      { $match: { "items.seller": sellerObjectId } },
+      { $unwind: "$items" },
+      { $match: { "items.seller": sellerObjectId, "items.fulfillmentStatus": "delivered" } },
+      { $group: { _id: "$paymentStatus", gross: { $sum: { $convert: { input: "$items.total", to: "double", onError: 0, onNull: 0 } } }, orders: { $addToSet: "$_id" } } },
+    ]);
+    const gross = rows.reduce((total, row) => total + Number(row.gross || 0), 0);
+    const paidGross = rows.filter((row) => row._id === "paid").reduce((total, row) => total + Number(row.gross || 0), 0);
+    const pendingGross = rows.filter((row) => !["paid", "refunded"].includes(row._id)).reduce((total, row) => total + Number(row.gross || 0), 0);
+    const refundedGross = rows.filter((row) => row._id === "refunded").reduce((total, row) => total + Number(row.gross || 0), 0);
+    const commission = (gross * rate) / 100;
+    return { commissionRate: rate, grossRevenue: gross, commission, netRevenue: Math.max(0, gross - commission - refundedGross), availablePayout: Math.max(0, paidGross - (paidGross * rate) / 100), pendingPayout: Math.max(0, pendingGross - (pendingGross * rate) / 100), refundedRevenue: refundedGross, status: "estimated" };
+  }
+
   static async getAllOrders(query) {
     let {
       page = 1,

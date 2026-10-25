@@ -65,6 +65,18 @@ export const uploadMultiple = async (files, options = {}) => {
   }
 };
 
+export const uploadRemoteImage = async (imageUrl, { folder = "products" } = {}) => {
+  if (!imageUrl || !/^https?:\/\//i.test(imageUrl)) {
+    throw new ApiError("A valid image URL is required");
+  }
+  try {
+    const response = await cloudinary.uploader.upload(imageUrl, { folder, resource_type: "image" });
+    return { url: response.secure_url, public_id: response.public_id };
+  } catch {
+    throw new ApiError("Remote image upload failed");
+  }
+};
+
 export const deleteFromCloudinary = async (publicId) => {
   if (!publicId) return;
 

@@ -16,7 +16,7 @@ import { AIShoppingPage } from '../pages/AIShopping/AIShoppingPage';
 import { CategoriesPage } from '../pages/Categories/CategoriesPage';
 import { AdminPage } from '../pages/Admin/AdminPage';
 import { AdminProfilePage } from '../pages/Admin/AdminProfilePage';
-import { SellerPage } from '../pages/Seller/SellerPage';
+import { SellerHomePage } from '../pages/Seller/SellerHomePage';
 import { SellerToolsPage } from '../pages/Seller/SellerToolsPage';
 import { SellerToolsPolishedPage } from '../pages/Seller/SellerToolsPolishedPage';
 import { SellerInsightsPage } from '../pages/Seller/SellerInsightsPage';
@@ -30,7 +30,7 @@ export function AppRoutes() {
     <Route path="/orders" element={<OrdersPage />} /><Route path="/orders/:id" element={<OrderDetailPage />} /><Route path="/orders/:id/tracking" element={<OrderDetailPage />} />
     <Route path="/notifications" element={<NotificationsPage />} /><Route path="/ai-shopping" element={<AIShoppingPage />} />
     <Route path="/admin" element={<AdminPage />} /><Route path="/admin/profile" element={<AdminProfilePage />} />
-    <Route path="/seller" element={<SellerPage />} /><Route path="/seller/tools" element={<SellerToolsPolishedPage />} /><Route path="/seller/tools/legacy" element={<SellerToolsPage />} /><Route path="/seller/insights" element={<SellerInsightsPage />} /><Route path="/seller/notifications" element={<NotificationsPage />} />
+    <Route path="/seller" element={<SellerHomePage />} /><Route path="/seller/tools" element={<SellerToolsPolishedPage />} /><Route path="/seller/tools/legacy" element={<SellerToolsPage />} /><Route path="/seller/insights" element={<SellerInsightsPage />} /><Route path="/seller/notifications" element={<NotificationsPage />} />
     <Route path="*" element={<SimpleAccountPage title="Page not found" text="This SmartCart page does not exist." link="/" linkText="Return home" />} />
   </Routes>;
 }

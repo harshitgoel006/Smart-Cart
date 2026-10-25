@@ -12,6 +12,7 @@ import {
   applyCouponController,
   getSellerOrdersController,
   getSellerOrderDetailsController,
+  getSellerSettlementController,
   updateOrderStatusController,
   updateTrackingInfoController,
   addTrackingScanEventController,
@@ -116,6 +117,10 @@ router
 router
   .route("/seller/sales-analytics")
   .get(verifyJWT, authorizedRole("seller"), getSalesAnalyticsController);
+
+router
+  .route("/seller/settlement")
+  .get(verifyJWT, authorizedRole("seller"), getSellerSettlementController);
 
 // ======================================================
 // =============== ADMIN PANEL HANDLERS =================

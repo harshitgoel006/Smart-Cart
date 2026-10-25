@@ -1,6 +1,8 @@
 import NotificationDispatcher from "./notification.dispatcher.js";
 import { Notification } from "../../models/notification.model.js";
 import { ApiError } from "../../utils/ApiError.js";
+import { Product } from "../../models/product.model.js";
+import { Order } from "../../models/order.model.js";
 
 class NotificationService {
   static async emit(event, payload) {
@@ -60,6 +62,38 @@ class NotificationService {
     );
 
     return result.modifiedCount;
+  }
+
+  static async getSellerAlerts(sellerId) {
+    const [lowStock, pendingProducts, orderItems] = await Promise.all([
+      Product.find({ seller: sellerId, isDeleted: false, isActive: true, stock: { $lte: 5 } })
+        .select("name stock")
+        .sort({ stock: 1 })
+        .limit(10)
+        .lean(),
+      Product.find({ seller: sellerId, isDeleted: false, approvalStatus: "pending" })
+        .select("name createdAt")
+        .sort({ createdAt: -1 })
+        .limit(10)
+        .lean(),
+      Order.find({ "items.seller": sellerId, isDeleted: false })
+        .select("_id items createdAt")
+        .sort({ createdAt: -1 })
+        .limit(30)
+        .lean(),
+    ]);
+
+    const pendingOrders = orderItems.flatMap((order) => order.items
+      .filter((item) => String(item.seller) === String(sellerId) && ["pending", "processing"].includes(item.fulfillmentStatus))
+      .map((item) => ({ orderId: order._id, itemId: item._id, status: item.fulfillmentStatus, quantity: item.quantity, createdAt: order.createdAt }))
+    ).slice(0, 10);
+
+    return {
+      lowStock,
+      pendingProducts,
+      pendingOrders,
+      counts: { lowStock: lowStock.length, pendingProducts: pendingProducts.length, pendingOrders: pendingOrders.length },
+    };
   }
 }
 

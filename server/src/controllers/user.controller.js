@@ -262,7 +262,7 @@ const getTopSellingItems = asyncHandler(async (req, res) => {
 });
 
 const getDailySalesData = asyncHandler(async (req, res) => {
-  const dailyData = await userService.getDailySalesData(req.user._id);
+  const dailyData = await userService.getDailySalesData(req.user._id, req.query);
 
   res.status(200).json({
     success: true,

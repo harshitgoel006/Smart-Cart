@@ -306,14 +306,16 @@ const fallbackReviewSummary = (reviews) => {
 };
 
 export const aiService = {
-  async generateSellerContent({ type, name, brand, category, description, price }) {
-    const safeType = ["listing", "seo", "pricing", "reply"].includes(type) ? type : "listing";
-    const context = JSON.stringify({ name, brand, category, description, price });
+  async generateSellerContent({ type, name, brand, category, description, price, stock }) {
+    const safeType = ["listing", "seo", "pricing", "reply", "forecast", "reorder"].includes(type) ? type : "listing";
+    const context = JSON.stringify({ name, brand, category, description, price, stock });
     const instructions = {
       listing: "Create ecommerce listing copy for SmartCart. Return valid JSON with keys title, description, bullets, tags. Keep claims grounded in the supplied product details. Do not invent specifications.",
       seo: "Create SEO metadata for a SmartCart product. Return valid JSON with keys seoTitle, metaDescription, keywords. Keep it concise and grounded in the supplied details.",
       pricing: "Give practical pricing guidance for a SmartCart seller. Return valid JSON with keys recommendation, reasoning, risks. Do not claim live market data; clearly label it as a heuristic.",
       reply: "Write a warm, concise seller reply to a customer review or question. Return valid JSON with key reply. Do not promise refunds or guarantees.",
+      forecast: "Give a cautious demand forecast using only the supplied product context and current stock. Return valid JSON with keys outlook, confidence, signals, caveats. Do not claim live market data.",
+      reorder: "Recommend a reorder quantity using the supplied product context and current stock. Return valid JSON with keys recommendedUnits, reasoning, urgency, caveats. Clearly label it as a heuristic.",
     };
     const generated = await generateTextReply(instructions[safeType], context).catch(() => null);
     if (generated) return { type: safeType, content: generated, source: "provider" };
@@ -323,6 +325,8 @@ export const aiService = {
       return { type: safeType, source: "fallback", content: JSON.stringify({ recommendation: Number.isFinite(numericPrice) ? `Start near ₹${Math.round(numericPrice).toLocaleString("en-IN")} and test a 5–10% launch offer.` : "Add a price to receive a heuristic recommendation.", reasoning: "This is a simple launch heuristic, not live market intelligence.", risks: "Validate competitor pricing, margins, shipping, and returns before publishing." }) };
     }
     if (safeType === "reply") return { type: safeType, source: "fallback", content: JSON.stringify({ reply: "Thank you for sharing your experience. We appreciate your feedback and will use it to keep improving the SmartCart experience." }) };
+    if (safeType === "forecast") return { type: safeType, source: "fallback", content: JSON.stringify({ outlook: Number(price) > 0 ? "Review recent sales before increasing stock." : "Add price and sales context for a better forecast.", confidence: "low", signals: [Number(price) ? `Current price: ${price}` : "No price supplied", description ? "Product description supplied" : "Limited product context"], caveats: "This is a heuristic, not live demand intelligence." }) };
+    if (safeType === "reorder") { const numericStock = Number(stock); return { type: safeType, source: "fallback", content: JSON.stringify({ recommendedUnits: Number.isFinite(numericStock) ? Math.max(0, 10 - numericStock) : 0, reasoning: "Keep a small safety buffer until reliable sales history is available.", urgency: Number.isFinite(numericStock) && numericStock <= 5 ? "high" : "normal", caveats: "Validate supplier lead time, margin, and recent demand before ordering." }) }; }
     return { type: safeType, source: "fallback", content: JSON.stringify({ title: name || "Everyday essential", description: description || "A thoughtfully selected product for everyday use.", bullets: [brand ? `From ${brand}` : "SmartCart selected", category ? `Category: ${category}` : "Made for everyday needs"], tags: [name, brand, category].filter(Boolean) }) };
   },
 

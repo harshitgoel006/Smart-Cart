@@ -2,6 +2,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { Product } from "../models/product.model.js";
 import {
   uploadMultiple,
+  uploadRemoteImage,
   deleteMultipleFromCloudinary,
 } from "../utils/cloudinary.js";
 import { Order } from "../models/order.model.js";
@@ -782,13 +783,14 @@ export const productService = {
       throw new ApiError(400, "Product with same name already exists");
     }
 
-    if (!files || files.length === 0) {
-      throw new ApiError(400, "At least one image is required");
+    let uploadedImages;
+    if (files?.length) {
+      uploadedImages = await uploadMultiple(files, { folder: "products" });
+    } else if (body.imageUrl) {
+      uploadedImages = [await uploadRemoteImage(body.imageUrl, { folder: "products" })];
+    } else {
+      throw new ApiError(400, "At least one image or image URL is required");
     }
-
-    const uploadedImages = await uploadMultiple(files, {
-      folder: "products",
-    });
 
     if (!uploadedImages || uploadedImages.length === 0) {
       throw new ApiError(500, "Image upload failed");
@@ -1149,6 +1151,27 @@ export const productService = {
       });
     }
 
+    return product;
+  },
+
+  async manageSellerMedia(productId, sellerId, imageIds = []) {
+    if (!mongoose.Types.ObjectId.isValid(productId)) throw new ApiError(400, "Invalid product ID");
+    if (!Array.isArray(imageIds) || imageIds.length > 5) throw new ApiError(400, "Choose up to 5 product images");
+    const product = await Product.findOne({ _id: productId, seller: sellerId, isDeleted: false });
+    if (!product) throw new ApiError(404, "Product not found");
+    const existing = new Map(product.images.map((image) => [image.public_id, image]));
+    const unknown = imageIds.some((publicId) => !existing.has(publicId));
+    if (unknown) throw new ApiError(400, "One or more images do not belong to this product");
+    const nextImages = imageIds.map((publicId) => existing.get(publicId));
+    const removed = product.images.filter((image) => !imageIds.includes(image.public_id)).map((image) => image.public_id);
+    product.images = nextImages;
+    product.coverImage = nextImages[0] || { public_id: "", url: "" };
+    product.approvalStatus = "pending";
+    product.isActive = false;
+    await product.save();
+    if (removed.length) {
+      try { await deleteMultipleFromCloudinary(removed); } catch (error) { console.error("Cloudinary media cleanup failed:", error.message); }
+    }
     return product;
   },
 

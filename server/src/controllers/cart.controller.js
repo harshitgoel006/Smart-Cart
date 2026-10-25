@@ -116,6 +116,21 @@ const listCoupons = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, result, "Coupons fetched successfully"));
 });
 
+const createSellerCoupon = asyncHandler(async (req, res) => {
+  const coupon = await cartService.createSellerCoupon(req.user._id, req.body || {});
+  return res.status(201).json(new ApiResponse(201, coupon, "Seller coupon created successfully"));
+});
+
+const listSellerCoupons = asyncHandler(async (req, res) => {
+  const result = await cartService.listSellerCoupons(req.user._id, req.query);
+  return res.status(200).json(new ApiResponse(200, result, "Seller coupons fetched successfully"));
+});
+
+const toggleSellerCoupon = asyncHandler(async (req, res) => {
+  const coupon = await cartService.toggleSellerCoupon(req.user._id, req.params.couponId, req.body?.isActive);
+  return res.status(200).json(new ApiResponse(200, coupon, "Seller coupon updated successfully"));
+});
+
 const resetUserCart = asyncHandler(async (req, res) => {
   const cart = await cartService.resetUserCart(req.params.userId);
 
@@ -137,5 +152,8 @@ export {
   createCoupon,
   updateCoupon,
   listCoupons,
+  createSellerCoupon,
+  listSellerCoupons,
+  toggleSellerCoupon,
   resetUserCart,
 };
